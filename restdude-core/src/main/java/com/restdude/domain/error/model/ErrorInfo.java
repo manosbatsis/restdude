@@ -1,15 +1,39 @@
-package com.restdude.domain.base.model;
+package com.restdude.domain.error.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.domain.base.controller.AbstractModelController;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
-@ApiModel(value = "ErrorInfo", description = "DTO for error information responses")
-public class ErrorInfo {
+@ModelResource(path = "errors", controllerSuperClass = AbstractModelController.class,
+        apiName = "Errors", apiDescription = "Error Operations")
+@Entity
+@Table(name = "error_info")
+@Inheritance(strategy = InheritanceType.JOINED)
+@ApiModel(value = "ErrorInfo", description = "Used to persist error of the application or it's clients.")
+public class ErrorInfo extends AbstractSystemUuidPersistable {
+
+    public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_CREATE = "hasRole('ROLE_USER')";
+    public static final String PRE_AUTHORIZE_UPDATE = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_PATCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_DELETE = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+
+    public static final String PRE_AUTHORIZE_DELETE_BY_ID = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
+    public static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
+    public static final String PRE_AUTHORIZE_FIND_BY_IDS = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static final String PRE_AUTHORIZE_COUNT = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
 
     @ApiModelProperty(value = "The HTTP status code ")
     private final int code;
@@ -24,34 +48,30 @@ public class ErrorInfo {
     private final String message;
 
     @ApiModelProperty(value = "List of specific error items, if any")
+    @JsonIgnore
+    @Transient
     private List<String> errors;
 
-    @ApiModelProperty(value = "Message for technical staff")
-    private final String developerMessage;
-
-    @ApiModelProperty(value = "URL where technical staff can get more information")
-    private final String moreInfoUrl;
-
     @ApiModelProperty(value = "The error exception")
+    @JsonIgnore
+    @Transient
     private final Throwable throwable;
 
 
-    public ErrorInfo(String status, int code, String message, String developerMessage, String moreInfoUrl, List<String> errors, Throwable throwable) {
+    public ErrorInfo(String status, int code, String message, List<String> errors, Throwable throwable) {
         if (status == null) {
             throw new NullPointerException("HttpStatus argument cannot be null.");
         }
         this.status = status;
         this.code = code;
         this.message = message;
-        this.developerMessage = developerMessage;
-        this.moreInfoUrl = moreInfoUrl;
         this.errors = errors;
         this.throwable = throwable;
 
     }
 
-    public ErrorInfo(String status, int code, String message, String developerMessage, String moreInfoUrl, Throwable throwable) {
-        this(status, code, message, developerMessage, moreInfoUrl, null, throwable);
+    public ErrorInfo(String status, int code, String message, Throwable throwable) {
+        this(status, code, message, null, throwable);
     }
 
     public int getCode() {
@@ -66,21 +86,7 @@ public class ErrorInfo {
         return StringUtils.isNotBlank(this.message) ? this.message : this.status;
     }
 
-    public List<String> getErrors() {
-        return errors;
-    }
 
-    public String getDeveloperMessage() {
-        return developerMessage;
-    }
-
-    public String getMoreInfoUrl() {
-        return moreInfoUrl;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
-    }
 
     @Override
     public String toString() {
@@ -97,8 +103,6 @@ public class ErrorInfo {
         private int code;
         private String status;
         private String message;
-        private String developerMessage;
-        private String moreInfoUrl;
         private List<String> errors;
         private Throwable throwable;
 
@@ -117,16 +121,6 @@ public class ErrorInfo {
 
         public Builder message(String message) {
             this.message = message;
-            return this;
-        }
-
-        public Builder developerMessage(String developerMessage) {
-            this.developerMessage = developerMessage;
-            return this;
-        }
-
-        public Builder moreInfoUrl(String moreInfoUrl) {
-            this.moreInfoUrl = moreInfoUrl;
             return this;
         }
 
@@ -152,7 +146,7 @@ public class ErrorInfo {
             if (this.status == null) {
                 this.status = "Internal Server Error";
             }
-            return new ErrorInfo(this.status, this.code, this.message, this.developerMessage, this.moreInfoUrl, this.errors, this.throwable);
+            return new ErrorInfo(this.status, this.code, this.message, this.errors, this.throwable);
         }
     }
 }

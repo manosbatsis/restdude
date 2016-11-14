@@ -67,23 +67,4 @@ public class UserRegistrationCodeBatchController extends AbstractNoDeleteModelCo
 		return this.service.findBatchCodes(id);
 	}
 
-	@RequestMapping(value = "csv", method = RequestMethod.GET, produces = "text/csv")
-	@ResponseBody
-	@ApiOperation(value = "Export batch to a spreadsheet (CSV) report", notes = "The filename will be [batch name]_[date: yyyyMMddHHmmss].csv")
-	public List<UserRegistrationCodeInfo> exportToCsv(HttpServletResponse response) {
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		// get batch name ot name file
-		String csvFileName = "foobar.csv";
-
-		// tell browser to launch spreadsheet
-		String headerKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"",
-				csvFileName);
-		response.setHeader(headerKey, headerValue);
-		response.setContentType("text/csv;charset=utf-8");
-
-		// return results
-		return this.service.findBatchCodes();
-	}
-
 }
