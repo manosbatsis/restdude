@@ -1,0 +1,70 @@
+{
+  "name": "generator-gulp-requirejs",
+  "main": "generators/app/index.js",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": "adriancmiranda/generator-gulp-requirejs",
+  "description": "Scaffold out a web app using RequireJS",
+  "author": {
+    "name": "Adrian C. Miranda",
+    "email": "adriancmiranda@gmail.com",
+    "url": "https://github.com/adriancmiranda"
+  },
+  "appDirs": {
+    "tasks": "tasks/",
+    "styles": "source/styles/",
+    "scripts": "source/scripts/",
+    "vendors": "source/scripts/vendors/",
+    "images": "source/media/",
+    "videos": "source/media/videos/",
+    "views": "source/views/",
+    "fonts": "source/fonts/",
+    "tests": "tests/"
+  },
+  "scripts": {
+    "prestart": "npm install",
+    "start": "npm run prestart && gulp",
+    "test": "gulp test"
+  },
+  "dependencies": {
+    "Proto": "1.0.0",
+    "bluebird": "3.4.0",
+    "chalk": "1.1.3",
+    "cheerio": "0.20.0",
+    "fs-extra": "0.30.0",
+    "mkdirp": "0.5.1",
+    "underscore.string": "3.3.4",
+    "yeoman-assert": "2.2.1",
+    "yeoman-environment": "1.6.1",
+    "yeoman-generator": "0.20.3",
+    "yeoman-test": "1.4.0",
+    "yosay": "1.1.1"
+  },
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "gulp-eslint": "2.0.0",
+    "gulp-jslint": "1.0.1",
+    "gulp-mocha": "2.2.0",
+    "load-gulp-config": "1.2.2",
+    "temp": "0.8.3"
+  },
+  "files": [
+    "generators/app",
+    "generators/back",
+    "generators/front"
+  ],
+  "keywords": [
+    "yeoman-generator",
+    "scaffold",
+    "front-end",
+    "back-end",
+    "fullstack",
+    "requirejs",
+    "modernizr",
+    "webapp",
+    "jquery",
+    "gulp",
+    "web",
+    "app"
+  ]
+}
