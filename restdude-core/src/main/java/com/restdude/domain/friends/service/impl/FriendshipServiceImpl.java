@@ -38,7 +38,32 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 		return this.saveRelationship(resource);
 	}
 
+	/**
+	 * Approve or reject a friendship request
+	 */
+	@Override
+	@Transactional(readOnly = false)
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public Friendship update(Friendship resource) {
+		LOGGER.debug("update: {}", resource);
+		return this.saveRelationship(resource);
+	}
+
+	/**
+	 * Delete the friendship and it's inverse
+	 */
+	@Override
+	@Transactional(readOnly = false)
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public void delete(Friendship resource) {
+		resource.setStatus(FriendshipStatus.DELETE);
+		this.saveRelationship(resource);
+	}
+
+
 	protected void validateSender(Friendship resource) {
+
+		LOGGER.debug("validateSender resource: {}", resource);
 
 		// get current principal
 		String userDetailsId = this.getPrincipal().getId();
@@ -62,9 +87,9 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 		// verify principal != friend
 		else if (userDetailsId.equals(friend.getId())) {
             throw new BadRequestException("Befriending yourself is not allowed.");
-        }
+		}
 
-		LOGGER.debug("validateSender returns: {}", resource);
+		LOGGER.debug("validateSender returns resource: {}", resource);
 	}
 
 	protected Friendship saveRelationship(Friendship resource) {
@@ -115,28 +140,6 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 					new FriendshipDTO(resource));
 		}
 		return resource;
-	}
-
-	/**
-	 * Approve or reject a friendship request
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public Friendship update(Friendship resource) {
-		LOGGER.debug("update: {}", resource);
-		return this.saveRelationship(resource);
-	}
-
-	/**
-	 * Delete the friendship and it's inverse
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public void delete(Friendship resource) {
-		resource.setStatus(FriendshipStatus.DELETE);
-		this.saveRelationship(resource);
 	}
 
 	@Override

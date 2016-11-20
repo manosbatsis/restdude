@@ -9,7 +9,6 @@ import com.restdude.domain.users.model.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -48,11 +47,8 @@ public interface FriendshipRepository extends ModelRepository<Friendship,Friends
 	@Query(QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID)
 	List<String> findAllStompOnlineFriendUsernames(String userId);
 
-	@Query("from Friendship friendship where friendship.id.owner = :#{#friendshipId.owner} and friendship.id.friend = :#{#friendshipId.friend} ")
-	Friendship findOne(@Param("friendshipId") FriendshipId friendshipId);
-
-	@Query("select friendship.status from Friendship friendship where friendship.id.owner = :#{#friendshipId.owner} and friendship.id.friend = :#{#friendshipId.friend} ")
-	FriendshipStatus getCurrentStatus(@Param("friendshipId") FriendshipId friendshipId);
+	@Query("select f.status from Friendship f where f.id = ?1 ")
+	FriendshipStatus getCurrentStatus(FriendshipId id);
 	
 	@Query(QUERY_FRIEND_USERNAMES_BY_USERID)
 	Iterable<String> findAllFriendUsernames(String userId);

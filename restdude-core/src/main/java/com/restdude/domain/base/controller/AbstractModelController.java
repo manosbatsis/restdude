@@ -112,11 +112,6 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 		resource.setId(id);
 		applyCurrentPrincipal(resource);
 
-		T retreivedResource = this.findById(id);
-		if (retreivedResource == null) {
-			throw new NotFoundException();
-		}
-
 		return this.service.update(resource);
 	}
 
