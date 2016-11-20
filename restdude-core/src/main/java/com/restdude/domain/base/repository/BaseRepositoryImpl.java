@@ -17,11 +17,15 @@
  */
 package com.restdude.domain.base.repository;
 
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.MetadataSubject;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.specifications.SpecificationsBuilder;
 import com.restdude.mdd.util.ParameterMapBackedPageRequest;
+import com.restdude.util.exception.http.BadRequestException;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -31,13 +35,17 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.thymeleaf.util.ListUtils;
 
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.*;
 
-public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ModelRepository<T, ID> {
+public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ModelRepository<T, ID> {
 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
@@ -45,20 +53,44 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 	private SpecificationsBuilder<T, ID> specificationsBuilder;
 	private EntityManager entityManager;
 	private Class<T> domainClass;
-	
-	
-	/**
+    private List<String> uniqueFieldNames = new LinkedList<String>();
+    private List<String> requiredFieldNames = new LinkedList<String>();
+
+
+    /**
 	 * Creates a new {@link SimpleJpaRepository} to manage objects of the given {@link JpaEntityInformation}.
-	 * 
-	 * @param entityInformation must not be {@literal null}.
-	 * @param entityManager must not be {@literal null}.
+	 *
+     * @param domainClass must not be {@literal null}.
+     * @param entityManager must not be {@literal null}.
 	 */
 	public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
 		super(domainClass, entityManager);
 		this.entityManager = entityManager;
 		this.domainClass = domainClass;
 		this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.domainClass);
-	}
+
+        // init constraints info
+        Field[] fields = FieldUtils.getFieldsWithAnnotation(this.domainClass, Column.class);
+        if (fields.length > 0) {
+            for (int i = 0; i < fields.length; i++) {
+                Field field = fields[i];
+                Column column = field.getAnnotation(Column.class);
+
+                // if unique or not-null field
+                if (!field.getName().equals("id")) {
+                    if (column.unique()) {
+                        uniqueFieldNames.add(field.getName());
+                    }
+                    if (!column.nullable()) {
+                        requiredFieldNames.add(field.getName());
+                    }
+                }
+
+            }
+
+
+        }
+    }
 
 	/***
 	 * t {@inheritDoc} 
@@ -251,5 +283,89 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 		Selection<? extends BinaryFile> join = root.join(propertyName,JoinType.INNER);
 		query.select(join);
 		return this.entityManager.createQuery(query).getResultList();
-	}
+    }
+
+    public List<String> validateConstraints(T resource) {
+        LOGGER.debug("validateConstraints, uniqueFieldNames: {}", this.uniqueFieldNames);
+        List<String> errors = new LinkedList<String>();
+        // validate not-null
+        for (String fieldName : this.requiredFieldNames) {
+            try {
+                Object value = PropertyUtils.getProperty(resource, fieldName);
+                if (value == null) {
+                    errors.add("Missing required property value: " + fieldName);
+                }
+            } catch (Exception e) {
+                LOGGER.warn("Failed validating unique constrains for property: " + fieldName, e);
+            }
+        }
+
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(this.domainClass);
+        Root<T> root = criteriaQuery.from(this.domainClass);
+        List<Predicate> predicates = new ArrayList<Predicate>(this.uniqueFieldNames.size());
+        try {
+            for (String propertyName : this.uniqueFieldNames) {
+
+                LOGGER.debug("validateConstraints, adding predicate for: {}", propertyName);
+                Object propertyValue = PropertyUtils.getProperty(resource, propertyName);
+                Predicate predicate = criteriaBuilder.equal(root.get(propertyName), propertyValue);
+                predicates.add(predicate);
+            }
+
+            criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
+            TypedQuery<T> typedQuery = this.entityManager.createQuery(criteriaQuery);
+            List<T> resultSet = typedQuery.getResultList();
+            LOGGER.debug("validateConstraints, resultSet size: {}", resultSet.size());
+            if (!resultSet.isEmpty()) {
+                Set<String> unavailableValueFieldNames = new HashSet<String>();
+                for (T match : resultSet) {
+                    if (!match.getId().equals(resource.getId())) {
+                        for (String propertyName : this.uniqueFieldNames) {
+                            Object newValue = PropertyUtils.getProperty(resource, propertyName);
+                            Object existingValue = PropertyUtils.getProperty(match, propertyName);
+
+                            LOGGER.debug("validateConstraints, newValue: {}, existingValue: {}", newValue, existingValue);
+                            if (newValue != null && newValue.equals(existingValue)) {
+                                unavailableValueFieldNames.add(propertyName);
+                            }
+                        }
+                    }
+                }
+
+                for (String propertyName : unavailableValueFieldNames) {
+                    errors.add("Value already exists for field " + propertyName);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error while validating constraints", e);
+        }
+
+        LOGGER.debug("validateConstraints, errors: {}", errors);
+        return errors;
+    }
+
+    protected void validate(T resource) {
+        List<String> errors = this.validateConstraints(resource);
+
+        if (!ListUtils.isEmpty(errors)) {
+            StringBuffer message = new StringBuffer("Validation failed: ")
+                    .append(errors.get(0));
+            if (errors.size() > 1) {
+                message.append(" (")
+                        .append(errors.size() - 1)
+                        .append(" more)");
+            }
+            throw new BadRequestException(message.toString(), errors);
+        }
+
+    }
+
+    @Override
+    public <S extends T> S save(S entity) {
+        entity.preSave();
+        this.validate(entity);
+        return super.save(entity);
+    }
 }

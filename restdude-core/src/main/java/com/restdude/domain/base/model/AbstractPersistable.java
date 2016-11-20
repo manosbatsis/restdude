@@ -22,12 +22,14 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * Abstract base class for all persistent entities.
  * @param <ID> The id Serializable
  */
+@XmlRootElement
 @MappedSuperclass
 public abstract class AbstractPersistable<ID extends Serializable> implements CalipsoPersistable<ID> {
 
@@ -91,5 +93,12 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Ca
 		int hashCode = 17;
 		hashCode += null == getId() ? 0 : getId().hashCode() * 31;
 		return hashCode;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void preSave() {
+
 	}
 }

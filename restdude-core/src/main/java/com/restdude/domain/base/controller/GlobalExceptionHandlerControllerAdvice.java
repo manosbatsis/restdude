@@ -2,7 +2,7 @@ package com.restdude.domain.base.controller;
 
 
 import com.restdude.domain.error.model.ErrorInfo;
-import com.restdude.util.exception.BadRequestException;
+import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.HttpException;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,10 +38,11 @@ import java.util.Map;
 /**
  * Global RESTful-friendly exception handling that writes aa {@Link ErrorInfo} object to the response
  */
+@EnableWebMvc
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandlerControllerAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandlerControllerAdvice.class);
     private static Map<Class, Integer> exceptionStatuses = new HashMap<Class, Integer>();
 
     static {
@@ -67,6 +69,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorInfo handleBadRequestException(HttpServletRequest request, Exception e) {
+        LOGGER.warn("handleBadRequestException", e);
         BadRequestException ex = (BadRequestException) e;
         ErrorInfo.Builder builder = new ErrorInfo.Builder()
                 .message(ex.getMessage())
@@ -80,6 +83,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpException.class)
     @ResponseBody
     public ErrorInfo handleHttpException(HttpServletRequest request, HttpServletResponse response, HttpException ex) {
+        LOGGER.warn("handleHttpException", ex);
         HttpStatus status = ex.getStatus();
         ErrorInfo.Builder builder = buildErrorInfo(response, ex, status);
 
@@ -102,6 +106,7 @@ public class GlobalExceptionHandler {
             AsyncRequestTimeoutException.class, Exception.class})
     @ResponseBody
     public ErrorInfo handleStandardException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
+        LOGGER.warn("handleStandardException", ex);
         HttpStatus status = getHttpStatus(ex);
 
         ErrorInfo.Builder builder = buildErrorInfo(response, ex, status);

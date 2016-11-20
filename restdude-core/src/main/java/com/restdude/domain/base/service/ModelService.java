@@ -19,13 +19,17 @@ package com.restdude.domain.base.service;
 
 
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.cms.model.BinaryFile;
+import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.domain.users.model.User;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
-import org.springframework.data.domain.Persistable;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Provides SCRUD and utility operations for {@link T} entities
@@ -35,16 +39,38 @@ import java.io.Serializable;
  * @param <ID> the entity ID type
  */
 @Service
-public interface ModelService <T extends Persistable<ID>, ID extends Serializable>
-extends GenericService<T, ID>{
+public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Serializable>
+        extends CrudService<T, ID> {
 
 	/**
-	 * Get the current user's details
+     * Get the entity Class corresponding to the generic T
+     *
+     * @return the corresponding entity Class
+     */
+    public Class<T> getDomainClass();
+
+    /**
+     * Get the current user's details
 	 * @return
 	 */
 	public ICalipsoUserDetails getPrincipal();
 
-	/**
+    public void addMetadatum(ID subjectId, Metadatum dto);
+
+    public void addMetadata(ID subjectId, Collection<Metadatum> dtos);
+
+    public void removeMetadatum(ID subjectId, String predicate);
+
+    /**
+     * Get the entity's file uploads for this property
+     *
+     * @param subjectId    the entity id
+     * @param propertyName the property holding the upload(s)
+     * @return the uploads
+     */
+    public List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName);
+
+    /**
 	 * Get the current user's details from the DB
 	 * @return
 	 */

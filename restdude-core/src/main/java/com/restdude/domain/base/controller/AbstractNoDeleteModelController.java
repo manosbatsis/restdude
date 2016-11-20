@@ -19,9 +19,9 @@ package com.restdude.domain.base.controller;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
+import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.resthub.web.exception.NotImplementedClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Base class for model controllers that must not support HTTP DELETE
+ * Base class for model controllers not allowing HTTP DELETE
  * operations.
  */
 public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>>
@@ -44,26 +44,26 @@ public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistab
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) {
-		throw new NotImplementedClientException("Method is unsupported.");
-	}
+        throw new NotImplementedException("Method is unsupported.");
+    }
 
 	@Override
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ApiOperation(hidden = true, value = "Delete all resources (unsupported)")
 	public void delete() {
-		throw new NotImplementedClientException("Method is unsupported.");
-	}
+        throw new NotImplementedException("Method is unsupported.");
+    }
 
 	@ApiOperation(hidden = true, value = "Delete an uploaded file")
     @RequestMapping(value = "{subjectId}/uploads/{propertyName}/{id}", method = RequestMethod.DELETE)
     public @ResponseBody List deleteById(@PathVariable String subjectId, @PathVariable String propertyName, @PathVariable String id) {
-		throw new NotImplementedClientException("Method is unsupported.");
-	}
+        throw new NotImplementedException("Method is unsupported.");
+    }
 
 	@RequestMapping(value = "{subjectId}/metadata/{predicate}", method = RequestMethod.DELETE)
 	@ResponseBody
 	@ApiOperation(hidden = true, value = "Remove metadatum")
 	public void removeMetadatum(@PathVariable ID subjectId, @PathVariable String predicate) {
-		throw new NotImplementedClientException("Method is unsupported.");
-	}
+        throw new NotImplementedException("Method is unsupported.");
+    }
 }

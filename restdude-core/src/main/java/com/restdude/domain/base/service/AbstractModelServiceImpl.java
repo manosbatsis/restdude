@@ -25,30 +25,18 @@ import com.restdude.domain.base.service.impl.AbstractAclAwareServiceImpl;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.util.email.service.EmailService;
-import com.restdude.mdd.util.ParameterMapBackedPageRequest;
-import com.restdude.util.exception.BadRequestException;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.ListUtils;
 
-import javax.persistence.Column;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
@@ -149,7 +137,6 @@ implements ModelService<T, ID>{
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_CREATE)
     public T create(T resource) {
-        this.validate(resource);
         return super.create(resource);
     }
 
@@ -160,36 +147,21 @@ implements ModelService<T, ID>{
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
     public T update(T resource) {
-        this.validate(resource);
         return super.update(resource);
     }
 
-	protected void validate(T resource) {
-		List<String> errors = this.validateUniqueConstraints(resource);
 
-		if(!ListUtils.isEmpty(errors)){
-			StringBuffer message = new StringBuffer("Validation failed: ")
-					.append( errors.get(0));
-			if(errors.size() > 1){
-				message.append(" (")
-				.append(errors.size() - 1)
-				.append(" more)");
-			}
-			ICalipsoUserDetails ud = this.getPrincipal();
-			boolean complete = ud != null && ud.isAdmin();
-			throw new BadRequestException(message.toString(), errors, complete);
-		}
-		
-	}
+/*
 
-	protected List<String> validateUniqueConstraints(T resource) {
+	// TODO: refactor to single query then parse results to find errors
+	protected List<String> validateUniqueConstraintss(T resource) {
 		List<String> errors = new LinkedList<String>();
 		Field[] fields = FieldUtils.getFieldsWithAnnotation(this.getDomainClass(), Column.class);
 		if(fields.length > 0){
 			for(int i = 0; i < fields.length; i++){
 				Field field = fields[i];
 				Column column = field.getAnnotation(Column.class);
-				
+
 				try {
 					// if unique field
 					if(column.unique() && !field.getName().equals("id")){
@@ -214,11 +186,12 @@ implements ModelService<T, ID>{
 				} catch (Exception e) {
 					LOGGER.warn("Failed validating unique constrains for property: " + field.getName(), e);
 				}
-				
+
 			}
-			
-			
+
+
 		}
 		return errors;
 	}
+ */
 }

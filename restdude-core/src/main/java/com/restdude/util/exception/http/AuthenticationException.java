@@ -11,17 +11,17 @@ import java.util.Map;
  */
 public class AuthenticationException extends HttpException {
 
-    public static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
+    protected static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
 
     /**
-     * Creates a new AuthenticationException with HTTP 401 status code and message.
+     * Creates a new instance with HTTP 401 status code and message.
      */
     protected AuthenticationException() {
         super(STATUS);
     }
 
     /**
-     * Creates a new AuthenticationException with the specified message and HTTP status 401.
+     * Creates a new instance with the specified message and HTTP status 401.
      *
      * @param message the exception detail message
      */
@@ -30,7 +30,7 @@ public class AuthenticationException extends HttpException {
     }
 
     /**
-     * Creates a new AuthenticationException with the specified cause and HTTP status 401.
+     * Creates a new instance with the specified cause and HTTP status 401.
      *
      * @param cause the {@code Throwable} that caused this exception, or {@code null}
      *              if the cause is unavailable, unknown, or not a {@code Throwable}
@@ -40,7 +40,7 @@ public class AuthenticationException extends HttpException {
     }
 
     /**
-     * Creates a new AuthenticationException with the specified message, cause and HTTP status 401.
+     * Creates a new instance with the specified message, cause and HTTP status 401.
      *
      * @param message the exception detail message
      * @param cause   the {@code Throwable} that caused this exception, or {@code null}

@@ -28,7 +28,7 @@ import java.io.Serializable;
  * @param <ID> The id Serializable
  */
 @MappedSuperclass
-public abstract class AbstractAssignedidPersistable<ID extends Serializable>  implements CalipsoPersistable<ID>{
+public abstract class AbstractAssignedidPersistable<ID extends Serializable> extends AbstractPersistable<ID> {
 
 	private static final long serialVersionUID = 4340156130534111231L;
 
@@ -76,4 +76,10 @@ public abstract class AbstractAssignedidPersistable<ID extends Serializable>  im
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void preSave() {
+
+	}
 }

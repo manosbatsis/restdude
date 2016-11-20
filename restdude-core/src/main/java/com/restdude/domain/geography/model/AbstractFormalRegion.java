@@ -24,11 +24,9 @@ import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Abstract base class for formal (usually political) geographical regions
- * @param <T> The parent category type
  */
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
@@ -67,11 +65,13 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion>
 	public String getPathSeparator(){
 		return PATH_SEPARATOR;
 	}
-	
-	@PreUpdate
-    @PrePersist
-    public void normalizePath() throws UnsupportedEncodingException{
-		// set path
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void preSave() {
+        // set path
 		if(this.getPath() == null){
 			StringBuffer path = new StringBuffer();
 			if(this.getParent() != null){

@@ -28,12 +28,11 @@ import java.io.Serializable;
 
 /**
  * Base repository for entities extending AbstractAuditableRateable or otherwise implementing Rateable
- * 
- * @see gr.abiss.calipso.model.entities.AbstractAuditableRateable
+ *
  * @see Rateable
  */
 @NoRepositoryBean
-public interface RateableRepository<T extends Rateable<?>, ID extends Serializable> extends ModelRepository<T, ID> {
+public interface RateableRepository<T extends Rateable<ID, ?>, ID extends Serializable> extends ModelRepository<T, ID> {
 
 	@Transactional(readOnly = false)
 	@Modifying

@@ -128,5 +128,12 @@ public class Friendship implements CalipsoPersistable<FriendshipId> {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void preSave() {
+
+	}
+
 	
 }

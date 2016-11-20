@@ -27,15 +27,12 @@ import com.restdude.auth.acl.repository.AclSidRepository;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.domain.base.service.GenericService;
+import com.restdude.domain.base.service.CrudService;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.MetadataSubject;
 import com.restdude.domain.metadata.model.Metadatum;
-import com.restdude.mdd.util.EntityUtil;
-import org.resthub.common.service.CrudServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +56,7 @@ import java.util.*;
  */
 @Transactional(readOnly = true)
 public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
-		extends CrudServiceImpl<T, ID, R> implements GenericService<T, ID> {
+		extends CrudServiceImpl<T, ID, R> implements CrudService<T, ID> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAclAwareServiceImpl.class);
 
@@ -86,7 +83,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Class<T> getDomainClass() {
 		return this.repository.getDomainClass();
@@ -158,13 +154,7 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
 	public T patch(@P("resource") T resource) {
-		// make sure entity is set to support partial updates
-		T persisted = this.findById(resource.getId());
-		// copy non-null properties to persisted
-		BeanUtils.copyProperties(resource, persisted, EntityUtil.getNullPropertyNames(resource));
-		resource = persisted;
-		// FW to normal update
-		return this.update(persisted);
+		return super.patch(resource);
 	}
 
 
@@ -208,7 +198,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	@Transactional(readOnly = false)
 	public void addMetadatum(ID subjectId, Metadatum dto) {
 		if(LOGGER.isDebugEnabled()){
@@ -221,7 +210,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	@Transactional(readOnly = false)
 	public void addMetadata(ID subjectId, Collection<Metadatum> dtos) {
 		if (!CollectionUtils.isEmpty(dtos)) {
@@ -231,7 +219,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 		}
 	}
 
-	@Override
 	@Transactional(readOnly = false)
 	public void removeMetadatum(ID subjectId, String predicate) {
 		if(LOGGER.isDebugEnabled()){
@@ -259,7 +246,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_DELETE)
 	public void delete(@P("resource") T resource) {
-		// TODO Auto-generated method stub
 		super.delete(resource);
 	}
 
@@ -270,7 +256,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_DELETE_BY_ID)
 	public void delete(ID id) {
-		// TODO Auto-generated method stub
 		super.delete(id);
 	}
 
@@ -281,7 +266,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_DELETE_ALL)
 	public void deleteAll() {
-		// TODO Auto-generated method stub
 		super.deleteAll();
 	}
 
@@ -292,7 +276,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Transactional(readOnly = false)
 	@PreAuthorize(T.PRE_AUTHORIZE_DELETE_WITH_CASCADE)
 	public void deleteAllWithCascade() {
-		// TODO Auto-generated method stub
 		super.deleteAllWithCascade();
 	}
 
@@ -302,7 +285,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Override
 	@PreAuthorize(T.PRE_AUTHORIZE_VIEW)
 	public T findById(ID id) {
-		// TODO Auto-generated method stub
 		return super.findById(id);
 	}
 
@@ -312,7 +294,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Override
 	@PreAuthorize(T.PRE_AUTHORIZE_FIND_BY_IDS)
 	public Iterable<T> findByIds(Set<ID> ids) {
-		// TODO Auto-generated method stub
 		return super.findByIds(ids);
 	}
 
@@ -322,7 +303,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Override
 	@PreAuthorize(T.PRE_AUTHORIZE_FIND_ALL)
 	public Iterable<T> findAll() {
-		// TODO Auto-generated method stub
 		return super.findAll();
 	}
 
@@ -332,7 +312,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Override
 	@PreAuthorize(T.PRE_AUTHORIZE_SEARCH)
 	public Page<T> findAll(Pageable pageRequest) {
-		// TODO Auto-generated method stub
 		return super.findAll(pageRequest);
 	}
 
@@ -342,7 +321,6 @@ public abstract class AbstractAclAwareServiceImpl<T extends CalipsoPersistable<I
 	@Override
 	@PreAuthorize(T.PRE_AUTHORIZE_COUNT)
 	public Long count() {
-		// TODO Auto-generated method stub
 		return super.count();
 	}
 	

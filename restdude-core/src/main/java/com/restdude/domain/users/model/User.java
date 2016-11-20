@@ -256,25 +256,11 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	}
 
 	/**
-	 * Called by Hibernate <code>@PreUpdate</code> to keep the email hash of the
-	 * user up-to date
-	 */
-	@PreUpdate
-	public void onBeforeUpdate() {
-		this.onBeforeSave();
-	}
-
-	/**
-	 * Called by Hibernate <code>@PrePersist</code> > to keep the email hash of
-	 * the user up-to date
-	 */
-	@PrePersist
-	public void onBeforeCreate() {
-		this.onBeforeSave();
-	}
-
-	protected void onBeforeSave() {
-		if (!StringUtils.isNotBlank(this.getLocale())) {
+     *  {@inheritDoc}
+     */
+    @Override
+    public void preSave() {
+        if (!StringUtils.isNotBlank(this.getLocale())) {
 			this.setLocale("en");
 		}
 		// create the email hash,

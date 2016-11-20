@@ -122,6 +122,9 @@ public class FriendshipId implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
 		if (FriendshipId.class.isAssignableFrom(obj.getClass())) {
 			final FriendshipId other = (FriendshipId) obj;
 			return new EqualsBuilder().append(idOrNull(this.getOwner()), idOrNull(other.getOwner()))

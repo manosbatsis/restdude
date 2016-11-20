@@ -18,6 +18,7 @@
 package com.restdude.domain.base.controller;
 
 
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistenceService;
@@ -26,7 +27,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Persistable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,7 +46,7 @@ import java.util.List;
  * to your controller, inject a {@link FilePersistenceService} and make it accessible
  * by implementing {@link #getFilePersistenceService()}. No other coding is needed.
  */
-public interface IFilesModelController<T extends Persistable<ID>, ID extends Serializable, S extends ModelService<T, ID>> 
+public interface IFilesModelController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>>
  extends ModelController<T, ID, S>{
 
 

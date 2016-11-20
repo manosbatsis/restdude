@@ -27,7 +27,7 @@ import com.restdude.domain.users.repository.UserCredentialsRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.util.exception.BadRequestException;
+import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;

@@ -25,10 +25,10 @@ import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.resthub.web.exception.NotImplementedClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -80,7 +80,7 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @ApiOperation(value = "Update a resource", hidden = true)
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     public User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
-        throw new NotImplementedClientException("PUT is not supported; use PATCH");
+        throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 
 }

@@ -17,19 +17,20 @@
  */
 package com.restdude.domain.rating.model;
 
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.rating.repository.RateableRepository;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Simple interface for rating POJOs that have no typed target. 
  * If you are using this interface in your persistend classes you might want to check out 
  * the provided AbstractAuditableRateable entity and RateableRepository.
- * 
- * @see gr.abiss.calipso.model.entities.AbstractAuditableRateable
+ *
  * @see RateableRepository
  */
-public interface Rateable<R extends AbstractRating>{
+public interface Rateable<ID extends Serializable, R extends AbstractRating> extends CalipsoPersistable<ID> {
 
 	/**
 	 * Get the average rating for this entity

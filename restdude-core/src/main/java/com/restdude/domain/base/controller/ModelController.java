@@ -17,13 +17,13 @@
  */
 package com.restdude.domain.base.controller;
 
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
-import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 
-public interface ModelController<T extends Persistable<ID>, ID extends Serializable, S extends ModelService<T, ID>> {
-	
-	public S getService();
+public interface ModelController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>> {
+
+    public S getService();
 	
 }

@@ -28,7 +28,7 @@ import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.ConfigurationFactory;
-import com.restdude.util.exception.BadRequestException;
+import com.restdude.util.exception.http.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.configuration.Configuration;

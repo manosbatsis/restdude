@@ -44,8 +44,12 @@ public interface CalipsoPersistable<ID extends Serializable> extends Persistable
 
 	public ID getId();
 	public void setId(ID id);
-	
-	
-	
+
+    /**
+     * Equivalent of a method annotated with @{@link javax.persistence.PrePersist} and/or
+     *
+     * @{@link javax.persistence.PreUpdate}, only applied before validation
+     */
+    public void preSave();
 
 }

@@ -101,9 +101,11 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         this.registrationCode = registrationCode;
     }
 
-    @PreUpdate
-    @PrePersist
-    public void onBeforeSave() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void preSave() {
 
         // fallback username
         if (!StringUtils.isNotBlank(this.getUsername())) {

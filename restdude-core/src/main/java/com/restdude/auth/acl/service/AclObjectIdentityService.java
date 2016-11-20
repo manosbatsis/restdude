@@ -18,9 +18,9 @@
 package com.restdude.auth.acl.service;
 
 import com.restdude.auth.acl.model.AclObjectIdentity;
-import com.restdude.domain.base.service.GenericService;
+import com.restdude.domain.base.service.CrudService;
 
-public interface AclObjectIdentityService extends GenericService<AclObjectIdentity, Long> {
+public interface AclObjectIdentityService extends CrudService<AclObjectIdentity, Long> {
 
 }
 

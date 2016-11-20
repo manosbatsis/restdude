@@ -18,9 +18,9 @@
 package com.restdude.auth.acl.service;
 
 import com.restdude.auth.acl.model.AclSid;
-import com.restdude.domain.base.service.GenericService;
+import com.restdude.domain.base.service.CrudService;
 
-public interface AclSidService extends GenericService<AclSid, Long> {
+public interface AclSidService extends CrudService<AclSid, Long> {
 
 }
 

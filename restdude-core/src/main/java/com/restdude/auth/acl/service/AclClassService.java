@@ -18,9 +18,9 @@
 package com.restdude.auth.acl.service;
 
 import com.restdude.auth.acl.model.AclClass;
-import com.restdude.domain.base.service.GenericService;
+import com.restdude.domain.base.service.CrudService;
 
-public interface AclClassService extends GenericService<AclClass, Long> {
+public interface AclClassService extends CrudService<AclClass, Long> {
 
 	AclClass findByClassName(String name);
 

@@ -27,7 +27,7 @@ import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.util.exception.BadRequestException;
+import com.restdude.util.exception.http.BadRequestException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
