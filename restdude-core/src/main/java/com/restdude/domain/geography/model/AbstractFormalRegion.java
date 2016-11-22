@@ -22,8 +22,11 @@ import com.restdude.domain.base.model.AbstractAssignedidPersistable;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Abstract base class for formal (usually political) geographical regions
@@ -35,13 +38,15 @@ import javax.persistence.*;
 public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> 
 	extends AbstractAssignedidPersistable<String> {
 
-	private static final long serialVersionUID = -1397566289646826160L;
 	private static final String PATH_SEPARATOR = ": ";
 
+	@NotNull
 	@Column(name = "name", nullable = false)
 	private String name;
+	@NotNull
 	@Column(name = "path", nullable = false)
 	private String path;
+	@NotNull
 	@Column(name = "path_level", nullable = false)
 	private Short pathLevel;
 	
@@ -111,6 +116,28 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion>
 	public void setPathLevel(Short pathLevel) {
 		this.pathLevel = pathLevel;
 	}
-	
 
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+				.appendSuper(super.hashCode())
+				.append(AbstractFormalRegion.class)
+				.append(this.getName())
+				.append(this.getPath())
+				.toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof AbstractFormalRegion) {
+			final AbstractFormalRegion other = (AbstractFormalRegion) obj;
+			return new EqualsBuilder()
+					.append(this.getName(), other.getName())
+					.append(this.getPath(), other.getPath())
+					.isEquals();
+		} else {
+			return false;
+		}
+	}
 }

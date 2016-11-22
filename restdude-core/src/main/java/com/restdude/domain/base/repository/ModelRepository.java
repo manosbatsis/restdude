@@ -95,14 +95,14 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 
 
 	/**
-	 * @see javax.persistence.EntityManager.refresh(T)
-	 * @param entity
+     * @see javax.persistence.EntityManager#refresh(Object)
+     * @param entity
 	 */
 	void refresh(T entity);
 
 	/**
-	 * @see javax.persistence.EntityManager.persist(T)
-	 * @param entity
+     * @see javax.persistence.EntityManager#persist(Object)
+     * @param entity
 	 */
 	T persist(T entity);
 
@@ -122,7 +122,5 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 	 */
 	List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName);
 
-
-    List<String> validateConstraints(T resource);
 
 }

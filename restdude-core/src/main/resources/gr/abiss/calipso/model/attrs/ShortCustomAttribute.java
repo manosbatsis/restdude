@@ -31,6 +31,7 @@ public class ShortCustomAttribute extends CustomAttribute<Short> {
 
 	private static final long serialVersionUID = -2502062165638085607L;
 
+	@NotNull
 	@Column(name = "value", nullable = false)
 	private Short value;
 

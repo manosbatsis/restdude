@@ -46,6 +46,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -89,13 +90,18 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@Column(name = "last_name", nullable = true)
 	private String lastName;
 
+	@Column(name = "introduction", length = 500, nullable = true)
+	private String introduction;
+
 	@Transient
 	@JsonIgnore
 	Locale localeObject = null;
 
+	@NotNull
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 
+	@NotNull
 	@Column(name = "email_hash", nullable = false)
 	private String emailHash;
 
@@ -134,6 +140,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@Column(name = "last_visit")
 	private Date lastVisit;
 
+	@NotNull
 	@Column(name = "locale", nullable = false)
 	private String locale = "en";
 
@@ -355,6 +362,14 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getIntroduction() {
+		return introduction;
+	}
+
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
 	}
 
 	public String getEmail() {

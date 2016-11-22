@@ -38,12 +38,15 @@ public abstract class CustomAttributeDefinition extends
 
 	private static final long serialVersionUID = 4008152148196369725L;
 
+	@NotNull
 	@Column(name = "name", nullable = false, updatable = false)
 	private String name;
 
+	@NotNull
 	@Column(name = "className", nullable = false, updatable = false)
 	private String className;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "subject", referencedColumnName = "id", nullable = false)
 	private BaseCustomAttributesSchema subject;

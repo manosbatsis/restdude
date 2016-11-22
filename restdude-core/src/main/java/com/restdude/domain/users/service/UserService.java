@@ -23,6 +23,7 @@ import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
+import com.restdude.util.exception.http.HttpException;
 
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public interface UserService extends ModelService<User, String>{
 	 * @param newPasswordConfirm the confirmation for the new password
 	 * @return the matching user, if any, with the persistent password already updated 
 	 */
-	public User changePassword(String userNameOrEmail, String oldPassword, String newPassword, String newPasswordConfirm);
+    public User changePassword(String userNameOrEmail, String oldPassword, String newPassword, String newPasswordConfirm) throws HttpException;
 
     /**
      * Find an active  user with the given ID
@@ -82,7 +83,8 @@ public interface UserService extends ModelService<User, String>{
 	 * @return
 	 */
 	public User findById(String userId);
-	public User createForImplicitSignup(User user) throws DuplicateEmailException;
+
+    public User createForImplicitSignup(User user) throws DuplicateEmailException, HttpException;
 
 	/**
 	 * Get a local application user matching the given credentials, after adding
@@ -99,7 +101,7 @@ public interface UserService extends ModelService<User, String>{
      *         credentials
      */
     public User findActiveByCredentials(String userNameOrEmail, String userPassword,
-                                        Map<String, String> metadata);
+                                        Map<String, String> metadata) throws HttpException;
 
     /**
      * Get a local application user matching the given credentials,
@@ -113,17 +115,17 @@ public interface UserService extends ModelService<User, String>{
 
 	//public User confirmPrincipal(String confirmationToken);
 
-	public void handlePasswordResetRequest(String userNameOrEmail);
+    public void handlePasswordResetRequest(String userNameOrEmail) throws HttpException;
 
-	public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword);
+    public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword) throws HttpException;
 
-	public User createTest(User resource);
+    public User createTest(User resource) throws HttpException;
 
 	public void updateLastLogin(ICalipsoUserDetails u);
 
 	public void expireResetPasswordTokens();
 
 
-	public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations);
+    public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations) throws HttpException;
 
 }

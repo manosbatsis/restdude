@@ -23,6 +23,7 @@ import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.mdd.specifications.GenericSpecifications;
+import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -62,8 +63,8 @@ public interface IFilesModelController<T extends CalipsoPersistable<ID>, ID exte
 		headers=("content-type=multipart/*"), 
 		produces = { "application/json", "application/xml" })
 	public default @ResponseBody T updateFiles(@PathVariable ID id,
-			MultipartHttpServletRequest request, HttpServletResponse response) {
-		Logger logger = LoggerFactory.getLogger(IFilesModelController.class);
+                                               MultipartHttpServletRequest request, HttpServletResponse response) throws HttpException {
+        Logger logger = LoggerFactory.getLogger(IFilesModelController.class);
 
 		T entity = this.getService().findById(id);
         LOGGER.debug("Entity before uploading files: {}", entity);
@@ -102,8 +103,8 @@ public interface IFilesModelController<T extends CalipsoPersistable<ID>, ID exte
 	 * @param id
 	 * @param filenames
 	 */
-	public default void deleteFiles(ID id, String... filenames) {
-		Logger logger = LoggerFactory.getLogger(IFilesModelController.class);
+    public default void deleteFiles(ID id, String... filenames) throws HttpException {
+        Logger logger = LoggerFactory.getLogger(IFilesModelController.class);
 		String basePath = new StringBuffer(this.getService().getDomainClass().getSimpleName())
 				.append('/').append(id).append('/').toString();
 		List<String> keys = new LinkedList<String>();

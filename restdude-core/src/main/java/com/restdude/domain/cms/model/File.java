@@ -22,7 +22,7 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+import javax.validation.constraints.NotNull;
 /**
  */
 @Entity
@@ -35,7 +35,8 @@ public class File extends AbstractSystemUuidPersistable {
 	/**
 	 * The MIME type of the resource. 
 	 */
-	@Column(name = "mime", nullable = false)
+    @NotNull
+    @Column(name = "mime", nullable = false)
 	private String mime;
 
 	@Override

@@ -18,13 +18,16 @@
 package com.restdude.auth.social.model;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class UserSocialConnectionId implements Serializable{
 
-	@Column(length = 255, nullable = false)
+    @NotNull
+    @Column(length = 255, nullable = false)
 	private String userId;
-	@Column(length = 255, nullable = false)
+    @NotNull
+    @Column(length = 255, nullable = false)
 	private String providerId;
 	private Integer rank;
 	

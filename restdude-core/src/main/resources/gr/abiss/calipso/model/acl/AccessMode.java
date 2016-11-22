@@ -40,9 +40,11 @@ public class AccessMode implements Persistable<Short> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Short id;
 
+	@NotNull
 	@Column(name = "name", unique = true, nullable = false)
 	private String name;
 
+	@NotNull
 	@Column(name = "weight", unique = true, nullable = false)
 	private Short weight;
 

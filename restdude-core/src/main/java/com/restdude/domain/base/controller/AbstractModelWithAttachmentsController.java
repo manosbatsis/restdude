@@ -23,6 +23,7 @@ import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.cms.service.BinaryFileService;
 import com.restdude.mdd.specifications.GenericSpecifications;
 import com.restdude.util.ConfigurationFactory;
+import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration.Configuration;
@@ -115,8 +116,8 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 	@ApiOperation(value = "Delete an uploaded file")
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody List deleteById(@PathVariable String subjectId, @PathVariable String propertyName,
-			@PathVariable String id) {
-		Configuration config = ConfigurationFactory.getConfiguration();
+                                         @PathVariable String id) throws HttpException {
+        Configuration config = ConfigurationFactory.getConfiguration();
 		String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
 		BinaryFile file = binaryFileService.findById(id);
 		File fileFile = new File(fileUploadDirectory + "/" + file.getNewFilename());

@@ -52,7 +52,8 @@ public class Host extends AbstractSystemUuidPersistable  {
 	public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
 	public static final String PRE_AUTHORIZE_COUNT = "denyAll";
 
-	@Column(name = "name", nullable = false, unique = true)
+    @NotNull
+    @Column(name = "name", nullable = false, unique = true)
 	private String name;
 
 	@NotNull
@@ -60,8 +61,8 @@ public class Host extends AbstractSystemUuidPersistable  {
 	private String description;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "country_id", referencedColumnName = "id", nullable = true)
-	private Country country;
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
+    private Country country;
 
 	@ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "host_aliases", joinColumns = @JoinColumn(name = "host_id"))

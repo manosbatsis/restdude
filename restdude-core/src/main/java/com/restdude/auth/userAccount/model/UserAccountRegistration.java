@@ -17,6 +17,7 @@
  */
 package com.restdude.auth.userAccount.model;
 
+import com.restdude.auth.userAccount.validation.RegistrationCodeConstraint;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.model.UserRegistrationCode;
@@ -25,6 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -35,11 +37,13 @@ public class UserAccountRegistration implements Serializable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountRegistration.class);
 
+	@RegistrationCodeConstraint
 	private String registrationCode;
 	private String username;
 	private String password;
 	private String passwordConfirmation;
-    private String registrationEmail;
+	@NotNull
+	private String registrationEmail;
     private String firstName;
 	private String lastName;
 	private String telephone;

@@ -17,9 +17,11 @@
  */
 package com.restdude.domain.base.model;
 
-import com.restdude.domain.users.model.User;
+import com.restdude.domain.base.validation.Unique;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,9 +33,11 @@ import java.io.Serializable;
  */
 @XmlRootElement
 @MappedSuperclass
+@Unique
 public abstract class AbstractPersistable<ID extends Serializable> implements CalipsoPersistable<ID> {
 
 	private static final long serialVersionUID = -6009587976502456848L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistable.class);
 
     public static interface ItemView {}
     public static interface CollectionView {}
@@ -76,7 +80,7 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Ca
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof User)) {
+		if (!(obj instanceof AbstractPersistable)) {
 			return false;
 		}
 		AbstractPersistable other = (AbstractPersistable) obj;

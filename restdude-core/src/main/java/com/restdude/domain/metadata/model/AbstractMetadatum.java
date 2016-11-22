@@ -22,6 +22,7 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Abstract base persistent class for metadata entries. Implementations can
@@ -37,12 +38,14 @@ public abstract class AbstractMetadatum<S extends MetadataSubject>
 
 	private static final long serialVersionUID = -1468517690700208260L;
 
-	@JsonIgnore
+    @NotNull
+    @JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "subject", nullable = false)
 	private S subject;
 
-	@Column(name = "predicate", nullable = false, insertable = true, updatable = false)
+    @NotNull
+    @Column(name = "predicate", nullable = false, insertable = true, updatable = false)
 	private String predicate;
 
 	@Column(name = "object")

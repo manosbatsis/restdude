@@ -23,11 +23,12 @@ import com.restdude.domain.base.service.AbstractModelServiceImpl;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.domain.users.model.*;
 import com.restdude.domain.users.repository.RoleRepository;
-import com.restdude.domain.users.repository.UserCredentialsRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
+import com.restdude.domain.users.service.UserCredentialsService;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
+import com.restdude.util.exception.http.HttpException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -61,7 +62,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	private final StringKeyGenerator generator = KeyGenerators.string();
 	
 	private RoleRepository roleRepository;
-	private UserCredentialsRepository credentialsRepository;
+	private UserCredentialsService credentialsService;
 	private UserRegistrationCodeRepository userRegistrationCodeRepository;
 
 	private PasswordEncoder passwordEncoder;
@@ -79,8 +80,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 
 	@Autowired
-	public void setCredentialsRepository(UserCredentialsRepository credentialsRepository) {
-		this.credentialsRepository = credentialsRepository;
+	public void setCredentialsRepository(UserCredentialsService credentialsService) {
+		this.credentialsService = credentialsService;
 	}
 
 	@Autowired
@@ -100,7 +101,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	@Transactional(readOnly = false)
-	public User findActiveByCredentials(String userNameOrEmail, String password, Map metadata) {
+	public User findActiveByCredentials(String userNameOrEmail, String password, Map metadata) throws HttpException {
 		
 		User user = null;
 		try {
@@ -122,7 +123,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public User create(User resource) {
+	public User create(User resource) throws HttpException {
 
 		// note any credential info
 		UserCredentials credentials = resource.getCredentials();
@@ -156,7 +157,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		}
 
 		// attach credentials
-		credentials = this.credentialsRepository.save(credentials);
+		credentials = this.credentialsService.create(credentials);
 		resource.setCredentials(credentials);
 
 		// update code
@@ -202,7 +203,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	
 	@Override
 	@Transactional(readOnly = false)
-	public User createTest(User resource) {
+	public User createTest(User resource) throws HttpException {
 
 		// note any credential info
 		UserCredentials credentials = resource.getCredentials();
@@ -229,7 +230,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 			credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
 		}
 
-		credentials = this.credentialsRepository.save(credentials);
+		credentials = this.credentialsService.create(credentials);
 		
 		resource.setCredentials(credentials);
 		
@@ -238,7 +239,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword) {
+	public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword) throws HttpException {
 		Assert.notNull(userNameOrEmail);
 		User user = this.findOneByUserNameOrEmail(userNameOrEmail);
 		if (user == null) {
@@ -261,15 +262,15 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		credentials.setActive(true);
 
 		// persist
-		credentials = this.credentialsRepository.save(credentials);
-		//this.credentialsRepository.flush();
+		credentials = this.credentialsService.update(credentials);
+		//this.credentialsService.flush();
 		user.setCredentials(credentials);
 		return user;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void handlePasswordResetRequest(String userNameOrEmail) {
+	public void handlePasswordResetRequest(String userNameOrEmail) throws HttpException {
 		Assert.notNull(userNameOrEmail);
 		User user = this.findActiveByUserNameOrEmail(userNameOrEmail);
 		if (user == null) {
@@ -280,7 +281,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		if (credentials.getResetPasswordToken() == null) {
 			credentials.setResetPasswordToken(this.generator.generateKey());
 			credentials.setResetPasswordTokenCreated(new Date());
-			credentials = this.credentialsRepository.save(credentials);
+			credentials = this.credentialsService.update(credentials);
 			user.setCredentials(credentials);
 		}
 		emailService.sendPasswordResetLink(user);
@@ -387,7 +388,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public User createForImplicitSignup(User userAccountData) throws DuplicateEmailException {
+	public User createForImplicitSignup(User userAccountData) throws DuplicateEmailException, HttpException {
 		
 		
 		User existing = this.getPrincipalLocalUser();
@@ -419,7 +420,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	public User changePassword(String userNameOrEmail, String oldPassword, String newPassword,
-			String newPasswordConfirm) {
+							   String newPasswordConfirm) throws HttpException {
 		
 		// make sure we have all params
 
@@ -442,8 +443,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		LOGGER.debug("changePassword, new password: " + newPassword);
 		credentials.setPassword(this.passwordEncoder.encode(newPassword));
 		credentials.setLastPassWordChangeDate(new Date());
-		credentials = this.credentialsRepository.save(credentials);
-		//this.credentialsRepository.flush();
+		credentials = this.credentialsService.update(credentials);
+		//this.credentialsService.flush();
 		u.setCredentials(credentials);
 		return u;
 	}
@@ -451,7 +452,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations) {
+	public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations) throws HttpException {
 		UserInvitationResultsDTO results = new UserInvitationResultsDTO();
 		// add from list
 		if(!CollectionUtils.isEmpty(invitations.getRecepients())){

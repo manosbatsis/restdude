@@ -24,6 +24,7 @@ import com.restdude.domain.users.model.UserRegistrationCodeInfo;
 import com.restdude.domain.users.repository.UserRegistrationCodeBatchRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.service.UserRegistrationCodeBatchService;
+import com.restdude.util.exception.http.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
     UserRegistrationCodeRepository userRegistrationCodeRepository;
 
     @Autowired
-    public void setCredentialsRepository(UserRegistrationCodeRepository userRegistrationCodeRepository) {
+    public void setUserRegistrationCodeRepository(UserRegistrationCodeRepository userRegistrationCodeRepository) {
         this.userRegistrationCodeRepository = userRegistrationCodeRepository;
     }
 
@@ -54,7 +55,7 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
     @Override
     @Transactional(readOnly = false)
     @PreAuthorize(UserRegistrationCodeBatch.PRE_AUTHORIZE_CREATE)
-    public UserRegistrationCodeBatch create(UserRegistrationCodeBatch resource) {
+    public UserRegistrationCodeBatch create(UserRegistrationCodeBatch resource) throws HttpException {
         resource = super.create(resource);
 
         // create codes

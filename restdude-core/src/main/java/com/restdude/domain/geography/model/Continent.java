@@ -17,9 +17,13 @@
  */
 package com.restdude.domain.geography.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 
-@SuppressWarnings("rawtypes")
 @Entity
 @Table(name = "continent")
 @AttributeOverrides({
@@ -27,7 +31,7 @@ import javax.persistence.*;
 })
 public class Continent extends AbstractFormalRegion<Continent> {
 
-	private static final long serialVersionUID = 6388235900995527471L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
 
 	public Continent() {
 		super();
@@ -37,4 +41,22 @@ public class Continent extends AbstractFormalRegion<Continent> {
 		super(id, name, null);
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof Continent) {
+			final Continent other = (Continent) obj;
+			return new EqualsBuilder().appendSuper(super.equals(other))
+					.isEquals();
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+				.appendSuper(super.hashCode())
+				.append(Continent.class)
+				.toHashCode();
+	}
 }

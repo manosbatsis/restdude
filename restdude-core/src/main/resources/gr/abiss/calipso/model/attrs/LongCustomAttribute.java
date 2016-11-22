@@ -31,6 +31,7 @@ public class LongCustomAttribute extends CustomAttribute<Long> {
 
 	private static final long serialVersionUID = 808705172204599477L;
 
+	@NotNull
 	@Column(name = "value", nullable = false)
 	private Long value;
 

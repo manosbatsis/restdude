@@ -23,11 +23,13 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public class AbstractLocalRegionMailingAddress extends AbstractMailingAddressDetail {
 
-	@ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "region_id", referencedColumnName = "id", nullable = false)
 	private LocalRegion city;
 	

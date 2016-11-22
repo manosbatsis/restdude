@@ -29,6 +29,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @ShallowReference
@@ -40,11 +41,12 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
 
     private static final long serialVersionUID = 1L;
 
-
+    @NotNull
     @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "active")
+    @NotNull
+    @Column(name = "active", nullable = false)
     private Boolean active = false;
 
     @Column(name = "inactivation_reason")

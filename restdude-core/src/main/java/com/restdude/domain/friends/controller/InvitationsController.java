@@ -20,6 +20,7 @@ package com.restdude.domain.friends.controller;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -44,8 +45,8 @@ public class InvitationsController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
     @ApiOperation(value = "Invite users", notes = "Invite users by email")
-	public UserInvitationResultsDTO inviteUsers(@RequestBody UserInvitationsDTO invitations) {
-		LOGGER.debug("INVITE USERS: " + invitations);
+    public UserInvitationResultsDTO inviteUsers(@RequestBody UserInvitationsDTO invitations) throws HttpException {
+        LOGGER.debug("INVITE USERS: " + invitations);
 		return this.userService.inviteUsers(invitations);
 	}
 }

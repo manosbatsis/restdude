@@ -1,39 +1,97 @@
 package com.restdude.domain.error.model;
 
+import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
 import com.restdude.domain.base.model.AbstractAssignedidPersistable;
+import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Formula;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  */
+@ModelResource(path = "stackTraces", controllerSuperClass = AbstractReadOnlyModelController.class,
+        apiName = "Stack Traces", apiDescription = "SystemError Stacktraces")
+
 @Entity
-@Table(name = "error_trace")
-@Inheritance(strategy = InheritanceType.JOINED)
-@ApiModel(value = "StackTrace", description = "Used to persist stacktraces of application or client errors. The hash of the stacktrace is used as the ID to avoid redundancy")
+@Table(name = "stack_trace")
+@ApiModel(value = "StackTrace", description = "Used to persist SystemError stacktraces using the corresponding hash as the ID. The generated hash ignores line numbers and is thus tolerant of small code changes, like adding a comment line.")
 public class StackTrace extends AbstractAssignedidPersistable<String> {
 
-    private static final long serialVersionUID = 3558291745762331656L;
+    public static final int MAX_MESSAGE_LENGTH = 500;
+    public static final int MAX_STACKTRACE_LENGTH = 20000;
 
-    public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_CREATE = "hasRole('ROLE_USER')";
-    public static final String PRE_AUTHORIZE_UPDATE = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_PATCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_DELETE = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    @ApiModelProperty(value = "The root cause message.")
+    @Column(name = "root_cause_msg", length = MAX_MESSAGE_LENGTH)
+    String rootCauseMessage;
 
-    public static final String PRE_AUTHORIZE_DELETE_BY_ID = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    public static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    public static final String PRE_AUTHORIZE_FIND_BY_IDS = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static final String PRE_AUTHORIZE_COUNT = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    @Column(name = "last_occurred")
+    private Date lastOccurred;
+
+    @Formula(" (select count(*) from system_error syserr where syserr.stacktrace_id = id) ")
+    @ApiModelProperty(value = "The number of errors corresponding to this stacktrace.")
+    private Integer errorCount = 0;
+
+    @ApiModelProperty(value = "The actual stacktrace.")
+    @Column(length = MAX_STACKTRACE_LENGTH)
+    @NotNull
+    private String stacktrace;
 
     public StackTrace() {
     }
 
+    public StackTrace(String hash, String rootCauseMessage, Date lastOccured, String stacktrace) {
+        this.setId(hash);
+        this.rootCauseMessage = rootCauseMessage;
+        this.lastOccurred = lastOccured;
+        this.stacktrace = stacktrace;
+    }
 
+    @Override
+    public void preSave() {
+        if (StringUtils.isNotEmpty(this.rootCauseMessage) && this.rootCauseMessage.length() > MAX_MESSAGE_LENGTH) {
+            this.rootCauseMessage = StringUtils.abbreviate(this.rootCauseMessage, MAX_MESSAGE_LENGTH);
+        }
+        if (StringUtils.isNotEmpty(this.stacktrace) && this.stacktrace.length() > MAX_STACKTRACE_LENGTH) {
+            this.stacktrace = StringUtils.abbreviate(this.stacktrace, MAX_STACKTRACE_LENGTH);
+        }
+    }
+
+    public String getRootCauseMessage() {
+        return rootCauseMessage;
+    }
+
+    public void setRootCauseMessage(String rootCauseMessage) {
+        this.rootCauseMessage = rootCauseMessage;
+    }
+
+    public Date getLastOccurred() {
+        return lastOccurred;
+    }
+
+    public void setLastOccurred(Date lastOccurred) {
+        this.lastOccurred = lastOccurred;
+    }
+
+    public Integer getErrorCount() {
+        return errorCount;
+    }
+
+    public void setErrorCount(Integer errorCount) {
+        this.errorCount = errorCount;
+    }
+
+    public String getStacktrace() {
+        return stacktrace;
+    }
+
+    public void setStacktrace(String stacktrace) {
+        this.stacktrace = stacktrace;
+    }
 }

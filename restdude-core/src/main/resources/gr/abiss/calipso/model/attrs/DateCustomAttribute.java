@@ -33,6 +33,7 @@ public class DateCustomAttribute extends CustomAttribute<Date> {
 
 	private static final long serialVersionUID = 2762939924093800065L;
 
+	@NotNull
 	@Column(name = "value", nullable = false)
 	private Date value;
 

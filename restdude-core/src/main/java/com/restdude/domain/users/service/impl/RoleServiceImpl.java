@@ -28,7 +28,6 @@ import javax.inject.Named;
 
 
 @Named("roleService")
-@Transactional(readOnly = true)
 public class RoleServiceImpl extends AbstractModelServiceImpl<Role, String, RoleRepository> implements RoleService {
 
 	@Override

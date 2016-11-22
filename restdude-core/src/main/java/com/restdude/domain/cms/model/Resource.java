@@ -24,11 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import static org.apache.commons.lang.CharEncoding.UTF_8;
-
 /**
  */
 @Entity
@@ -42,14 +42,16 @@ public class Resource extends AbstractSystemUuidPersistable {
 	 * The last HTTP URL segment of the resource, excluding the protocol prefix, host, port and extension suffix.
 	 * Starts with a slash. 
 	 */
-	@Column(name = "name", nullable = false)
+    @NotNull
+    @Column(name = "name", nullable = false)
 	private String name;
 	
 	/**
 	 * The last HTTP URL segment of the resource, excluding the protocol prefix, host, port and extension suffix.
 	 * Starts with a slash. 
 	 */
-	@Column(name = "path_name", nullable = false)
+    @NotNull
+    @Column(name = "path_name", nullable = false)
 	private String pathName;
 
 	/**
@@ -62,7 +64,8 @@ public class Resource extends AbstractSystemUuidPersistable {
 	/**
 	 * The HTTP domain of the resource. 
 	 */
-	@Enumerated(EnumType.STRING)
+    @NotNull
+    @Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private ResourceProtocol protocol = ResourceProtocol.HTTP;
 

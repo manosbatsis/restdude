@@ -34,10 +34,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-
 
 public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
 		extends AbstractAclAwareServiceImpl<T, ID, R> 
@@ -49,12 +47,6 @@ implements ModelService<T, ID>{
 	protected EmailService emailService;
 	
 	protected SimpMessageSendingOperations messagingTemplate;
-	
-	@Autowired
-	public void setRepository(R repository) {
-		LOGGER.debug("setRepository: " + repository);
-		super.setRepository(repository);
-	}
 
 	@Autowired
 	public void setEmailService(EmailService emailService) {
@@ -129,27 +121,6 @@ implements ModelService<T, ID>{
 		LOGGER.debug("sendStompStateChangeMessage, useername: {}", useername);
 		this.messagingTemplate.convertAndSendToUser(useername, Destinations.USERQUEUE_UPDATES_STATE, msg);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@PreAuthorize(T.PRE_AUTHORIZE_CREATE)
-    public T create(T resource) {
-        return super.create(resource);
-    }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
-    public T update(T resource) {
-        return super.update(resource);
-    }
-
 
 /*
 

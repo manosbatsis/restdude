@@ -10,6 +10,7 @@ import com.restdude.domain.friends.service.FriendshipService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.util.exception.http.BadRequestException;
+import com.restdude.util.exception.http.HttpException;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.ActivityNotificationMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Named;
 
 @Named(FriendshipService.BEAN_ID)
-@Transactional(readOnly = true)
 public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, FriendshipId, FriendshipRepository>
 		implements FriendshipService {
 
@@ -33,8 +33,8 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public Friendship create(Friendship resource) {
-		LOGGER.debug("create: {}", resource);
+    public Friendship create(Friendship resource) throws HttpException {
+        LOGGER.debug("create: {}", resource);
 		return this.saveRelationship(resource);
 	}
 
@@ -44,8 +44,8 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public Friendship update(Friendship resource) {
-		LOGGER.debug("update: {}", resource);
+    public Friendship update(Friendship resource) throws HttpException {
+        LOGGER.debug("update: {}", resource);
 		return this.saveRelationship(resource);
 	}
 
@@ -55,13 +55,13 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public void delete(Friendship resource) {
-		resource.setStatus(FriendshipStatus.DELETE);
+    public void delete(Friendship resource) throws HttpException {
+        resource.setStatus(FriendshipStatus.DELETE);
 		this.saveRelationship(resource);
 	}
 
 
-	protected void validateSender(Friendship resource) {
+    protected void validateSender(Friendship resource) throws HttpException {
 
 		LOGGER.debug("validateSender resource: {}", resource);
 
@@ -92,7 +92,7 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 		LOGGER.debug("validateSender returns resource: {}", resource);
 	}
 
-	protected Friendship saveRelationship(Friendship resource) {
+    protected Friendship saveRelationship(Friendship resource) throws HttpException {
 
 		validateSender(resource);
 

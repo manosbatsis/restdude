@@ -27,6 +27,7 @@ import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -62,7 +63,8 @@ public class Role extends AbstractSystemUuidPersistable implements GrantedAuthor
 	public static final String ROLE_USER = "ROLE_USER";
 
 
-	@Column(unique = true, nullable = false)
+    @NotNull
+    @Column(unique = true, nullable = false)
 	private String name;
 	
 	@Column(length = 510)

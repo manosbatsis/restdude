@@ -29,6 +29,7 @@ import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BadRequestException;
+import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.configuration.Configuration;
@@ -79,8 +80,9 @@ public class UserAccountController {
 	@RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Register new account", notes = "Register a new user")
     @ResponseBody
-	public User create(@RequestBody UserAccountRegistration resource) {
-		LOGGER.debug("create, resource: {}", resource);
+    public User create(@RequestBody UserAccountRegistration resource) throws HttpException {
+        LOGGER.debug("create, resource: {}", resource);
+
 		// get config
 		Configuration config = ConfigurationFactory.getConfiguration();
 		boolean forceCodes = config.getBoolean(ConfigurationFactory.FORCE_CODES, false);
@@ -112,7 +114,7 @@ public class UserAccountController {
             "currentPassword, password and passwordConfirmation to immediately change password. 2) when anonymous, provide resetPasswordToken, password and passwordConfirmation to immediately" +
             "change password. 3) when anonymous, provide email or username to have a password reset token and link sent to your inbox.")
     @ResponseBody
-    public ICalipsoUserDetails update(@RequestBody PasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
+    public ICalipsoUserDetails update(@RequestBody PasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) throws HttpException {
         LOGGER.debug("update, resource: {}", resource);
 
         ICalipsoUserDetails userDetails = this.userDetailsService.resetPassword(resource);

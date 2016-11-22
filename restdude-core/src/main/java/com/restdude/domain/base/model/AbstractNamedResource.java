@@ -21,6 +21,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -31,7 +32,8 @@ public abstract class AbstractNamedResource extends AbstractSystemUuidPersistabl
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "name", length = 500, nullable = false)
+    @NotNull
+    @Column(name = "name", length = 500, nullable = false)
 	private String name;
 
 	public AbstractNamedResource() {

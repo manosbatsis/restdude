@@ -19,6 +19,10 @@ package com.restdude.domain.geography.model;
 
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 
@@ -36,7 +40,7 @@ import javax.persistence.*;
 @ApiModel(value = "Country", description = "A model representing a country, meaning a region that is identified as a distinct entity in political geography.")
 public class Country extends AbstractFormalRegion<Continent> {
 
-	private static final long serialVersionUID = 3723330183409907891L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
 
 
 	public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_USER')";
@@ -126,4 +130,22 @@ public class Country extends AbstractFormalRegion<Continent> {
 		this.languages = languages;
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof Country) {
+			final Country other = (Country) obj;
+			return new EqualsBuilder().appendSuper(super.equals(other))
+					.isEquals();
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+				.appendSuper(super.hashCode())
+				.append(Country.class)
+				.toHashCode();
+	}
 }

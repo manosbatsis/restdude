@@ -28,14 +28,13 @@ import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
+import com.restdude.util.exception.http.HttpException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
@@ -51,14 +50,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 @Service
 @Named("userDetailsService")
-@Transactional(readOnly = true)
 public class UserDetailsServiceImpl implements UserDetailsService,
 		org.springframework.security.core.userdetails.UserDetailsService,
 		org.springframework.social.security.SocialUserDetailsService,
@@ -112,7 +108,7 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	 */
 	@Transactional(readOnly = false)
 	@Override
-	public ICalipsoUserDetails create(final ICalipsoUserDetails tryUserDetails) {
+    public ICalipsoUserDetails create(final ICalipsoUserDetails tryUserDetails) throws HttpException {
 
 		ICalipsoUserDetails userDetails = null;
 		if (tryUserDetails != null) {
@@ -145,8 +141,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	@Transactional(readOnly = false)
-	public void handlePasswordResetRequest(String usernameOrEmail) {
-		// require user handle
+    public void handlePasswordResetRequest(String usernameOrEmail) throws HttpException {
+        // require user handle
 		if (StringUtils.isBlank(usernameOrEmail)) {
 			throw new BadRequestException("Unauthorised request must provide a username or email");
 		}
@@ -155,8 +151,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	@Transactional(readOnly = false)
-	public ICalipsoUserDetails resetPassword(PasswordResetRequest passwordResetRequest) {
-		ICalipsoUserDetails userDetails = this.getPrincipal();
+    public ICalipsoUserDetails resetPassword(PasswordResetRequest passwordResetRequest) throws HttpException {
+        ICalipsoUserDetails userDetails = this.getPrincipal();
 		User u = null;
 		LOGGER.debug("resetPassword, userDetails: {}, currentPassword: {}", userDetails, passwordResetRequest.getCurrentPassword());
 		// Case 1: if authorized as current user, require current password
@@ -216,52 +212,6 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	}
 
 
-	@Override
-	@Transactional(readOnly = false)
-	public ICalipsoUserDetails update(ICalipsoUserDetails resource) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void delete(ICalipsoUserDetails resource) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void delete(String id) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void deleteAll() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void deleteAllWithCascade() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public ICalipsoUserDetails findById(String id) {
-		// LOGGER.info("findById: " + id);
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<ICalipsoUserDetails> findAll() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Page<ICalipsoUserDetails> findAll(Pageable pageRequest) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Long count() {
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * @see org.springframework.social.security.SocialUserDetailsService#loadUserByUserId(java.lang.String)
@@ -318,8 +268,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 					user = userService.createForImplicitSignup(user);
 					
 					//username = user.getUsername();
-				} catch (DuplicateEmailException e) {
-					LOGGER.error("ConnectionSignUp#executeError while implicitly registering user", e);
+                } catch (Exception e) {
+                    LOGGER.error("ConnectionSignUp#executeError while implicitly registering user", e);
 				}
 
 			}
@@ -360,16 +310,12 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	public ICalipsoUserDetails createForImplicitSignup(
-			User user) throws DuplicateEmailException {
-		LOGGER.info("createForImplicitSignup, user: " + user);
+            User user) throws HttpException, DuplicateEmailException {
+        LOGGER.info("createForImplicitSignup, user: " + user);
 		ICalipsoUserDetails userDetails = UserDetails
 				.fromUser(this.userService.createForImplicitSignup(user));
 		return userDetails;
 	}
 
-	@Override
-	public Iterable<ICalipsoUserDetails> findByIds(Set<String> ids) {
-		throw new UnsupportedOperationException();
-	}
 
 }

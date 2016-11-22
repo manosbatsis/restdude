@@ -17,12 +17,51 @@
  */
 package com.restdude.auth.userdetails.controller.form;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+
+import javax.persistence.Column;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
 */
 public class ValidatorUtil {
+
+	public static final ConcurrentHashMap<Class, List<String>> uniqueFieldNames = new ConcurrentHashMap<Class, List<String>>();
+
+	public static List<String> getUniqueFieldNames(Class beanClass) {
+		List<String> names;
+
+		// if names have not been initialized for bean classz
+		if (uniqueFieldNames.containsKey(beanClass)) {
+			names = uniqueFieldNames.get(beanClass);
+		} else {
+			// init unique names
+			names = new LinkedList<String>();
+			Field[] fields = FieldUtils.getFieldsWithAnnotation(beanClass, Column.class);
+			if (fields.length > 0) {
+				for (int i = 0; i < fields.length; i++) {
+					Field field = fields[i];
+					Column column = field.getAnnotation(Column.class);
+
+					// if unique or not-null field
+					if (!field.getName().equals("id")) {
+						if (column.unique()) {
+							names.add(field.getName());
+						}
+					}
+				}
+			}
+
+			// cache unique names for bean class
+			uniqueFieldNames.put(beanClass, names);
+		}
+
+		return names;
+	}
 
 	public static void addValidationError(String field, ConstraintValidatorContext context) {
 		context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate()).addNode(field).addConstraintViolation();

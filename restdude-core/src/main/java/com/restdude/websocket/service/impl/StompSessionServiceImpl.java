@@ -7,6 +7,7 @@ import com.restdude.domain.base.service.AbstractModelServiceImpl;
 import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
+import com.restdude.util.exception.http.HttpException;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.StateUpdateMessage;
 import com.restdude.websocket.model.StompSession;
@@ -25,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.messaging.*;
 
 @Service(StompSessionService.BEAN_ID)
-@Transactional(readOnly = true)
 public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSession, String, StompSessionRepository> implements StompSessionService {
 
 
@@ -41,13 +41,13 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 
 //	@EventListener({ SessionConnectEvent.class })
 //	@Transactional(readOnly = false)
-	public void onSessionConnectEvent(SessionConnectEvent event) {
-	}
+public void onSessionConnectEvent(SessionConnectEvent event) throws HttpException {
+}
 	
 	@EventListener({ SessionConnectedEvent.class })
 	@Transactional(readOnly = false)
-	public void onSessionConnectedEvent(SessionConnectedEvent event) {
-		UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) event.getUser();
+    public void onSessionConnectedEvent(SessionConnectedEvent event) throws HttpException {
+        UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) event.getUser();
 		UserDetails ud = (UserDetails) auth.getPrincipal();
         // persist STOMP session
 		StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
@@ -57,17 +57,17 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 	
 //	@EventListener({ SessionSubscribeEvent.class })
 //	@Transactional(readOnly = false)
-	public void onSessionSubscribeEvent(SessionSubscribeEvent event) {
-	}
+public void onSessionSubscribeEvent(SessionSubscribeEvent event) throws HttpException {
+}
 
 //	@EventListener({ SessionUnsubscribeEvent.class })
 //	@Transactional(readOnly = false)
-	public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
-	}
+public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) throws HttpException {
+}
 
 	@EventListener({ SessionDisconnectEvent.class })
 	@Transactional(readOnly = false)
-	public void onSessionDisconnectEvent(SessionDisconnectEvent event) {
+    public void onSessionDisconnectEvent(SessionDisconnectEvent event) throws HttpException {
 
 		StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
 		this.delete(event.getSessionId());
@@ -81,8 +81,8 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize(StompSession.PRE_AUTHORIZE_CREATE)
-	public StompSession create(StompSession resource) {
-		validateUser(resource);
+    public StompSession create(StompSession resource) throws HttpException {
+        validateUser(resource);
 		
 		// get user id
 		String userId = resource.getUser().getId();
@@ -124,8 +124,8 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize(StompSession.PRE_AUTHORIZE_UPDATE)
-	public StompSession update(StompSession resource) {
-		validateUser(resource);
+    public StompSession update(StompSession resource) throws HttpException {
+        validateUser(resource);
 		return super.update(resource);
 	}
 	
@@ -135,8 +135,8 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize(StompSession.PRE_AUTHORIZE_DELETE)
-	public void delete(@P("resource") StompSession sess) {
-		sess = this.repository.getOne(sess.getId());
+    public void delete(@P("resource") StompSession sess) throws HttpException {
+        sess = this.repository.getOne(sess.getId());
 		long count = this.repository.countForUser(sess.getUser().getId()).longValue();
 		super.delete(sess);
 		// notify friends if user has gone offline
@@ -151,8 +151,8 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize(StompSession.PRE_AUTHORIZE_DELETE)
-	public void delete(String id) {
-		StompSession sess = this.repository.findOne(id);
+    public void delete(String id) throws HttpException {
+        StompSession sess = this.repository.findOne(id);
 		if(sess != null){
 			long count = this.repository.countForUser(sess.getUser().getId()).longValue();
 			super.delete(sess);

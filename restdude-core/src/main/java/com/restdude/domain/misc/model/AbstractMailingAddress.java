@@ -20,14 +20,17 @@ package com.restdude.domain.misc.model;
 import com.restdude.domain.geography.model.Country;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public class AbstractMailingAddress extends AbstractMailingAddressDetail {
 
-	@Column(nullable = false)
+    @NotNull
+    @Column(nullable = false)
 	private String city;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
 	private Country country;
 

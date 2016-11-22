@@ -1,14 +1,16 @@
 package com.restdude.domain.base.controller;
 
 
-import com.restdude.domain.error.model.ErrorInfo;
-import com.restdude.util.exception.http.BadRequestException;
+import com.restdude.domain.error.model.SystemError;
+import com.restdude.domain.error.service.SystemErrorService;
+import com.restdude.util.exception.http.BeanValidationException;
 import com.restdude.util.exception.http.HttpException;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -23,20 +25,22 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
+import org.springframework.web.util.NestedServletException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global RESTful-friendly exception handling that writes aa {@Link ErrorInfo} object to the response
+ * Global RESTful-friendly exception handling that writes a {@Link SystemError} object to the response.
+ * May automatically persist SystemError objects according to calipso.validationErrors.system.persist* configuration properties.
  */
 @EnableWebMvc
 @ControllerAdvice
@@ -65,36 +69,57 @@ public class GlobalExceptionHandlerControllerAdvice {
         exceptionStatuses.put(Exception.class, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(BadRequestException.class)
+    private SystemErrorService systemErrorService;
+
+    @Autowired
+    public void setSystemErrorService(SystemErrorService systemErrorService) {
+        this.systemErrorService = systemErrorService;
+    }
+
+    @ExceptionHandler({NestedServletException.class, ServletException.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorInfo handleBadRequestException(HttpServletRequest request, Exception e) {
-        LOGGER.warn("handleBadRequestException", e);
-        BadRequestException ex = (BadRequestException) e;
-        ErrorInfo.Builder builder = new ErrorInfo.Builder()
-                .message(ex.getMessage())
-                .code(HttpStatus.BAD_REQUEST.value())
-                .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .errors(ex.getErrors())
-                .throwable(ex);
-        return builder.build();
+    public SystemError handleNestedServletException(HttpServletRequest request, HttpServletResponse response, ServletException ex) {
+        Throwable nestedException = ex;
+        while (NestedServletException.class.isAssignableFrom(nestedException.getClass()) || nestedException.getClass().equals(ServletException.class)) {
+            nestedException = nestedException.getCause();
+        }
+
+        if (BeanValidationException.class.isAssignableFrom(nestedException.getClass())) {
+            return this.handleBeanValidationException(request, response, (BeanValidationException) nestedException);
+        } else if (HttpException.class.isAssignableFrom(nestedException.getClass())) {
+            return this.handleHttpException(request, response, (HttpException) nestedException);
+        } else {
+            return this.handleStandardException(request, response, (HttpException) nestedException);
+        }
+
+    }
+
+    @ExceptionHandler(BeanValidationException.class)
+    @ResponseBody
+    public SystemError handleBeanValidationException(HttpServletRequest request, HttpServletResponse response, BeanValidationException ex) {
+
+        // get response status
+        HttpStatus status = ex.getStatus();
+
+        // create error
+        SystemError error = this.createSystemError(request, response, status.value(), ex);
+
+        error.setValidationErrors(ex.getErrors());
+
+        return error;
     }
 
     @ExceptionHandler(HttpException.class)
     @ResponseBody
-    public ErrorInfo handleHttpException(HttpServletRequest request, HttpServletResponse response, HttpException ex) {
-        LOGGER.warn("handleHttpException", ex);
+    public SystemError handleHttpException(HttpServletRequest request, HttpServletResponse response, HttpException ex) {
+
+        // get response status
         HttpStatus status = ex.getStatus();
-        ErrorInfo.Builder builder = buildErrorInfo(response, ex, status);
 
-        Map<String, String> headers = ex.getResponseHeaders();
-        if (MapUtils.isNotEmpty(headers)) {
-            for (String key : headers.keySet()) {
-                response.addHeader(key, headers.get(key));
-            }
-        }
+        // create error
+        SystemError error = this.createSystemError(request, response, status.value(), ex);
 
-        return builder.build();
+        return error;
     }
 
 
@@ -105,29 +130,49 @@ public class GlobalExceptionHandlerControllerAdvice {
             MissingServletRequestPartException.class, BindException.class, NoHandlerFoundException.class,
             AsyncRequestTimeoutException.class, Exception.class})
     @ResponseBody
-    public ErrorInfo handleStandardException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        LOGGER.warn("handleStandardException", ex);
-        HttpStatus status = getHttpStatus(ex);
+    public SystemError handleStandardException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
 
-        ErrorInfo.Builder builder = buildErrorInfo(response, ex, status);
+        // get response status
+        HttpStatus status = getStandardExceptionHttpStatus(ex);
 
-        return builder.build();
+        // create error
+        SystemError error = this.createSystemError(request, response, status.value(), ex);
+
+        return error;
     }
 
+    private SystemError createSystemError(HttpServletRequest request, HttpServletResponse response, Integer status, Exception ex) {
 
-    private ErrorInfo.Builder buildErrorInfo(HttpServletResponse response, Exception ex, HttpStatus status) {
-        // build error info
-        ErrorInfo.Builder builder = new ErrorInfo.Builder()
-                .message(ex.getMessage())
-                .code(status.value())
-                .status(status.getReasonPhrase());
+        // create error instance
+        SystemError error = new SystemError(request, status, ex.getMessage(), ex);
 
-        // update response
-        response.setStatus(status.value());
-        return builder;
+        // update response status
+        response.setStatus(status);
+
+        // update response headers
+        if (HttpException.class.isAssignableFrom(ex.getClass())) {
+            Map<String, String> headers = ((HttpException) ex).getResponseHeaders();
+            if (MapUtils.isNotEmpty(headers)) {
+                for (String key : headers.keySet()) {
+                    response.addHeader(key, headers.get(key));
+                }
+            }
+        }
+
+        // persist?
+        if (true) {
+            try {
+                error = this.systemErrorService.create(error);
+            } catch (HttpException e) {
+                LOGGER.error("Failed persisting system error", e);
+            }
+
+        }
+
+        return error;
     }
 
-    private HttpStatus getHttpStatus(Exception ex) {
+    private HttpStatus getStandardExceptionHttpStatus(Exception ex) {
         Class exceptionClass = ex.getClass();
         Integer statusCode = null;
         while (statusCode == null) {

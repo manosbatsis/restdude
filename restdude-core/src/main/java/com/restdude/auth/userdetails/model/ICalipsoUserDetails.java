@@ -18,6 +18,7 @@
 package com.restdude.auth.userdetails.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.restdude.domain.base.model.CalipsoPersistable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.social.security.SocialUserDetails;
 
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonDeserialize(as=UserDetails.class)
-public interface ICalipsoUserDetails extends SocialUserDetails, Principal {
+public interface ICalipsoUserDetails extends SocialUserDetails, Principal, CalipsoPersistable<String> {
 
 	public String getEmailOrUsername();
 

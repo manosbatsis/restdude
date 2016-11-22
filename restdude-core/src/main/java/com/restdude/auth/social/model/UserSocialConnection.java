@@ -18,6 +18,7 @@
 package com.restdude.auth.social.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity 
@@ -34,12 +35,15 @@ public class UserSocialConnection implements Serializable{
     @Id
     private Integer rank;
 	private String providerUserId;
-	@Column(nullable = false)
+    @NotNull
+    @Column(nullable = false)
 	private String displayName;
-	@Column(length = 1000, nullable = false)
+    @NotNull
+    @Column(length = 1000, nullable = false)
 	private String profileUrl;
 	private String imageUrl;
-	@Column(nullable = false)
+    @NotNull
+    @Column(nullable = false)
 	private String accessToken;
 	private String secret;
 	private String refreshToken;

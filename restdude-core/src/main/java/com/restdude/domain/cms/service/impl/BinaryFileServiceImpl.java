@@ -23,9 +23,7 @@ import com.restdude.domain.cms.repository.BinaryFileRepository;
 import com.restdude.domain.cms.service.BinaryFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("binaryFileService")
@@ -34,19 +32,6 @@ public class BinaryFileServiceImpl extends AbstractModelServiceImpl<BinaryFile, 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BinaryFileServiceImpl.class);
 
-	@Override
-	@Inject
-	public void setRepository(BinaryFileRepository binaryFileRepository) {
-		super.setRepository(binaryFileRepository);
-	}
-
-	@Transactional(readOnly = false)
-	@Override
-	public void delete(BinaryFile resource) {
-		// TODO Auto-generated method stub
-		this.repository.delete(resource);
-	}
-	
 	
 
 }

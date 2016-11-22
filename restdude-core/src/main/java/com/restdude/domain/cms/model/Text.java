@@ -20,7 +20,7 @@ package com.restdude.domain.cms.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+import javax.validation.constraints.NotNull;
 /**
  */
 @Entity
@@ -32,13 +32,15 @@ public class Text extends Resource {
 	/**
 	 * The MIME type of the page source. May be used to dynamically generate response content. 
 	 */
-	@Column(name = "source_content_type", nullable = false)
+    @NotNull
+    @Column(name = "source_content_type", nullable = false)
 	private String sourceContentType;
 	
 	/**
 	 * The raw text content of the resource 
 	 */
-	@Column(name = "source", nullable = false)
+    @NotNull
+    @Column(name = "source", nullable = false)
 	private String source;
 
 	public Text() {

@@ -18,9 +18,11 @@
 package com.restdude.domain.base.service;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.util.exception.http.HttpException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -41,7 +43,14 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param resource Resource to create
      * @return new resource
      */
-    T create(T resource);
+    T create(T resource) throws HttpException;
+
+    /**
+     * Override to handle post-create
+     *
+     * @param resource The created resource
+     */
+    void postCreate(T resource);
 
     /**
      * Update an existing resource.
@@ -49,7 +58,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param resource Resource to update
      * @return resource updated
      */
-    T update(T resource);
+    T update(T resource) throws HttpException;
 
 
     /**
@@ -58,21 +67,21 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param resource Resource to update
      * @return resource updated
      */
-    T patch(T resource);
+    T patch(T resource) throws HttpException;
 
     /**
      * Delete an existing resource.
      *
      * @param resource Resource to delete
      */
-    void delete(T resource);
+    void delete(T resource) throws HttpException;
 
     /**
      * Delete an existing resource.
      *
      * @param id Resource id
      */
-    void delete(ID id);
+    void delete(ID id) throws HttpException;
 
     /**
      * Delete all existing resource. Do not use cascade remove (not a choice -> JPA specs)
@@ -121,5 +130,14 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @return number of resources
      */
     Long count();
+
+    /**
+     * Validate the given resource using bean validator. {@link javax.persistence.Column} annotations are
+     * also used to validate uniqueness and non-nullable values.
+     *
+     * @param resource
+     * @return the set of failed constraints
+     */
+    Set<ConstraintViolation<T>> validateConstraints(T resource);
 
 }

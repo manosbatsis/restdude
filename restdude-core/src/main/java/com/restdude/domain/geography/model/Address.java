@@ -23,7 +23,7 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;
-
+import javax.validation.constraints.NotNull;
 
 /**
  * An entity topersist postal addresses. 
@@ -52,7 +52,8 @@ public class Address extends AbstractSystemUuidPersistable  {
 	@JsonProperty("lat")
 	private Double latitude;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
 	private LocalRegion city;
 

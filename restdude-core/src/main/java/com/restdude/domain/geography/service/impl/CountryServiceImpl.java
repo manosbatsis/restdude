@@ -21,13 +21,11 @@ import com.restdude.domain.base.service.AbstractModelServiceImpl;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.repository.CountryRepository;
 import com.restdude.domain.geography.service.CountryService;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
 
 
 @Named("countryService")
-@Transactional(readOnly = true)
 public class CountryServiceImpl extends AbstractModelServiceImpl<Country, String, CountryRepository> implements CountryService {
 
 }

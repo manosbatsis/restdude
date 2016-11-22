@@ -21,15 +21,18 @@ import javax.persistence.Column;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) 
 public abstract class AbstractMailingAddressDetail {
-	
-	@Column(name = "postal_code", length = 50, nullable = false)
+
+    @NotNull
+    @Column(name = "postal_code", length = 50, nullable = false)
 	private String postalCode;
-	
-	@Column(name = "address_or_pobox", length = 300, nullable = false)
+
+    @NotNull
+    @Column(name = "address_or_pobox", length = 300, nullable = false)
 	private String streetAddressOrPoBox;
 	
 	public AbstractMailingAddressDetail(){

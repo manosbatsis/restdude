@@ -17,6 +17,7 @@
  */
 package com.restdude.auth.userdetails.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -165,6 +166,11 @@ public class UserDetails implements  ICalipsoUserDetails{
 	public void setId(String id) {
 		this.id = id;
 	}
+
+    @Override
+    public void preSave() {
+
+    }
 
 	/**
      * @see ICalipsoUserDetails#getFirstName()
@@ -621,6 +627,13 @@ public class UserDetails implements  ICalipsoUserDetails{
 	@Override
 	public String getName() {
 		return this.getUsername();
-	}
+    }
+
+
+    @Override
+    @JsonIgnore
+    public boolean isNew() {
+        return true;
+    }
 
 }

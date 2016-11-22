@@ -21,12 +21,10 @@ import com.restdude.auth.acl.model.AclObjectIdentity;
 import com.restdude.auth.acl.repository.AclObjectIdentityRepository;
 import com.restdude.auth.acl.service.AclObjectIdentityService;
 import com.restdude.domain.base.service.impl.AbstractAclAwareServiceImpl;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
 
 @Named("aclObjectIdentityService")
-@Transactional(readOnly = true)
 public class AclObjectIdentityServiceImpl
 		extends
 		AbstractAclAwareServiceImpl<AclObjectIdentity, Long, AclObjectIdentityRepository>

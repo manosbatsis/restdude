@@ -1,6 +1,7 @@
 package com.restdude.domain.base.controller;
 
 
+import com.restdude.util.exception.http.HttpException;
 import org.resthub.common.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public interface IRestController<T, ID extends Serializable> {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    T create(@RequestBody T resource);
+    T create(@RequestBody T resource) throws HttpException;
 
     /**
      * Update an existing resource<br/>
@@ -40,7 +41,7 @@ public interface IRestController<T, ID extends Serializable> {
      */
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     @ResponseBody
-    T update(@PathVariable ID id, @RequestBody T resource);
+    T update(@PathVariable ID id, @RequestBody T resource) throws HttpException;
 
     /**
      * Find all resources, and return the full collection (plain list not paginated)<br/>
@@ -51,7 +52,7 @@ public interface IRestController<T, ID extends Serializable> {
      */
     @RequestMapping(method = RequestMethod.GET, params = "page=no")
     @ResponseBody
-    Iterable<T> findAll();
+    Iterable<T> findAll() throws HttpException;
 
     /**
      * Find all resources, and return a paginated and optionaly sorted collection
@@ -67,7 +68,7 @@ public interface IRestController<T, ID extends Serializable> {
     Page<T> findPaginated(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                           @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
                           @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction,
-                          @RequestParam(value = "properties", required = false) String properties);
+                          @RequestParam(value = "properties", required = false) String properties) throws HttpException;
 
     /**
      * Find a resource by its identifier<br/>
@@ -79,7 +80,7 @@ public interface IRestController<T, ID extends Serializable> {
      */
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     @ResponseBody
-    T findById(@PathVariable ID id);
+    T findById(@PathVariable ID id) throws HttpException;
 
     /**
      * Find multiple resources by their identifiers<br/>
@@ -93,7 +94,7 @@ public interface IRestController<T, ID extends Serializable> {
      */
     @RequestMapping(method = RequestMethod.GET, params = "ids[]")
     @ResponseBody
-    Iterable<T> findByIds(@RequestParam(value = "ids[]") Set<ID> ids);
+    Iterable<T> findByIds(@RequestParam(value = "ids[]") Set<ID> ids) throws HttpException;
 
     /**
      * Delete all resources<br/>
@@ -102,7 +103,7 @@ public interface IRestController<T, ID extends Serializable> {
      */
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete();
+    void delete() throws HttpException;
 
     /**
      * Delete a resource by its identifier<br />
@@ -114,6 +115,6 @@ public interface IRestController<T, ID extends Serializable> {
      */
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(@PathVariable ID id);
+    void delete(@PathVariable ID id) throws HttpException;
 
 }

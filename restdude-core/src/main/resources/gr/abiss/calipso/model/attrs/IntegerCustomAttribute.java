@@ -32,6 +32,7 @@ public class IntegerCustomAttribute extends CustomAttribute<Integer> {
 
 	private static final long serialVersionUID = -4447456108154051246L;
 
+	@NotNull
 	@Column(name = "value", nullable = false)
 	private Integer value;
 

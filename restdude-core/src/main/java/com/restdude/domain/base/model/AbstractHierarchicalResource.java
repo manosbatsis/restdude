@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +42,15 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 	/**
 	 * The HTTP URL of the resource, excluding the protocol, domain and port. Starts with a slash. 
 	 */
-	@Column(name = "path", length = 1500, nullable = false)
+    @NotNull
+    @Column(name = "path", length = 1500, nullable = false)
 	private String path;
 	
 	/**
 	 * The number of URL segments in the resourc path
 	 */
-	@Column(name = "path_level", nullable = false)
+    @NotNull
+    @Column(name = "path_level", nullable = false)
 	private Short pathLevel;
 
 	@DiffIgnore
