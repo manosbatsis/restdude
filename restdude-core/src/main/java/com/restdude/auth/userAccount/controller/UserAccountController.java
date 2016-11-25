@@ -29,7 +29,6 @@ import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BadRequestException;
-import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.configuration.Configuration;
@@ -38,17 +37,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 @Api(tags = "AuthAccount", description = "User account operations")
 @RequestMapping(value = {"/api/auth/account", "/api/auth/accounts"}, produces = {"application/json", "application/xml"})
 public class UserAccountController {
@@ -79,8 +77,7 @@ public class UserAccountController {
 
 	@RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Register new account", notes = "Register a new user")
-    @ResponseBody
-    public User create(@RequestBody UserAccountRegistration resource) throws HttpException {
+    public User create(@RequestBody UserAccountRegistration resource) {
         LOGGER.debug("create, resource: {}", resource);
 
 		// get config
@@ -113,8 +110,7 @@ public class UserAccountController {
     @ApiOperation(value = "Update account password", notes = "Update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
             "currentPassword, password and passwordConfirmation to immediately change password. 2) when anonymous, provide resetPasswordToken, password and passwordConfirmation to immediately" +
             "change password. 3) when anonymous, provide email or username to have a password reset token and link sent to your inbox.")
-    @ResponseBody
-    public ICalipsoUserDetails update(@RequestBody PasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) throws HttpException {
+    public ICalipsoUserDetails update(@RequestBody PasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.debug("update, resource: {}", resource);
 
         ICalipsoUserDetails userDetails = this.userDetailsService.resetPassword(resource);

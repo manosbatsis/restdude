@@ -22,13 +22,11 @@ import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
-import com.restdude.auth.userdetails.util.DuplicateEmailException;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
-import com.restdude.util.exception.http.HttpException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +106,7 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	 */
 	@Transactional(readOnly = false)
 	@Override
-    public ICalipsoUserDetails create(final ICalipsoUserDetails tryUserDetails) throws HttpException {
+    public ICalipsoUserDetails create(final ICalipsoUserDetails tryUserDetails) {
 
 		ICalipsoUserDetails userDetails = null;
 		if (tryUserDetails != null) {
@@ -141,7 +139,7 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	@Transactional(readOnly = false)
-    public void handlePasswordResetRequest(String usernameOrEmail) throws HttpException {
+    public void handlePasswordResetRequest(String usernameOrEmail) {
         // require user handle
 		if (StringUtils.isBlank(usernameOrEmail)) {
 			throw new BadRequestException("Unauthorised request must provide a username or email");
@@ -151,7 +149,7 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	@Transactional(readOnly = false)
-    public ICalipsoUserDetails resetPassword(PasswordResetRequest passwordResetRequest) throws HttpException {
+    public ICalipsoUserDetails resetPassword(PasswordResetRequest passwordResetRequest) {
         ICalipsoUserDetails userDetails = this.getPrincipal();
 		User u = null;
 		LOGGER.debug("resetPassword, userDetails: {}, currentPassword: {}", userDetails, passwordResetRequest.getCurrentPassword());
@@ -310,7 +308,7 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	public ICalipsoUserDetails createForImplicitSignup(
-            User user) throws HttpException, DuplicateEmailException {
+            User user) {
         LOGGER.info("createForImplicitSignup, user: " + user);
 		ICalipsoUserDetails userDetails = UserDetails
 				.fromUser(this.userService.createForImplicitSignup(user));

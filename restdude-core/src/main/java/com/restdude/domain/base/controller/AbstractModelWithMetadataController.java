@@ -24,7 +24,10 @@ import com.restdude.domain.metadata.model.MetadatumDTO;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.Serializable;
 
@@ -35,7 +38,6 @@ public abstract class AbstractModelWithMetadataController<T extends CalipsoPersi
  
 
 	@RequestMapping(value = "{subjectId}/metadata", method = RequestMethod.PUT)
-	@ResponseBody
     @ApiOperation(value = "Add metadatum", notes = "Add or updated a resource metadatum")
 	public void addMetadatum(@PathVariable ID subjectId,
 			@RequestBody MetadatumDTO dto) {
@@ -43,7 +45,6 @@ public abstract class AbstractModelWithMetadataController<T extends CalipsoPersi
 	}
 
 	@RequestMapping(value = "{subjectId}/metadata/{predicate}", method = RequestMethod.DELETE)
-	@ResponseBody
     @ApiOperation(value = "Remove metadatum", notes = "Remove a resource metadatum if it exists")
 	public void removeMetadatum(@PathVariable ID subjectId,
 			@PathVariable String predicate) {

@@ -38,5 +38,5 @@ public interface RateableRepository<T extends Rateable<ID, ?>, ID extends Serial
 	@Modifying
 	@Query("update #{#entityName} e set e.rating = ((e.rating * e.ratingsSize) + ?2) / (e.ratingsSize + 1), e.ratingsSize = (e.ratingsSize + 1) WHERE e.id = ?1")
 	public void addRating(ID id, float rating);
-	
+
 }

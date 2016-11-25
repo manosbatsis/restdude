@@ -26,18 +26,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 @Api(tags = "RegistrationCodeBatches", description = "Codes management (admin, operator)")
 @RequestMapping(value = "/api/rest/registrationCodeBatches", produces = {"application/json", "application/xml"})
 public class UserRegistrationCodeBatchController extends AbstractNoDeleteModelController<UserRegistrationCodeBatch, String, UserRegistrationCodeBatchService> {
@@ -46,7 +45,6 @@ public class UserRegistrationCodeBatchController extends AbstractNoDeleteModelCo
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 
 	@RequestMapping(value = "{id}/csv", method = RequestMethod.GET, produces = "text/csv")
-	@ResponseBody
 	@ApiOperation(value = "Export batch to a spreadsheet (CSV) report", notes = "The filename will be [batch name]_[date: yyyyMMddHHmmss].csv")
 	public List<UserRegistrationCodeInfo> exportToCsv(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, HttpServletResponse response) {
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);

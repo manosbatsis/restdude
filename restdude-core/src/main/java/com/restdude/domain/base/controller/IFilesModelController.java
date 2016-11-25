@@ -23,7 +23,6 @@ import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.mdd.specifications.GenericSpecifications;
-import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -31,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
@@ -62,8 +60,8 @@ public interface IFilesModelController<T extends CalipsoPersistable<ID>, ID exte
 		method = { RequestMethod.POST}, 
 		headers=("content-type=multipart/*"), 
 		produces = { "application/json", "application/xml" })
-	public default @ResponseBody T updateFiles(@PathVariable ID id,
-                                               MultipartHttpServletRequest request, HttpServletResponse response) throws HttpException {
+    public default T updateFiles(@PathVariable ID id,
+                                 MultipartHttpServletRequest request, HttpServletResponse response) {
         Logger logger = LoggerFactory.getLogger(IFilesModelController.class);
 
 		T entity = this.getService().findById(id);
@@ -103,7 +101,7 @@ public interface IFilesModelController<T extends CalipsoPersistable<ID>, ID exte
 	 * @param id
 	 * @param filenames
 	 */
-    public default void deleteFiles(ID id, String... filenames) throws HttpException {
+    public default void deleteFiles(ID id, String... filenames) {
         Logger logger = LoggerFactory.getLogger(IFilesModelController.class);
 		String basePath = new StringBuffer(this.getService().getDomainClass().getSimpleName())
 				.append('/').append(id).append('/').toString();

@@ -18,7 +18,6 @@
 package com.restdude.websocket.service;
 
 import com.restdude.domain.base.service.ModelService;
-import com.restdude.util.exception.http.HttpException;
 import com.restdude.websocket.model.StompSession;
 import org.springframework.web.socket.messaging.*;
 
@@ -26,14 +25,14 @@ public interface StompSessionService extends ModelService<StompSession, String> 
 
 	public static final String BEAN_ID = "stompSessionService";
 
-    public void onSessionConnectEvent(SessionConnectEvent event) throws HttpException;
+    public void onSessionConnectEvent(SessionConnectEvent event);
 
-    public void onSessionConnectedEvent(SessionConnectedEvent event) throws HttpException;
+    public void onSessionConnectedEvent(SessionConnectedEvent event);
 
-    public void onSessionSubscribeEvent(SessionSubscribeEvent event) throws HttpException;
+    public void onSessionSubscribeEvent(SessionSubscribeEvent event);
 
-    public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) throws HttpException;
+    public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event);
 
-    public void onSessionDisconnectEvent(SessionDisconnectEvent event) throws HttpException;
+    public void onSessionDisconnectEvent(SessionDisconnectEvent event);
 
 }

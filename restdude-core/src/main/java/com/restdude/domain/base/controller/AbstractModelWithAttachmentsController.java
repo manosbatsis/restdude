@@ -23,7 +23,6 @@ import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.cms.service.BinaryFileService;
 import com.restdude.mdd.specifications.GenericSpecifications;
 import com.restdude.util.ConfigurationFactory;
-import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration.Configuration;
@@ -35,7 +34,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -64,8 +62,8 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get file uploads by property")
-	public @ResponseBody List<BinaryFile> getUploadsByProperty(@PathVariable ID subjectId,
-			@PathVariable String propertyName) {
+    public List<BinaryFile> getUploadsByProperty(@PathVariable ID subjectId,
+                                                 @PathVariable String propertyName) {
 		LOGGER.info("uploadGet called");
 		List<BinaryFile> uploads = null;
 		// attach file
@@ -115,8 +113,8 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 	@ApiOperation(value = "Delete an uploaded file")
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody List deleteById(@PathVariable String subjectId, @PathVariable String propertyName,
-                                         @PathVariable String id) throws HttpException {
+    public List deleteById(@PathVariable String subjectId, @PathVariable String propertyName,
+                           @PathVariable String id) {
         Configuration config = ConfigurationFactory.getConfiguration();
 		String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
 		BinaryFile file = binaryFileService.findById(id);
@@ -135,8 +133,8 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 	@ApiOperation(value = "Add a file uploads to property")
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}", method = { RequestMethod.POST,
 			RequestMethod.PUT }, consumes = {})
-	public @ResponseBody BinaryFile addUploadsToProperty(@PathVariable ID subjectId, @PathVariable String propertyName,
-			MultipartHttpServletRequest request, HttpServletResponse response) {
+    public BinaryFile addUploadsToProperty(@PathVariable ID subjectId, @PathVariable String propertyName,
+                                           MultipartHttpServletRequest request, HttpServletResponse response) {
 		LOGGER.info("uploadPost called");
 
 		Configuration config = ConfigurationFactory.getConfiguration();

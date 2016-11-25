@@ -25,7 +25,6 @@ import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.util.exception.http.HttpException;
 import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
-
+@RestController
 @Api(tags = "Users", description = "User management operations")
 @RequestMapping(value = "/api/rest/users", produces = {"application/json", "application/xml"})
 public class UserController extends AbstractNoDeleteModelController<User, String, UserService> implements IFilesModelController<User, String, UserService> {
@@ -58,17 +57,15 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     }
 
     @RequestMapping(value = "byUserNameOrEmail/{userNameOrEmail}", method = RequestMethod.GET)
-    @ResponseBody
     @ApiOperation(value = "Get one by username or email", notes = "Get the single user with the given username or email.")
-    public User getByUserNameOrEmail(@PathVariable String userNameOrEmail) throws HttpException {
+    public User getByUserNameOrEmail(@PathVariable String userNameOrEmail) {
         return this.service.findOneByUserNameOrEmail(userNameOrEmail);
     }
 
     @RequestMapping(value = "{subjectId}/metadata", method = RequestMethod.PUT)
-    @ResponseBody
     @ApiOperation(value = "Add metadatum", notes = "Add or update a resource metadatum")
     public void addMetadatum(@PathVariable String subjectId,
-                             @RequestBody MetadatumDTO dto) throws HttpException {
+                             @RequestBody MetadatumDTO dto) {
         service.addMetadatum(subjectId, dto);
     }
 
@@ -77,10 +74,9 @@ public class UserController extends AbstractNoDeleteModelController<User, String
      */
     @Override
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    @ResponseBody
     @ApiOperation(value = "Update a resource", hidden = true)
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) throws HttpException {
+    public User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 

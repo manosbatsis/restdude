@@ -22,7 +22,9 @@ import com.restdude.domain.geography.model.Continent;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.service.ContinentService;
 import com.restdude.domain.geography.service.CountryService;
-import com.restdude.domain.users.model.*;
+import com.restdude.domain.users.model.Role;
+import com.restdude.domain.users.model.User;
+import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.RoleRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeBatchRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
@@ -30,26 +32,20 @@ import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.domain.util.email.service.EmailService;
 import com.restdude.util.ConfigurationFactory;
-import com.restdude.util.exception.http.HttpException;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.resthub.common.util.PostInitialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 @Component
@@ -111,11 +107,11 @@ public class CalipsoDataInitializer {
 	public void setUserRegistrationCodeBatchRepository(UserRegistrationCodeBatchRepository userRegistrationCodeBatchRepository) {
 		this.userRegistrationCodeBatchRepository = userRegistrationCodeBatchRepository;
 	}
-	
 
-	@PostInitialize(order = 10)
+
+	@PostConstruct
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	public void postInitialize() throws HttpException {
+	public void postInitialize() {
 		
 		Configuration config = ConfigurationFactory.getConfiguration();
 		boolean initData = config.getBoolean(ConfigurationFactory.INIT_DATA, true);
@@ -139,10 +135,6 @@ public class CalipsoDataInitializer {
             system.setCredentials(new UserCredentials.Builder().active(false).username("system").password("system").build());
             system.setLastVisit(now);
 			system = userService.createTest(system);
-
-			// login
-			SecurityContextHolder.getContext().setAuthentication(
-					new UsernamePasswordAuthenticationToken(system, system.getCredentials().getPassword(), system.getRoles()));
 
 			User adminUser = new User();
 			adminUser.setEmail("info@abiss.gr");
@@ -186,22 +178,6 @@ public class CalipsoDataInitializer {
 				}
 			}
 
-			// sample registration codes batch
-			UserRegistrationCodeBatch batch = new UserRegistrationCodeBatch();
-			batch.setCreatedBy(system);
-			batch.setBatchSize(20);
-			batch.setName("INITDATATEST01");
-			batch.setDescription("Sample batch created as initial test data");
-			batch.setExpirationDate(DateUtils.addMonths(batch.getCreatedDate(), 1));
-			batch = this.userRegistrationCodeBatchRepository.save(batch);
-			// create codes
-			List<UserRegistrationCode> codes = new ArrayList<UserRegistrationCode>(batch.getBatchSize());
-			for (int i = 0; i < batch.getBatchSize(); i++) {
-				codes.add(new UserRegistrationCode(batch));
-			}
-			this.userRegistrationCodeRepository.save(codes);
-
-
 
 		}
 		
@@ -230,7 +206,7 @@ public class CalipsoDataInitializer {
 		}
 	}
 
-	protected void initContinentsAndCountries() throws HttpException {
+	protected void initContinentsAndCountries() {
 
 		if (continentService.count() == 0) {
 			Continent AF = continentService.create(new Continent("AF", "Africa"));

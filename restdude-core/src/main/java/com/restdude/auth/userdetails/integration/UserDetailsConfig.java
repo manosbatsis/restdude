@@ -21,10 +21,6 @@ public interface UserDetailsConfig {
 
 	public abstract String getCookiesBasicAuthTokenName();
 
-	public abstract String getCookiesDomain();
-
-	public abstract String getCookiesContextPath();
-	
 	public abstract boolean isCookiesSecure();
 	
 	public abstract boolean isCookiesHttpOnly();

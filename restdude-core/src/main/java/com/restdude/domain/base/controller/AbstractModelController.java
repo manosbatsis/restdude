@@ -9,7 +9,6 @@ import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.CurrentPrincipal;
 import com.restdude.mdd.annotation.CurrentPrincipalField;
 import com.restdude.mdd.uischema.model.UiSchema;
-import com.restdude.util.exception.http.HttpException;
 import com.restdude.util.exception.http.NotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -92,10 +91,9 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
 	@ApiOperation(value = "Create a new resource")
 	@JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public T create(@RequestBody T resource) throws HttpException {
+    public T create(@RequestBody T resource) {
         applyCurrentPrincipal(resource);
 		return this.service.create(resource);
 	}
@@ -105,10 +103,9 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	 */
 	@Override
 	@RequestMapping(value = "{id}", method = RequestMethod.PUT)
-	@ResponseBody
 	@ApiOperation(value = "Update a resource")
 	@JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public T update(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id, @RequestBody T resource) throws HttpException {
+    public T update(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id, @RequestBody T resource) {
         Assert.notNull(id, "id cannot be null");
 		resource.setId(id);
 		applyCurrentPrincipal(resource);
@@ -120,10 +117,9 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	 * {@inheritDoc}
 	 */
 	@RequestMapping(value = "{id}", method = RequestMethod.PATCH)
-	@ResponseBody
 	@ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
 	@JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public T patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id, @RequestBody T resource) throws HttpException {
+    public T patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id, @RequestBody T resource) {
         applyCurrentPrincipal(resource);
 		resource.setId(id);
 		return this.service.patch(resource);
@@ -134,9 +130,8 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.GET, params = "page=no", produces = "application/json")
-	@ResponseBody
 	@ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
-    public Iterable<T> findAll() throws HttpException {
+    public Iterable<T> findAll() {
         return service.findAll();
 	}
 
@@ -145,7 +140,6 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
-	@ResponseBody
 	@ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated collection."
 			+ " Besides the predefined paging properties (page, size, properties, direction) all serialized member names "
 			+ "of the resource are supported as search criteria in the form of HTTP URL parameters.")
@@ -153,7 +147,7 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "properties", required = false, defaultValue = "id") String sort,
-            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) throws HttpException {
+            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
         boolean applyCurrentPrincipalIdPredicate = true;
 
 		if(BooleanUtils.toBoolean(request.getParameter("skipCurrentPrincipalIdPredicate"))){
@@ -171,10 +165,9 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	 */
 	@Override
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	@ResponseBody
 	@ApiOperation(value = "Find by id", notes = "Find a resource by it's identifier")
 	@JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public T findById(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) throws HttpException {
+    public T findById(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) {
         T resource = this.service.findById(id);
 		if (resource == null) {
 			throw new NotFoundException();
@@ -187,9 +180,8 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	 */
 	@Override
 	@RequestMapping(params = "ids", method = RequestMethod.GET)
-	@ResponseBody
 	@ApiOperation(value = "Search by ids", notes = "Find the set of resources matching the given identifiers.")
-    public Iterable<T> findByIds(@RequestParam(value = "ids[]") Set<ID> ids) throws HttpException {
+    public Iterable<T> findByIds(@RequestParam(value = "ids[]") Set<ID> ids) {
         Assert.notNull(ids, "ids list cannot be null");
 		return this.service.findByIds(ids);
 	}
@@ -201,7 +193,7 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
-    public void delete(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) throws HttpException {
+    public void delete(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) {
         T resource = this.findById(id);
 		this.service.delete(resource);
 	}
@@ -212,22 +204,20 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 	@Override
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ApiOperation(value = "Delete all resources")
-    public void delete() throws HttpException {
+    public void delete() {
         this.service.deleteAllWithCascade();
 	}
 
 	@RequestMapping(value = "uischema", produces = {"application/json"}, method = RequestMethod.GET)
-	@ResponseBody
 	@ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
-    public UiSchema getSchema() throws HttpException {
+    public UiSchema getSchema() {
         UiSchema schema = new UiSchema(this.service.getDomainClass());
 		return schema;
 	}
 
 	@RequestMapping(produces = {"application/json"}, method = RequestMethod.OPTIONS)
-	@ResponseBody
 	@ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
-    public UiSchema getSchemas() throws HttpException {
+    public UiSchema getSchemas() {
         return this.getSchema();
 	}
 

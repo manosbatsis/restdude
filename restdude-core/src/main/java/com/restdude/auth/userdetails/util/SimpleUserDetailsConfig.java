@@ -23,8 +23,6 @@ import com.restdude.util.Constants;
 public class SimpleUserDetailsConfig implements UserDetailsConfig {
 
 	private String cookiesBasicAuthTokenName = Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME;
-	private String cookiesDomain = null;
-	private String cookiesContextPath = null;
 	private boolean cookiesSecure = false;
 	private boolean cookiesHttpOnly = false;
 
@@ -33,31 +31,21 @@ public class SimpleUserDetailsConfig implements UserDetailsConfig {
 	}
 
 	public SimpleUserDetailsConfig(String cookiesBasicAuthTokenName) {
-		this(cookiesBasicAuthTokenName, null, null, false, false);
+		this(cookiesBasicAuthTokenName, false, false);
 	}
 	public SimpleUserDetailsConfig(String cookiesBasicAuthTokenName, String cookiesDomain, String cookiesContextPath) {
-		this(cookiesBasicAuthTokenName, cookiesDomain, cookiesContextPath, false, false);
+		this(cookiesBasicAuthTokenName, false, false);
 	}
-	
-	public SimpleUserDetailsConfig(String cookiesBasicAuthTokenName, String cookiesDomain, String cookiesContextPath, boolean cookiesSecure, boolean cookiesHttpOnly) {
+
+	public SimpleUserDetailsConfig(String cookiesBasicAuthTokenName, boolean cookiesSecure, boolean cookiesHttpOnly) {
 		super();
 		this.cookiesBasicAuthTokenName = cookiesBasicAuthTokenName;
-		this.cookiesDomain = cookiesDomain;
-		this.cookiesContextPath = cookiesContextPath;
 		this.cookiesSecure = cookiesSecure;
 		this.cookiesHttpOnly = cookiesHttpOnly;
 	}
 
 	public String getCookiesBasicAuthTokenName() {
 		return cookiesBasicAuthTokenName;
-	}
-
-	public String getCookiesDomain() {
-		return cookiesDomain;
-	}
-
-	public String getCookiesContextPath() {
-		return cookiesContextPath;
 	}
 
 	public boolean isCookiesSecure() {

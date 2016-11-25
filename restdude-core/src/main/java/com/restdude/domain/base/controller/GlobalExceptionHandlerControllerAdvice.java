@@ -66,6 +66,7 @@ public class GlobalExceptionHandlerControllerAdvice {
         exceptionStatuses.put(BindException.class, HttpServletResponse.SC_BAD_REQUEST);
         exceptionStatuses.put(NoHandlerFoundException.class, HttpServletResponse.SC_NOT_FOUND);
         exceptionStatuses.put(AsyncRequestTimeoutException.class, HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        exceptionStatuses.put(RuntimeException.class, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         exceptionStatuses.put(Exception.class, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
@@ -128,7 +129,7 @@ public class GlobalExceptionHandlerControllerAdvice {
             ServletRequestBindingException.class, ConversionNotSupportedException.class, TypeMismatchException.class,
             HttpMessageNotReadableException.class, HttpMessageNotWritableException.class, MethodArgumentNotValidException.class,
             MissingServletRequestPartException.class, BindException.class, NoHandlerFoundException.class,
-            AsyncRequestTimeoutException.class, Exception.class})
+            AsyncRequestTimeoutException.class, RuntimeException.class, Exception.class})
     @ResponseBody
     public SystemError handleStandardException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
 

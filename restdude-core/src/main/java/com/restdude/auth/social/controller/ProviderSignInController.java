@@ -21,13 +21,11 @@ import com.restdude.auth.userdetails.controller.form.RegistrationForm;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
-import com.restdude.auth.userdetails.util.DuplicateEmailException;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.auth.userdetails.util.SocialMediaService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.util.ConfigurationFactory;
-import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.Api;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -157,25 +155,19 @@ public class ProviderSignInController extends org.springframework.social.connect
 	* Creates a new user account by calling the service method. If the email address is found
 	* from the database, this method adds a field error to the email field of the form object.
 	*/
-    private ICalipsoUserDetails createUserAccount(RegistrationForm userAccountData, BindingResult result) throws HttpException {
+    private ICalipsoUserDetails createUserAccount(RegistrationForm userAccountData, BindingResult result) {
         LOGGER.debug("createUserAccount, userAccountData: {}", userAccountData);
 		ICalipsoUserDetails registered = null;
 
-		try {
-			User user = new User();
-            user.setCredentials(new UserCredentials());
-            user.setEmail(userAccountData.getEmail());
-			user.setFirstName(userAccountData.getFirstName());
-			user.setLastName(userAccountData.getLastName());
-            user.getCredentials().setUsername(userAccountData.getUserName());
-            user.getCredentials().setPassword(userAccountData.getPassword());
+        User user = new User();
+        user.setCredentials(new UserCredentials());
+        user.setEmail(userAccountData.getEmail());
+        user.setFirstName(userAccountData.getFirstName());
+        user.setLastName(userAccountData.getLastName());
+        user.getCredentials().setUsername(userAccountData.getUserName());
+        user.getCredentials().setPassword(userAccountData.getPassword());
 
-			registered = userService.createForImplicitSignup(user);
-		} catch (DuplicateEmailException ex) {
-			LOGGER.debug("An email address: {} exists.", userAccountData.getEmail());
-			addFieldError(MODEL_NAME_REGISTRATION_DTO, RegistrationForm.FIELD_NAME_EMAIL, userAccountData.getEmail(),
-					ERROR_CODE_EMAIL_EXIST, result);
-		}
+        registered = userService.createForImplicitSignup(user);
 
 		return registered;
 	}

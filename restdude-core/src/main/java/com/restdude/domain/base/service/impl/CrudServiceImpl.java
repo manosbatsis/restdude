@@ -9,7 +9,6 @@ import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.exception.http.BeanValidationException;
-import com.restdude.util.exception.http.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -81,7 +80,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @Override
     @Transactional(readOnly = false)
     @PreAuthorize(T.PRE_AUTHORIZE_CREATE)
-    public T create(@P("resource") T resource) throws HttpException {
+    public T create(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
         this.validate(resource);
         resource = repository.save(resource);
@@ -100,7 +99,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @Override
     @Transactional(readOnly = false)
     @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
-    public T update(@P("resource") T resource) throws HttpException {
+    public T update(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
         this.validate(resource);
         return repository.save(resource);
@@ -112,7 +111,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @Override
     @Transactional(readOnly = false)
     @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
-    public T patch(@P("resource") T resource) throws HttpException {
+    public T patch(@P("resource") T resource) {
         // make sure entity is set to support partial updates
         T persisted = this.findById(resource.getId());
         // copy non-null properties to persisted
@@ -128,7 +127,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @Override
     @Transactional(readOnly = false)
     @PreAuthorize(T.PRE_AUTHORIZE_DELETE)
-    public void delete(T resource) throws HttpException {
+    public void delete(T resource) {
         Assert.notNull(resource, "Resource can't be null");
         repository.delete(resource);
     }
@@ -139,7 +138,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @Override
     @Transactional(readOnly = false)
     @PreAuthorize(T.PRE_AUTHORIZE_DELETE_BY_ID)
-    public void delete(ID id) throws HttpException {
+    public void delete(ID id) {
         Assert.notNull(id, "Resource ID can't be null");
         repository.delete(id);
     }
@@ -321,7 +320,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
             return errors;
         }
     */
-    protected void validate(T resource) throws HttpException {
+    protected void validate(T resource) {
         resource.preSave();
         Set<ConstraintViolation<T>> violations = this.validateConstraints(resource);
         if (!CollectionUtils.isEmpty(violations)) {

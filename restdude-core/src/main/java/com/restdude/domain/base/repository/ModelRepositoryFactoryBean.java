@@ -21,6 +21,7 @@ import com.restdude.domain.base.model.CalipsoPersistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
@@ -46,11 +47,20 @@ public class ModelRepositoryFactoryBean<R extends JpaRepository<T, ID>, T extend
 			this.entityManager = entityManager;
 		}
 
+		private Object getModelRepository(RepositoryInformation information, EntityManager entityManager) {
+			return new BaseRepositoryImpl<T, ID>((Class<T>) information.getDomainType(), entityManager);
+		}
 
 		@Override
-		protected Object getTargetRepository(RepositoryMetadata metadata) {
-            return new BaseRepositoryImpl<T, ID>((Class<T>) metadata.getDomainType(), entityManager);
-        }
+		protected Object getTargetRepository(RepositoryInformation information) {
+			return this.getModelRepository(information, this.entityManager);
+		}
+
+
+		/*@Override
+		protected <T, ID extends Serializable> SimpleJpaRepository<?, ?> getTargetRepository(RepositoryInformation information, EntityManager entityManager) {
+			return (SimpleJpaRepository) new BaseRepositoryImpl<T, ID>((Class<T>) information.getDomainType(), entityManager);
+		}*/
 
 		@Override
 		protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {

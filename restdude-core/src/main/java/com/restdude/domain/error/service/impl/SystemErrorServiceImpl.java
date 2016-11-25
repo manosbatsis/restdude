@@ -23,7 +23,6 @@ import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.repository.StackTraceRepository;
 import com.restdude.domain.error.repository.SystemErrorRepository;
 import com.restdude.domain.error.service.SystemErrorService;
-import com.restdude.util.exception.http.HttpException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,7 @@ public class SystemErrorServiceImpl extends AbstractModelServiceImpl<SystemError
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
     @PreAuthorize(SystemError.PRE_AUTHORIZE_CREATE)
-    public SystemError create(SystemError resource) throws HttpException {
+    public SystemError create(SystemError resource) {
 
         // init timstamp
         Date now = new Date();

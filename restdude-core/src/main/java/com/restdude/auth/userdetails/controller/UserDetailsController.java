@@ -24,7 +24,6 @@ import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
-import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -34,13 +33,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Api(tags = "Auth", description = "Authentication operations")
+@RestController
 @RequestMapping(value = {"/apiauth/userDetails", "/api/auth/userDetails"}, produces = {"application/json", "application/xml"})
 public class UserDetailsController {
 
@@ -72,8 +72,7 @@ public class UserDetailsController {
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Login",
             notes = "Login using a JSON object with email/password properties.")
-    @ResponseBody
-    public ICalipsoUserDetails create(@RequestBody LoginSubmission resource) throws HttpException {
+    public ICalipsoUserDetails create(@RequestBody LoginSubmission resource) {
         ICalipsoUserDetails userDetails = new UserDetails(resource);
         LOGGER.debug("create, LoginSubmission: {}", resource);
         userDetails = this.service.create(userDetails);
@@ -93,8 +92,7 @@ public class UserDetailsController {
     @ApiOperation(value = "Remember",
             notes = "Login remembered user")
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public ICalipsoUserDetails remember() throws HttpException {
+    public ICalipsoUserDetails remember() {
         ICalipsoUserDetails userDetails = this.service.getPrincipal();
         if (userDetails == null) {
             userDetails = new UserDetails();
@@ -106,8 +104,7 @@ public class UserDetailsController {
     @ApiOperation(value = "Logout",
             notes = "Logout and forget user")
     @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
-    public ICalipsoUserDetails delete() throws HttpException {
+    public ICalipsoUserDetails delete() {
         // logout
         SecurityUtil.logout(request, response, userDetailsConfig);
         return new UserDetails();
@@ -116,8 +113,7 @@ public class UserDetailsController {
     @RequestMapping(value = "verification", method = RequestMethod.POST)
     @ApiOperation(value = "Verify",
             notes = "Validation utility operation, used to verify the user based on current password.")
-    @ResponseBody
-    public ICalipsoUserDetails verify(@RequestBody LoginSubmission resource) throws HttpException {
+    public ICalipsoUserDetails verify(@RequestBody LoginSubmission resource) {
         ICalipsoUserDetails userDetails = new UserDetails(resource);
         return this.service.create(userDetails);
     }

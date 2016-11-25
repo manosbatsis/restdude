@@ -20,13 +20,15 @@ package com.restdude.domain.friends.controller;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.util.exception.http.HttpException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 
@@ -43,9 +45,8 @@ public class InvitationsController {
 	UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	@ResponseBody
     @ApiOperation(value = "Invite users", notes = "Invite users by email")
-    public UserInvitationResultsDTO inviteUsers(@RequestBody UserInvitationsDTO invitations) throws HttpException {
+    public UserInvitationResultsDTO inviteUsers(@RequestBody UserInvitationsDTO invitations) {
         LOGGER.debug("INVITE USERS: " + invitations);
 		return this.userService.inviteUsers(invitations);
 	}

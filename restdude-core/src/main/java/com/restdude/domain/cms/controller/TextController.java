@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.inject.Inject;
 
 
-//@Controller
+//@RestController
 @Api(hidden = true, tags = "Text resources", description = "Operations about text resources")
 @RequestMapping(value = "/api/rest/texts", produces = { "application/json", "application/xml" })
 public class TextController extends AbstractModelController<Text, String, TextService> {

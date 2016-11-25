@@ -21,8 +21,8 @@ import com.restdude.domain.cms.service.BinaryFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ import javax.inject.Inject;
  *
  * @author jdmr
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/rest/binaryFiles")
 public class UploadsController  {
     

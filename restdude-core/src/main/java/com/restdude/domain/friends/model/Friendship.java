@@ -1,6 +1,7 @@
 package com.restdude.domain.friends.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.domain.base.model.AbstractPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.ModelResource;
@@ -22,7 +23,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "friendships")
 @ModelResource(path = Friendship.API_PATH, apiName = "Friendships", apiDescription = "Operations about friendships")
 @ApiModel(value = "Friendship", description = "A model representing a directional connection between two users. ")
-public class Friendship implements CalipsoPersistable<FriendshipId> {
+public class Friendship extends AbstractPersistable<FriendshipId> implements CalipsoPersistable<FriendshipId> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Friendship.class);
 	private static final long serialVersionUID = 1L;

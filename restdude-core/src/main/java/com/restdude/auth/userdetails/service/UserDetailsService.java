@@ -19,25 +19,22 @@ package com.restdude.auth.userdetails.service;
 
 import com.restdude.auth.userAccount.model.PasswordResetRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.auth.userdetails.util.DuplicateEmailException;
 import com.restdude.domain.users.model.User;
-import com.restdude.util.exception.http.HttpException;
 import org.springframework.transaction.annotation.Transactional;
 
 
 public interface UserDetailsService {
 
-    ICalipsoUserDetails resetPassword(PasswordResetRequest resource) throws HttpException;
+    ICalipsoUserDetails resetPassword(PasswordResetRequest resource);
 
     @Transactional(readOnly = false)
-    ICalipsoUserDetails create(ICalipsoUserDetails tryUserDetails) throws HttpException;
+    ICalipsoUserDetails create(ICalipsoUserDetails tryUserDetails);
 
-    void handlePasswordResetRequest(String userNameOrEmail) throws HttpException;
+    void handlePasswordResetRequest(String userNameOrEmail);
 
 //	ICalipsoUserDetails confirmPrincipal(String confirmationToken);
 
-	ICalipsoUserDetails createForImplicitSignup(User user)
-            throws HttpException, DuplicateEmailException;
+    ICalipsoUserDetails createForImplicitSignup(User user);
 
 	ICalipsoUserDetails getPrincipal();
 

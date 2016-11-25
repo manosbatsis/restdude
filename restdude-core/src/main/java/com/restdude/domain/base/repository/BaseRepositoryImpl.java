@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -38,10 +39,11 @@ import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.*;
 
+@NoRepositoryBean
 public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ModelRepository<T, ID> {
 
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
 
 
 	private SpecificationsBuilder<T, ID> specificationsBuilder;

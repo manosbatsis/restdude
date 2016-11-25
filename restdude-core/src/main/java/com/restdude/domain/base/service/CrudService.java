@@ -18,7 +18,6 @@
 package com.restdude.domain.base.service;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.util.exception.http.HttpException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -43,7 +42,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param resource Resource to create
      * @return new resource
      */
-    T create(T resource) throws HttpException;
+    T create(T resource);
 
     /**
      * Override to handle post-create
@@ -58,7 +57,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param resource Resource to update
      * @return resource updated
      */
-    T update(T resource) throws HttpException;
+    T update(T resource);
 
 
     /**
@@ -67,21 +66,21 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param resource Resource to update
      * @return resource updated
      */
-    T patch(T resource) throws HttpException;
+    T patch(T resource);
 
     /**
      * Delete an existing resource.
      *
      * @param resource Resource to delete
      */
-    void delete(T resource) throws HttpException;
+    void delete(T resource);
 
     /**
      * Delete an existing resource.
      *
      * @param id Resource id
      */
-    void delete(ID id) throws HttpException;
+    void delete(ID id);
 
     /**
      * Delete all existing resource. Do not use cascade remove (not a choice -> JPA specs)

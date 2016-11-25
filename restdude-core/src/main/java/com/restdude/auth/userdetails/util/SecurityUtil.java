@@ -102,19 +102,13 @@ public class SecurityUtil {
 				", cookie value: " + cookieValue+
 					", domain: " + server +
 				", secure: "+userDetailsConfig.isCookiesSecure() +
-				", http-only: "+userDetailsConfig.isCookiesHttpOnly() +
-				", path: "+userDetailsConfig.getCookiesContextPath());
+					", http-only: " + userDetailsConfig.isCookiesHttpOnly());
 		}
 		Cookie cookie = new Cookie(cookieName, cookieValue);
 		
 		// set the cookie domain
 		if (StringUtils.isNotBlank(server)) {
 			cookie.setDomain('.' + server);
-		}
-
-		// set the cookie path
-		if (StringUtils.isNotBlank(userDetailsConfig.getCookiesContextPath())) {
-			cookie.setPath(userDetailsConfig.getCookiesContextPath());
 		}
 		
 		cookie.setSecure(userDetailsConfig.isCookiesSecure());

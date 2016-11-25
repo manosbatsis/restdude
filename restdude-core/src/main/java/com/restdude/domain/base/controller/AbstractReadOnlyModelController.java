@@ -19,7 +19,6 @@ package com.restdude.domain.base.controller;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
-import com.restdude.util.exception.http.HttpException;
 import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.Serializable;
@@ -43,25 +41,22 @@ public abstract class AbstractReadOnlyModelController<T extends CalipsoPersistab
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
 	@ApiOperation(hidden = true, value = "Create a resource (unsupported)")
-    public T create(T resource) throws HttpException {
+    public T create(T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
 	@RequestMapping(value = "{id}", method = RequestMethod.PUT)
-	@ResponseBody
 	@ApiOperation(hidden = true, value = "Update a resource (unsupported)")
-    public T update(ID id, T resource) throws HttpException {
+    public T update(ID id, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
 	@RequestMapping(value = "{id}", method = RequestMethod.PATCH)
-	@ResponseBody
 	@ApiOperation(hidden = true, value = "Perform a partial update (unsupported)")
-    public T patch(ID id, T resource) throws HttpException {
+    public T patch(ID id, T resource) {
 
         throw new NotImplementedException("Method is unsupported.");
     }

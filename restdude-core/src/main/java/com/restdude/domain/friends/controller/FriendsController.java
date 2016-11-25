@@ -63,7 +63,6 @@ public class FriendsController implements BuildPageable{
 
 
 	@RequestMapping(value = {"my" }, method = RequestMethod.GET)
-	@ResponseBody
 	@ApiOperation(value = "Find all friends (paginated)", notes = "Find all friends of the current user. Returns paginated results")
 	public Page<UserDTO> findMyFriendsPaginated(
 			@ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
@@ -78,7 +77,6 @@ public class FriendsController implements BuildPageable{
 	}	
 	
 	@RequestMapping(value = {"{friendId}" }, method = RequestMethod.GET)
-	@ResponseBody
 	@ApiOperation(value = "Find all friends of a friend (paginated)", notes = "Find all friends of a friend. Returns paginated results")
 	public Page<UserDTO> findAFriendsFriendsPaginated(
 			@ApiParam(name = "friendId", required = true, value = "string") @PathVariable String friendId,

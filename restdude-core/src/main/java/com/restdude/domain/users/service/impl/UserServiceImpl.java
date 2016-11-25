@@ -18,7 +18,6 @@
 package com.restdude.domain.users.service.impl;
 
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.auth.userdetails.util.DuplicateEmailException;
 import com.restdude.domain.base.service.AbstractModelServiceImpl;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.domain.users.model.*;
@@ -28,7 +27,6 @@ import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserCredentialsService;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
-import com.restdude.util.exception.http.HttpException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -101,9 +99,9 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	@Transactional(readOnly = false)
-	public User findActiveByCredentials(String userNameOrEmail, String password, Map metadata) throws HttpException {
-		
-		User user = null;
+    public User findActiveByCredentials(String userNameOrEmail, String password, Map metadata) {
+
+        User user = null;
 		try {
 			user = this.findActiveByCredentials(userNameOrEmail, password);
 			if (user != null) {
@@ -123,7 +121,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public User create(User resource) throws HttpException {
+    public User create(User resource) {
 
 		// note any credential info
 		UserCredentials credentials = resource.getCredentials();
@@ -203,7 +201,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	
 	@Override
 	@Transactional(readOnly = false)
-	public User createTest(User resource) throws HttpException {
+    public User createTest(User resource) {
 
 		// note any credential info
 		UserCredentials credentials = resource.getCredentials();
@@ -239,8 +237,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword) throws HttpException {
-		Assert.notNull(userNameOrEmail);
+    public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword) {
+        Assert.notNull(userNameOrEmail);
 		User user = this.findOneByUserNameOrEmail(userNameOrEmail);
 		if (user == null) {
 			throw new UsernameNotFoundException("Could not match username: " + userNameOrEmail);
@@ -270,8 +268,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public void handlePasswordResetRequest(String userNameOrEmail) throws HttpException {
-		Assert.notNull(userNameOrEmail);
+    public void handlePasswordResetRequest(String userNameOrEmail) {
+        Assert.notNull(userNameOrEmail);
 		User user = this.findActiveByUserNameOrEmail(userNameOrEmail);
 		if (user == null) {
 			throw new UsernameNotFoundException("Could not match username/email to an active user: " + userNameOrEmail);
@@ -388,10 +386,10 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public User createForImplicitSignup(User userAccountData) throws DuplicateEmailException, HttpException {
-		
-		
-		User existing = this.getPrincipalLocalUser();
+    public User createForImplicitSignup(User userAccountData) {
+
+
+        User existing = this.getPrincipalLocalUser();
 		if (existing == null) {
 			existing = this.repository.findByEmail(userAccountData.getEmail());
 		}
@@ -420,9 +418,9 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	public User changePassword(String userNameOrEmail, String oldPassword, String newPassword,
-							   String newPasswordConfirm) throws HttpException {
-		
-		// make sure we have all params
+                               String newPasswordConfirm) {
+
+        // make sure we have all params
 
 		String[] params = {userNameOrEmail, oldPassword, newPassword, newPasswordConfirm};
 		if (StringUtils.isAnyBlank(userNameOrEmail, oldPassword, newPassword, newPasswordConfirm)) {
@@ -452,8 +450,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations) throws HttpException {
-		UserInvitationResultsDTO results = new UserInvitationResultsDTO();
+    public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations) {
+        UserInvitationResultsDTO results = new UserInvitationResultsDTO();
 		// add from list
 		if(!CollectionUtils.isEmpty(invitations.getRecepients())){
 			// Proces recepients
