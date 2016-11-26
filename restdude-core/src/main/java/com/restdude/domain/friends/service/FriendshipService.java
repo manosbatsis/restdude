@@ -32,4 +32,6 @@ public interface FriendshipService extends ModelService<Friendship, FriendshipId
 //	public Page<UserDTO> findAllMyFriendsPaginated(Pageable pageRequest);
 
 	public void sendStompActivityMessageToOnlineFriends(ActivityNotificationMessage msg);
+
+    Friendship createTest(Friendship resource);
 }

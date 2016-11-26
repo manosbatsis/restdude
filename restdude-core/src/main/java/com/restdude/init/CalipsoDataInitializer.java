@@ -37,10 +37,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -49,9 +52,11 @@ import java.util.Date;
 
 
 @Component
+@Named(CalipsoDataInitializer.BEAN_NAME)
 public class CalipsoDataInitializer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CalipsoDataInitializer.class);
+	public static final String BEAN_NAME = "calipsoDataInitializer";
 
 	private UserService userService;
 	private EmailService emailService;
@@ -110,7 +115,7 @@ public class CalipsoDataInitializer {
 
 
 	@PostConstruct
-	@Transactional(readOnly = false, rollbackFor = Exception.class)
+	@Transactional(readOnly = false)
 	public void postInitialize() {
 		
 		Configuration config = ConfigurationFactory.getConfiguration();
@@ -146,6 +151,10 @@ public class CalipsoDataInitializer {
             adminUser.setCredentials(new UserCredentials.Builder().active(true).username("admin").password("admin").build());
 //			adminUser.setCreatedBy(system);
 			adminUser = userService.createTest(adminUser);
+
+			SecurityContextHolder.getContext().setAuthentication(
+					new UsernamePasswordAuthenticationToken(system, system.getCredentials().getPassword(), system.getRoles()));
+
 
 			User opUser = new User();
 			opUser.setEmail("operator@abiss.gr");

@@ -38,6 +38,17 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	}
 
 	/**
+	 * Create a friendship request
+	 */
+	@Override
+	@Transactional(readOnly = false)
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public Friendship createTest(Friendship resource) {
+		LOGGER.debug("createTest: {}", resource);
+		return this.repository.save(resource);
+	}
+
+	/**
 	 * Approve or reject a friendship request
 	 */
 	@Override
@@ -91,7 +102,7 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 		LOGGER.debug("validateSender returns resource: {}", resource);
 	}
 
-    protected Friendship saveRelationship(Friendship resource) {
+	protected Friendship saveRelationship(Friendship resource) {
 
 		validateSender(resource);
 
