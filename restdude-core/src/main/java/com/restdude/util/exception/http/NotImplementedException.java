@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Signals the appropriate handler for the request is not implemented
  */
-public class NotImplementedException extends HttpException {
+public class NotImplementedException extends SystemException {
 
     protected static final HttpStatus STATUS = HttpStatus.NOT_IMPLEMENTED;
 

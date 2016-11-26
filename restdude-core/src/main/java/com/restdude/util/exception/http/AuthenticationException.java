@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Signals a failure in authentication process
  */
-public class AuthenticationException extends HttpException {
+public class AuthenticationException extends SystemException {
 
     protected static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
 

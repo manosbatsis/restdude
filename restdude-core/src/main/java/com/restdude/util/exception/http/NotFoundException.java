@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Signals the requested resource was not found
  */
-public class NotFoundException extends HttpException {
+public class NotFoundException extends SystemException {
 
     protected static final HttpStatus STATUS = HttpStatus.NOT_FOUND;
 

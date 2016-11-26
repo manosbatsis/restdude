@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Signals a failure in authentication process
  */
-public class BadRequestException extends HttpException {
+public class BadRequestException extends SystemException {
 
     protected static final HttpStatus STATUS = HttpStatus.BAD_REQUEST;
 

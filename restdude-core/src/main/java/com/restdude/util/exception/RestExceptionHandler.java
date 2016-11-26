@@ -2,7 +2,7 @@ package com.restdude.util.exception;
 
 import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.service.SystemErrorService;
-import com.restdude.util.exception.http.HttpException;
+import com.restdude.util.exception.http.SystemException;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,7 +190,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         if (true) {
             try {
                 error.setId(this.systemErrorService.create(error).getId());
-            } catch (HttpException e) {
+            } catch (SystemException e) {
                 LOGGER.error("Failed persisting system error", e);
             }
 
@@ -236,8 +236,8 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
     private void applyHeadersIfPossible(ServletWebRequest webRequest, SystemError error) {
         if (!WebUtils.isIncludeRequest(webRequest.getRequest())
                 && error.getThrowable() != null
-                && HttpException.class.isAssignableFrom(error.getThrowable().getClass())) {
-            Map<String, String> resHeaders = ((HttpException) error.getThrowable()).getResponseHeaders();
+                && SystemException.class.isAssignableFrom(error.getThrowable().getClass())) {
+            Map<String, String> resHeaders = ((SystemException) error.getThrowable()).getResponseHeaders();
             if (MapUtils.isNotEmpty(resHeaders)) {
                 HttpServletResponse response = webRequest.getResponse();
                 for (String headerName : resHeaders.keySet()) {

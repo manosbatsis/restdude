@@ -2,7 +2,7 @@ package com.restdude.util.exception;
 
 
 import com.restdude.domain.error.model.SystemError;
-import com.restdude.util.exception.http.HttpException;
+import com.restdude.util.exception.http.SystemException;
 import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,9 +88,9 @@ public class DefaultRestErrorResolver implements RestErrorResolver, MessageSourc
         // get response status
         HttpStatus status = null;
 
-        // if  HttpException
-        if (HttpException.class.isAssignableFrom(ex.getClass())) {
-            status = ((HttpException) ex).getStatus();
+        // if  SystemException
+        if (SystemException.class.isAssignableFrom(ex.getClass())) {
+            status = ((SystemException) ex).getStatus();
         } else {
             status = this.getStandardExceptionHttpStatus(ex);
         }
