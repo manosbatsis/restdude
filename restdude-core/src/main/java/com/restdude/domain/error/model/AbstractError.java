@@ -4,20 +4,21 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.CurrentPrincipal;
 import com.restdude.mdd.annotation.CurrentPrincipalField;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 
-@MappedSuperclass
+@ApiModel(value = "AbstractError", description = "Generic error superclass")
+@Entity
+@Table(name = "error_abstract")
+@Inheritance(strategy = InheritanceType.JOINED)
 @CurrentPrincipalField(ignoreforRoles = {"ROLE_ADMIN", "ROLE_SITE_OPERATOR"})
-public abstract class AbstractError extends AbstractSystemUuidPersistable {
+public class AbstractError extends AbstractSystemUuidPersistable {
 
     public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
     public static final String PRE_AUTHORIZE_CREATE = "hasRole('ROLE_USER')";
@@ -33,15 +34,20 @@ public abstract class AbstractError extends AbstractSystemUuidPersistable {
     public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
     public static final String PRE_AUTHORIZE_COUNT = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
 
+    public static final int MAX_MESSAGE_LENGTH = 500;
+    public static final int MAX_STACKTRACE_LENGTH = 20000;
+
     @NotNull
     @ApiModelProperty(value = "Message for user")
     @Column(name = "error_message", nullable = false, updatable = false)
     private String message;
 
+    @ApiModelProperty(value = "Date created")
     @NotNull
     @Column(name = "date_created", nullable = false, updatable = false)
     private Date createdDate;
 
+    @ApiModelProperty(value = "User in context")
     @ManyToOne
     @JoinColumn(name = "user_id", updatable = false)
     @CurrentPrincipal

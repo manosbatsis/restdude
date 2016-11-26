@@ -5,59 +5,64 @@ import javax.validation.ConstraintViolation;
 import java.util.Set;
 
 /**
- * Signals a failure in authentication process
+ * Signals a validation failure
  */
-public class BeanValidationException extends BadRequestException {
+public class BeanValidationException extends BadRequestException implements ConstraintViolationException {
 
-    private Set<ConstraintViolation> errors;
+    private Set<ConstraintViolation> constraintViolations;
 
 
     /**
      * Creates a new instance with HTTP 400 status code and message.
+     * @param constraintViolations bean validation errors, if any
      */
-    public BeanValidationException(Set<ConstraintViolation> errors) {
+    public BeanValidationException(Set<ConstraintViolation> constraintViolations) {
         super();
-        this.errors = errors;
+        this.constraintViolations = constraintViolations;
     }
 
     /**
      * Creates a new instance with the specified message and HTTP status 400.
      *
      * @param message the exception detail message
+     * @param constraintViolations bean validation errors, if any
      */
-    public BeanValidationException(final String message, Set<ConstraintViolation> errors) {
+    public BeanValidationException(final String message, Set<ConstraintViolation> constraintViolations) {
         super(message);
-        this.errors = errors;
+        this.constraintViolations = constraintViolations;
     }
 
     /**
      * Creates a new instance with the specified cause and HTTP status 400.
      *
+     * @param constraintViolations bean validation errors, if any
      * @param cause the {@code Throwable} that caused this exception, or {@code null}
      *              if the cause is unavailable, unknown, or not a {@code Throwable}
      */
-    public BeanValidationException(Set<ConstraintViolation> errors, final Throwable cause) {
+    public BeanValidationException(Set<ConstraintViolation> constraintViolations, final Throwable cause) {
         super(cause);
-        this.errors = errors;
+        this.constraintViolations = constraintViolations;
     }
 
     /**
      * Creates a new instance with the specified message, cause and HTTP status 400.
      *
      * @param message the exception detail message
+     * @param constraintViolations bean validation errors, if any
      * @param cause   the {@code Throwable} that caused this exception, or {@code null}
      *                if the cause is unavailable, unknown, or not a {@code Throwable}
      */
-    public BeanValidationException(final String message, Set<ConstraintViolation> errors, final Throwable cause) {
+    public BeanValidationException(final String message, Set<ConstraintViolation> constraintViolations, final Throwable cause) {
         super(message, cause);
-        this.errors = errors;
+        this.constraintViolations = constraintViolations;
     }
 
-    public Set<ConstraintViolation> getErrors() {
-        return errors;
+    @Override
+    public Set<ConstraintViolation> getConstraintViolations() {
+        return constraintViolations;
     }
 
-    public void setErrors(Set<ConstraintViolation> errors) {
-        this.errors = errors;
+    public void setConstraintViolations(Set<ConstraintViolation> constraintViolations) {
+        this.constraintViolations = constraintViolations;
     }
 }

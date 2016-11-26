@@ -20,9 +20,9 @@ package com.restdude.domain.base.repository;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.Metadatum;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -41,7 +41,7 @@ import java.util.Optional;
  * @see org.springframework.data.domain.Page
  */
 @NoRepositoryBean
-public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Serializable> extends PagingAndSortingRepository<T, ID> {
+public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
 
 	EntityManager getEntityManager();
 	

@@ -58,7 +58,7 @@ import java.util.*;
 /**
  * Generates <code>Repository</code>, <code>Service</code> and
  * <code>Controller</code> tiers for entity beans are annotated with
- * {@link javax.persistence.ModelResource} or
+ * {@link com.restdude.mdd.annotation.ModelResource} or
  * {@link com.restdude.mdd.annotation.ModelRelatedResource}.
  */
 public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
@@ -261,7 +261,8 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	protected void createRepository(BeanDefinitionRegistry registry, ModelContext modelContext)
 			throws NotFoundException, CannotCompileException {
 		if (modelContext.getRepositoryDefinition() == null) {
-			Class<?> repoSUperInterface = ModelRepository.class;
+            LOGGER.debug("#createRepository: CREATE repository for model type: {}", modelContext.getModelType().getName());
+            Class<?> repoSUperInterface = ModelRepository.class;
 
 			String newBeanPackage = modelContext.getBeansBasePackage() + ".repository";
 
@@ -283,7 +284,8 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 			modelContext.setRepositoryType(newRepoInterface);
 
 		} else {
-			// mote the repository interface as a possible dependency to a
+            LOGGER.debug("#createRepository: NOTE repository for model type: {}", modelContext.getModelType().getName());
+            // mote the repository interface as a possible dependency to a
 			// service
 			Class<?> beanClass = ClassUtils.getClass(modelContext.getRepositoryDefinition().getBeanClassName());
 			// get the actual interface in case of a factory
@@ -336,16 +338,20 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 					}
 				}
 				// if repository
+
 				else if (isOfType(def, JpaRepositoryFactoryBean.class) || isOfType(def, JpaRepository.class)) {
 					String repoName = (String) def.getPropertyValues().get("repositoryInterface");
 
 					Class<?> repoInterface = ClassUtils.getClass(repoName);
-					if (JpaRepository.class.isAssignableFrom(repoInterface)) {
-						Class<?> entity = GenericTypeResolver.resolveTypeArguments(repoInterface,
+                    LOGGER.debug("#findExistingBeans found repository bean: {}, class: {}", repoName, repoInterface.getCanonicalName());
+                    if (JpaRepository.class.isAssignableFrom(repoInterface)) {
+                        LOGGER.debug("#findExistingBeans repository bean: {}, is assignable", repoName);
+                        Class<?> entity = GenericTypeResolver.resolveTypeArguments(repoInterface,
 								JpaRepository.class)[0];
 						ModelContext modelContext = entityModelContextsMap.get(entity);
 						if (modelContext != null) {
-							modelContext.setRepositoryDefinition(def);
+                            LOGGER.debug("#findExistingBeans repository bean: {}, added to modelContext", repoName);
+                            modelContext.setRepositoryDefinition(def);
 						}
 					}
 				}

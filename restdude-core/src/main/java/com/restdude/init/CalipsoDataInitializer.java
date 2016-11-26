@@ -25,10 +25,10 @@ import com.restdude.domain.geography.service.CountryService;
 import com.restdude.domain.users.model.Role;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
-import com.restdude.domain.users.repository.RoleRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeBatchRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
+import com.restdude.domain.users.service.RoleService;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.domain.util.email.service.EmailService;
 import com.restdude.util.ConfigurationFactory;
@@ -57,8 +57,8 @@ public class CalipsoDataInitializer {
 	private EmailService emailService;
 	private ContinentService continentService;
 	private CountryService countryService;
-	private RoleRepository roleRepository;
-	private UserRepository userRepository;
+    private RoleService roleService;
+    private UserRepository userRepository;
 	private ModelRepository<UserCredentials, String> credentialsRepository;
 	private UserRegistrationCodeRepository userRegistrationCodeRepository;
 	private UserRegistrationCodeBatchRepository userRegistrationCodeBatchRepository;
@@ -84,9 +84,9 @@ public class CalipsoDataInitializer {
 	}
 
 	@Autowired
-	public void setRoleRepository(RoleRepository roleRepository) {
-		this.roleRepository = roleRepository;
-	}
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
 	@Autowired
 	public void setUserRepository(UserRepository userRepository) {
@@ -117,16 +117,17 @@ public class CalipsoDataInitializer {
 		boolean initData = config.getBoolean(ConfigurationFactory.INIT_DATA, true);
 
 		if (initData && this.userRepository.count() == 0) {
-			
+            LOGGER.debug("postInitialize, creating data");
 
-			this.initContinentsAndCountries();
+
+            this.initContinentsAndCountries();
 			this.initRoles();
-			
-			
-			Role adminRole = this.roleRepository.findByIdOrName(Role.ROLE_ADMIN);
-			Role operatorRole = this.roleRepository.findByIdOrName(Role.ROLE_SITE_OPERATOR);
-			
-			Date now = new Date();
+
+
+            Role adminRole = this.roleService.findByIdOrName(Role.ROLE_ADMIN);
+            Role operatorRole = this.roleService.findByIdOrName(Role.ROLE_SITE_OPERATOR);
+
+            Date now = new Date();
 
 			User system = new User();
 			system.setEmail("system@abiss.gr");
@@ -179,7 +180,11 @@ public class CalipsoDataInitializer {
 			}
 
 
-		}
+		} else {
+
+            LOGGER.debug("postInitialize, skipping data");
+        }
+
 		
 		// send test email?
 		if(config.getBoolean(ConfigurationFactory.TEST_EMAIL_ENABLE, false)){
@@ -194,22 +199,27 @@ public class CalipsoDataInitializer {
 	}
 
 
-	private void initRoles() {
-		if (this.roleRepository.count() == 0) {
-			Role adminRole = new Role(Role.ROLE_ADMIN, "System Administrator.");
-			adminRole = this.roleRepository.save(adminRole);
-			Role siteAdminRole = new Role(Role.ROLE_SITE_OPERATOR, "Site Operator.");
-			siteAdminRole = this.roleRepository.save(siteAdminRole);
-			// this is added to users by user service, just creating it
+    protected void initRoles() {
+        if (this.roleService.count() == 0) {
+            LOGGER.debug("#initRoles, creating");
+            Role adminRole = new Role(Role.ROLE_ADMIN, "System Administrator.");
+            adminRole = this.roleService.create(adminRole);
+            Role siteAdminRole = new Role(Role.ROLE_SITE_OPERATOR, "Site Operator.");
+            siteAdminRole = this.roleService.create(siteAdminRole);
+            // this is added to users by user service, just creating it
 			Role userRole = new Role(Role.ROLE_USER, "Logged in user");
-			userRole = this.roleRepository.save(userRole);
-		}
-	}
+            userRole = this.roleService.create(userRole);
+        } else {
+
+            LOGGER.debug("#initRoles, skipping");
+        }
+    }
 
 	protected void initContinentsAndCountries() {
 
 		if (continentService.count() == 0) {
-			Continent AF = continentService.create(new Continent("AF", "Africa"));
+            LOGGER.debug("#initContinentsAndCountries, creating");
+            Continent AF = continentService.create(new Continent("AF", "Africa"));
 			Continent AN = continentService.create(new Continent("AN", "Antarctica"));
 			Continent AS = continentService.create(new Continent("AS", "Asia"));
 			Continent EU = continentService.create(new Continent("EU", "Europe"));
@@ -544,7 +554,10 @@ public class CalipsoDataInitializer {
 					"af,en,nr,st,ss,tn,ts,ve,xh,zu"));
 			countryService.create(new Country("ZM", "Zambia", "Zambia", "260", AF, "Lusaka", "ZMK", "en"));
 			countryService.create(new Country("ZW", "Zimbabwe", "Zimbabwe", "263", AF, "Harare", "ZWL", "en,sn,nd"));
-		}
+        } else {
+
+            LOGGER.debug("#initContinentsAndCountries, skipping");
+        }
 	}
 
 	private String[] getTenNames() {

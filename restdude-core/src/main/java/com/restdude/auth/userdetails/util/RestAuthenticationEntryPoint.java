@@ -17,8 +17,10 @@
  */
 package com.restdude.auth.userdetails.util;
 
+import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -50,13 +52,23 @@ import java.io.PrintWriter;
 public final class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestAuthenticationEntryPoint.class);
-	
+    private static final String BODY = "{\"message\":\"Not authenticated\", \"httpStatusCode\":401,\"httpStatusMessage\":\"Unauthorized\"}";
+
+
+    protected UserDetailsConfig userDetailsConfig = new SimpleUserDetailsConfig();
+
+    @Autowired(required = false)
+    public void setUserDetailsConfig(UserDetailsConfig userDetailsConfig) {
+        this.userDetailsConfig = userDetailsConfig;
+    }
+
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        SecurityUtil.logout(request, response, userDetailsConfig);
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter out = response.getWriter();
-        out.print("{\"message\":\"Full authentication is required to access this resource.\", \"access-denied\":true,\"cause\":\"NOT AUTHENTICATED\"}");
+        out.print(BODY);
         out.flush();
         out.close();
     }

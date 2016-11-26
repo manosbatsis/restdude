@@ -3,19 +3,14 @@ package com.restdude.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,16 +22,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 
-@Configuration
-@ComponentScan({"com.restdude"})
-@EnableAutoConfiguration
-@EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.restdude"},
-        repositoryFactoryBeanClass = com.restdude.domain.base.repository.ModelRepositoryFactoryBean.class
-        //,
-        //repositoryBaseClass = com.restdude.domain.base.repository.BaseRepositoryImpl.class
-)
-public class AbstractPersistenceJPAConfig {
+public abstract class AbstractPersistenceJPAConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceJPAConfig.class);
 

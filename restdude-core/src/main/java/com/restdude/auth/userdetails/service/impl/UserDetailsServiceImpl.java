@@ -27,6 +27,7 @@ import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
+import com.restdude.util.exception.http.InvalidCredentialsException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,14 +92,16 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	@Override
 	public ICalipsoUserDetails loadUserByUsername(
 			String findByUsernameOrEmail) throws UsernameNotFoundException {
-		ICalipsoUserDetails userDetails = null;
+
+        LOGGER.debug("#loadUserByUsername, findByUsernameOrEmail: {}", findByUsernameOrEmail);
+        ICalipsoUserDetails userDetails = null;
 
         User user = this.userService.findActiveByUserNameOrEmail(findByUsernameOrEmail);
 		if (user == null) {
 			throw new UsernameNotFoundException("Could not match username: " + findByUsernameOrEmail);
 		}
-
-		return UserDetails.fromUser(user);
+        LOGGER.debug("#loadUserByUsername, user: {}", user);
+        return UserDetails.fromUser(user);
 	}
 
 	/**
@@ -126,9 +129,13 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 				User user = this.userService
 						.findActiveByCredentials(usernameOrEmail, password, metadata);
 				if (user != null && user.getId() != null) {
-					// convert to UserDetails if not null
+
+                    LOGGER.info("#create, user: {}", user);
+                    // convert to UserDetails if not null
 					userDetails = UserDetails.fromUser(user);
-				}
+				} else {
+                    throw new InvalidCredentialsException();
+                }
 
 			}
 
@@ -152,7 +159,6 @@ public class UserDetailsServiceImpl implements UserDetailsService,
     public ICalipsoUserDetails resetPassword(PasswordResetRequest passwordResetRequest) {
         ICalipsoUserDetails userDetails = this.getPrincipal();
 		User u = null;
-		LOGGER.debug("resetPassword, userDetails: {}, currentPassword: {}", userDetails, passwordResetRequest.getCurrentPassword());
 		// Case 1: if authorized as current user, require current password
 		if (userDetails != null && StringUtils.isNotBlank(passwordResetRequest.getCurrentPassword())) {
 			u = this.userService.changePassword(
@@ -204,8 +210,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 		}
 
 		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("getPrincipalUser, user: " + user);
-		}
+            LOGGER.debug("#getPrincipalUser, user: {}", user);
+        }
 		return user;
 	}
 
@@ -218,10 +224,10 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
 		ICalipsoUserDetails userDetails = null;
 
-		// LOGGER.info("loadUserByUserId using: " + userId);
+        LOGGER.info("#loadUserByUserId using: {}", userId);
         User user = this.userService.findActiveById(userId);
 
-		// LOGGER.info("loadUserByUserId user: " + user);
+        LOGGER.info("#loadUserByUserId user: {}", user);
         if (user != null && user.getCredentials().getActive()) {
             userDetails = UserDetails.fromUser(user);
 		}
@@ -280,8 +286,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 		//userService.createAccount(account);
 		String result = user != null && user.getId() != null ? user.getId().toString() : null;
 		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("ConnectionSignUp#execute, returning result: "+result); 
-		}
+            LOGGER.debug("ConnectionSignUp#execute, returning result: {}", result);
+        }
 		return result;
 	}
 
@@ -291,16 +297,16 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	 */
 	@Override
 	public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
-		LOGGER.info("signIn, userId: " + userId);
+        LOGGER.info("#signIn, userId: {}", userId);
 
         User user = this.userService.findActiveById(userId);
         if(user == null){
             user = this.userService.findActiveByUserNameOrEmail(userId);
         }
-		//if(LOGGER.isDebugEnabled()){
-			LOGGER.info("SignInAdapter#signIn userId: " + userId + ", connection: " + connection.getKey() + ", mached user: " + user);
-		//}
-		if(user != null){
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.info("#signIn userId: " + userId + ", connection: " + connection.getKey() + ", mached user: {}", user);
+        }
+        if(user != null){
 			SecurityUtil.login((HttpServletRequest) request.getNativeRequest(), (HttpServletResponse) request.getNativeResponse(), user, this.userDetailsConfig, this);
 		}
 		return null;
@@ -309,8 +315,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	@Override
 	public ICalipsoUserDetails createForImplicitSignup(
             User user) {
-        LOGGER.info("createForImplicitSignup, user: " + user);
-		ICalipsoUserDetails userDetails = UserDetails
+        LOGGER.info("#createForImplicitSignup, user: {}", user);
+        ICalipsoUserDetails userDetails = UserDetails
 				.fromUser(this.userService.createForImplicitSignup(user));
 		return userDetails;
 	}

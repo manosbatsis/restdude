@@ -24,16 +24,15 @@ import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
+import com.restdude.util.exception.http.InvalidCredentialsException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -74,7 +73,7 @@ public class UserDetailsController {
             notes = "Login using a JSON object with email/password properties.")
     public ICalipsoUserDetails create(@RequestBody LoginSubmission resource) {
         ICalipsoUserDetails userDetails = new UserDetails(resource);
-        LOGGER.debug("create, LoginSubmission: {}", resource);
+        LOGGER.debug("#create, LoginSubmission: {}", resource);
         userDetails = this.service.create(userDetails);
         if (userDetails != null && userDetails.getId() != null) {
 
@@ -82,32 +81,35 @@ public class UserDetailsController {
             SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.service);
         } else {
 
-            LOGGER.info("login failed, logging out: " + userDetails);
+            LOGGER.debug("#create, login failed, logging out");
             SecurityUtil.logout(request, response, userDetailsConfig);
-            userDetails = new UserDetails();
         }
         return userDetails;
     }
 
     @ApiOperation(value = "Remember",
-            notes = "Login remembered user")
+            notes = "Login user if remembered")
     @RequestMapping(method = RequestMethod.GET)
     public ICalipsoUserDetails remember() {
         ICalipsoUserDetails userDetails = this.service.getPrincipal();
-        if (userDetails == null) {
-            userDetails = new UserDetails();
+        if (userDetails == null || userDetails.getId() == null) {
+            LOGGER.debug("#remember failed, logging out");
+            SecurityUtil.logout(request, response, userDetailsConfig);
+            throw new InvalidCredentialsException("Not authenticated");
+        } else {
+            LOGGER.debug("#remember successful, userDetails: {}", userDetails);
+            return userDetails;
         }
-        return userDetails;
 
     }
 
     @ApiOperation(value = "Logout",
             notes = "Logout and forget user")
     @RequestMapping(method = RequestMethod.DELETE)
-    public ICalipsoUserDetails delete() {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete() {
         // logout
         SecurityUtil.logout(request, response, userDetailsConfig);
-        return new UserDetails();
     }
 
     @RequestMapping(value = "verification", method = RequestMethod.POST)

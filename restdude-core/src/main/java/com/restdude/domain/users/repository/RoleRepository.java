@@ -19,14 +19,12 @@ package com.restdude.domain.users.repository;
 
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.users.model.Role;
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@JaversSpringDataAuditable
 public interface RoleRepository extends ModelRepository<Role, String> {
 
 	@Query("select r from Role r where r.name = ?1")

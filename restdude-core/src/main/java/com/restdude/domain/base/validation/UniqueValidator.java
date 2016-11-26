@@ -56,6 +56,10 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                 // process violating records
                 if (!resultSet.isEmpty()) {
 
+                    // disable default constraint vilation construction
+                    // as it will point to  the object instead of the property
+                    constraintValidatorContext.disableDefaultConstraintViolation();
+
                     for (CalipsoPersistable match : resultSet) {
                         if (!match.getId().equals(value.getId())) {
                             for (String propertyName : uniqueFieldNames) {
@@ -67,7 +71,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                                     valid = false;
                                     // report violation
                                     constraintValidatorContext
-                                            .buildConstraintViolationWithTemplate("Unique value is unavailable")
+                                            .buildConstraintViolationWithTemplate("Unique value not available")
                                             .addPropertyNode(propertyName).addConstraintViolation();
                                 }
                             }

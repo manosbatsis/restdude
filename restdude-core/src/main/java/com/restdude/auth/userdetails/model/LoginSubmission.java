@@ -36,8 +36,6 @@ public class LoginSubmission implements Serializable{
 		return new ToStringBuilder(this)
 			.append("username", username)
 			.append("email", email)
-			.append("password", password)
-			.append("resetPasswordToken", resetPasswordToken)
 			.toString();
 	}
 

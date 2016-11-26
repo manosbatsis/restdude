@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Named;
 import java.util.Date;
 
-@Named("systemErrorService")
+@Named(SystemErrorService.BEAN_ID)
 public class SystemErrorServiceImpl extends AbstractModelServiceImpl<SystemError, String, SystemErrorRepository>
         implements SystemErrorService {
 
