@@ -47,6 +47,8 @@ public class AuditJaversConfig {
         dialectsMap.put("org.hibernate.dialect.SQLServerDialect", DialectName.MSSQL);
         dialectsMap.put("org.hibernate.dialect.H2Dialect", DialectName.H2);
         dialectsMap.put("org.hibernate.dialect.PostgreSQLDialect", DialectName.POSTGRES);
+        dialectsMap.put("org.hibernate.dialect.PostgreSQL9Dialect", DialectName.POSTGRES);
+
         dialectsMap.put("ORACLE", DialectName.ORACLE);
         dialectsMap.put("org.hibernate.dialect.MySQL5InnoDBDialect", DialectName.MYSQL);
     }
