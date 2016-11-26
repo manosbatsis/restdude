@@ -66,6 +66,10 @@ public class UserDTO implements IMessageResource<String> {
         this.stompSessionCount = stompSessionCount;
     }
 
+    public UserDTO(User user) {
+        this(user.getId(), user.getFirstName(), user.getLastName(), user.getCredentials() != null ? user.getCredentials().getUsername() : null, user.getEmail(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString()).append("id", this.getUsername())

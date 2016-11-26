@@ -151,7 +151,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	private Integer stompSessionCount;
 
 	@JsonIgnore
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	UserCredentials credentials;
 
 	// @OneToOne(optional = true, fetch=FetchType.LAZY)

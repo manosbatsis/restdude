@@ -80,6 +80,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	private String redirectUrl = null;
 
 	private Boolean active = false;
+	private Integer stompSessionCount = 0;
 
 	@JsonSerialize(using = SkipPropertySerializer.class)
 	private String inactivationReason;
@@ -171,6 +172,14 @@ public class UserDetails implements  ICalipsoUserDetails{
     public void preSave() {
 
     }
+
+	public Integer getStompSessionCount() {
+		return stompSessionCount;
+	}
+
+	public void setStompSessionCount(Integer stompSessionCount) {
+		this.stompSessionCount = stompSessionCount;
+	}
 
 	/**
      * @see ICalipsoUserDetails#getFirstName()
