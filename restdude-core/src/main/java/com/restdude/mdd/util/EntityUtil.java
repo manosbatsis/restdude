@@ -19,6 +19,7 @@ package com.restdude.mdd.util;
 
 import com.restdude.mdd.annotation.ModelRelatedResource;
 import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
@@ -29,6 +30,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
+import javax.persistence.Entity;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -37,7 +39,8 @@ import java.util.Set;
 public class EntityUtil {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityUtil.class);
-	
+
+
 	@SuppressWarnings("unchecked")
 	public static <T> T getParentEntity(Object child){
         ModelRelatedResource anr = child.getClass().getAnnotation(ModelRelatedResource.class);
@@ -47,19 +50,37 @@ public class EntityUtil {
         Object parent = ReflectionUtils.getField(field, child);
         return (T) parent;
     }
-    
-    public static Set<BeanDefinition> findAnnotatedClasses(String scanPackage) {
-        ClassPathScanningCandidateComponentProvider provider = createComponentScanner();
-        return provider.findCandidateComponents(scanPackage);
-    }
-    
-    public static ClassPathScanningCandidateComponentProvider createComponentScanner() {
-        // Don't pull default filters (@Component, etc.):
+
+	public static Set<BeanDefinition> findModelResources(String scanPackage) {
+		ClassPathScanningCandidateComponentProvider provider = createComponentScanner(ModelResource.class, ModelRelatedResource.class);
+		return provider.findCandidateComponents(scanPackage);
+	}
+
+	private static Set<BeanDefinition> findEntities(String scanPackage) {
+		ClassPathScanningCandidateComponentProvider provider = createComponentScanner(Entity.class);
+		return provider.findCandidateComponents(scanPackage);
+	}
+
+	public static Set<String> findEntityPackageNames(String... basePackages) {
+		Set<String> pkgs = new HashSet<String>();
+		for (String basePackage : basePackages) {
+			Set<BeanDefinition> entityBeanDefs = EntityUtil.findEntities(basePackage);
+			for (BeanDefinition beanDef : entityBeanDefs) {
+				Class<?> entity = ClassUtils.getClass(beanDef.getBeanClassName());
+				pkgs.add(entity.getPackage().getName());
+			}
+		}
+		return pkgs;
+	}
+
+	public static ClassPathScanningCandidateComponentProvider createComponentScanner(Class... annotations) {
+		// Don't pull default filters (@Component, etc.):
         ClassPathScanningCandidateComponentProvider provider
                 = new ClassPathScanningCandidateComponentProvider(false);
-        provider.addIncludeFilter(new AnnotationTypeFilter(ModelResource.class));
-        provider.addIncludeFilter(new AnnotationTypeFilter(ModelRelatedResource.class));
-        return provider;
+		for (Class annotation : annotations) {
+			provider.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		}
+		return provider;
     }
     
     public static Class<?> getIdType(Class<?> modelType) {

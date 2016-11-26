@@ -87,7 +87,8 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 
 		try {
-            findModels("**.calipso.**.model", "**.restdude.**.model");
+			findModels("**.calipso", "**.restdude");
+
             findExistingBeans(registry);
 			createBeans(registry);
 			LOGGER.info("Completed generation");
@@ -97,6 +98,7 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	
 
 	}
+
 
 	public void createBeans(BeanDefinitionRegistry registry) throws NotFoundException, CannotCompileException {
 
@@ -380,8 +382,8 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	// @Override
     protected void findModels(String... basePackages) throws Exception {
         for (String basePackage : basePackages) {
-            Set<BeanDefinition> entityBeanDefs = EntityUtil.findAnnotatedClasses(basePackage);
-            for (BeanDefinition beanDef : entityBeanDefs) {
+			Set<BeanDefinition> entityBeanDefs = EntityUtil.findModelResources(basePackage);
+			for (BeanDefinition beanDef : entityBeanDefs) {
                 Class<?> entity = ClassUtils.getClass(beanDef.getBeanClassName());
                 LOGGER.info("Found resource model class {}", entity.getCanonicalName());
                 entityModelContextsMap.put(entity, ModelContext.from(entity));

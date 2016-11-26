@@ -1,10 +1,10 @@
 package com.restdude.config;
 
+import com.restdude.mdd.util.EntityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -24,9 +24,9 @@ import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
 
 @Configuration
-@ComponentScan({"**.restdude", "**.calipso"})
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"**.restdude", "**.calipso"},
         repositoryFactoryBeanClass = com.restdude.domain.base.repository.ModelRepositoryFactoryBean.class,
@@ -35,6 +35,7 @@ import java.util.Properties;
 public class PersistenceJPAConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceJPAConfig.class);
+    public static final String[] BASE_PACKAGES = {"**.restdude", "**.calipso"};
 
     public static String getPropertyAsString(Properties prop) {
         StringWriter writer = new StringWriter();
@@ -82,19 +83,22 @@ public class PersistenceJPAConfig {
     @Value("${calipso.hibernate.id.new_generator_mappings}")
     private String emHbmIdNewGeneratorMappings;
 
-
     @Bean
     public EntityManagerFactory entityManagerFactory() throws SQLException {
-        LOGGER.debug("entityManagerFactory");
-        String[] packages = {"com.restdude"};//this.emPackagesToScan.split(",");
-        LOGGER.debug("entityManagerFactory setPackagesToScan: {}", Arrays.toString(packages));
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(packages);
+
+        // expand package patterns because
+        // org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.setPackagesToScan()
+        // does not handle wildcards
+        Set<String> entityPackageNames = EntityUtil.findEntityPackageNames(BASE_PACKAGES);
+        String[] entityPackages = entityPackageNames.toArray(new String[entityPackageNames.size()]);
+        LOGGER.debug("entityManagerFactory setPackagesToScan: {}", Arrays.toString(entityPackages));
+        em.setPackagesToScan(entityPackages);
 
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
