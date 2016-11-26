@@ -90,7 +90,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@Column(name = "last_name", nullable = true)
 	private String lastName;
 
-	@Column(name = "introduction", length = 500, nullable = true)
+	@Column(name = "introduction", length = 1000, nullable = true)
 	private String introduction;
 
 	@Transient
