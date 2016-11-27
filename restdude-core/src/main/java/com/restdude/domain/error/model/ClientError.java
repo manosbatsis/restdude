@@ -1,6 +1,10 @@
 package com.restdude.domain.error.model;
 
+import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
 import com.restdude.domain.fs.FilePersistence;
+import com.restdude.domain.fs.FilePersistencePreview;
+import com.restdude.domain.users.model.User;
+import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+@ModelResource(path = ClientError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+		apiName = "Client Errors", apiDescription = "Client Error Operations (readonly)")
 @Entity
 @Table(name = "error_client")
 @ApiModel(value = "ClientError", description = "Client errors are created upon client request and refer to exceptions occurred " +
@@ -20,6 +26,7 @@ public class ClientError extends AbstractError {
 
 	@ApiModelProperty(value = "A client application screenshot demonstrating the issue.")
 	@FilePersistence(maxWidth = 1920, maxHeight = 1080)
+	@FilePersistencePreview(maxWidth = 200, maxHeight = 200)
 	@Column(name = "screenshot_url")
 	private String screenshotUrl;
 
@@ -71,11 +78,23 @@ public class ClientError extends AbstractError {
 
 	public static class Builder {
 		private String message;
+		private User user;
+		private String screenshotUrl;
 		private String description;
 		private String errorLog;
 
 		public Builder message(String message) {
 			this.message = message;
+			return this;
+		}
+
+		public Builder user(User user) {
+			this.user = user;
+			return this;
+		}
+
+		public Builder screenshotUrl(String screenshotUrl) {
+			this.screenshotUrl = screenshotUrl;
 			return this;
 		}
 
@@ -96,6 +115,8 @@ public class ClientError extends AbstractError {
 
 	private ClientError(Builder builder) {
 		this.setMessage(builder.message);
+		this.setUser(builder.user);
+		this.screenshotUrl = builder.screenshotUrl;
 		this.description = builder.description;
 		this.errorLog = builder.errorLog;
 	}

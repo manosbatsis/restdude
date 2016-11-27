@@ -1,4 +1,4 @@
-package com.restdude.domain.error;
+package com.restdude.domain.error.controller;
 
 import com.restdude.domain.base.controller.AbstractNoDeleteModelController;
 import com.restdude.domain.base.controller.IFilesModelController;

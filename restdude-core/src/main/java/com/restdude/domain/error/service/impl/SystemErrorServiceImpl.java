@@ -60,7 +60,9 @@ public class SystemErrorServiceImpl extends AbstractModelServiceImpl<SystemError
         Date now = new Date();
         resource.setCreatedDate(now);
         // assign new or existing stacktrace
-        resource.setStackTrace(this.getStackTrace(now, resource.getThrowable()));
+        if (resource.getStackTrace() == null && resource.getThrowable() != null) {
+            resource.setStackTrace(this.getStackTrace(now, resource.getThrowable()));
+        }
 
         // save and return
         return super.create(resource);

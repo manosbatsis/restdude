@@ -1,9 +1,11 @@
 package com.restdude.domain.error.model;
 
+import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.CurrentPrincipal;
 import com.restdude.mdd.annotation.CurrentPrincipalField;
+import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,12 +15,15 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 
+@ModelResource(path = AbstractError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+        apiName = "Errors", apiDescription = "Error Operations (readonly)")
 @ApiModel(value = "AbstractError", description = "Generic error superclass")
 @Entity
 @Table(name = "error_abstract")
 @Inheritance(strategy = InheritanceType.JOINED)
 @CurrentPrincipalField(ignoreforRoles = {"ROLE_ADMIN", "ROLE_SITE_OPERATOR"})
 public class AbstractError extends AbstractSystemUuidPersistable {
+    public static final String API_PATH = "allErrors";
 
     public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
     public static final String PRE_AUTHORIZE_CREATE = "hasRole('ROLE_USER')";

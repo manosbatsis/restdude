@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
+import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.HttpUtil;
 import com.restdude.util.exception.http.ConstraintViolationException;
@@ -172,6 +173,10 @@ public class SystemError extends AbstractError {
 	}
 
 	public static class Builder {
+
+		private String message;
+		private User user;
+
 		private String requestMethod;
 		private String requestUrl;
 		private Integer httpStatusCode;
@@ -179,6 +184,15 @@ public class SystemError extends AbstractError {
 		private Throwable throwable;
 		private StackTrace stackTrace;
 
+		public Builder message(String message) {
+			this.message = message;
+			return this;
+		}
+
+		public Builder user(User user) {
+			this.user = user;
+			return this;
+		}
 		public Builder requestMethod(String requestMethod) {
 			this.requestMethod = requestMethod;
 			return this;
@@ -215,6 +229,10 @@ public class SystemError extends AbstractError {
 	}
 
 	private SystemError(Builder builder) {
+
+		this.setMessage(builder.message);
+		this.setUser(builder.user);
+
 		this.requestMethod = builder.requestMethod;
 		this.requestUrl = builder.requestUrl;
 		this.httpStatusCode = builder.httpStatusCode;
