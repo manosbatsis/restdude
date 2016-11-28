@@ -1,0 +1,14 @@
+header('ngheader'='')
+
+section(class='content')
+
+	header
+		img(class='logo', src='images/angularjs.png')
+		img(class='logo', src='images/polymer.png')
+
+	.buttons.row
+		link(rel='import' href='modules/libButton.html')
+		element-libButton('ng-repeat'='lib in data.libs', name='{{lib.name}}', url='{{lib.url}}')
+
+link(rel='import' href='modules/footer.html')
+element-footer(year='2015')
