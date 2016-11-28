@@ -20,8 +20,8 @@ package com.restdude.mdd.processor;
 import com.restdude.domain.base.controller.ModelController;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.repository.ModelRepositoryFactoryBean;
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
 import com.restdude.domain.base.service.ModelService;
+import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.mdd.util.CreateClassCommand;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.mdd.util.JavassistUtil;
@@ -152,24 +152,30 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	 */
 	protected void createController(BeanDefinitionRegistry registry, ModelContext modelContext) {
 		if (modelContext.getControllerDefinition() == null) {
-			String newBeanNameSuffix = "Controller";
-			String newBeanClassName = modelContext.getGeneratedClassNamePrefix() + newBeanNameSuffix;
-			String newBeanRegistryName = StringUtils.uncapitalize(newBeanClassName);
-			String newBeanPackage = modelContext.getBeansBasePackage() + ".controller";
+			String className = modelContext.getGeneratedClassNamePrefix() + "Controller";
+			String beanName = StringUtils.uncapitalize(className);
+			String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
+					.append(".controller.")
+					.append(className).toString();
+
+			// gfire up a create command
+			CreateClassCommand createControllerCmd = new CreateClassCommand(fullClassName,
+					modelContext.getControllerSuperClass());
 
 			// grab the generic types
 			List<Class<?>> genericTypes = modelContext.getGenericTypes();
 			genericTypes.add(modelContext.getServiceInterfaceType());
-			CreateClassCommand createControllerCmd = new CreateClassCommand(newBeanPackage + newBeanClassName,
-					modelContext.getControllerSuperClass());
 			createControllerCmd.setGenericTypes(genericTypes);
-			LOGGER.info("Creating class " + newBeanClassName + 
-					", super: " + modelContext.getControllerSuperClass().getName() + 
+
+
+			LOGGER.debug("Creating class " + fullClassName +
+					", super: " + modelContext.getControllerSuperClass().getName() +
 					", genericTypes: " + genericTypes);
-			
-			// add @Controller stereotype annotation
+
+
+			// add @RestController stereotype annotation
 			Map<String, Object> controllerMembers = new HashMap<String, Object>();
-			controllerMembers.put("value", newBeanRegistryName);
+			controllerMembers.put("value", beanName);
 			createControllerCmd.addTypeAnnotation(RestController.class, controllerMembers);
 
 			// set swagger Api annotation
@@ -197,8 +203,8 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 			AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(controllerClass)
 					.addDependsOn(serviceDependency).setAutowireMode(Autowire.BY_NAME.value()).getBeanDefinition();
 
-			LOGGER.info("Registering bean " + newBeanRegistryName);
-			registry.registerBeanDefinition(newBeanRegistryName, beanDefinition);
+			LOGGER.info("Registering bean " + beanName);
+			registry.registerBeanDefinition(beanName, beanDefinition);
 
 		}
 	}
@@ -207,33 +213,41 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 			throws NotFoundException, CannotCompileException {
 		if (modelContext.getServiceDefinition() == null) {
 
-			String newBeanClassName = modelContext.getGeneratedClassNamePrefix() + "Service";
-			String newBeanRegistryName = StringUtils.uncapitalize(newBeanClassName);
+			String className = modelContext.getGeneratedClassNamePrefix() + "Service";
+			String beanName = StringUtils.uncapitalize(className);
+			String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
+					.append(".service.")
+					.append(className).toString();
+			LOGGER.debug("createService interface: {}", fullClassName);
 
-			String newBeanPackage = modelContext.getBeansBasePackage() + ".service";
+
 			// grab the generic types
 			List<Class<?>> genericTypes = modelContext.getGenericTypes();
 
 			// extend the base service interface
-			Class<?> newServiceInterface = JavassistUtil.createInterface(newBeanPackage + newBeanClassName,
+			Class<?> newServiceInterface = JavassistUtil.createInterface(fullClassName,
 					ModelService.class, genericTypes);
 			ArrayList<Class<?>> interfaces = new ArrayList<Class<?>>(1);
 			interfaces.add(newServiceInterface);
 
 			// create a service implementation bean
-			CreateClassCommand createServiceCmd = new CreateClassCommand(
-					newBeanPackage + "impl." + newBeanClassName + "Impl", AbstractModelServiceImpl.class);
+			String newBImpllassName = new StringBuffer(modelContext.getBeansBasePackage())
+					.append(".service.impl.")
+					.append(className)
+					.append("Impl").toString();
+			LOGGER.debug("createService class: {}", newBImpllassName);
+			CreateClassCommand createServiceCmd = new CreateClassCommand(newBImpllassName, AbstractModelServiceImpl.class);
 			createServiceCmd.setInterfaces(interfaces);
 			createServiceCmd.setGenericTypes(genericTypes);
 			createServiceCmd.addGenericType(modelContext.getRepositoryType());
 			HashMap<String, Object> named = new HashMap<String, Object>();
-			named.put("value", newBeanRegistryName);
+			named.put("value", beanName);
 			createServiceCmd.addTypeAnnotation(Named.class, named);
 
 			// create and register a service implementation bean
 			Class<?> serviceClass = JavassistUtil.createClass(createServiceCmd);
 			AbstractBeanDefinition def = BeanDefinitionBuilder.rootBeanDefinition(serviceClass).getBeanDefinition();
-			registry.registerBeanDefinition(newBeanRegistryName, def);
+			registry.registerBeanDefinition(beanName, def);
 
 			// note in context as a dependency to a controller
 			modelContext.setServiceDefinition(def);
@@ -263,17 +277,22 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	protected void createRepository(BeanDefinitionRegistry registry, ModelContext modelContext)
 			throws NotFoundException, CannotCompileException {
 		if (modelContext.getRepositoryDefinition() == null) {
-            LOGGER.debug("#createRepository: CREATE repository for model type: {}", modelContext.getModelType().getName());
             Class<?> repoSUperInterface = ModelRepository.class;
 
-			String newBeanPackage = modelContext.getBeansBasePackage() + ".repository";
+			String className = modelContext.getGeneratedClassNamePrefix() + "Repository";
+			String beanName = StringUtils.uncapitalize(className);
+			String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
+					.append(".repository.")
+					.append(className).toString();
 
+			LOGGER.debug("#createRepository: create repository: {}", fullClassName);
 			// grab the generic types
 			List<Class<?>> genericTypes = modelContext.getGenericTypes();
 
 			// create the new interface
 			Class<?> newRepoInterface = JavassistUtil.createInterface(
-					newBeanPackage + modelContext.getGeneratedClassNamePrefix() + "Repository", repoSUperInterface,
+					fullClassName
+					, repoSUperInterface,
 					genericTypes, modelContext.isAuditable());
 
 			// register using the uncapitalised className as the key

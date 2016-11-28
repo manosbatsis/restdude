@@ -1,6 +1,6 @@
 package com.restdude.domain.friends.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
+import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipDTO;
 import com.restdude.domain.friends.model.FriendshipId;

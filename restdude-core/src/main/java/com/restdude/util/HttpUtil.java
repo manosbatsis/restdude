@@ -1,5 +1,6 @@
 package com.restdude.util;
 
+import com.restdude.domain.error.model.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,24 @@ public class HttpUtil {
             request.setAttribute(Constants.DOMAIN_KEY, request.getServerName());
         }
         return baseUrl;
+    }
+
+    public static UserAgent getUserAgent(HttpServletRequest request) {
+
+        UserAgent ua = null;
+        String value = request.getHeader("User-Agent");
+        if (StringUtils.isNotBlank(value)) {
+            ua = new UserAgent(HashUtils.buildHash(value), value);
+        }
+        return ua;
+    }
+
+    public static String getRemoteAddress(HttpServletRequest request) {
+        String addresss = request.getHeader("X-FORWARDED-FOR");
+        if (addresss == null) {
+            addresss = request.getRemoteAddr();
+        }
+        return addresss;
     }
 
 }

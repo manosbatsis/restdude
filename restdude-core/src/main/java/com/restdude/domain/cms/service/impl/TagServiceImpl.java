@@ -17,7 +17,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
+import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.cms.model.Tag;
 import com.restdude.domain.cms.repository.TagRepository;
 import com.restdude.domain.cms.service.TagService;

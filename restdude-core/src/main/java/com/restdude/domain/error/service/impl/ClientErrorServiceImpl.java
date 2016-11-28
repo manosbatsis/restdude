@@ -17,40 +17,21 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.repository.ClientErrorRepository;
 import com.restdude.domain.error.service.ClientErrorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
-import java.util.Date;
 
 @Named(ClientErrorService.BEAN_ID)
-public class ClientErrorServiceImpl extends AbstractModelServiceImpl<ClientError, String, ClientErrorRepository>
+public class ClientErrorServiceImpl extends AbstractErrorServiceImpl<ClientError, String, ClientErrorRepository>
         implements ClientErrorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientErrorServiceImpl.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-    @PreAuthorize(ClientError.PRE_AUTHORIZE_CREATE)
-    public ClientError create(ClientError resource) {
 
-        // init timstamp
-        Date now = new Date();
-        resource.setCreatedDate(now);
-
-        // save and return
-        return super.create(resource);
-    }
 
 
 }

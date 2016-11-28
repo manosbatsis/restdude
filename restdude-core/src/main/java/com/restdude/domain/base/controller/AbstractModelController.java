@@ -260,7 +260,8 @@ public abstract class AbstractModelController<T extends CalipsoPersistable<ID>, 
 
 	}
 
-	protected boolean hasAnyRoles(String[] roles) {
+
+    protected boolean hasAnyRoles(String[] roles) {
 		boolean skipPredicate = false;
 		for(int i = 0; i < roles.length; i++) {
 			if (request.isUserInRole(roles[i])){

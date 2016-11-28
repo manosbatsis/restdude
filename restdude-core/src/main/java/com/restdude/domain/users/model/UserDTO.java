@@ -25,8 +25,21 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class UserDTO implements IMessageResource<String> {
 
     public static UserDTO fromUser(User user) {
-        UserCredentials credentials = user.getCredentials();
-        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), credentials != null ? credentials.getUsername() : null, user.getEmail(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
+        UserDTO dto = null;
+        if (user != null) {
+
+            UserCredentials credentials = user.getCredentials();
+            return new UserDTO(user.getId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    credentials != null ? credentials.getUsername() : null,
+                    user.getEmail(),
+                    user.getEmailHash(),
+                    user.getAvatarUrl(),
+                    user.getBannerUrl(),
+                    user.getStompSessionCount());
+        }
+        return dto;
     }
 
     private String id;

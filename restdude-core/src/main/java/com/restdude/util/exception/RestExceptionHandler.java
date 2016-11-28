@@ -189,7 +189,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         // persist?
         if (true) {
             try {
-                error.setId(this.systemErrorService.create(error).getId());
+                error = this.systemErrorService.create(error);
             } catch (SystemException e) {
                 LOGGER.error("Failed persisting system error", e);
             }
@@ -235,14 +235,13 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
     private void applyHeadersIfPossible(ServletWebRequest webRequest, SystemError error) {
         if (!WebUtils.isIncludeRequest(webRequest.getRequest())
-                && error.getThrowable() != null
-                && SystemException.class.isAssignableFrom(error.getThrowable().getClass())) {
-            Map<String, String> resHeaders = ((SystemException) error.getThrowable()).getResponseHeaders();
-            if (MapUtils.isNotEmpty(resHeaders)) {
-                HttpServletResponse response = webRequest.getResponse();
-                for (String headerName : resHeaders.keySet()) {
-                    response.addHeader(headerName, resHeaders.get(headerName));
-                }
+                && MapUtils.isNotEmpty(error.getResponseHeaders())) {
+
+            Map<String, String> resHeaders = error.getResponseHeaders();
+
+            HttpServletResponse response = webRequest.getResponse();
+            for (String headerName : resHeaders.keySet()) {
+                response.addHeader(headerName, resHeaders.get(headerName));
             }
         }
     }

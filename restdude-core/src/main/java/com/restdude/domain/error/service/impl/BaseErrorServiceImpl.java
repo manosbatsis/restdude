@@ -17,20 +17,20 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
-import com.restdude.domain.error.model.StackTrace;
-import com.restdude.domain.error.repository.StackTraceRepository;
-import com.restdude.domain.error.service.StackTraceService;
+
+import com.restdude.domain.error.model.BaseError;
+import com.restdude.domain.error.repository.BaseErrorRepository;
+import com.restdude.domain.error.service.BaseErrorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 
-@Named(StackTraceService.BEAN_ID)
-public class StackTraceServiceImpl extends AbstractModelServiceImpl<StackTrace, String, StackTraceRepository>
-        implements StackTraceService {
+@Named(BaseErrorService.BEAN_ID)
+public class BaseErrorServiceImpl extends AbstractErrorServiceImpl<BaseError, String, BaseErrorRepository>
+        implements BaseErrorService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StackTraceServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseErrorServiceImpl.class);
 
 
 }

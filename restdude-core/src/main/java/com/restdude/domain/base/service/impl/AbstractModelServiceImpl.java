@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.base.service;
+package com.restdude.domain.base.service.impl;
 
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.domain.base.service.impl.AbstractAclAwareServiceImpl;
+import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.util.email.service.EmailService;
@@ -38,10 +38,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.io.Serializable;
 
 public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
-		extends AbstractAclAwareServiceImpl<T, ID, R> 
-implements ModelService<T, ID>{
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceImpl.class);
+		extends AbstractAclAwareServiceImpl<T, ID, R>
+        implements ModelService<T, ID> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceImpl.class);
 	
 	protected UserRepository userRepository;
 	protected EmailService emailService;

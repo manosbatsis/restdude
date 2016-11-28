@@ -17,7 +17,7 @@
  */
 package com.restdude.domain.users.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
+import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.users.model.Role;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.RoleRepository;

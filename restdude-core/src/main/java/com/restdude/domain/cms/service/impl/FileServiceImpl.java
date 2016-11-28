@@ -17,7 +17,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
+import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.cms.model.File;
 import com.restdude.domain.cms.repository.FileRepository;
 import com.restdude.domain.cms.service.FileService;

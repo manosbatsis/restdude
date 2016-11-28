@@ -3,7 +3,7 @@ package com.restdude.domain.error.model;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
+import com.restdude.domain.base.controller.AbstractModelController;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.HttpUtil;
@@ -14,23 +14,27 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-@ModelResource(path = SystemError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(path = SystemError.API_PATH, controllerSuperClass = AbstractModelController.class,
 		apiName = "System Errors", apiDescription = "System Error Operations (readonly)")
 @Entity
 @Table(name = "error_system")
 @ApiModel(value = "SystemError", description = "System validationErrors are created exclusively by the system " +
 		"(i.e. without manual intervention) to handle and inform the user about runtime exceptions. "
 		+ "They may be persisted automatically according to calipso.validationErrors.system.persist* configuration properties. "
-		+ "System validationErrors have a many-to-one relationship with StackTrace records, as those are shared based on their hash to save space. ")
+		+ "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
 @JsonPropertyOrder({"id", "message", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
 		"validationErrors", "user"})
-public class SystemError extends AbstractError {
+public class SystemError extends BaseError {
 
 	public static final String API_PATH = "systemErrors";
 
@@ -42,6 +46,7 @@ public class SystemError extends AbstractError {
 	@Column(name = "request_url", updatable = false, length = 500)
 	private String requestUrl;
 
+
 	@ApiModelProperty(value = "The HTTP response status code ")
 	@Column(name = "status_code", updatable = false)
 	private Integer httpStatusCode;
@@ -50,18 +55,17 @@ public class SystemError extends AbstractError {
 	@Transient
 	private Set<ConstraintViolationEntry> validationErrors;
 
-	@ApiModelProperty(hidden = true)
 	@JsonIgnore
 	@Transient
-	private Throwable throwable;
+	private Map<String, String> responseHeaders;
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "stacktrace_id", updatable = false)
-	private StackTrace stackTrace;
 
-	public SystemError(HttpServletRequest request, Integer httpStatusCode, String message, Throwable throwable) {
-		super(message);
+	private SystemError() {
+		super();
+	}
+
+	public SystemError(HttpServletRequest request, String message, Integer httpStatusCode, Throwable throwable) {
+		super(request, message);
 		if (httpStatusCode == null) {
 			throw new NullPointerException("httpStatusCode argument cannot be null.");
 		}
@@ -73,22 +77,8 @@ public class SystemError extends AbstractError {
 			this.setMessage(HttpStatus.valueOf(httpStatusCode).getReasonPhrase());
 		}
 
-		this.throwable = throwable;
-
-		// request details
-		if (request != null) {
-			this.requestMethod = request.getMethod();
-			String baseUrl = HttpUtil.setBaseUrl(request);
-			StringBuffer reUrl = request.getRequestURL();
-
-			// add query string if any
-			String queryString = request.getQueryString();
-			if (StringUtils.isNoneBlank(queryString)) {
-				reUrl.append('?').append(queryString);
-			}
-
-			this.requestUrl = reUrl.substring(baseUrl.length());
-		}
+		// add error log
+		this.setErrorLog(new ErrorLog(this.getCreatedDate(), throwable));
 
 		// add validation errors, if any
 		if (ConstraintViolationException.class.isAssignableFrom(throwable.getClass())) {
@@ -103,13 +93,22 @@ public class SystemError extends AbstractError {
 
 	}
 
+	public void addRequestInfo(HttpServletRequest request) {
+		super.addRequestInfo(request);
+		// request details
+		if (request != null) {
+			this.requestMethod = request.getMethod();
+			String baseUrl = HttpUtil.setBaseUrl(request);
+			StringBuffer reUrl = request.getRequestURL();
 
-	public SystemError(HttpServletRequest request, Integer httpStatusCode, Throwable throwable) {
-		this(request, httpStatusCode, null, throwable);
-	}
+			// add query string if any
+			String queryString = request.getQueryString();
+			if (StringUtils.isNoneBlank(queryString)) {
+				reUrl.append('?').append(queryString);
+			}
 
-	public SystemError() {
-		super();
+			this.requestUrl = reUrl.substring(baseUrl.length());
+		}
 	}
 
 	@JsonGetter("httpStatusMessage")
@@ -118,11 +117,12 @@ public class SystemError extends AbstractError {
 		return HttpStatus.valueOf(this.getHttpStatusCode()).getReasonPhrase();
 	}
 
-	@JsonGetter("stackTraceId")
-	@ApiModelProperty(value = "The corresponding stacktrace ID, if any")
+	@JsonGetter("errorLogId")
+	@ApiModelProperty(name = "errorLogId", value = "The corresponding log/stacktrace ID, if any")
 	public String getStackTraceId() {
-		return this.getStackTrace() != null ? this.getStackTrace().getId() : null;
+		return this.getErrorLog() != null ? this.getErrorLog().getId() : null;
 	}
+
 
 	public String getRequestMethod() {
 		return requestMethod;
@@ -140,6 +140,7 @@ public class SystemError extends AbstractError {
 		this.requestUrl = requestUrl;
 	}
 
+
 	public Integer getHttpStatusCode() {
 		return httpStatusCode;
 	}
@@ -156,20 +157,12 @@ public class SystemError extends AbstractError {
 		this.validationErrors = validationErrors;
 	}
 
-	public Throwable getThrowable() {
-		return throwable;
+	public Map<String, String> getResponseHeaders() {
+		return responseHeaders;
 	}
 
-	public void setThrowable(Throwable throwable) {
-		this.throwable = throwable;
-	}
-
-	public StackTrace getStackTrace() {
-		return stackTrace;
-	}
-
-	public void setStackTrace(StackTrace stackTrace) {
-		this.stackTrace = stackTrace;
+	public void setResponseHeaders(Map<String, String> responseHeaders) {
+		this.responseHeaders = responseHeaders;
 	}
 
 	public static class Builder {
@@ -182,7 +175,7 @@ public class SystemError extends AbstractError {
 		private Integer httpStatusCode;
 		private Set<ConstraintViolationEntry> validationErrors;
 		private Throwable throwable;
-		private StackTrace stackTrace;
+		private ErrorLog errorLog;
 
 		public Builder message(String message) {
 			this.message = message;
@@ -218,8 +211,8 @@ public class SystemError extends AbstractError {
 			return this;
 		}
 
-		public Builder stackTrace(StackTrace stackTrace) {
-			this.stackTrace = stackTrace;
+		public Builder stackTrace(ErrorLog errorLog) {
+			this.errorLog = errorLog;
 			return this;
 		}
 
@@ -237,7 +230,6 @@ public class SystemError extends AbstractError {
 		this.requestUrl = builder.requestUrl;
 		this.httpStatusCode = builder.httpStatusCode;
 		this.validationErrors = builder.validationErrors;
-		this.throwable = builder.throwable;
-		this.stackTrace = builder.stackTrace;
+		this.setErrorLog(builder.errorLog);
 	}
 }

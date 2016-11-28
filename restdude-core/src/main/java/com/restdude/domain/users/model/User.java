@@ -28,7 +28,7 @@ import com.restdude.domain.metadata.model.AbstractMetadataSubject;
 import com.restdude.mdd.uischema.annotation.FormSchemaEntry;
 import com.restdude.mdd.uischema.annotation.FormSchemas;
 import com.restdude.util.Constants;
-import com.restdude.util.MD5Utils;
+import com.restdude.util.HashUtils;
 import com.restdude.websocket.model.StompSession;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -90,8 +90,8 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@Column(name = "last_name", nullable = true)
 	private String lastName;
 
-	@Column(name = "introduction", length = 1000, nullable = true)
-	private String introduction;
+    @Column(name = "description", length = 1000, nullable = true)
+    private String description;
 
 	@Transient
 	@JsonIgnore
@@ -277,7 +277,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 			// make sure it's trimmed
 			this.setEmail(this.getEmail().trim());
 			// update the hash
-			this.setEmailHash(MD5Utils.md5Hex(this.getEmail()));
+            this.setEmailHash(HashUtils.md5Hex(this.getEmail()));
 
 		}
 		// fallback to gravatar
@@ -364,13 +364,13 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		this.lastName = lastName;
 	}
 
-	public String getIntroduction() {
-		return introduction;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setIntroduction(String introduction) {
-		this.introduction = introduction;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 	public String getEmail() {
 		return email;

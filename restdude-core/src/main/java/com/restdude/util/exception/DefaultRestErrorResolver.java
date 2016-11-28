@@ -114,7 +114,7 @@ public class DefaultRestErrorResolver implements RestErrorResolver, MessageSourc
     protected SystemError createSystemError(ServletWebRequest request, Integer status, Exception ex) {
 
         // create error instance
-        return new SystemError(request.getRequest(), status, ex.getMessage(), ex);
+        return new SystemError(request.getRequest(), ex.getMessage(), status, ex);
     }
 
     @Override

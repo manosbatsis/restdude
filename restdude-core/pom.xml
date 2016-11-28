@@ -361,6 +361,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- User Agent utils -->
+        <dependency>
+            <groupId>com.github.coveo</groupId>
+            <artifactId>uap-java</artifactId>
+        </dependency>
+
 
         <!--exception hashes -->
         <dependency>

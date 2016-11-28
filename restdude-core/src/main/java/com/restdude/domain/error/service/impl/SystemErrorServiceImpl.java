@@ -17,74 +17,20 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.base.service.AbstractModelServiceImpl;
-import com.restdude.domain.error.model.StackTrace;
 import com.restdude.domain.error.model.SystemError;
-import com.restdude.domain.error.repository.StackTraceRepository;
 import com.restdude.domain.error.repository.SystemErrorRepository;
 import com.restdude.domain.error.service.SystemErrorService;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
-import java.util.Date;
 
 @Named(SystemErrorService.BEAN_ID)
-public class SystemErrorServiceImpl extends AbstractModelServiceImpl<SystemError, String, SystemErrorRepository>
+public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError, String, SystemErrorRepository>
         implements SystemErrorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemErrorServiceImpl.class);
 
-    private StackTraceRepository stackTraceRepository;
 
-    @Autowired
-    public void setRepository(StackTraceRepository stackTraceRepository) {
-        this.stackTraceRepository = stackTraceRepository;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-    @PreAuthorize(SystemError.PRE_AUTHORIZE_CREATE)
-    public SystemError create(SystemError resource) {
-
-        // init timstamp
-        Date now = new Date();
-        resource.setCreatedDate(now);
-        // assign new or existing stacktrace
-        if (resource.getStackTrace() == null && resource.getThrowable() != null) {
-            resource.setStackTrace(this.getStackTrace(now, resource.getThrowable()));
-        }
-
-        // save and return
-        return super.create(resource);
-    }
-
-    private StackTrace getStackTrace(Date now, Throwable ex) {
-        StackTrace stackTrace = null;
-        try {
-            com.github.tkawachi.exhash.core.IStacktrace hashStacktrace = com.github.tkawachi.exhash.core.Stacktrace.getInstance(ex);
-            com.github.tkawachi.exhash.core.IStacktraceHash h = new com.github.tkawachi.exhash.core.StacktraceHash();
-            String hash = h.hash(hashStacktrace);
-            stackTrace = this.stackTraceRepository.findOne(hash);
-            if (stackTrace != null) {
-                stackTrace.setLastOccurred(now);
-                stackTrace = this.stackTraceRepository.save(stackTrace);
-            } else {
-                stackTrace = this.stackTraceRepository.save(new StackTrace(hash, ExceptionUtils.getRootCauseMessage(ex), now, ExceptionUtils.getStackTrace(ex)));
-            }
-        } catch (com.github.tkawachi.exhash.core.StacktraceHashException e) {
-            LOGGER.error("Failed creating exception hash", e);
-        }
-        return stackTrace;
-    }
 
 }
