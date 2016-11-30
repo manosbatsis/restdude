@@ -19,10 +19,7 @@ package com.restdude.domain.fs;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,13 +76,14 @@ public class S3FilePersistenceServiceImpl implements FilePersistenceService {
 		meta.setContentType(contentType);
 
 		// save to bucket
-		s3Client.putObject(new PutObjectRequest(nameCardBucket, path, in, meta)
+		PutObjectResult putObjectResult = s3Client.putObject(new PutObjectRequest(nameCardBucket, path, in, meta)
 				.withCannedAcl(CannedAccessControlList.PublicRead));
+
 		// set the URL to return
 		url = s3Client.getUrl(nameCardBucket, path).toString();
 		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("File saved, url: " + url + ", path: " + path + ", size: " + contentLength + ", contentType: " + contentType);
-		}
+			LOGGER.debug("File saved, url: {}, size: {}, contentType: {}, expires: {}, exp. rule: {}", url, contentLength, contentType, putObjectResult.getExpirationTime(), putObjectResult.getExpirationTimeRuleId());
+		}//
 		return url;
 	}
 
