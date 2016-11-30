@@ -18,6 +18,7 @@
 package com.restdude.domain.fs;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
@@ -26,7 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -110,7 +114,6 @@ public interface FilePersistenceService {
                     .path(filename).build();
 
         } catch (Exception e) {
-            this.closeFileDto(file);
             throw new RuntimeException("Failed deleting file", e);
         }
         this.deleteFile(fileField, file);
@@ -147,12 +150,11 @@ public interface FilePersistenceService {
                     saveScaled(img, file.getContentType(), previewConfig.maxWidth(), previewConfig.maxHeight(), file.getPath() + "_" + key);
                 }
             }
-            //cleanup
-            file.getIn().close();
 
         } catch (IOException e) {
-            this.closeFileDto(file);
             throw new RuntimeException("Failed persisting file", e);
+        } finally {
+            this.closeFileDto(file);
         }
 
         return url;
@@ -163,28 +165,26 @@ public interface FilePersistenceService {
         if (IMAGE_GIF.equals(fileDto.getContentType())) {
             FileDTO gifDto = fileDto;
 
-            InputStream tmpIn = fileDto.getIn();
-            FileOutputStream tmpFos = null;
-            File tmpFile = null;
+            InputStream in = fileDto.getIn();
+            ByteArrayOutputStream os = null;
             try {
-                BufferedImage tmpImg = ImageIO.read(tmpIn);
-                tmpFile = File.createTempFile(this.getClass().getCanonicalName(), ".png");
-                tmpFos = new FileOutputStream(tmpFile);
-                ImageIO.write(tmpImg, "PNG", tmpFos);
-                tmpFos.close();
+
+                // convert
+                BufferedImage tmpImg = ImageIO.read(in);
+                os = new ByteArrayOutputStream();
+                ImageIO.write(tmpImg, "PNG", os);
 
                 // update FileDTO
-                fileDto = new FileDTO.Builder().contentLength(tmpFile.length()).contentType(IMAGE_PNG).in(new FileInputStream(tmpFile)).path(fileDto.getPath()).build();
+                fileDto = new FileDTO.Builder().contentLength(os.size())
+                        .contentType(IMAGE_PNG)
+                        .in(new ByteArrayInputStream(os.toByteArray()))
+                        .path(fileDto.getPath()).build();
+
             } catch (Exception e) {
                 throw new RuntimeException("Failed persisting file", e);
             } finally {
-                tmpIn.close();
-                if (tmpFos != null) {
-                    tmpFos.close();
-                }
-                if (tmpFile != null) {
-                    tmpFile.delete();
-                }
+                IOUtils.closeQuietly(in);
+                IOUtils.closeQuietly(os);
             }
             LOGGER.debug("Converted GIF: {} to PNG: {}", gifDto, fileDto);
         }
@@ -219,13 +219,17 @@ public interface FilePersistenceService {
     }
 
 
-    public default String saveScaled(BufferedImage file, String contentType, int maxWidth, int maxHeight, String path) throws IOException {
+    public default String saveScaled(BufferedImage img, String contentType, int maxWidth, int maxHeight, String path) throws IOException {
         String url;
-        FileDTO tmp = scaleFile(file, contentType, maxWidth, maxHeight);
-        url = saveFile(tmp.getIn(), tmp.getContentLength(), tmp.getContentType(), path);
-
-        //cleanup
-        tmp.getIn().close();
+        FileDTO tmp = null;
+        try {
+            tmp = scaleFile(img, contentType, maxWidth, maxHeight);
+            url = saveFile(tmp.getIn(), tmp.getContentLength(), tmp.getContentType(), path);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.closeFileDto(tmp);
+        }
         return url;
     }
 
@@ -251,32 +255,55 @@ public interface FilePersistenceService {
     }
 
     public default FileDTO scaleFile(BufferedImage img, String contentType, int maxWidth, int maxHeight) throws IOException {
-        BufferedImage scaled = Scalr.resize(img,
-                Scalr.Method.SPEED,
-                Scalr.Mode.FIT_TO_WIDTH,
-                maxWidth,
-                maxHeight,
-                Scalr.OP_ANTIALIAS);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ImageIO.write(scaled, getImageIoFormat(contentType), os);
-        FileDTO scaledFile = new FileDTO.Builder()
-                .contentLength(os.size())
-                .contentType(contentType)
-                .in(new ByteArrayInputStream(os.toByteArray()))
-                .build();
-        os.close();
+        FileDTO scaledFile = null;
+        ByteArrayOutputStream os = null;
+        ByteArrayInputStream in = null;
+        try {
+            BufferedImage scaled = Scalr.resize(img,
+                    Scalr.Method.SPEED,
+                    Scalr.Mode.FIT_TO_WIDTH,
+                    maxWidth,
+                    maxHeight,
+                    Scalr.OP_ANTIALIAS);
+            os = new ByteArrayOutputStream();
+            ImageIO.write(scaled, getImageIoFormat(contentType), os);
+            in = new ByteArrayInputStream(os.toByteArray());
+            scaledFile = new FileDTO.Builder()
+                    .contentLength(os.size())
+                    .contentType(contentType)
+                    .in(in)
+                    .build();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            IOUtils.closeQuietly(os);
+            IOUtils.closeQuietly(in);
+        }
         return scaledFile;
     }
 
 
     public default String saveFile(BufferedImage img, long contentLength, String contentType, String path) throws IOException {
+        String result = null;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ImageIO.write(img, getImageIoFormat(contentType), os);
-        return saveFile(new ByteArrayInputStream(os.toByteArray()), contentLength, contentType, path);
+        ByteArrayInputStream in = null;
+        try {
+            ImageIO.write(img, getImageIoFormat(contentType), os);
+            in = new ByteArrayInputStream(os.toByteArray());
+            result = saveFile(in, os.size(), contentType, path);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            IOUtils.closeQuietly(os);
+            IOUtils.closeQuietly(in);
+        }
+
+        return result;
 
     }
 
-    public String saveFile(InputStream in, long contentLength, String contentType, String path);
+
+    public String saveFile(InputStream in, long contentLength, String contentType, String path) throws IOException;
 
     public void deleteFiles(String... path);
 
