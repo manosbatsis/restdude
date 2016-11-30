@@ -1,0 +1,17 @@
+dom-module(id='element-footer')
+	template
+		style.
+			:host {
+				font-size: 0.8em;
+			}
+
+		div(class='row')
+			p @{{year}}
+
+	script.
+		Polymer({
+			is: 'element-footer',
+			properties: {
+				year: String
+			}
+		});

@@ -1,0 +1,17 @@
+body {
+  background: Linen;
+  text-align: center;
+  padding: 20px; }
+
+header img.logo {
+  width: 200px;
+  margin: 0 10px; }
+
+section.content {
+  margin: 20px 0; }
+  section.content header {
+    margin-bottom: 20px; }
+  section.content .buttons a {
+    margin: 5px; }
+
+/*# sourceMappingURL=main.css.map */

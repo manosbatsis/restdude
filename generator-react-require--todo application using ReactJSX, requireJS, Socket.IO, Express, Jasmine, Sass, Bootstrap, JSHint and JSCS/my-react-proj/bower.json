@@ -1,0 +1,14 @@
+{
+    "name": "generator-react-require",
+    "dependencies": {
+        "react": "~0.11.0",
+        "bootstrap": "~3.2.0",
+        "socket.io-client": "~1.0.6",
+        "requirejs": "~2.1.14",
+        "requirejs-plugins": "~1.0.2",
+        "jquery": "~2.1.1"
+    },
+    "devDependencies": {
+
+    }
+}

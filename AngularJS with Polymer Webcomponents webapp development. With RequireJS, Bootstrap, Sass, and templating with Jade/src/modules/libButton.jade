@@ -1,0 +1,18 @@
+dom-module(id='element-libButton')
+	template
+		style.
+			:host {
+				font-size: 0.8em;
+			}
+
+		a(class='btn btn-default btn-sm', 'href'='{{url}}', 'target'='_black')
+			| {{name}}
+
+	script.
+		Polymer({
+			is: 'element-libButton',
+			properties: {
+				name: String,
+				ulr: String
+			}
+		});
