@@ -20,6 +20,8 @@ package com.restdude.domain.fs;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -35,7 +37,7 @@ import java.util.Map;
  * Abstract file persistence
  */
 public interface FilePersistenceService {
-
+    Logger LOGGER = LoggerFactory.getLogger(FilePersistenceService.class);
     String BEAN_ID = "filePersistenceService";
     String IMAGE_JPEG = "image/jpeg";
     String IMAGE_PNG = "image/png";
@@ -64,7 +66,8 @@ public interface FilePersistenceService {
     }
 
     public default String saveFile(Field fileField, MultipartFile multipartFile, String filename) {
-        FileDTO file;
+        String result = null;
+        FileDTO file = null;
         try {
             file = new FileDTO.Builder()
                     .contentLength(multipartFile.getSize())
@@ -72,19 +75,42 @@ public interface FilePersistenceService {
                     .in(multipartFile.getInputStream())
                     .path(filename).build();
 
+            file = convertToPngIfGif(file);
+
+            result = this.saveFile(fileField, file);
+
+
         } catch (IOException e) {
             throw new RuntimeException("Failed persisting file", e);
+        } finally {
+            closeFileDto(file);
         }
-        return this.saveFile(fileField, file);
+        return result;
+    }
+
+    default void closeFileDto(FileDTO file) {
+        if (file != null) {
+            try {
+                if (file.getIn() != null) {
+                    file.getIn().close();
+                }
+            } catch (Exception e) {
+                LOGGER.error("Faild closing file stream", e);
+            }
+            if (file.getTmpFile() != null) {
+                file.getTmpFile().delete();
+            }
+        }
     }
 
     public default void deleteFile(Field fileField, MultipartFile multipartFile, String filename) {
-        FileDTO file;
+        FileDTO file = null;
         try {
             file = new FileDTO.Builder()
                     .path(filename).build();
 
         } catch (Exception e) {
+            this.closeFileDto(file);
             throw new RuntimeException("Failed deleting file", e);
         }
         this.deleteFile(fileField, file);
@@ -99,8 +125,6 @@ public interface FilePersistenceService {
     public default String saveFile(Field fileField, FileDTO file) {
         String url = null;
         try {
-
-            file = convertToPngIfGif(file);
 
             FilePersistence config = fileField.getAnnotation(FilePersistence.class);
             // ensure accepted content type
@@ -127,17 +151,19 @@ public interface FilePersistenceService {
             file.getIn().close();
 
         } catch (IOException e) {
+            this.closeFileDto(file);
             throw new RuntimeException("Failed persisting file", e);
         }
 
         return url;
     }
 
-    default FileDTO convertToPngIfGif(FileDTO file) throws IOException {
+    default FileDTO convertToPngIfGif(FileDTO fileDto) throws IOException {
         // convert GIF to PNG
-        if (IMAGE_GIF.equals(file.getContentType())) {
+        if (IMAGE_GIF.equals(fileDto.getContentType())) {
+            FileDTO gifDto = fileDto;
 
-            InputStream tmpIn = file.getIn();
+            InputStream tmpIn = fileDto.getIn();
             FileOutputStream tmpFos = null;
             File tmpFile = null;
             try {
@@ -148,7 +174,9 @@ public interface FilePersistenceService {
                 tmpFos.close();
 
                 // update FileDTO
-                file = new FileDTO.Builder().contentLength(tmpFile.length()).contentType(IMAGE_PNG).in(new FileInputStream(tmpFile)).path(file.getPath()).build();
+                fileDto = new FileDTO.Builder().contentLength(tmpFile.length()).contentType(IMAGE_PNG).in(new FileInputStream(tmpFile)).path(fileDto.getPath()).build();
+            } catch (Exception e) {
+                throw new RuntimeException("Failed persisting file", e);
             } finally {
                 tmpIn.close();
                 if (tmpFos != null) {
@@ -158,8 +186,9 @@ public interface FilePersistenceService {
                     tmpFile.delete();
                 }
             }
+            LOGGER.debug("Converted GIF: {} to PNG: {}", gifDto, fileDto);
         }
-        return file;
+        return fileDto;
     }
 
     /**

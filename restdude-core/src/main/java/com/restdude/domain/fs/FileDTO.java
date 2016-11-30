@@ -1,5 +1,8 @@
 package com.restdude.domain.fs;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.io.File;
 import java.io.InputStream;
 
 public class FileDTO {
@@ -8,9 +11,19 @@ public class FileDTO {
 	private String contentType;
 	private InputStream in;
 	private String path;
+	private File tmpFile;
 
 	public FileDTO() {
 		super();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("path", this.getPath())
+				.append("contentLength", this.getContentLength())
+				.append("contentType", this.getContentType())
+				.toString();
 	}
 
 	public long getContentLength() {
@@ -45,11 +58,20 @@ public class FileDTO {
 		this.path = path;
 	}
 
+	public File getTmpFile() {
+		return tmpFile;
+	}
+
+	public void setTmpFile(File tmpFile) {
+		this.tmpFile = tmpFile;
+	}
+
 	public static class Builder {
 		private long contentLength;
 		private String contentType;
 		private InputStream in;
 		private String path;
+		private File tmpFile;
 
 		public Builder contentLength(long contentLength) {
 			this.contentLength = contentLength;
@@ -71,6 +93,11 @@ public class FileDTO {
 			return this;
 		}
 
+		public Builder tmpFile(File tmpFile) {
+			this.tmpFile = tmpFile;
+			return this;
+		}
+
 		public FileDTO build() {
 			return new FileDTO(this);
 		}
@@ -81,5 +108,6 @@ public class FileDTO {
 		this.contentType = builder.contentType;
 		this.in = builder.in;
 		this.path = builder.path;
+		this.tmpFile = builder.tmpFile;
 	}
 }
