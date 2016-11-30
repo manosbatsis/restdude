@@ -134,7 +134,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
      */
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception originalException) {
-
+        LOGGER.debug("doResolveException called", originalException);
         ModelAndView mav = null;
 
 
@@ -142,9 +142,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         RestErrorResolver resolver = getErrorResolver();
         SystemError error = resolver.resolveError(webRequest, handler, originalException);
 
-        if (error == null) {
-            LOGGER.warn("Failed resolving exception, message: {}, type: {}", originalException.getMessage(), originalException.getClass().getCanonicalName());
-        } else {
+        if (error != null) {
             // persist?
             if (true) {
                 error = this.systemErrorService.create(error);

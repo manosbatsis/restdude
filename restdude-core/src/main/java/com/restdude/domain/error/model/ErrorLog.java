@@ -98,7 +98,7 @@ public class ErrorLog extends AbstractAssignedIdPersistable<String> {
 		return new ToStringBuilder(this)
 				.append("id", this.getId())
 				.append("rootCauseMessage", this.getRootCauseMessage())
-				.append("stacktrace", this.getStacktrace())
+				.append("stacktrace", StringUtils.abbreviate(this.getStacktrace(), 120))
 				.toString();
 	}
 

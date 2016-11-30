@@ -24,10 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,15 +36,19 @@ import java.util.Map;
  */
 public interface FilePersistenceService {
 
-    public static final String BEAN_ID = "filePersistenceService";
-    public static final String[] MIMES_IMAGE = {"image/jpeg", "image/png", "image/gif", "image/x-ms-bmp"};
-    public static final Map<String, String> MIME_FORMATS = new HashMap<String, String>();
+    String BEAN_ID = "filePersistenceService";
+    String IMAGE_JPEG = "image/jpeg";
+    String IMAGE_PNG = "image/png";
+    String IMAGE_GIF = "image/gif";
+    String IMAGE_X_MS_BMP = "image/x-ms-bmp";
+    String[] MIMES_IMAGE = {IMAGE_JPEG, IMAGE_PNG, IMAGE_GIF, IMAGE_X_MS_BMP};
+    Map<String, String> MIME_FORMATS = new HashMap<String, String>();
 
     public static String getImageIoFormat(String contentType) {
         if (MIME_FORMATS.size() == 0) {
-            MIME_FORMATS.put("image/jpeg", "jpeg");
-            MIME_FORMATS.put("image/png", "png");
-            MIME_FORMATS.put("image/gif", "gif");
+            MIME_FORMATS.put(IMAGE_JPEG, "jpeg");
+            MIME_FORMATS.put(IMAGE_PNG, "png");
+            MIME_FORMATS.put(IMAGE_GIF, "gif");
         }
         return MIME_FORMATS.get(contentType);
     }
@@ -99,12 +100,14 @@ public interface FilePersistenceService {
         String url = null;
         try {
 
+            file = convertToPngIfGif(file);
 
             FilePersistence config = fileField.getAnnotation(FilePersistence.class);
             // ensure accepted content type
             validateContentType(file.getContentType(), config);
-            BufferedImage img = ImageIO.read(file.getIn());
 
+
+            BufferedImage img = ImageIO.read(file.getIn());
             // if image that needs scaling
             if (isImage(file.getContentType()) && (config.maxHeight() > 0 || config.maxWidth() > 0)) {
                 url = saveScaled(img, file.getContentType(), config.maxWidth(), config.maxHeight(), file.getPath());
@@ -128,6 +131,35 @@ public interface FilePersistenceService {
         }
 
         return url;
+    }
+
+    default FileDTO convertToPngIfGif(FileDTO file) throws IOException {
+        // convert GIF to PNG
+        if (IMAGE_GIF.equals(file.getContentType())) {
+
+            InputStream tmpIn = file.getIn();
+            FileOutputStream tmpFos = null;
+            File tmpFile = null;
+            try {
+                BufferedImage tmpImg = ImageIO.read(tmpIn);
+                tmpFile = File.createTempFile(this.getClass().getCanonicalName(), ".png");
+                tmpFos = new FileOutputStream(tmpFile);
+                ImageIO.write(tmpImg, "PNG", tmpFos);
+                tmpFos.close();
+
+                // update FileDTO
+                file = new FileDTO.Builder().contentLength(tmpFile.length()).contentType(IMAGE_PNG).in(new FileInputStream(tmpFile)).path(file.getPath()).build();
+            } finally {
+                tmpIn.close();
+                if (tmpFos != null) {
+                    tmpFos.close();
+                }
+                if (tmpFile != null) {
+                    tmpFile.delete();
+                }
+            }
+        }
+        return file;
     }
 
     /**
