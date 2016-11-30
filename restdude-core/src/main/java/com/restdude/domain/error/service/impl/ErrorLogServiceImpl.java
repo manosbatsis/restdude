@@ -17,37 +17,20 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.domain.base.service.impl.AbstractAssignedIdModelServiceImpl;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.repository.ErrorLogRepository;
 import com.restdude.domain.error.service.ErrorLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import javax.inject.Named;
 
 @Named(ErrorLogService.BEAN_ID)
-public class ErrorLogServiceImpl extends AbstractModelServiceImpl<ErrorLog, String, ErrorLogRepository>
+public class ErrorLogServiceImpl extends AbstractAssignedIdModelServiceImpl<ErrorLog, String, ErrorLogRepository>
         implements ErrorLogService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorLogServiceImpl.class);
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = false)
-    @PreAuthorize(ErrorLog.PRE_AUTHORIZE_CREATE)
-    public ErrorLog create(@P("resource") ErrorLog resource) {
-        Assert.notNull(resource, "Resource can't be null");
-        this.validate(resource);
-        resource = repository.merge(resource);
-        this.postCreate(resource);
-        return resource;
-    }
 }

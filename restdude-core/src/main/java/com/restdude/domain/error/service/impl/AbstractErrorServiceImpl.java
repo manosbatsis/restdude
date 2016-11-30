@@ -21,8 +21,7 @@ import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.PersistableError;
-import com.restdude.domain.error.model.UserAgent;
-import com.restdude.domain.error.repository.ErrorLogRepository;
+import com.restdude.domain.error.service.ErrorLogService;
 import com.restdude.domain.error.service.UserAgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +38,10 @@ public abstract class AbstractErrorServiceImpl<T extends PersistableError<ID>, I
 
 
     private UserAgentService userAgentService;
-    private ErrorLogRepository errorLogService;
+    private ErrorLogService errorLogService;
 
     @Autowired
-    public void setErrorLogRepository(ErrorLogRepository errorLogService) {
+    public void setErrorLogService(ErrorLogService errorLogService) {
         this.errorLogService = errorLogService;
     }
 
@@ -61,18 +60,30 @@ public abstract class AbstractErrorServiceImpl<T extends PersistableError<ID>, I
         LOGGER.debug("create PersistableError: {}", resource);
 
         // merge the UserAgent based on it's hash/id
-        UserAgent ua = resource.getUserAgent();
-        if (ua != null) {
-            resource.setUserAgent(this.userAgentService.create(ua));
+        if (resource.getUserAgent() != null) {
+            resource.setUserAgent(this.userAgentService.findOrCreate(resource.getUserAgent()));
         }
-        // merge the ErrorLog based on it's hash/id
-        ErrorLog log = resource.getErrorLog();
-        if (log != null) {
-            resource.setErrorLog(this.errorLogService.merge(log));
+        // merge the ErrorLog based on it's hash (i.e. ID)
+        if (resource.getErrorLog() != null) {
+            resource.setErrorLog(this.errorLogService.findOrCreate(resource.getErrorLog()));
         }
 
-        // save and return
-        return super.create(resource);
+        // save error
+        resource = super.create(resource);
+
+        // update log details
+        ErrorLog log = resource.getErrorLog();
+        if (log != null) {
+            if (log.getFirstOccurred() == null) {
+                log.setFirstOccurred(resource.getCreatedDate());
+            }
+            log.setLastOccurred(resource.getCreatedDate());
+            // update log
+            LOGGER.debug("create, updating Error");
+            resource.setErrorLog(this.errorLogService.update(log));
+        }
+
+        return resource;
     }
 
 }

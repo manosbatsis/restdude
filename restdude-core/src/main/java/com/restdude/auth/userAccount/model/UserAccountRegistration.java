@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @ApiModel(value = "UserAccountRegistration", description = "User registration")
 public class UserAccountRegistration implements Serializable {
@@ -49,8 +49,8 @@ public class UserAccountRegistration implements Serializable {
 	private String telephone;
 	private String cellphone;
 	private String locale = "en";
-	private Date birthDay;
-	private String redirectUrl = null;
+    private LocalDate birthDay;
+    private String redirectUrl = null;
 
 	/**
 	 * Default constructor
@@ -153,12 +153,12 @@ public class UserAccountRegistration implements Serializable {
 		this.locale = locale;
 	}
 
-	public Date getBirthDay() {
-		return birthDay;
+    public LocalDate getBirthDay() {
+        return birthDay;
 	}
 
-	public void setBirthDay(Date birthDay) {
-		this.birthDay = birthDay;
+    public void setBirthDay(LocalDate birthDay) {
+        this.birthDay = birthDay;
 	}
 
 	public String getRedirectUrl() {
@@ -180,8 +180,8 @@ public class UserAccountRegistration implements Serializable {
 		private String telephone;
 		private String cellphone;
 		private String locale;
-		private Date birthDay;
-		private String redirectUrl;
+        private LocalDate birthDay;
+        private String redirectUrl;
 
 		public Builder registrationCode(String registrationCode) {
 			this.registrationCode = registrationCode;
@@ -233,8 +233,8 @@ public class UserAccountRegistration implements Serializable {
 			return this;
 		}
 
-		public Builder birthDay(Date birthDay) {
-			this.birthDay = birthDay;
+        public Builder birthDay(LocalDate birthDay) {
+            this.birthDay = birthDay;
 			return this;
 		}
 

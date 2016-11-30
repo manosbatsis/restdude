@@ -78,7 +78,7 @@ public class SystemError extends BaseError {
 		}
 
 		// add error log
-		this.setErrorLog(new ErrorLog(this.getCreatedDate(), throwable));
+        this.setErrorLog(new ErrorLog(throwable));
 
 		// add validation errors, if any
 		if (ConstraintViolationException.class.isAssignableFrom(throwable.getClass())) {

@@ -1,12 +1,13 @@
 package com.restdude.domain.error.model;
 
 import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractAssignedidPersistable;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.annotations.Formula;
 
@@ -14,7 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @ModelResource(path = ErrorLog.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class, apiName = "ErrorLogs",
         apiDescription = "Stacktrace or other error log details.")
@@ -23,7 +24,7 @@ import java.util.Date;
 @Table(name = "error_log")
 @ApiModel(value = "ErrorLog", description = "Used to persist error stacktraces using the corresponding hash as the ID. "
         + "The generated hash ignores line numbers (in case of SystemError) and is thus tolerant of small code changes, like adding a comment line.")
-public class ErrorLog extends AbstractAssignedidPersistable<String> {
+public class ErrorLog extends AbstractAssignedIdPersistable<String> {
 
     public static final String API_PATH = "errorLogs";
 
@@ -34,10 +35,13 @@ public class ErrorLog extends AbstractAssignedidPersistable<String> {
     @Column(name = "root_cause_msg", length = PersistableError.MAX_MESSAGE_LENGTH)
     private String rootCauseMessage;
 
-    @NotNull
-    @ApiModelProperty(value = "The latest error occurrence date.", required = true)
-    @Column(name = "last_occurred")
-	private Date lastOccurred;
+	@ApiModelProperty(value = "First occurrence date", required = true)
+	@Column(name = "first_occurred")
+	private LocalDateTime firstOccurred;
+
+	@ApiModelProperty(value = "Lats occurrence date.", required = true)
+	@Column(name = "last_occurred")
+	private LocalDateTime lastOccurred;
 
     @Formula(" (select count(*) from error_abstract errS where errS.error_log_id = id) ")
     @ApiModelProperty(value = "The number of errors corresponding to this stacktrace.")
@@ -53,18 +57,17 @@ public class ErrorLog extends AbstractAssignedidPersistable<String> {
     }
 
 
-    public ErrorLog(Date lastOccurred, Throwable ex) {
-        this(HashUtils.buildHash(ex), lastOccurred, ExceptionUtils.getRootCauseMessage(ex), ExceptionUtils.getStackTrace(ex));
-    }
+	public ErrorLog(Throwable ex) {
+		this(HashUtils.buildHash(ex), ExceptionUtils.getRootCauseMessage(ex), ExceptionUtils.getStackTrace(ex));
+	}
 
-    public ErrorLog(Date lastOccurred, String rootCauseMessage, String stacktrace) {
-        this(HashUtils.buildHash(stacktrace), lastOccurred, rootCauseMessage, stacktrace);
-    }
+	public ErrorLog(String rootCauseMessage, String stacktrace) {
+		this(HashUtils.buildHash(stacktrace), rootCauseMessage, stacktrace);
+	}
 
-    protected ErrorLog(String hash, Date lastOccurred, String rootCauseMessage, String stacktrace) {
-        super(hash);
+	protected ErrorLog(String hash, String rootCauseMessage, String stacktrace) {
+		super(hash);
         this.rootCauseMessage = rootCauseMessage;
-        this.lastOccurred = lastOccurred;
         this.stacktrace = stacktrace;
 	}
 
@@ -89,6 +92,16 @@ public class ErrorLog extends AbstractAssignedidPersistable<String> {
         }
 	}
 
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("id", this.getId())
+				.append("rootCauseMessage", this.getRootCauseMessage())
+				.append("stacktrace", this.getStacktrace())
+				.toString();
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -105,12 +118,20 @@ public class ErrorLog extends AbstractAssignedidPersistable<String> {
 		this.rootCauseMessage = rootCauseMessage;
 	}
 
-	public Date getLastOccurred() {
+	public LocalDateTime getLastOccurred() {
 		return lastOccurred;
 	}
 
-	public void setLastOccurred(Date lastOccurred) {
+	public void setLastOccurred(LocalDateTime lastOccurred) {
 		this.lastOccurred = lastOccurred;
+	}
+
+	public LocalDateTime getFirstOccurred() {
+		return firstOccurred;
+	}
+
+	public void setFirstOccurred(LocalDateTime firstOccurred) {
+		this.firstOccurred = firstOccurred;
 	}
 
 	public Integer getErrorCount() {

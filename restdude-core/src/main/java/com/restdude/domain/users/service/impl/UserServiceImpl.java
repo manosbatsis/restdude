@@ -45,6 +45,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -278,7 +279,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		UserCredentials credentials = user.getCredentials();
 		if (credentials.getResetPasswordToken() == null) {
 			credentials.setResetPasswordToken(this.generator.generateKey());
-			credentials.setResetPasswordTokenCreated(new Date());
+			credentials.setResetPasswordTokenCreated(LocalDateTime.now());
 			credentials = this.credentialsService.update(credentials);
 			user.setCredentials(credentials);
 		}
@@ -440,7 +441,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		// update password and return user
 		LOGGER.debug("changePassword, new password: " + newPassword);
 		credentials.setPassword(this.passwordEncoder.encode(newPassword));
-		credentials.setLastPassWordChangeDate(new Date());
+		credentials.setLastPassWordChangeDate(LocalDateTime.now());
 		credentials = this.credentialsService.update(credentials);
 		//this.credentialsService.flush();
 		u.setCredentials(credentials);

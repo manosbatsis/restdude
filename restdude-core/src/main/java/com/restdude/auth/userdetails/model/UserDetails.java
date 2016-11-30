@@ -34,7 +34,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.CollectionUtils;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -56,7 +61,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	@JsonSerialize(using = SkipPropertySerializer.class)
 	private String password;
 
-    private Date lastPassWordChangeDate;
+	private LocalDateTime lastPassWordChangeDate;
 
 	private String email;
 	private String emailHash;
@@ -72,9 +77,9 @@ public class UserDetails implements  ICalipsoUserDetails{
 	private String locale = "en";
 	private String dateFormat;
 
-	private Date birthDay;
-	private Date lastVisit;
-	private Date lastPost;
+	private LocalDate birthDay;
+	private LocalDateTime lastVisit;
+	private LocalDateTime lastPost;
 	private Short loginAttempts = 0;
 
 	private String redirectUrl = null;
@@ -85,7 +90,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	@JsonSerialize(using = SkipPropertySerializer.class)
 	private String inactivationReason;
 
-	private Date inactivationDate;
+	private LocalDateTime inactivationDate;
 	private boolean isAdmin = false;
 	private boolean isSiteAdmin = false;
 
@@ -94,8 +99,6 @@ public class UserDetails implements  ICalipsoUserDetails{
 	@JsonProperty(value = "roles")
 	private List<? extends GrantedAuthority> authorities;
 	private Map<String, String> metadata;
-
-
 
 	private Boolean isResetPasswordReguest = false;
 
@@ -217,15 +220,15 @@ public class UserDetails implements  ICalipsoUserDetails{
      * @see ICalipsoUserDetails#getLastPassWordChangeDate()
      */
 	@Override
-	public Date getLastPassWordChangeDate() {
+	public LocalDateTime getLastPassWordChangeDate() {
 		return lastPassWordChangeDate;
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setLastPassWordChangeDate(java.util.Date)
-     */
+	 * @see ICalipsoUserDetails#setLastPassWordChangeDate(LocalDateTime)
+	 */
 	@Override
-	public void setLastPassWordChangeDate(Date lastPassWordChangeDate) {
+	public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate) {
 		this.lastPassWordChangeDate = lastPassWordChangeDate;
 	}
 
@@ -322,15 +325,15 @@ public class UserDetails implements  ICalipsoUserDetails{
      * @see ICalipsoUserDetails#getBirthDay()
      */
 	@Override
-	public Date getBirthDay() {
+	public LocalDate getBirthDay() {
 		return birthDay;
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setBirthDay(java.util.Date)
-     */
+	 * @see ICalipsoUserDetails#setBirthDay(LocalDate)
+	 */
 	@Override
-	public void setBirthDay(Date birthDay) {
+	public void setBirthDay(LocalDate birthDay) {
 		this.birthDay = birthDay;
 	}
 
@@ -338,15 +341,15 @@ public class UserDetails implements  ICalipsoUserDetails{
      * @see ICalipsoUserDetails#getLastVisit()
      */
 	@Override
-	public Date getLastVisit() {
+	public LocalDateTime getLastVisit() {
 		return lastVisit;
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setLastVisit(java.util.Date)
-     */
+	 * @see ICalipsoUserDetails#setLastVisit(LocalDateTime)
+	 */
 	@Override
-	public void setLastVisit(Date lastVisit) {
+	public void setLastVisit(LocalDateTime lastVisit) {
 		this.lastVisit = lastVisit;
 	}
 
@@ -354,15 +357,15 @@ public class UserDetails implements  ICalipsoUserDetails{
      * @see ICalipsoUserDetails#getLastPost()
      */
 	@Override
-	public Date getLastPost() {
+	public LocalDateTime getLastPost() {
 		return lastPost;
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setLastPost(java.util.Date)
-     */
+	 * @see ICalipsoUserDetails#setLastPost(LocalDateTime)
+	 */
 	@Override
-	public void setLastPost(Date lastPost) {
+	public void setLastPost(LocalDateTime lastPost) {
 		this.lastPost = lastPost;
 	}
 
@@ -418,15 +421,15 @@ public class UserDetails implements  ICalipsoUserDetails{
      * @see ICalipsoUserDetails#getInactivationDate()
      */
 	@Override
-	public Date getInactivationDate() {
+	public LocalDateTime getInactivationDate() {
 		return inactivationDate;
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setInactivationDate(java.util.Date)
-     */
+	 * @see ICalipsoUserDetails#setInactivationDate(LocalDateTime)
+	 */
 	@Override
-	public void setInactivationDate(Date inactivationDate) {
+	public void setInactivationDate(LocalDateTime inactivationDate) {
 		this.inactivationDate = inactivationDate;
 	}
 

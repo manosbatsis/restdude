@@ -17,10 +17,8 @@
  */
 package com.restdude.domain.users.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.mdd.annotation.CurrentPrincipal;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -33,7 +31,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @ShallowReference
 @Entity
@@ -71,23 +69,9 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
     @Formula(" (select count(*) from registration_code where registration_code.batch_id = id and registration_code.credentials_id IS NULL) ")
     private Integer available;
 
-    @NotNull
-    @ApiModelProperty(value = "Creation date, generated automatically.", readOnly = true)
-    @Column(name = "created_date", nullable = false, updatable = false)
-    private Date createdDate = new Date();
-
     @ApiModelProperty(value = "Expiration date.")
     @Column(name = "expiration_date")
-    private Date expirationDate;
-
-    @JsonIgnore
-    @CurrentPrincipal
-    @NotNull
-    @ApiModelProperty(value = "The batch creator", readOnly = true, hidden = true)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "createdby_id", referencedColumnName = "id", nullable = false, updatable = false)
-    private User createdBy;
-
+    private LocalDate expirationDate;
 
     public UserRegistrationCodeBatch() {
     }
@@ -161,27 +145,12 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
         this.available = available;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getExpirationDate() {
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
 }

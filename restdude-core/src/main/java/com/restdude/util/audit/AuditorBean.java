@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.AuditorAware;
 
-/**
- * @deprecated Use javers {@link org.javers.spring.annotation.JaversSpringDataAuditable} annotation to your repositories instead
- */
-@Deprecated
+
 public class AuditorBean implements AuditorAware<User> {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AuditorBean.class);

@@ -26,30 +26,31 @@ import java.io.Serializable;
  */
 public interface CalipsoPersistable<ID extends Serializable> extends Persistable<ID>{
 
-	public static final String PRE_AUTHORIZE_SEARCH = "isAuthenticated()";
-	public static final String PRE_AUTHORIZE_CREATE = "isAuthenticated()";
-	public static final String PRE_AUTHORIZE_UPDATE = "isAuthenticated()";
-	public static final String PRE_AUTHORIZE_PATCH = "isAuthenticated()";
-	public static final String PRE_AUTHORIZE_VIEW = "isAuthenticated()";
-    public static final String PRE_AUTHORIZE_DELETE = "denyAll";
+    static final String PRE_AUTHORIZE_SEARCH = "isAuthenticated()";
+    static final String PRE_AUTHORIZE_CREATE = "isAuthenticated()";
+    static final String PRE_AUTHORIZE_UPDATE = "isAuthenticated()";
+    static final String PRE_AUTHORIZE_PATCH = "isAuthenticated()";
+    static final String PRE_AUTHORIZE_VIEW = "isAuthenticated()";
+    static final String PRE_AUTHORIZE_DELETE = "denyAll";
 
 
-    public static final String PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_ALL = "denyAll";
-	public static final String PRE_AUTHORIZE_COUNT = "denyAll";
-	
+    static final String PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
+    static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
+    static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
+    static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
+    static final String PRE_AUTHORIZE_FIND_ALL = "denyAll";
+    static final String PRE_AUTHORIZE_COUNT = "denyAll";
 
-	public ID getId();
-	public void setId(ID id);
+
+    ID getId();
+
+    void setId(ID id);
 
     /**
      * Equivalent of a method annotated with @{@link javax.persistence.PrePersist} and/or
      *
      * @{@link javax.persistence.PreUpdate}, only applied before validation
      */
-    public void preSave();
+    void preSave();
 
 }

@@ -17,38 +17,20 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.domain.base.service.impl.AbstractAssignedIdModelServiceImpl;
 import com.restdude.domain.error.model.UserAgent;
 import com.restdude.domain.error.repository.UserAgentRepository;
 import com.restdude.domain.error.service.UserAgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import javax.inject.Named;
 
 @Named(UserAgentService.BEAN_ID)
-public class UserAgentServiceImpl extends AbstractModelServiceImpl<UserAgent, String, UserAgentRepository>
+public class UserAgentServiceImpl extends AbstractAssignedIdModelServiceImpl<UserAgent, String, UserAgentRepository>
         implements UserAgentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAgentServiceImpl.class);
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = false)
-    @PreAuthorize(UserAgent.PRE_AUTHORIZE_CREATE)
-    public UserAgent create(@P("resource") UserAgent resource) {
-        Assert.notNull(resource, "Resource can't be null");
-        this.validate(resource);
-        resource = repository.merge(resource);
-        this.postCreate(resource);
-        return resource;
-    }
 
 }

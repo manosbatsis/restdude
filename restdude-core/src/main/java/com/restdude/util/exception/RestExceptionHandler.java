@@ -2,7 +2,6 @@ package com.restdude.util.exception;
 
 import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.service.SystemErrorService;
-import com.restdude.util.exception.http.SystemException;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,18 +13,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +41,6 @@ import java.util.Map;
  * {@link SystemError#getHttpStatusCode()} value.</li>
  * <li>The {@code RestError} instance is presented to a configured {@link RestErrorConverter} to allow transforming
  * the {@code RestError} instance into an object potentially more suitable for rendering as the HTTP response body.</li>
- * <li>The
- * {@link #setMessageConverters(org.springframework.http.converter.HttpMessageConverter[]) HttpMessageConverters}
- * are consulted (in iteration order) with this object result for rendering.  The first
- * {@code HttpMessageConverter} instance that {@link HttpMessageConverter#canWrite(Class, org.springframework.http.MediaType) canWrite}
- * the object based on the request's supported {@code MediaType}s will be used to render this result object as
- * the HTTP response body.</li>
  * <li>If no {@code HttpMessageConverter}s {@code canWrite} the result object, nothing is done, and this handler
  * returns {@code null} to indicate other ExceptionResolvers potentially further in the resolution chain should
  * handle the exception instead.</li>
@@ -67,21 +59,7 @@ import java.util.Map;
  * <td>{@link DefaultRestErrorResolver DefaultRestErrorResolver}</td>
  * <td>Converts Exceptions to {@link SystemError} instances.  Should be suitable for most needs.</td>
  * </tr>
- * <tr>
- * <td>messageConverters</td>
- * <td>multiple instances</td>
- * <td>Default collection are those automatically enabled by Spring as
- * <a href="http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-config-enable">defined here</a> (specifically item #5)</td>
- * </tr>
  * </table>
- * <p>
- * <h2>JSON Rendering</h2>
- * This implementation comes pre-configured with Spring's typical default
- * {@link HttpMessageConverter} instances; JSON will be enabled automatically if Jackson is in the classpath.  If you
- * want to match the JSON representation shown in the article above (recommended) but do not want to use Jackson
- * (or the Spring's default Jackson config), you will need to
- * {@link #setMessageConverters(org.springframework.http.converter.HttpMessageConverter[]) configure} a different
- * JSON-capable {@link HttpMessageConverter}.
  *
  * @author Les Hazlewood
  * @see DefaultRestErrorResolver
@@ -94,15 +72,14 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
 
     private SystemErrorService systemErrorService;
-
-    private HttpMessageConverter<?>[] messageConverters = null;
-
-    private List<HttpMessageConverter<?>> allMessageConverters = null;
-
     private RestErrorResolver errorResolver;
-
     private RestErrorConverter<?> errorConverter;
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
+    @Autowired
+    public void setRequestMappingHandlerAdapter(RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
+        this.requestMappingHandlerAdapter = requestMappingHandlerAdapter;
+    }
     @Autowired
     public void setSystemErrorService(SystemErrorService systemErrorService) {
         this.systemErrorService = systemErrorService;
@@ -110,10 +87,6 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
     public RestExceptionHandler() {
         this.errorResolver = new DefaultRestErrorResolver();
-    }
-
-    public void setMessageConverters(HttpMessageConverter<?>[] messageConverters) {
-        this.messageConverters = messageConverters;
     }
 
     public void setErrorResolver(RestErrorResolver errorResolver) {
@@ -134,23 +107,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ensureMessageConverters();
-    }
 
-    @SuppressWarnings("unchecked")
-    private void ensureMessageConverters() {
-
-        List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
-
-        //user configured values take precedence:
-        if (this.messageConverters != null && this.messageConverters.length > 0) {
-            converters.addAll(CollectionUtils.arrayToList(this.messageConverters));
-        }
-
-        //defaults next:
-        new HttpMessageConverterHelper().addDefaults(converters);
-
-        this.allMessageConverters = converters;
     }
 
     //leverage Spring's existing default setup behavior:
@@ -172,35 +129,35 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
      * @param response current HTTP response
      * @param handler  the executed handler, or <code>null</code> if none chosen at the time of the exception (for example,
      *                 if multipart resolution failed)
-     * @param ex       the exception that got thrown during handler execution
+     * @param originalException       the exception that got thrown during handler execution
      * @return a corresponding ModelAndView to forward to, or <code>null</code> for default processing
      */
     @Override
-    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        LOGGER.error("#doResolveException: ", ex);
-        ServletWebRequest webRequest = new ServletWebRequest(request, response);
+    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception originalException) {
 
-        RestErrorResolver resolver = getErrorResolver();
-
-        SystemError error = resolver.resolveError(webRequest, handler, ex);
-        if (error == null) {
-            return null;
-        }
-        // persist?
-        if (true) {
-            try {
-                error = this.systemErrorService.create(error);
-            } catch (SystemException e) {
-                LOGGER.error("Failed persisting system error", e);
-            }
-
-        }
         ModelAndView mav = null;
 
-        try {
-            mav = getModelAndView(webRequest, handler, error);
-        } catch (Exception invocationEx) {
-            LOGGER.error("Failed resolving exception [" + ex + "]", invocationEx);
+
+        ServletWebRequest webRequest = new ServletWebRequest(request, response);
+        RestErrorResolver resolver = getErrorResolver();
+        SystemError error = resolver.resolveError(webRequest, handler, originalException);
+
+        if (error == null) {
+            LOGGER.warn("Failed resolving exception, message: {}, type: {}", originalException.getMessage(), originalException.getClass().getCanonicalName());
+        } else {
+            // persist?
+            if (true) {
+                error = this.systemErrorService.create(error);
+            }
+
+            try {
+                mav = getModelAndView(webRequest, handler, error);
+            } catch (Exception invocationEx) {
+                LOGGER.error("Failed handling exception", originalException);
+                RuntimeException wrapperErxception = new RuntimeException("Failed handling original exception with message [" + originalException.getMessage() + "]", invocationEx);
+                wrapperErxception.addSuppressed(originalException);
+                throw wrapperErxception;
+            }
         }
 
         return mav;
@@ -258,7 +215,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         MediaType.sortByQualityValue(acceptedMediaTypes);
         HttpOutputMessage outputMessage = new ServletServerHttpResponse(webRequest.getResponse());
         Class<?> bodyType = body.getClass();
-        List<HttpMessageConverter<?>> converters = this.allMessageConverters;
+        List<HttpMessageConverter<?>> converters = this.requestMappingHandlerAdapter.getMessageConverters();
 
         if (converters != null) {
             for (MediaType acceptedMediaType : acceptedMediaTypes) {

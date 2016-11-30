@@ -72,8 +72,8 @@ public class CalendarDate implements Persistable<Date> {
 	public CalendarDate(Date date) {
 		super();
 		this.id = date;
-		// TODO: init remaining fields usinf the date
-	}
+        // TODO: init remaining fields using the date
+    }
 
 	@Override
 	public boolean isNew() {

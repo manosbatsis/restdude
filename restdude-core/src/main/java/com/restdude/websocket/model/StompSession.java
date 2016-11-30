@@ -1,6 +1,6 @@
 package com.restdude.websocket.model;
 
-import com.restdude.domain.base.model.AbstractAssignedidPersistable;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "stomp_session")
 @ModelResource(path = StompSession.API_PATH, apiName = "STOMP Sessions", apiDescription = "STOMP Session Operations")
 @ApiModel(value = "STOMP Session", description = "A model representing a websocket STOMP session")
-public class StompSession extends AbstractAssignedidPersistable<String> {
+public class StompSession extends AbstractAssignedIdPersistable<String> {
 
 	private static final long serialVersionUID = 1L;
 

@@ -4,7 +4,7 @@ import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.model.User;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @param <ID>
@@ -18,10 +18,6 @@ public interface PersistableError<ID extends Serializable> extends CalipsoPersis
 
     void setMessage(String message);
 
-    Date getCreatedDate();
-
-    void setCreatedDate(Date createdDate);
-
     User getUser();
 
     void setUser(User user);
@@ -33,4 +29,9 @@ public interface PersistableError<ID extends Serializable> extends CalipsoPersis
     ErrorLog getErrorLog();
 
     void setErrorLog(ErrorLog errorLog);
+
+
+    LocalDateTime getCreatedDate();
+
+    LocalDateTime getLastModifiedDate();
 }

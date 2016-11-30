@@ -1,40 +1,45 @@
 /**
  * calipso-hub-framework - A full stack, high level framework for lazy application hackers.
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.base.binding;
+package com.restdude.domain.base.service;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import org.joda.time.DateTime;
 
-import java.io.IOException;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
+import org.springframework.security.access.method.P;
+import org.springframework.stereotype.Service;
 
-public class DateTimeToUnixTimestampSerializer extends JsonSerializer<DateTime> {
+import java.io.Serializable;
 
-	@Override
-	public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+/**
+ * Provides SCRUD and utility operations for {@link T} entities
+ * @author manos
+ *
+ * @param <T> the entity type
+ * @param <ID> the entity ID type
+ */
+@Service
+public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistable<ID>, ID extends Serializable>
+        extends ModelService<T, ID> {
 
-		if (null == value) {
-			// write the word 'null' if there's no value available
-			jgen.writeNull();
-		} else {
-			jgen.writeNumber(value.toDate().getTime());
-		}
-	}
+    /**
+     * Return the entity matching the ID of the given resource if any, or the newly persisted instance otherwise
+     * @param resource
+     * @return
+     */
+    public T findOrCreate(@P("resource") T resource);
+
 }

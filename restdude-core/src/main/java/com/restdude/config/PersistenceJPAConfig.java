@@ -1,12 +1,16 @@
 package com.restdude.config;
 
+import com.restdude.domain.users.model.User;
 import com.restdude.mdd.util.EntityUtil;
+import com.restdude.util.audit.AuditorBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
@@ -32,6 +36,7 @@ import java.util.Set;
         repositoryFactoryBeanClass = com.restdude.domain.base.repository.ModelRepositoryFactoryBean.class,
         repositoryBaseClass = com.restdude.domain.base.repository.BaseRepositoryImpl.class
 )
+@EnableJpaAuditing
 public class PersistenceJPAConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceJPAConfig.class);
@@ -165,5 +170,10 @@ public class PersistenceJPAConfig {
     @Bean
     public HibernateExceptionTranslator hibernateExceptionTranslator() {
         return new HibernateExceptionTranslator();
+    }
+
+    @Bean
+    public AuditorAware<User> auditorProvider() {
+        return new AuditorBean();
     }
 }

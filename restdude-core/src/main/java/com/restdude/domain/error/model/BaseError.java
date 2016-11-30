@@ -17,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 
 @ModelResource(path = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
@@ -49,11 +48,6 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     @ApiModelProperty(value = "Message for user")
     @Column(name = "error_message", nullable = false, updatable = false)
     private String message;
-
-    @NotNull
-    @ApiModelProperty(value = "Date created")
-    @Column(name = "date_created", nullable = false, updatable = false)
-    private Date createdDate;
 
     @ApiModelProperty(value = "The address the request originated from")
     @Column(name = "remote_address", updatable = false, length = 500)
@@ -104,16 +98,8 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
         return new ToStringBuilder(this)
                 .append("id", this.getId())
                 .append("message", this.getMessage())
-                .append("userAgent", this.getUserAgent())
+                .append("remoteAddress", this.getRemoteAddress())
                 .toString();
-    }
-
-    @Override
-    public void preSave() {
-        super.preSave();
-        if (this.getCreatedDate() == null) {
-            this.setCreatedDate(new Date());
-        }
     }
 
     @Override
@@ -124,16 +110,6 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     @Override
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    @Override
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    @Override
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
 
     public String getRemoteAddress() {

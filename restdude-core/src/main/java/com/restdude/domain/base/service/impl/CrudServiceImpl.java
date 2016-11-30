@@ -83,7 +83,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     public T create(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
         this.validate(resource);
-        resource = repository.save(resource);
+        resource = repository.persist(resource);
         this.postCreate(resource);
         return resource;
     }
@@ -321,6 +321,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
         }
     */
     protected void validate(T resource) {
+        LOGGER.debug("validate resource: {}", resource);
         resource.preSave();
         Set<ConstraintViolation<T>> violations = this.validateConstraints(resource);
         if (!CollectionUtils.isEmpty(violations)) {

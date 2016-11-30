@@ -49,7 +49,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  */
@@ -135,10 +140,10 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
 	@Column(name = "birthday")
 	@FormSchemas({ @FormSchemaEntry(json = FormSchemaEntry.TYPE_DATE) })
-	private Date birthDay;
+    private LocalDate birthDay;
 
 	@Column(name = "last_visit")
-	private Date lastVisit;
+    private LocalDateTime lastVisit;
 
 	@NotNull
 	@Column(name = "locale", nullable = false)
@@ -420,20 +425,20 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		this.cellphone = cellphone;
 	}
 
-	public Date getBirthDay() {
-		return birthDay;
+    public LocalDate getBirthDay() {
+        return birthDay;
 	}
 
-	public void setBirthDay(Date birthDay) {
-		this.birthDay = birthDay;
+    public void setBirthDay(LocalDate birthDay) {
+        this.birthDay = birthDay;
 	}
 
-	public Date getLastVisit() {
-		return lastVisit;
+    public LocalDateTime getLastVisit() {
+        return lastVisit;
 	}
 
-	public void setLastVisit(Date lastVisit) {
-		this.lastVisit = lastVisit;
+    public void setLastVisit(LocalDateTime lastVisit) {
+        this.lastVisit = lastVisit;
 	}
 
 	public String getLocale() {
@@ -534,9 +539,9 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		private String address;
 		private String postCode;
 		private Country country;
-		private Date birthDay;
-		private Date lastVisit;
-		private String locale;
+        private LocalDate birthDay;
+        private LocalDateTime lastVisit;
+        private String locale;
 		private UserCredentials credentials;
 
 		public Builder id(String id) {
@@ -599,13 +604,13 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 			return this;
 		}
 
-		public Builder birthDay(Date birthDay) {
-			this.birthDay = birthDay;
+        public Builder birthDay(LocalDate birthDay) {
+            this.birthDay = birthDay;
 			return this;
 		}
 
-		public Builder lastVisit(Date lastVisit) {
-			this.lastVisit = lastVisit;
+        public Builder lastVisit(LocalDateTime lastVisit) {
+            this.lastVisit = lastVisit;
 			return this;
 		}
 

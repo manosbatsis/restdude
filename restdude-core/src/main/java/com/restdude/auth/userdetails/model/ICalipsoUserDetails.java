@@ -23,7 +23,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.social.security.SocialUserDetails;
 
 import java.security.Principal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +45,9 @@ public interface ICalipsoUserDetails extends SocialUserDetails, Principal, Calip
 
 	public void setLastName(String lastName);
 
-	public Date getLastPassWordChangeDate();
+    public LocalDateTime getLastPassWordChangeDate();
 
-	public void setLastPassWordChangeDate(Date lastPassWordChangeDate);
+    public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate);
 
 	public String getEmail();
 
@@ -60,17 +61,17 @@ public interface ICalipsoUserDetails extends SocialUserDetails, Principal, Calip
 
 	public void setAvatarUrl(String avatarUrl);
 
-	public Date getBirthDay();
+    public LocalDate getBirthDay();
 
-	public void setBirthDay(Date birthDay);
+    public void setBirthDay(LocalDate birthDay);
 
-	public Date getLastVisit();
+    public LocalDateTime getLastVisit();
 
-	public void setLastVisit(Date lastVisit);
+    public void setLastVisit(LocalDateTime lastVisit);
 
-	public Date getLastPost();
+    public LocalDateTime getLastPost();
 
-	public void setLastPost(Date lastPost);
+    public void setLastPost(LocalDateTime lastPost);
 
 	public Short getLoginAttempts();
 
@@ -84,9 +85,9 @@ public interface ICalipsoUserDetails extends SocialUserDetails, Principal, Calip
 
 	public void setInactivationReason(String inactivationReason);
 
-	public Date getInactivationDate();
+    public LocalDateTime getInactivationDate();
 
-	public void setInactivationDate(Date inactivationDate);
+    public void setInactivationDate(LocalDateTime inactivationDate);
 
 	public String getLocale();
 

@@ -30,7 +30,7 @@ import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @ShallowReference
 @Entity
@@ -53,7 +53,7 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     private String inactivationReason;
 
     @Column(name = "inactivation_date")
-    private Date inactivationDate;
+    private LocalDateTime inactivationDate;
 
     @ApiModelProperty(hidden = true)
     @JsonSerialize(using = SkipPropertySerializer.class)
@@ -66,13 +66,13 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
 
     @JsonIgnore
     @Column(name = "reset_password_token_date")
-    private Date resetPasswordTokenCreated;
+    private LocalDateTime resetPasswordTokenCreated;
 
     @Column(name = "password_changed")
-    private Date lastPassWordChangeDate;
+    private LocalDateTime lastPassWordChangeDate;
 
     @Column(name = "last_login")
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
 
     @Column(name = "login_attempts")
     private Short loginAttempts = 0;
@@ -86,9 +86,9 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     public UserCredentials() {
     }
 
-    public UserCredentials(String username, Boolean active, String inactivationReason, Date inactivationDate,
-                           String password, String resetPasswordToken, Date resetPasswordTokenCreated,
-                           Date lastPassWordChangeDate, Date lastLogin, Short loginAttempts, UserRegistrationCode registrationCode) {
+    public UserCredentials(String username, Boolean active, String inactivationReason, LocalDateTime inactivationDate,
+                           String password, String resetPasswordToken, LocalDateTime resetPasswordTokenCreated,
+                           LocalDateTime lastPassWordChangeDate, LocalDateTime lastLogin, Short loginAttempts, UserRegistrationCode registrationCode) {
         super();
         this.username = username;
         this.active = active;
@@ -124,7 +124,7 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         if (this.getResetPasswordToken() == null) {
             this.setResetPasswordTokenCreated(null);
         } else if (this.getResetPasswordTokenCreated() == null) {
-            this.setResetPasswordTokenCreated(new Date());
+            this.setResetPasswordTokenCreated(LocalDateTime.now());
         }
     }
 
@@ -167,11 +167,11 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         this.inactivationReason = inactivationReason;
     }
 
-    public Date getInactivationDate() {
+    public LocalDateTime getInactivationDate() {
         return inactivationDate;
     }
 
-    public void setInactivationDate(Date inactivationDate) {
+    public void setInactivationDate(LocalDateTime inactivationDate) {
         this.inactivationDate = inactivationDate;
     }
 
@@ -192,27 +192,27 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         this.resetPasswordToken = resetPasswordToken;
     }
 
-    public Date getResetPasswordTokenCreated() {
+    public LocalDateTime getResetPasswordTokenCreated() {
         return resetPasswordTokenCreated;
     }
 
-    public void setResetPasswordTokenCreated(Date resetPasswordTokenCreated) {
+    public void setResetPasswordTokenCreated(LocalDateTime resetPasswordTokenCreated) {
         this.resetPasswordTokenCreated = resetPasswordTokenCreated;
     }
 
-    public Date getLastPassWordChangeDate() {
+    public LocalDateTime getLastPassWordChangeDate() {
         return lastPassWordChangeDate;
     }
 
-    public void setLastPassWordChangeDate(Date lastPassWordChangeDate) {
+    public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate) {
         this.lastPassWordChangeDate = lastPassWordChangeDate;
     }
 
-    public Date getLastLogin() {
+    public LocalDateTime getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Date lastLogin) {
+    public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
     }
 
@@ -250,12 +250,12 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         private String username;
         private Boolean active;
         private String inactivationReason;
-        private Date inactivationDate;
+        private LocalDateTime inactivationDate;
         private String password;
         private String resetPasswordToken;
-        private Date resetPasswordTokenCreated;
-        private Date lastPassWordChangeDate;
-        private Date lastLogin;
+        private LocalDateTime resetPasswordTokenCreated;
+        private LocalDateTime lastPassWordChangeDate;
+        private LocalDateTime lastLogin;
         private Short loginAttempts;
         private User user;
         private UserRegistrationCode registrationCode;
@@ -275,7 +275,7 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
             return this;
         }
 
-        public Builder inactivationDate(Date inactivationDate) {
+        public Builder inactivationDate(LocalDateTime inactivationDate) {
             this.inactivationDate = inactivationDate;
             return this;
         }
@@ -290,17 +290,17 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
             return this;
         }
 
-        public Builder resetPasswordTokenCreated(Date resetPasswordTokenCreated) {
+        public Builder resetPasswordTokenCreated(LocalDateTime resetPasswordTokenCreated) {
             this.resetPasswordTokenCreated = resetPasswordTokenCreated;
             return this;
         }
 
-        public Builder lastPassWordChangeDate(Date lastPassWordChangeDate) {
+        public Builder lastPassWordChangeDate(LocalDateTime lastPassWordChangeDate) {
             this.lastPassWordChangeDate = lastPassWordChangeDate;
             return this;
         }
 
-        public Builder lastLogin(Date lastLogin) {
+        public Builder lastLogin(LocalDateTime lastLogin) {
             this.lastLogin = lastLogin;
             return this;
         }
