@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.friends.controller;
+package com.restdude.auth.userAccount.controller;
 
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
@@ -25,10 +25,8 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
@@ -45,6 +43,7 @@ public class InvitationsController {
 	UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Invite users", notes = "Invite users by email")
     public UserInvitationResultsDTO inviteUsers(@RequestBody UserInvitationsDTO invitations) {
         LOGGER.debug("INVITE USERS: " + invitations);

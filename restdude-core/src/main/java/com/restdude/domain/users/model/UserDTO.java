@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @ApiModel(value = "UserDTO", description = "UserDTO is a lightweight DTO version of User")
 public class UserDTO implements IMessageResource<String> {
 
+
     public static UserDTO fromUser(User user) {
         UserDTO dto = null;
         if (user != null) {
@@ -43,23 +44,14 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     private String id;
-
     private String name;
-
     private String firstName;
-
     private String lastName;
-
     private String username;
-
     private String email;
-
     private String emailHash;
-
     private String avatarUrl;
-
     private String bannerUrl;
-
     private Integer stompSessionCount;
 
     public UserDTO() {
@@ -80,20 +72,48 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     public UserDTO(User user) {
-        this(user.getId(), user.getFirstName(), user.getLastName(), user.getCredentials() != null ? user.getCredentials().getUsername() : null, user.getEmail(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
+        this(user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getCredentials() != null ? user.getCredentials().getUsername() : null, user.getEmail(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
+    }
+
+    private UserDTO(Builder builder) {
+        this.id = builder.id;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.username = builder.username;
+        this.email = builder.email;
+        this.emailHash = builder.emailHash;
+        this.avatarUrl = builder.avatarUrl;
+        this.stompSessionCount = builder.stompSessionCount;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString()).append("id", this.getUsername())
-                .append("firstName", this.getUsername()).append("lastName", this.getUsername())
-                .append("username", this.getUsername()).append("email", this.getUsername())
-                .append("emailHash", this.getEmail()).append("avatarUrl", this.getAvatarUrl()).append("bannerUrl", this.getBannerUrl()).toString();
+                .append("firstName", this.getUsername())
+                .append("lastName", this.getUsername())
+                .append("username", this.getUsername())
+                .append("email", this.getUsername())
+                .append("emailHash", this.getEmail())
+                .append("avatarUrl", this.getAvatarUrl())
+                .append("bannerUrl", this.getBannerUrl())
+                .toString();
     }
 
     public User toUser() {
-        return new User.Builder().id(this.id).firstName(this.firstName).lastName(this.lastName).credentials(new UserCredentials.Builder().username(this.username).build())
-                .email(this.email).emailHash(this.emailHash).avatarUrl(this.avatarUrl).bannerUrl(bannerUrl).build();
+        return new User.Builder()
+                .id(this.id)
+                .firstName(this.firstName)
+                .lastName(this.lastName)
+                .credentials(new UserCredentials.Builder()
+                        .username(this.username).build())
+                .email(this.email)
+                .emailHash(this.emailHash)
+                .avatarUrl(this.avatarUrl)
+                .bannerUrl(bannerUrl)
+                .build();
     }
 
     /**
@@ -168,7 +188,6 @@ public class UserDTO implements IMessageResource<String> {
     public void setEmailHash(String emailHash) {
         this.emailHash = emailHash;
     }
-
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -247,17 +266,6 @@ public class UserDTO implements IMessageResource<String> {
         public UserDTO build() {
             return new UserDTO(this);
         }
-    }
-
-    private UserDTO(Builder builder) {
-        this.id = builder.id;
-        this.firstName = builder.firstName;
-        this.lastName = builder.lastName;
-        this.username = builder.username;
-        this.email = builder.email;
-        this.emailHash = builder.emailHash;
-        this.avatarUrl = builder.avatarUrl;
-        this.stompSessionCount = builder.stompSessionCount;
     }
 
 }

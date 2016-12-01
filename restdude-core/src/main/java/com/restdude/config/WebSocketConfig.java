@@ -1,5 +1,6 @@
 package com.restdude.config;
 
+
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
@@ -38,10 +39,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
      * Registers the "/ws" endpoint, enabling SockJS fallback options so that alternative
      * messaging options may be used if WebSocket is not available.
      * <p>
-     * This endpoint, when prefixed with "/domain", is the endpoint that the
+     * This endpoint, when prefixed with "/app", is the endpoint that the
      * controller methods are mapped to handle.
      *
-     * @see WebSocketMessageBrokerConfigurer#registerStompEndpoints(StompEndpointRegistry)
+     * @see org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer#registerStompEndpoints(org.springframework.web.socket.config.annotation.StompEndpointRegistry)
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
@@ -54,16 +55,16 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
      * Configure the message broker with eenableSimpleBroker(), to enablee a simple memory-based message broker
      * to carry messages back to the client on destinations prefixed with "/topic".
      * <p>
-     * The "/domain" prefix is designated for messages that are bound for @MessageMapping-annotated methods.
+     * The "/app" prefix is designated for messages that are bound for @MessageMapping-annotated methods.
      *
-     * @see AbstractWebSocketMessageBrokerConfigurer#configureMessageBroker(MessageBrokerRegistry)
+     * @see org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer#configureMessageBroker(org.springframework.messaging.simp.config.MessageBrokerRegistry)
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry messageBrokerRegistry) {
 
         messageBrokerRegistry.enableSimpleBroker("/queue", "/topic").setTaskScheduler(heartbeatTaskScheduler());
-        messageBrokerRegistry.setApplicationDestinationPrefixes("/domain");
-//		messageBrokerRegistry.setUserDestinationPrefix("/user"); 
+        messageBrokerRegistry.setApplicationDestinationPrefixes("/app");
+//		messageBrokerRegistry.setUserDestinationPrefix("/user");
     }
 
 

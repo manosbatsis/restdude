@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.util.exception;
+package com.restdude.domain.error.resolver;
 
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.HandlerExceptionResolver;

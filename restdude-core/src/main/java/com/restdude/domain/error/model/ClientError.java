@@ -1,5 +1,6 @@
 package com.restdude.domain.error.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistencePreview;
 import com.restdude.domain.users.model.User;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @Table(name = "error_client")
 @ApiModel(value = "ClientError", description = "Client errors are created upon client request and refer to exceptions occurred " +
 		"specifically within client application code. ")
+@JsonIgnoreProperties("id")
 public class ClientError extends BaseError implements PersistableError<String> {
 
 	public static final String API_PATH = "clientErrors";
@@ -26,11 +28,11 @@ public class ClientError extends BaseError implements PersistableError<String> {
 	@ApiModelProperty(value = "A client application screenshot demonstrating the issue.")
 	@FilePersistence(maxWidth = 1920, maxHeight = 1080)
 	@FilePersistencePreview(maxWidth = 200, maxHeight = 200)
-	@Column(name = "screenshot_url")
+	@Column(name = "screenshot_url", length = MAX_MESSAGE_LENGTH)
 	private String screenshotUrl;
 
 	@ApiModelProperty(value = "The error description provided by the user, if any.")
-	@Column(length = BaseError.MAX_MESSAGE_LENGTH)
+	@Column(length = BaseError.MAX_DESCRIPTION_LENGTH)
 	private String description;
 
 	public ClientError() {

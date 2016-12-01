@@ -2,6 +2,7 @@ package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.restdude.domain.base.controller.AbstractModelController;
 import com.restdude.domain.users.model.User;
@@ -34,6 +35,7 @@ import java.util.Set;
 		+ "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
 @JsonPropertyOrder({"id", "message", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
 		"validationErrors", "user"})
+@JsonIgnoreProperties("id")
 public class SystemError extends BaseError {
 
 	public static final String API_PATH = "systemErrors";

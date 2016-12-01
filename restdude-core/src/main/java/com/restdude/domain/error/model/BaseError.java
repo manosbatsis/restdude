@@ -1,6 +1,7 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
@@ -12,11 +13,17 @@ import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.HttpUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 
 @ModelResource(path = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
@@ -26,6 +33,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "error_abstract")
 @Inheritance(strategy = InheritanceType.JOINED)
 @CurrentPrincipalField(ignoreforRoles = {"ROLE_ADMIN", "ROLE_SITE_OPERATOR"})
+@JsonIgnoreProperties("id")
 public class BaseError extends AbstractSystemUuidPersistable implements PersistableError<String> {
     public static final String API_PATH = "allErrors";
 
@@ -43,14 +51,34 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
     public static final String PRE_AUTHORIZE_COUNT = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
 
+    @CreatedDate
+    @DiffIgnore
+    @ApiModelProperty(value = "Date created")
+    @Column(name = "date_created", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @DiffIgnore
+    @ApiModelProperty(value = "Date last modified")
+    @Column(name = "date_last_modified", nullable = false)
+    private LocalDateTime lastModifiedDate;
+
+    @CreatedBy
+    @DiffIgnore
+    @JsonIgnore
+    @CurrentPrincipal
+    @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "createdby_id", referencedColumnName = "id", updatable = false)
+    private User createdBy;
 
     @NotNull
     @ApiModelProperty(value = "Message for user")
-    @Column(name = "error_message", nullable = false, updatable = false)
+    @Column(name = "error_message", nullable = false, updatable = false, length = MAX_MESSAGE_LENGTH)
     private String message;
 
     @ApiModelProperty(value = "The address the request originated from")
-    @Column(name = "remote_address", updatable = false, length = 500)
+    @Column(name = "remote_address", updatable = false, length = MAX_DESCRIPTION_LENGTH)
     private String remoteAddress;
 
     @ApiModelProperty(value = "User in context")
@@ -100,6 +128,43 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
                 .append("message", this.getMessage())
                 .append("remoteAddress", this.getRemoteAddress())
                 .toString();
+    }
+
+    @Override
+    public void preSave() {
+        super.preSave();
+        if (StringUtils.isNotEmpty(this.message) && this.message.length() > BaseError.MAX_MESSAGE_LENGTH) {
+            this.message = StringUtils.abbreviate(this.message, BaseError.MAX_MESSAGE_LENGTH);
+        }
+        if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
+            this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, BaseError.MAX_DESCRIPTION_LENGTH);
+        }
+    }
+
+    @Override
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    @Override
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override

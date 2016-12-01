@@ -1,4 +1,4 @@
-package com.restdude.util.exception;
+package com.restdude.domain.error.resolver;
 
 
 import com.restdude.domain.error.model.SystemError;

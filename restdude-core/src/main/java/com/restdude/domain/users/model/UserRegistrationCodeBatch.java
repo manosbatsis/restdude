@@ -17,21 +17,29 @@
  */
 package com.restdude.domain.users.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.annotation.CurrentPrincipal;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Formula;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.javers.core.metamodel.annotation.ShallowReference;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @ShallowReference
 @Entity
@@ -47,6 +55,36 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
     public static final String PRE_AUTHORIZE_CREATE = PRE_AUTHORIZE_SEARCH;
     public static final String PRE_AUTHORIZE_UPDATE = PRE_AUTHORIZE_CREATE;
     public static final String PRE_AUTHORIZE_PATCH = PRE_AUTHORIZE_UPDATE;
+
+
+    @CreatedDate
+    @DiffIgnore
+    @ApiModelProperty(value = "Date created")
+    @Column(name = "date_created", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @DiffIgnore
+    @ApiModelProperty(value = "Date last modified")
+    @Column(name = "date_last_modified", nullable = false)
+    private LocalDateTime lastModifiedDate;
+
+    @LastModifiedBy
+    @DiffIgnore
+    @JsonIgnore
+    @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_modified_by", referencedColumnName = "id", updatable = false)
+    private User lastModifiedBy;
+
+    @CreatedBy
+    @DiffIgnore
+    @JsonIgnore
+    @CurrentPrincipal
+    @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "createdby_id", referencedColumnName = "id", updatable = false)
+    private User createdBy;
 
     @NotNull
     @ApiModelProperty(value = "Unique short code, non-updatable.", required = true, example = "CompanyName01")
@@ -153,4 +191,35 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
         this.expirationDate = expirationDate;
     }
 
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public User getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(User lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 }
