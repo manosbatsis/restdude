@@ -161,10 +161,10 @@ public class ProviderSignInController extends org.springframework.social.connect
 
         User user = new User();
         user.setCredentials(new UserCredentials());
-        user.setEmail(userAccountData.getEmail());
+        user.setUsername(userAccountData.getUserName());
         user.setFirstName(userAccountData.getFirstName());
         user.setLastName(userAccountData.getLastName());
-        user.getCredentials().setUsername(userAccountData.getUserName());
+        user.getCredentials().setEmail(userAccountData.getEmail());
         user.getCredentials().setPassword(userAccountData.getPassword());
 
         registered = userService.createForImplicitSignup(user);

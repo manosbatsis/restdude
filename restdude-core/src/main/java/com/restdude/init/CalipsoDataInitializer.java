@@ -156,21 +156,21 @@ public class CalipsoDataInitializer {
             LocalDateTime now = LocalDateTime.now();
 
 			User system = new User();
-			system.setEmail("system@abiss.gr");
+			system.setUsername("system");
 			system.setFirstName("System");
 			system.setLastName("User");
-            system.setCredentials(new UserCredentials.Builder().active(false).username("system").password("system").build());
-            system.setLastVisit(now);
+			system.setCredentials(new UserCredentials.Builder().active(false).email("system@abiss.gr").password("system").build());
+			system.setLastVisit(now);
 			system = userService.createTest(system);
 			users.add(system);
 
 			User adminUser = new User();
-			adminUser.setEmail("info@abiss.gr");
+			adminUser.setUsername("admin");
 			adminUser.setFirstName("Admin");
 			adminUser.setLastName("User");
 			adminUser.setLastVisit(now);
 			adminUser.addRole(adminRole);
-            adminUser.setCredentials(new UserCredentials.Builder().active(true).username("admin").password("admin").build());
+			adminUser.setCredentials(new UserCredentials.Builder().active(true).email("info@abiss.gr").password("admin").build());
 //			adminUser.setCreatedBy(system);
 			adminUser = userService.createTest(adminUser);
 			users.add(adminUser);
@@ -180,11 +180,11 @@ public class CalipsoDataInitializer {
 
 
 			User opUser = new User();
-			opUser.setEmail("operator@abiss.gr");
+			opUser.setUsername("operator");
 			opUser.setFirstName("Operator");
 			opUser.setLastName("User");
-            opUser.setCredentials(new UserCredentials.Builder().active(true).username("operator").password("operator").build());
-            opUser.setLastVisit(now);
+			opUser.setCredentials(new UserCredentials.Builder().active(true).email("operator@abiss.gr").password("operator").build());
+			opUser.setLastVisit(now);
             opUser.addRole(operatorRole);
 //			opUser.setCreatedBy(system);
 			opUser = userService.createTest(opUser);
@@ -196,11 +196,11 @@ public class CalipsoDataInitializer {
 				for (String fullName : this.getTenNames()) {
 					String userName = fullName.toLowerCase().replace(" ", "") + usersCreated;
 					User u = new User();
-					u.setEmail(userName + "@abiss.gr");
+					u.setUsername(userName);
 					u.setFirstName(fullName.substring(0, fullName.indexOf(" ")));
 					u.setLastName(fullName.substring(fullName.indexOf(" ") + 1));
-                    u.setCredentials(new UserCredentials.Builder().active(true).username(userName).password(userName).build());
-                    u.setLastVisit(now);
+					u.setCredentials(new UserCredentials.Builder().active(true).email(userName + "@abiss.gr").password(userName).build());
+					u.setLastVisit(now);
 //					u.setCreatedBy(system);
 					u = userService.createTest(u);
 					users.add(u);

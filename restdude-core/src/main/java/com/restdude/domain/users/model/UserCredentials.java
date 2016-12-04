@@ -24,7 +24,6 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
@@ -42,8 +41,8 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @Column(name = "user_name", unique = true, nullable = false)
-    private String username;
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
     @NotNull
     @Column(name = "active", nullable = false)
@@ -86,11 +85,11 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     public UserCredentials() {
     }
 
-    public UserCredentials(String username, Boolean active, String inactivationReason, LocalDateTime inactivationDate,
+    public UserCredentials(String email, Boolean active, String inactivationReason, LocalDateTime inactivationDate,
                            String password, String resetPasswordToken, LocalDateTime resetPasswordTokenCreated,
                            LocalDateTime lastPassWordChangeDate, LocalDateTime lastLogin, Short loginAttempts, UserRegistrationCode registrationCode) {
         super();
-        this.username = username;
+        this.email = email;
         this.active = active;
         this.inactivationReason = inactivationReason;
         this.inactivationDate = inactivationDate;
@@ -109,17 +108,6 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     @Override
     public void preSave() {
 
-        // fallback username
-        if (!StringUtils.isNotBlank(this.getUsername())) {
-            String username = this.getUser().getEmail();
-            if (StringUtils.isNotBlank(username)) {
-                username = username.replace("@", "_").replaceAll("\\.", "_");
-            } else {
-                username = this.getUser().getId();
-            }
-            this.setUsername(username);
-        }
-
         // clear or set the token creation date  if needed
         if (this.getResetPasswordToken() == null) {
             this.setResetPasswordTokenCreated(null);
@@ -131,7 +119,7 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString())
-                .append("username", this.getUsername())
+                .append("email", this.getEmail())
                 .append("active", this.getActive())
                 .append("inactivationReason", this.getInactivationReason())
                 .append("inactivationDate", this.getInactivationDate())
@@ -143,12 +131,12 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     }
 
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String userName) {
-        this.username = userName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setActive(Boolean active) {
@@ -247,7 +235,7 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     }
 
     public static class Builder {
-        private String username;
+        private String email;
         private Boolean active;
         private String inactivationReason;
         private LocalDateTime inactivationDate;
@@ -260,8 +248,8 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         private User user;
         private UserRegistrationCode registrationCode;
 
-        public Builder username(String username) {
-            this.username = username;
+        public Builder email(String email) {
+            this.email = email;
             return this;
         }
 
@@ -326,7 +314,7 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     }
 
     private UserCredentials(Builder builder) {
-        this.username = builder.username;
+        this.email = builder.email;
         this.active = builder.active;
         this.inactivationReason = builder.inactivationReason;
         this.inactivationDate = builder.inactivationDate;

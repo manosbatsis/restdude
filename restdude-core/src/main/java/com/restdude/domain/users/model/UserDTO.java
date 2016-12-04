@@ -17,6 +17,8 @@
  */
 package com.restdude.domain.users.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.websocket.message.IMessageResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,8 +35,8 @@ public class UserDTO implements IMessageResource<String> {
             return new UserDTO(user.getId(),
                     user.getFirstName(),
                     user.getLastName(),
-                    credentials != null ? credentials.getUsername() : null,
-                    user.getEmail(),
+                    credentials != null ? credentials.getEmail() : null,
+                    user.getUsername(),
                     user.getEmailHash(),
                     user.getAvatarUrl(),
                     user.getBannerUrl(),
@@ -75,7 +77,7 @@ public class UserDTO implements IMessageResource<String> {
         this(user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getCredentials() != null ? user.getCredentials().getUsername() : null, user.getEmail(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
+                user.getCredentials() != null ? user.getCredentials().getEmail() : null, user.getUsername(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
     }
 
     private UserDTO(Builder builder) {
@@ -95,7 +97,6 @@ public class UserDTO implements IMessageResource<String> {
                 .append("firstName", this.getUsername())
                 .append("lastName", this.getUsername())
                 .append("username", this.getUsername())
-                .append("email", this.getUsername())
                 .append("emailHash", this.getEmail())
                 .append("avatarUrl", this.getAvatarUrl())
                 .append("bannerUrl", this.getBannerUrl())
@@ -108,8 +109,8 @@ public class UserDTO implements IMessageResource<String> {
                 .firstName(this.firstName)
                 .lastName(this.lastName)
                 .credentials(new UserCredentials.Builder()
-                        .username(this.username).build())
-                .email(this.email)
+                        .email(this.email).build())
+                .username(this.username)
                 .emailHash(this.emailHash)
                 .avatarUrl(this.avatarUrl)
                 .bannerUrl(bannerUrl)
@@ -173,10 +174,12 @@ public class UserDTO implements IMessageResource<String> {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getEmail() {
         return email;
     }
 
+    @JsonProperty
     public void setEmail(String email) {
         this.email = email;
     }

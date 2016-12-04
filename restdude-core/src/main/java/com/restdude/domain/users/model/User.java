@@ -28,7 +28,6 @@ import com.restdude.domain.metadata.model.AbstractMetadataSubject;
 import com.restdude.mdd.uischema.annotation.FormSchemaEntry;
 import com.restdude.mdd.uischema.annotation.FormSchemas;
 import com.restdude.util.Constants;
-import com.restdude.util.HashUtils;
 import com.restdude.websocket.model.StompSession;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -103,8 +102,9 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	Locale localeObject = null;
 
 	@NotNull
-	@Column(name = "email", unique = true, nullable = false)
-	private String email;
+	@Column(name = "user_name", unique = true, nullable = false)
+	private String username;
+
 
 	@NotNull
 	@Column(name = "email_hash", nullable = false)
@@ -184,7 +184,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		this.setId(dto.getId());
 		this.setFirstName(dto.getFirstName());
 		this.setLastName(dto.getLastName());
-		this.email = dto.getEmail();
+		this.username = dto.getUsername();
 		this.emailHash = dto.getEmailHash();
 	}
 
@@ -220,7 +220,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(this.name).append(this.email).toHashCode();
+		return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(this.name).append(this.username).toHashCode();
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		EqualsBuilder builder = new EqualsBuilder();
 		builder.appendSuper(super.equals(obj));
 		builder.append(getName(), other.getName());
-		builder.append(getEmail(), other.getEmail());
+		builder.append(getUsername(), other.getUsername());
 		return builder.isEquals();
 	}
 
@@ -247,7 +247,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
 				.append("firstName", this.getFirstName()).append("lastName", this.getLastName())
-				.append("email", this.getEmail()).append("new", this.isNew()).append("roles", this.getRoles())
+				.append("username", this.getUsername()).append("new", this.isNew()).append("roles", this.getRoles())
 				.toString();
 	}
 
@@ -274,16 +274,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     public void preSave() {
         if (!StringUtils.isNotBlank(this.getLocale())) {
 			this.setLocale("en");
-		}
-		// create the email hash,
-		// use email as username if latter is empty
-		if (this.getEmail() != null) {
-
-			// make sure it's trimmed
-			this.setEmail(this.getEmail().trim());
-			// update the hash
-            this.setEmailHash(HashUtils.md5Hex(this.getEmail()));
-
 		}
 		// fallback to gravatar
 		if (StringUtils.isBlank(this.getAvatarUrl())) {
@@ -377,12 +367,12 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
         this.description = description;
     }
 
-	public String getEmail() {
-		return email;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsername(String userName) {
+		this.username = userName;
 	}
 
 	public String getEmailHash() {
@@ -530,7 +520,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		private String id;
 		private String firstName;
 		private String lastName;
-		private String email;
+		private String username;
 		private String emailHash;
 		private String avatarUrl;
 		private String bannerUrl;
@@ -559,11 +549,11 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 			return this;
 		}
 
-		public Builder email(String email) {
-			this.email = email;
+		public Builder username(String username) {
+			this.username = username;
 			return this;
 		}
-		
+
 		public Builder emailHash(String emailHash) {
 			this.emailHash = emailHash;
 			return this;
@@ -633,7 +623,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		this.setId(builder.id);
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
-		this.email = builder.email;
+		this.username = builder.username;
 		this.emailHash = builder.emailHash;
 		this.avatarUrl = builder.avatarUrl;
 		this.bannerUrl = builder.bannerUrl;

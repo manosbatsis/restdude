@@ -18,9 +18,16 @@
 package com.restdude.domain.users.service.impl;
 
 import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.UserCredentialsRepository;
+import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserCredentialsService;
+import com.restdude.util.HashUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
 
@@ -28,4 +35,48 @@ import javax.inject.Named;
 @Named("userCredentialsService")
 public class UserCredentialsServiceImpl extends AbstractModelServiceImpl<UserCredentials, String, UserCredentialsRepository> implements UserCredentialsService {
 
+    private UserRepository roleRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @PreAuthorize(UserCredentials.PRE_AUTHORIZE_CREATE)
+    public UserCredentials create(@P("resource") UserCredentials resource) {
+        return super.create(resource);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @PreAuthorize(UserCredentials.PRE_AUTHORIZE_UPDATE)
+    public UserCredentials update(@P("resource") UserCredentials resource) {
+        UserCredentials uc = super.update(resource);
+        User u = this.userRepository.getOne(uc.getUser().getId());
+        u.setEmailHash(HashUtils.md5Hex(uc.getEmail()));
+        this.userRepository.save(u);
+        return uc;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @PreAuthorize(UserCredentials.PRE_AUTHORIZE_UPDATE)
+    public UserCredentials patch(@P("resource") UserCredentials resource) {
+        UserCredentials uc = super.patch(resource);
+        User u = this.userRepository.getOne(uc.getUser().getId());
+        u.setEmailHash(HashUtils.md5Hex(uc.getEmail()));
+        this.userRepository.save(u);
+        return uc;
+    }
 }

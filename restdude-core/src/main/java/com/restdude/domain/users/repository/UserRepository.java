@@ -34,8 +34,8 @@ public interface UserRepository extends ModelRepository<User, String> {
     public static final String SELECT_USERDTO = "select new com.restdude.domain.users.model.UserDTO(u.id, "
             + "		u.firstName, "
 			+ "		u.lastName, "
-			+ "		u.credentials.username, "
-			+ "		u.email, "
+			+ "		u.username, "
+			+ "		u.credentials.email, "
 			+ "		u.emailHash,"
 			+ "		u.avatarUrl,"
 			+ "		u.bannerUrl,"
@@ -45,29 +45,29 @@ public interface UserRepository extends ModelRepository<User, String> {
 	@Query("select u from User u where u.id = UPPER(?1) and u.credentials.active = true")
 	public User findActiveById(String id);
 
-	@Query("select u.credentials.username from User u where u.id = ?1 ")
+	@Query("select u.username from User u where u.id = ?1 ")
 	public String findUsernameById(String id);
 
-	@Query("select u from User u where UPPER(u.email) = UPPER(?1) and u.credentials.active = true")
+	@Query("select u from User u where UPPER(u.credentials.email) = UPPER(?1) and u.credentials.active = true")
 	public User findActiveByEmail(String email);
 
-	@Query("select u from User u where UPPER(u.credentials.username) = UPPER(?1) and u.credentials.active = true")
+	@Query("select u from User u where UPPER(u.username) = UPPER(?1) and u.credentials.active = true")
 	public User findActiveByUsername(String username);
 
-	@Query("select u from User u where UPPER(u.credentials.username) = UPPER(?1) ")
+	@Query("select u from User u where UPPER(u.username) = UPPER(?1) ")
 	public User findByUsername(String username);
 
-	@Query("select u from User u where UPPER(u.email) = UPPER(?1) ")
+	@Query("select u from User u where UPPER(u.credentials.email) = UPPER(?1) ")
 	public User findByEmail(String email);
 
-	@Query("select u from User u where u.id = ?1 or UPPER(u.email) = UPPER(?1) or UPPER(u.credentials.username) = UPPER(?1)) ")
+	@Query("select u from User u where u.id = ?1 or UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
 	public User findByIdOrUsernameOrEmail(String idOrUsernameOrEmail);
 
-	@Query("select u from User u where UPPER(u.email) = UPPER(?1) or UPPER(u.credentials.username) = UPPER(?1)) ")
+	@Query("select u from User u where UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
 	public User findByUsernameOrEmail(String idOrUsernameOrEmail);
 
-    @Query("select new com.restdude.domain.users.model.UserDTO(u.id, u.firstName, u.lastName, u.credentials.username, u.email, u.emailHash, u.avatarUrl, u.bannerUrl, u.stompSessionCount) from User u where u.id = ?1 or UPPER(u.email) = UPPER(?1) or UPPER(u.credentials.username) = UPPER(?1)) ")
-    public UserDTO findAsLink(String usernameOrEmailOrId);
+	@Query("select new com.restdude.domain.users.model.UserDTO(u.id, u.firstName, u.lastName, u.username, u.credentials.email, u.emailHash, u.avatarUrl, u.bannerUrl, u.stompSessionCount) from User u where u.id = ?1 or UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
+	public UserDTO findAsLink(String usernameOrEmailOrId);
 	
 	@Query(SELECT_USERDTO
 			+ "from User u where u.id = ?1")

@@ -22,8 +22,8 @@ public interface FriendshipRepository extends ModelRepository<Friendship,Friends
 	static final String SELECT_FRIEND_AS_USERDTO = "select new com.restdude.domain.users.model.UserDTO(friendship.id.friend.id, "
 			+ "		friendship.id.friend.firstName, "
 			+ "		friendship.id.friend.lastName, "
-			+ "		friendship.id.friend.credentials.username, "
-			+ "		friendship.id.friend.email, "
+			+ "		friendship.id.friend.username, "
+			+ "		friendship.id.friend.credentials.email, "
 			+ "		friendship.id.friend.emailHash, "
 			+ "		friendship.id.friend.avatarUrl, "
 			+ "		friendship.id.friend.bannerUrl, "
@@ -39,8 +39,8 @@ public interface FriendshipRepository extends ModelRepository<Friendship,Friends
 	// 
 	static final String FROM__STOMPONLINE_FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND + " and friendship.id.friend.stompSessionCount > 0 ";
 
-	static final String QUERY_FRIEND_USERNAMES_BY_USERID = "select friendship.id.friend.credentials.username " + FROM__FRIENDS_BY_USERID;
-	static final String QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID = "select friendship.id.friend.credentials.username " + FROM__STOMPONLINE_FRIENDS_BY_USERID;
+	static final String QUERY_FRIEND_USERNAMES_BY_USERID = "select friendship.id.friend.username " + FROM__FRIENDS_BY_USERID;
+	static final String QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID = "select friendship.id.friend.username " + FROM__STOMPONLINE_FRIENDS_BY_USERID;
 	
 	static final String QUERY_FRIENDS_BY_USERID = SELECT_FRIEND_AS_USERDTO + FROM__FRIENDS_BY_USERID;
 	

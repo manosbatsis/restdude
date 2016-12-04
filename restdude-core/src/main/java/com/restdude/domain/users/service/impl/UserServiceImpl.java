@@ -26,6 +26,7 @@ import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserCredentialsService;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.util.HashUtils;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import org.apache.commons.lang3.StringUtils;
@@ -126,16 +127,17 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 		// note any credential info
 		UserCredentials credentials = resource.getCredentials();
-		resource.setCredentials(null);
-
-		Role userRole = roleRepository.findByName(Role.ROLE_USER);
-		resource.addRole(userRole);
-		resource = super.create(resource);
-
 		// init credentials if empty
 		if (credentials == null) {
 			credentials = new UserCredentials();
 		}
+		resource.setCredentials(null);
+		addUserRoleEmailHashDefaultUsername(resource, credentials);
+
+
+		// save
+		resource = super.create(resource);
+
 		credentials.setActive(false);
 		credentials.setUser(resource);
 		credentials.setResetPasswordToken(generator.generateKey());
@@ -169,6 +171,26 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		emailService.sendAccountConfirmation(resource);
 
 		return resource;
+	}
+
+	public void addUserRoleEmailHashDefaultUsername(User resource, UserCredentials credentials) {
+		// add user role
+		Role userRole = roleRepository.findByName(Role.ROLE_USER);
+		resource.addRole(userRole);
+
+		// add email hash
+		if (credentials.getEmail() != null) {
+			resource.setEmailHash(HashUtils.md5Hex(credentials.getEmail()));
+		}
+
+		// fallback username
+		if (!StringUtils.isNotBlank(resource.getUsername())) {
+			String username = credentials.getEmail();
+			if (StringUtils.isNotBlank(username)) {
+				username = username.replace("@", "_").replaceAll("\\.", "_");
+			}
+			resource.setUsername(username);
+		}
 	}
 
 
@@ -206,16 +228,19 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 		// note any credential info
 		UserCredentials credentials = resource.getCredentials();
-		resource.setCredentials(null);
-
-		Role userRole = roleRepository.findByName(Role.ROLE_USER);
-		resource.addRole(userRole);
-		resource = super.create(resource);
-
 		// init credentials if empty
 		if (credentials == null) {
 			credentials = new UserCredentials();
 		}
+		resource.setCredentials(null);
+
+		// add user role
+		addUserRoleEmailHashDefaultUsername(resource, credentials);
+
+
+		// save
+		resource = super.create(resource);
+
 		credentials.setUser(resource);
 
 		// require password for active
@@ -392,10 +417,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
         User existing = this.getPrincipalLocalUser();
 		if (existing == null) {
-			existing = this.repository.findByEmail(userAccountData.getEmail());
-		}
-		if (existing == null) {
-			String email = userAccountData.getCredentials() != null ? userAccountData.getCredentials().getUsername() : null;
+			String email = userAccountData.getCredentials() != null ? userAccountData.getCredentials().getEmail() : null;
 			if (StringUtils.isNotBlank(email) && email.contains("@")) {
 				existing = this.repository.findByEmail(email);
 			}
@@ -465,7 +487,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 					}
 					else{
 						// invite user
-						results.getInvited().add(this.create(dto.toUser()).getEmail());
+						results.getInvited().add(this.create(dto.toUser()).getCredentials().getEmail());
 					}
 				}
 				else{
@@ -489,7 +511,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 							User u = this.repository.findByUsernameOrEmail(email.getAddress());
 							if(u == null){
 								u = new User();
-								u.setEmail(email.getAddress());
+								u.setCredentials(new UserCredentials());
+								u.getCredentials().setEmail(email.getAddress());
 								String personal = email.getPersonal();
 								if(StringUtils.isNotBlank(personal)){
 									String[] names = personal.split(" ");
@@ -507,7 +530,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 									}
 								}
 								// invite user
-								results.getInvited().add(this.create(u).getEmail());
+								results.getInvited().add(this.create(u).getCredentials().getEmail());
 							}
 						}
 					}

@@ -61,9 +61,9 @@ public class UserAccountRegistration implements Serializable {
 
 	public User asUser() {
 		User newUser = new User.Builder()
-				.credentials(new UserCredentials.Builder().username(this.username).password(this.password)
-						.registrationCode(new UserRegistrationCode(this.registrationCode)).build())
-                .email(this.registrationEmail).firstName(this.firstName).lastName(this.lastName).telephone(this.telephone)
+                .credentials(new UserCredentials.Builder().email(this.registrationEmail).password(this.password)
+                        .registrationCode(new UserRegistrationCode(this.registrationCode)).build())
+                .username(this.username).firstName(this.firstName).lastName(this.lastName).telephone(this.telephone)
                 .cellphone(this.cellphone).locale(this.locale).birthDay(this.birthDay).build();
 		return newUser;
 	}

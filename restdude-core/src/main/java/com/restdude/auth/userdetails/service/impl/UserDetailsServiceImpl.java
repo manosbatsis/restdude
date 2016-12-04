@@ -25,6 +25,7 @@ import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
+import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
@@ -265,8 +266,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 				}
 
 				user = new User();
-				user.setEmail(socialEmail);
-				user.setFirstName(socialFirstName);
+                user.setCredentials(new UserCredentials.Builder().email(socialEmail).build());
+                user.setFirstName(socialFirstName);
 				user.setLastName(socialLastName);
 				try {
 					user = userService.createForImplicitSignup(user);

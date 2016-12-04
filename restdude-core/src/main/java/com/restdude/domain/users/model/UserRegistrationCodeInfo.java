@@ -42,6 +42,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable impl
 
     public UserRegistrationCodeInfo(UserRegistrationCode code) {
         this(code.getId(), code.getAvailable(), code.getCredentials(), code.getBatch());
+
     }
 
     public UserRegistrationCodeInfo(String id, Boolean available, String username, String batchId, String batchName) {
@@ -56,7 +57,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable impl
         this.id = id;
         this.available = available;
         if (credentials != null) {
-            this.username = credentials.getUsername();
+            this.username = credentials.getUser().getUsername();
         }
         if (batch != null) {
             this.batchId = batch.getId();

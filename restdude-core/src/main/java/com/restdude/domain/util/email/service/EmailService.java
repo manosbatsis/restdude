@@ -113,8 +113,8 @@ public class EmailService {
 
 	public void sendEmailToUser(final User user, final String subject,
 			final String templateName) {
-		String emailTo = user.getEmail();
-		String emailFrom = getDefaultSender(user);
+        String emailTo = user.getCredentials().getEmail();
+        String emailFrom = getDefaultSender(user);
 		// Prepare the evaluation context
 		String locale = StringUtils.isNoneBlank(user.getLocale()) ? user.getLocale() : "en"; 
 		final Context ctx = new Context(new Locale(locale));
