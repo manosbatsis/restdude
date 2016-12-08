@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#">
+    <meta charset='utf-8'>
+    
+
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/frameworks-c64b206fb6104fd10a7b4f7460f970885149c62649a7414df084683d7a0f7bf3.css" media="all" rel="stylesheet" />
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-342a58e4873253c179dfd18daee13759cc4760fc0890736d93b13097048664f2.css" media="all" rel="stylesheet" />
+    
+    
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/site-0aa4f1a4bd9907ebd09f265a95d4856cabf513dd39b891f737b1b35c39f12564.css" media="all" rel="stylesheet" />
+    
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="viewport" content="width=device-width">
+    
+    <title>Chart.js · GitHub</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <meta property="fb:app_id" content="1401488693436528">
+
+      <meta content="https://avatars3.githubusercontent.com/u/10342521?v=3&amp;s=280" name="twitter:image:src" /><meta content="@github" name="twitter:site" /><meta content="summary" name="twitter:card" /><meta content="Chart.js" name="twitter:title" /><meta content="Simple, clean and engaging charts for designers and developers" name="twitter:description" />
+      <meta content="https://avatars3.githubusercontent.com/u/10342521?v=3&amp;s=280" property="og:image" /><meta content="GitHub" property="og:site_name" /><meta content="profile" property="og:type" /><meta content="Chart.js" property="og:title" /><meta content="https://github.com/chartjs" property="og:url" /><meta content="Simple, clean and engaging charts for designers and developers" property="og:description" /><meta content="chartjs" property="profile:username" />
+      <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
+    <meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
+    <link rel="assets" href="https://assets-cdn.github.com/">
+    
+    <meta name="pjax-timeout" content="1000">
+    
+    <meta name="request-id" content="BC04A049:23CD5:1BDC435E:584845C9" data-pjax-transient>
+
+    <meta name="msapplication-TileImage" content="/windows-tile.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="selected-link" value="/chartjs" data-pjax-transient>
+
+    <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
+<meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
+    <meta name="google-analytics" content="UA-3769691-2">
+
+<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="BC04A049:23CD5:1BDC435E:584845C9" name="octolytics-dimension-request_id" />
+<meta content="/&lt;org-login&gt;" data-pjax-transient="true" name="analytics-location" />
+
+
+
+  <meta class="js-ga-set" name="dimension1" content="Logged Out">
+
+
+
+        <meta name="hostname" content="github.com">
+    <meta name="user-login" content="">
+
+        <meta name="expected-hostname" content="github.com">
+      <meta name="js-proxy-site-detection-payload" content="NzRhZjhmODNkMmJkYjE5NTkzOWZhOTNhMmYwM2Q4YjljNjkwN2Y0MTVjMThmNTQxYWRjY2JjZjYyNWE2MjJlNnx7InJlbW90ZV9hZGRyZXNzIjoiMTg4LjQuMTYwLjczIiwicmVxdWVzdF9pZCI6IkJDMDRBMDQ5OjIzQ0Q1OjFCREM0MzVFOjU4NDg0NUM5IiwidGltZXN0YW1wIjoxNDgxMTMxNDY2LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
+
+
+      <link rel="mask-icon" href="https://assets-cdn.github.com/pinned-octocat.svg" color="#000000">
+      <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+
+    <meta name="html-safe-nonce" content="b1d3e318b8dc62e46efceb0bfd249b27a695b42e">
+    <meta content="2620cd518d380f9a0b89be83ba031109d9a3536d" name="form-nonce" />
+
+    <meta http-equiv="x-pjax-version" content="a6dbbb2c1c091648e8ccf10f861cc421">
+    
+
+      <meta name="description" content="GitHub is where people build software. More than 18 million people use GitHub to discover, fork, and contribute to over 48 million projects.">
+
+  </head>
+
+
+  <body class="logged-out  env-production   org">
+    <div id="js-pjax-loader-bar" class="pjax-loader-bar"><div class="progress"></div></div>
+    <a href="#start-of-content" tabindex="1" class="accessibility-aid js-skip-to-content">Skip to content</a>
+
+    
+    
+    
+
+
+
+          <header class="site-header js-details-container" role="banner">
+  <div class="container-responsive">
+    <a class="header-logo-invertocat" href="https://github.com/" aria-label="Homepage" data-ga-click="(Logged out) Header, go to homepage, icon:logo-wordmark">
+      <svg aria-hidden="true" class="octicon octicon-mark-github" height="32" version="1.1" viewBox="0 0 16 16" width="32"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+
+    <button class="btn-link float-right site-header-toggle js-details-target" type="button" aria-label="Toggle navigation">
+      <svg aria-hidden="true" class="octicon octicon-three-bars" height="24" version="1.1" viewBox="0 0 12 16" width="18"><path fill-rule="evenodd" d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"/></svg>
+    </button>
+
+    <div class="site-header-menu">
+      <nav class="site-header-nav site-header-nav-main">
+        <a href="/personal" class="js-selected-navigation-item nav-item nav-item-personal" data-ga-click="Header, click, Nav menu - item:personal" data-selected-links="/personal /personal">
+          Personal
+</a>        <a href="/open-source" class="js-selected-navigation-item nav-item nav-item-opensource" data-ga-click="Header, click, Nav menu - item:opensource" data-selected-links="/open-source /open-source">
+          Open source
+</a>        <a href="/business" class="js-selected-navigation-item nav-item nav-item-business" data-ga-click="Header, click, Nav menu - item:business" data-selected-links="/business /business/partners /business/features /business/customers /business">
+          Business
+</a>        <a href="/explore" class="js-selected-navigation-item nav-item nav-item-explore" data-ga-click="Header, click, Nav menu - item:explore" data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship /showcases /explore">
+          Explore
+</a>      </nav>
+
+      <div class="site-header-actions">
+            <a class="btn btn-primary site-header-actions-btn" href="/join?source=header" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up">Sign up</a>
+          <a class="btn site-header-actions-btn mr-1" href="/login?return_to=%2Fchartjs" data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">Sign in</a>
+      </div>
+
+        <nav class="site-header-nav site-header-nav-secondary mr-md-3">
+          <a class="nav-item" href="/pricing">Pricing</a>
+          <a class="nav-item" href="/blog">Blog</a>
+          <a class="nav-item" href="https://help.github.com">Support</a>
+          <a class="nav-item header-search-link" href="https://github.com/search">Search GitHub</a>
+              <div class="header-search scoped-search site-scoped-search js-site-search" role="search">
+  <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="/orgs/chartjs/search" class="js-site-search-form" data-scoped-search-url="/orgs/chartjs/search" data-unscoped-search-url="/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+    <label class="form-control header-search-wrapper js-chromeless-input-container">
+      <div class="header-search-scope">This organization</div>
+      <input type="text"
+        class="form-control header-search-input js-site-search-focus js-site-search-field is-clearable"
+        data-hotkey="s"
+        name="q"
+        placeholder="Search"
+        aria-label="Search this repository"
+        data-unscoped-placeholder="Search GitHub"
+        data-scoped-placeholder="Search"
+        autocapitalize="off">
+    </label>
+</form></div>
+
+        </nav>
+    </div>
+  </div>
+</header>
+
+
+
+    <div id="start-of-content" class="accessibility-aid"></div>
+
+      <div id="js-flash-container">
+</div>
+
+
+    <div role="main">
+
+      <div id="js-pjax-container" data-pjax-container>
+        
+
+
+
+
+
+<div itemscope itemtype="http://schema.org/Organization">
+  
+
+<header class="orghead">
+  <div class="container">
+
+    <div class="TableObject org-header-wrapper mb-4">
+      <img alt="@chartjs" class="TableObject-item avatar" height="100" itemprop="image" src="https://avatars3.githubusercontent.com/u/10342521?v=3&amp;s=200" width="100" />
+      <div class="TableObject-item TableObject-item--primary">
+        <h1 class="org-name lh-condensed">
+          Chart.js
+        </h1>
+          <p class="org-description" itemprop="description">Simple, clean and engaging charts for designers and developers</p>
+          <ul class="org-header-meta has-blog">
+              <li class="meta-item">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                <a href="http://www.chartjs.org/" class="text-gray" itemprop="url" title="http://www.chartjs.org/">http://www.chartjs.org/</a>
+              </li>
+          </ul>
+      </div>
+    </div>
+
+    <nav class="orgnav" role="navigation">
+  <a class="pagehead-tabs-item selected" href="/chartjs">
+    <svg aria-hidden="true" class="octicon octicon-repo" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"/></svg>
+    Repositories
+  </a>
+    <a class="pagehead-tabs-item " href="/orgs/chartjs/people">
+      <svg aria-hidden="true" class="octicon octicon-organization" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M16 12.999c0 .439-.45 1-1 1H7.995c-.539 0-.994-.447-.995-.999H1c-.54 0-1-.561-1-1 0-2.634 3-4 3-4s.229-.409 0-1c-.841-.621-1.058-.59-1-3 .058-2.419 1.367-3 2.5-3s2.442.58 2.5 3c.058 2.41-.159 2.379-1 3-.229.59 0 1 0 1s1.549.711 2.42 2.088C9.196 9.369 10 8.999 10 8.999s.229-.409 0-1c-.841-.62-1.058-.59-1-3 .058-2.419 1.367-3 2.5-3s2.437.581 2.495 3c.059 2.41-.158 2.38-1 3-.229.59 0 1 0 1s3.005 1.366 3.005 4"/></svg>
+      People
+      <span class="counter">6</span>
+    </a>
+
+
+
+</nav>
+
+  </div>
+</header>
+
+
+  <div class="org-profile container js-pinned-repos-reorder-container">
+
+      <h2 class="f4 mb-3 text-normal">
+        Pinned repositories
+        <img src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif"
+             width="13" class="spinner pinned-repos-spinner js-pinned-repos-spinner" alt="">
+        <span class="pinned-repos-reorder-error js-pinned-repos-reorder-error"></span>
+      </h2>
+        <ol class="pinned-repos-list org-pinned-repos-list mb-4 js-pinned-repos-reorder-list">
+    <li class="pinned-repo-item org-pinned-repo-item p-3 mb-3 border border-gray-dark rounded-1 js-pinned-repo-list-item public source ">
+      <div class="pinned-repo-item-content">
+        <span class="d-block">
+            <a href="/chartjs/Chart.js" class="text-bold">
+          <span class="repo js-repo" title="Chart.js">Chart.js</span>
+          </a>
+        </span>
+
+
+        <p class="pinned-repo-desc text-gray text-small d-block mt-2 mb-3">Simple HTML5 Charts using the &lt;canvas&gt; tag</p>
+
+        <p class="mb-0 f6 text-gray">
+              <span class="repo-language-color pinned-repo-meta" style="background-color:#f1e05a;"></span>
+            JavaScript
+            <a href="/chartjs/Chart.js/stargazers" class="pinned-repo-meta muted-link">
+              <svg aria-label="stars" class="octicon octicon-star" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+              26.7k
+            </a>
+            <a href="/chartjs/Chart.js/network" class="pinned-repo-meta muted-link">
+              <svg aria-label="forks" class="octicon octicon-repo-forked" height="16" role="img" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+              7.2k
+            </a>
+        </p>
+      </div>
+    </li>
+    <li class="pinned-repo-item org-pinned-repo-item p-3 mb-3 border border-gray-dark rounded-1 js-pinned-repo-list-item public source ">
+      <div class="pinned-repo-item-content">
+        <span class="d-block">
+            <a href="/chartjs/chartjs-plugin-zoom" class="text-bold">
+          <span class="repo js-repo" title="chartjs-plugin-zoom">chartjs-plugin-zoom</span>
+          </a>
+        </span>
+
+
+        <p class="pinned-repo-desc text-gray text-small d-block mt-2 mb-3">Zoom and pan plugin for Chart.js</p>
+
+        <p class="mb-0 f6 text-gray">
+              <span class="repo-language-color pinned-repo-meta" style="background-color:#f1e05a;"></span>
+            JavaScript
+            <a href="/chartjs/chartjs-plugin-zoom/stargazers" class="pinned-repo-meta muted-link">
+              <svg aria-label="stars" class="octicon octicon-star" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+              51
+            </a>
+            <a href="/chartjs/chartjs-plugin-zoom/network" class="pinned-repo-meta muted-link">
+              <svg aria-label="forks" class="octicon octicon-repo-forked" height="16" role="img" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+              26
+            </a>
+        </p>
+      </div>
+    </li>
+    <li class="pinned-repo-item org-pinned-repo-item p-3 mb-3 border border-gray-dark rounded-1 js-pinned-repo-list-item public source ">
+      <div class="pinned-repo-item-content">
+        <span class="d-block">
+            <a href="/chartjs/chartjs-plugin-annotation" class="text-bold">
+          <span class="repo js-repo" title="chartjs-plugin-annotation">chartjs-plugin-annotation</span>
+          </a>
+        </span>
+
+
+        <p class="pinned-repo-desc text-gray text-small d-block mt-2 mb-3">Annotation plugin for Chart.js</p>
+
+        <p class="mb-0 f6 text-gray">
+              <span class="repo-language-color pinned-repo-meta" style="background-color:#f1e05a;"></span>
+            JavaScript
+            <a href="/chartjs/chartjs-plugin-annotation/stargazers" class="pinned-repo-meta muted-link">
+              <svg aria-label="stars" class="octicon octicon-star" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+              26
+            </a>
+            <a href="/chartjs/chartjs-plugin-annotation/network" class="pinned-repo-meta muted-link">
+              <svg aria-label="forks" class="octicon octicon-repo-forked" height="16" role="img" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+              14
+            </a>
+        </p>
+      </div>
+    </li>
+    <li class="pinned-repo-item org-pinned-repo-item p-3 mb-3 border border-gray-dark rounded-1 js-pinned-repo-list-item public source ">
+      <div class="pinned-repo-item-content">
+        <span class="d-block">
+            <a href="/chartjs/chartjs-plugin-deferred" class="text-bold">
+          <span class="repo js-repo" title="chartjs-plugin-deferred">chartjs-plugin-deferred</span>
+          </a>
+        </span>
+
+
+        <p class="pinned-repo-desc text-gray text-small d-block mt-2 mb-3">Chart.js plugin to defer initial chart updates</p>
+
+        <p class="mb-0 f6 text-gray">
+              <span class="repo-language-color pinned-repo-meta" style="background-color:#f1e05a;"></span>
+            JavaScript
+            <a href="/chartjs/chartjs-plugin-deferred/stargazers" class="pinned-repo-meta muted-link">
+              <svg aria-label="stars" class="octicon octicon-star" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+              8
+            </a>
+            <a href="/chartjs/chartjs-plugin-deferred/network" class="pinned-repo-meta muted-link">
+              <svg aria-label="fork" class="octicon octicon-repo-forked" height="16" role="img" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+              1
+            </a>
+        </p>
+      </div>
+    </li>
+    <li class="pinned-repo-item org-pinned-repo-item p-3 mb-3 border border-gray-dark rounded-1 js-pinned-repo-list-item public source ">
+      <div class="pinned-repo-item-content">
+        <span class="d-block">
+            <a href="/chartjs/Chart.LinearGauge.js" class="text-bold">
+          <span class="repo js-repo" title="Chart.LinearGauge.js">Chart.LinearGauge.js</span>
+          </a>
+        </span>
+
+
+        <p class="pinned-repo-desc text-gray text-small d-block mt-2 mb-3">Linear Gauge chart type for Chart.js</p>
+
+        <p class="mb-0 f6 text-gray">
+              <span class="repo-language-color pinned-repo-meta" style="background-color:#f1e05a;"></span>
+            JavaScript
+            <a href="/chartjs/Chart.LinearGauge.js/stargazers" class="pinned-repo-meta muted-link">
+              <svg aria-label="stars" class="octicon octicon-star" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+              14
+            </a>
+            <a href="/chartjs/Chart.LinearGauge.js/network" class="pinned-repo-meta muted-link">
+              <svg aria-label="forks" class="octicon octicon-repo-forked" height="16" role="img" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+              8
+            </a>
+        </p>
+      </div>
+    </li>
+    <li class="pinned-repo-item org-pinned-repo-item p-3 mb-3 border border-gray-dark rounded-1 js-pinned-repo-list-item public source ">
+      <div class="pinned-repo-item-content">
+        <span class="d-block">
+            <a href="/chartjs/Chart.BarFunnel.js" class="text-bold">
+          <span class="repo js-repo" title="Chart.BarFunnel.js">Chart.BarFunnel.js</span>
+          </a>
+        </span>
+
+
+        <p class="pinned-repo-desc text-gray text-small d-block mt-2 mb-3">Bar Funnel Chart extension for Chart.js</p>
+
+        <p class="mb-0 f6 text-gray">
+              <span class="repo-language-color pinned-repo-meta" style="background-color:#f1e05a;"></span>
+            JavaScript
+            <a href="/chartjs/Chart.BarFunnel.js/stargazers" class="pinned-repo-meta muted-link">
+              <svg aria-label="stars" class="octicon octicon-star" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+              6
+            </a>
+            <a href="/chartjs/Chart.BarFunnel.js/network" class="pinned-repo-meta muted-link">
+              <svg aria-label="forks" class="octicon octicon-repo-forked" height="16" role="img" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+              4
+            </a>
+        </p>
+      </div>
+    </li>
+
+</ol>
+
+
+
+      
+<div class="user-profile-repo-filter border-bottom border-gray-dark pb-3 mb-3">
+  <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="/chartjs" class="TableObject" data-pjax-preserve-scroll="true" data-pjax="#org-repositories" data-results-container="org-repositories" method="get" role="search"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+    <div class="TableObject-item TableObject-item--primary">
+      <input type="search" id="your-repos-filter" name="q"
+             class="form-control width-full js-autosearch-field"
+             placeholder="Search repositories&hellip;"
+             autocomplete="off"
+             aria-label="Search repositories&hellip;"
+             data-hotkey="/" value="">
+    </div>
+
+    <div class="TableObject-item text-right">
+      <div class="select-menu js-repo-filter-select-menu ml-2  d-inline-block js-menu-container js-select-menu select-menu-modal-right">
+        <button class="btn select-menu-button js-menu-target" type="button" aria-haspopup="true">
+          <i>Type:</i>
+          <span class="js-select-button">
+            All
+          </span>
+        </button>
+
+        <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+          <div class="select-menu-modal">
+            <div class="select-menu-header text-left">
+              <svg aria-label="Close" class="octicon octicon-x js-menu-close" height="16" role="img" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+              <span class="select-menu-title">Select type:</span>
+            </div>
+            <div class="select-menu-list" role="menu">
+                <div class="select-menu-item js-navigation-item selected">
+                  <input checked="checked" id="type_" name="type" type="radio" value="" />
+                  <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"/></svg>
+                  <span class="select-menu-item-text js-select-button-text">All</span>
+                </div>
+                <div class="select-menu-item js-navigation-item ">
+                  <input id="type_source" name="type" type="radio" value="source" />
+                  <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"/></svg>
+                  <span class="select-menu-item-text js-select-button-text">Sources</span>
+                </div>
+                <div class="select-menu-item js-navigation-item ">
+                  <input id="type_fork" name="type" type="radio" value="fork" />
+                  <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"/></svg>
+                  <span class="select-menu-item-text js-select-button-text">Forks</span>
+                </div>
+                <div class="select-menu-item js-navigation-item ">
+                  <input id="type_mirror" name="type" type="radio" value="mirror" />
+                  <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"/></svg>
+                  <span class="select-menu-item-text js-select-button-text">Mirrors</span>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div class="select-menu js-repo-filter-select-menu ml-1  d-inline-block js-menu-container js-select-menu select-menu-modal-right">
+          <button class="btn select-menu-button js-menu-target" type="button" aria-haspopup="true">
+            <i>Language:</i>
+            <span class="js-select-button">
+              All
+            </span>
+          </button>
+
+          <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+            <div class="select-menu-modal">
+              <div class="select-menu-header text-left">
+                <svg aria-label="Close" class="octicon octicon-x js-menu-close" height="16" role="img" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+                <span class="select-menu-title">Select language:</span>
+              </div>
+              <div class="select-menu-list" role="menu">
+                <div class="select-menu-item js-navigation-item selected">
+                  <input checked="checked" id="language_" name="language" type="radio" value="" />
+                  <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"/></svg>
+                  <span class="select-menu-item-text js-select-button-text">All</span>
+                </div>
+                  <div class="select-menu-item js-navigation-item ">
+                    <input id="language_javascript" name="language" type="radio" value="javascript" />
+                    <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"/></svg>
+                    <span class="select-menu-item-text js-select-button-text">JavaScript</span>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="TableObject-item text-right">
+    </div>
+</form></div>
+
+
+    <div id="org-repositories" data-pjax-container>
+      <div class="col-8 d-inline-block">
+  <div class="org-repos repo-list">
+
+    
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/Chart.js" itemprop="name codeRepository">
+        Chart.js</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Simple HTML5 Charts using the &lt;canvas&gt; tag
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/Chart.js/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.js/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          26,700
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.js/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          7,223
+        </a>
+
+        Updated <relative-time datetime="2016-12-07T09:29:26Z">Dec 7, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/chartjs-plugin-annotation" itemprop="name codeRepository">
+        chartjs-plugin-annotation</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Annotation plugin for Chart.js
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/chartjs-plugin-annotation/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-plugin-annotation/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          26
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-plugin-annotation/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          14
+        </a>
+
+        Updated <relative-time datetime="2016-12-03T15:14:15Z">Dec 3, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/chartjs-plugin-zoom" itemprop="name codeRepository">
+        chartjs-plugin-zoom</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Zoom and pan plugin for Chart.js
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/chartjs-plugin-zoom/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-plugin-zoom/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          51
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-plugin-zoom/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          26
+        </a>
+
+        Updated <relative-time datetime="2016-11-29T17:23:58Z">Nov 29, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/chartjs-plugin-deferred" itemprop="name codeRepository">
+        chartjs-plugin-deferred</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Chart.js plugin to defer initial chart updates
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/chartjs-plugin-deferred/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-plugin-deferred/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          8
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-plugin-deferred/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          1
+        </a>
+
+        Updated <relative-time datetime="2016-10-29T09:42:12Z">Oct 29, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/Chart.BarFunnel.js" itemprop="name codeRepository">
+        Chart.BarFunnel.js</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Bar Funnel Chart extension for Chart.js
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/Chart.BarFunnel.js/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.BarFunnel.js/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          6
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.BarFunnel.js/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          4
+        </a>
+
+        Updated <relative-time datetime="2016-07-07T19:48:58Z">Jul 7, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public fork" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/chartjs-color" itemprop="name codeRepository">
+        chartjs-color</a>
+      </h3>
+
+        <span class="f6 text-gray mb-1">
+          Forked from <a href="/Qix-/color" class="muted-link">Qix-/color</a>
+        </span>
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          JavaScript color conversion and manipulation library
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/chartjs-color/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-color/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"></path></svg>
+          3
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/chartjs-color/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+          95
+        </a>
+
+        Updated <relative-time datetime="2016-05-14T18:22:14Z">May 14, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public fork" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/color-string" itemprop="name codeRepository">
+        color-string</a>
+      </h3>
+
+        <span class="f6 text-gray mb-1">
+          Forked from <a href="/Qix-/color-string" class="muted-link">Qix-/color-string</a>
+        </span>
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0" itemprop="description">
+          Parser and generator for CSS color strings
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/color-string/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="pinned-repo-language-color d-inline-block ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/color-string/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+          22
+        </a>
+
+        Updated <relative-time datetime="2016-05-11T15:05:44Z">May 11, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/Chart.smith.js" itemprop="name codeRepository">
+        Chart.smith.js</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Smith Chart extension for Chart.js
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/Chart.smith.js/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.smith.js/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          6
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.smith.js/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          1
+        </a>
+
+        Updated <relative-time datetime="2016-05-11T00:43:26Z">May 10, 2016</relative-time>
+    </div>
+  </li>
+
+  
+
+  <li class="col-12 d-block width-full py-4 border-bottom public source" itemprop="owns" itemscope itemtype="http://schema.org/Code">
+
+    <div class="d-inline-block mb-1">
+      <h3>
+        <a href="/chartjs/Chart.LinearGauge.js" itemprop="name codeRepository">
+        Chart.LinearGauge.js</a>
+      </h3>
+
+
+    </div>
+
+    <div class="py-1">
+        <p class="col-9 d-inline-block text-gray m-0 pr-4" itemprop="description">
+          Linear Gauge chart type for Chart.js
+        </p>
+
+      <div class="col-3 float-right text-right">
+        <poll-include-fragment
+          src="/chartjs/Chart.LinearGauge.js/graphs/participation?h=28&amp;type=sparkline&amp;w=155">
+        </poll-include-fragment>
+      </div>
+    </div>
+
+    <div class="f6 text-gray mt-2">
+          <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+        <span class="mr-3" itemprop="programmingLanguage">
+          JavaScript
+        </span>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.LinearGauge.js/stargazers" aria-label="Stargazers">
+          <svg aria-hidden="true" class="octicon octicon-star" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"/></svg>
+          14
+        </a>
+        <a class="muted-link tooltipped tooltipped-s mr-3" href="/chartjs/Chart.LinearGauge.js/network" aria-label="Forks">
+          <svg aria-hidden="true" class="octicon octicon-repo-forked" height="16" version="1.1" viewBox="0 0 10 16" width="10"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
+          8
+        </a>
+
+        Updated <relative-time datetime="2015-04-27T19:02:54Z">Apr 27, 2015</relative-time>
+    </div>
+  </li>
+
+
+
+<div class="paginate-container" data-pjax>
+  
+</div>
+
+  </div>
+</div>
+
+<div class="col-4 float-right pl-4">
+    <div class="simple-box mb-3">
+      <h4 class="f4 mb-2 text-normal">Top languages</h4>
+        <a class="no-wrap text-gray d-inline-block muted-link mt-2"
+           href="https://github.com/chartjs?language=javascript">
+            <span class="repo-language-color ml-0" style="background-color:#f1e05a;"></span>
+          <span class="mr-2">JavaScript</span>
+        </a>
+    </div>
+
+    <div class="simple-box">
+      <a class="d-block text-gray-dark" href="/orgs/chartjs/people" data-ga-click="Orgs, go to people, location:profile people module; text:People">
+        <span class="float-right f5 text-gray">
+          6
+          <svg aria-hidden="true" class="octicon octicon-chevron-right" height="16" version="1.1" viewBox="0 0 8 16" width="8"><path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3z"/></svg>
+        </span>
+        <h4 class="f4 text-normal mb-3">People</h4>
+      </a>
+      <div class="member-avatar-group">
+            <a href="/derekperkins" class="member-avatar tooltipped tooltipped-s" aria-label="derekperkins" data-ga-click="Orgs, go to person, location:profile people module; text:username tooltip">
+              <img alt="@derekperkins" class="avatar" height="48" src="https://avatars1.githubusercontent.com/u/3588778?v=3&amp;s=96" width="48" />
+            </a>
+            <a href="/etimberg" class="member-avatar tooltipped tooltipped-s" aria-label="etimberg" data-ga-click="Orgs, go to person, location:profile people module; text:username tooltip">
+              <img alt="@etimberg" class="avatar" height="48" src="https://avatars3.githubusercontent.com/u/6757853?v=3&amp;s=96" width="48" />
+            </a>
+            <a href="/nnnick" class="member-avatar tooltipped tooltipped-s" aria-label="nnnick" data-ga-click="Orgs, go to person, location:profile people module; text:username tooltip">
+              <img alt="@nnnick" class="avatar" height="48" src="https://avatars1.githubusercontent.com/u/1458051?v=3&amp;s=96" width="48" />
+            </a>
+            <a href="/simonbrunel" class="member-avatar tooltipped tooltipped-s" aria-label="simonbrunel" data-ga-click="Orgs, go to person, location:profile people module; text:username tooltip">
+              <img alt="@simonbrunel" class="avatar" height="48" src="https://avatars1.githubusercontent.com/u/3874900?v=3&amp;s=96" width="48" />
+            </a>
+            <a href="/tannerlinsley" class="member-avatar tooltipped tooltipped-s" aria-label="tannerlinsley" data-ga-click="Orgs, go to person, location:profile people module; text:username tooltip">
+              <img alt="@tannerlinsley" class="avatar" height="48" src="https://avatars3.githubusercontent.com/u/5580297?v=3&amp;s=96" width="48" />
+            </a>
+            <a href="/zachpanz88" class="member-avatar tooltipped tooltipped-s" aria-label="zachpanz88" data-ga-click="Orgs, go to person, location:profile people module; text:username tooltip">
+              <img alt="@zachpanz88" class="avatar" height="48" src="https://avatars1.githubusercontent.com/u/7033952?v=3&amp;s=96" width="48" />
+            </a>
+      </div>
+    </div>
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+      </div>
+      <div class="modal-backdrop js-touch-events"></div>
+    </div>
+
+        <div class="container site-footer-container">
+  <div class="site-footer" role="contentinfo">
+    <ul class="site-footer-links float-right">
+        <li><a href="https://github.com/contact" data-ga-click="Footer, go to contact, text:contact">Contact GitHub</a></li>
+      <li><a href="https://developer.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
+      <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+      <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
+        <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+        <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
+
+    </ul>
+
+    <a href="https://github.com" aria-label="Homepage" class="site-footer-mark" title="GitHub">
+      <svg aria-hidden="true" class="octicon octicon-mark-github" height="24" version="1.1" viewBox="0 0 16 16" width="24"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+</a>
+    <ul class="site-footer-links">
+      <li>&copy; 2016 <span title="0.10245s from github-fe120-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+        <li><a href="https://github.com/site/terms" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
+        <li><a href="https://github.com/site/privacy" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
+        <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
+        <li><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
+        <li><a href="https://help.github.com" data-ga-click="Footer, go to help, text:help">Help</a></li>
+    </ul>
+  </div>
+</div>
+
+
+
+    
+
+    <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+      <svg aria-hidden="true" class="octicon octicon-alert" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z"/></svg>
+      <button type="button" class="flash-close js-flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+        <svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+      </button>
+      You can't perform that action at this time.
+    </div>
+
+
+      <script crossorigin="anonymous" src="https://assets-cdn.github.com/assets/compat-30ce4c86c27f88c3d1b4eb03efda59b45d8d7c871880dee0b8f73d5ef1b25fdf.js"></script>
+      <script crossorigin="anonymous" src="https://assets-cdn.github.com/assets/frameworks-786af1c64a30401bf0a16eafed51415b9bcb03f72ff3183a1fa6007d7cb0f979.js"></script>
+      <script async="async" crossorigin="anonymous" src="https://assets-cdn.github.com/assets/github-2031f7ecd9e1576fa074cb5657a96fa3e86493c89ba73a1bf372e6eba8eb44ee.js"></script>
+      
+      
+      
+      
+    <div class="js-stale-session-flash stale-session-flash flash flash-warn flash-banner d-none">
+      <svg aria-hidden="true" class="octicon octicon-alert" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z"/></svg>
+      <span class="signed-in-tab-flash">You signed in with another tab or window. <a href="">Reload</a> to refresh your session.</span>
+      <span class="signed-out-tab-flash">You signed out in another tab or window. <a href="">Reload</a> to refresh your session.</span>
+    </div>
+    <div class="facebox" id="facebox" style="display:none;">
+  <div class="facebox-popup">
+    <div class="facebox-content" role="dialog" aria-labelledby="facebox-header" aria-describedby="facebox-description">
+    </div>
+    <button type="button" class="facebox-close js-facebox-close" aria-label="Close modal">
+      <svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+    </button>
+  </div>
+</div>
+
+  </body>
+</html>

@@ -48,6 +48,7 @@
     "mocha": "https://github.com/mochajs/mocha.git#^3.2.0",
     "Sinon.JS": "https://github.com/cjohansen/Sinon.JS.git#^1.17.6",
     "bootstrap-fileinput": "https://github.com/kartik-v/bootstrap-fileinput.git#^4.3.5",
-    "wp-calypso": "https://github.com/Automattic/wp-calypso"
+    "wp-calypso": "https://github.com/Automattic/wp-calypso",
+    "typeahead.js": "https://github.com/twitter/typeahead.js.git#^0.11.1"
   }
 }
