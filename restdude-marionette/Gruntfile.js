@@ -1,9 +1,23 @@
 module.exports = function(grunt) {
     //"use strict";
+      var liveReloadInjection =
+            '\n(function(){' +
+                'var s = document.createElement("script");' +
+                's.src="//localhost:35729/livereload.js";' +
+                'document.head.appendChild(s);' +
+            '}());';
 
+    var jsBanner = '/*! <%= pkg.title %>\n' +
+                     ' *  @description  <%= pkg.description %>\n' +
+                     ' *  @version      <%= pkg.version %>.REL<%= grunt.template.today("yyyymmdd") %>\n' +
+                     ' *  @copyright    <%= grunt.template.today("yyyy") %> ' +
+                     '<%= pkg.author.name %>\n */\n';
+
+        // This banner will appear at the top style sheets
+    var cssBanner = '@charset "utf-8";\n' + jsBanner;
     // Load grunt plugins
-    require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
-
+   // require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
+   
     // Paths configuration
     var pathConfig     = {};
     pathConfig.rootDir = "./";
@@ -11,6 +25,9 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
+         // Expose the banners to the tasks
+        jsBanner: jsBanner,
+        cssBanner: cssBanner,
         pkg: grunt.file.readJSON("package.json"),
         pathConfig: pathConfig,
         compass: {
@@ -142,12 +159,12 @@ module.exports = function(grunt) {
                     'clean',
                     // 'md2html',
                     // 'componentFinder',
-                    // 'copy',
+                     'copy',
                     // 'svgmin',
                     'sass',
                     // 'requirejs',
                     'concat:css',
-                    // 'copy',
+                     'copy',
                     'usebanner',
                 ],
             },
@@ -161,12 +178,12 @@ module.exports = function(grunt) {
                     'clean',
                     // 'md2html',
                     'componentFinder',
-                    // 'copy',
+                     'copy',
                     // 'svgmin',
                     // 'sass',
                     'requirejs',
                     'concat:js',
-                    // 'copy',
+                     'copy',
                     'usebanner',
                 ],
             },
@@ -234,7 +251,7 @@ module.exports = function(grunt) {
                         'jquery',
                         'cui',
                     ],
-                    optimize: 'none', // 'uglify2',
+                    optimize: 'uglify2', // 'uglify2',
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
                     out: 'dist/js/main.js', // Where the final project will be output
@@ -330,6 +347,6 @@ module.exports = function(grunt) {
     grunt.registerTask("compile",  [ "copy", "react", "compass"]);
     grunt.registerTask("build",    [ "test", "sca", "compile", "uglify" ]);
 
-    grunt.registerTask("default",  [ "compile"]);
-
+    grunt.registerTask("default",  [ "prod"]);
+// grunt.registerTask("default",  [ "react", "sass", "requirejs"]);
 };
