@@ -3,6 +3,7 @@ package com.restdude.domain.base.validation;
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.hibernate.proxy.HibernateProxyHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,21 +43,23 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
         boolean valid = true;
         // skip validation if null
         if (value != null) {
-            Class domainClass = value.getClass();
+
+            // get the entity class being proxied by <code>value</code> if any, or the actual <code>value</code> class otherwise
+            Class domainClass = HibernateProxyHelper.getClassWithoutInitializingProxy(value);
 
             try {
-                // get unique fiueld names
+                // get unique field names
                 List<String> uniqueFieldNames = ValidatorUtil.getUniqueFieldNames(domainClass);
 
                 // get records matching the unique field values
                 List<CalipsoPersistable> resultSet = getViolatingRecords(value, domainClass, uniqueFieldNames);
 
-                LOGGER.debug("validateColumnConstraints, resultSet size: {}", resultSet.size());
+                LOGGER.debug("isValid, resultSet size: {}", resultSet.size());
 
                 // process violating records
                 if (!resultSet.isEmpty()) {
 
-                    // disable default constraint vilation construction
+                    // disable default constraint validation construction
                     // as it will point to  the object instead of the property
                     constraintValidatorContext.disableDefaultConstraintViolation();
 
@@ -67,7 +70,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                                 Object existingValue = PropertyUtils.getProperty(match, propertyName);
 
                                 if (newValue != null && newValue.equals(existingValue)) {
-                                    LOGGER.debug("validateColumnConstraints, adding violation for property name: {}", propertyName);
+                                    LOGGER.debug("isValid, adding violation for property name: {}", propertyName);
                                     valid = false;
                                     // report violation
                                     constraintValidatorContext
@@ -83,6 +86,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
             }
         }
 
+        LOGGER.debug("isValid returns: {}", valid);
         return valid;
 
     }

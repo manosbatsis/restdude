@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="expressionHandler"
+          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="permissionEvaluator"/>
+        <property name="permissionCacheOptimizer" ref="permissionCacheOptimizer"/>
+    </bean>
+    <bean id="permissionCacheOptimizer" class="org.springframework.security.acls.AclPermissionCacheOptimizer">
+        <constructor-arg ref="aclService"/>
+    </bean>
+    <bean id="permissionEvaluator" class="org.springframework.security.acls.AclPermissionEvaluator">
+        <constructor-arg ref="aclService"/>
+    </bean>
+    <!-- Declare a custom PermissionEvaluator interface 
+    <bean class="my.CustomPermissionEvaluator" id="customPermissionEvaluator"/>
+    -->
+    <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="lookupStrategy"/>
+        <constructor-arg ref="aclCache"/>
+    </bean>
+
+    <bean id="aclAuthzStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <constructor-arg ref="adminAuthority"/>
+    </bean>
+    <bean id="adminAuthority" class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+        <constructor-arg value="ROLE_ADMIN"/>
+    </bean>
+    <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="aclCache"/>
+        <constructor-arg ref="aclAuthzStrategy"/>
+        <constructor-arg ref="consoleAuditLogger"/>
+    </bean>
+
+    <bean id="aclCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="/WEB-INF/calipso-ehcache.xml"/>
+    </bean>
+    <bean id="aclEhCacheFactoryBean" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager" ref="aclCacheManager"/>
+        <property name="cacheName" value="calipsoAclCache"/>
+    </bean>
+    <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+        <constructor-arg ref="aclEhCacheFactoryBean"/>
+        <constructor-arg ref="lookupStrategy"/>
+
+        <!--constructor-arg>
+            <bean class="org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy">
+                <constructor-arg>
+                    <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg-->
+        <constructor-arg ref="aclAuthzStrategy"/>
+    </bean>
+    <bean id="consoleAuditLogger" class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+
+
+    <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/hierarchicalroles/RoleHierarchyImpl.html 
+    <bean id="roleHierarchy"  class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <property name="hierarchy">
+            <value>
+                ROLE_ADMIN > ROLE_MODERATOR
+                ROLE_MODERATOR > ROLE_USER
+                ROLE_USER > ROLE_VISITOR
+            </value>
+        </property>
+    </bean>
+    -->
+</beans>

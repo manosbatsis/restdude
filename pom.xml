@@ -33,6 +33,8 @@
 
     <modules>
         <module>restdude-core</module>
+        <module>restdude-test</module>
+        <module>restdude-war-overlay</module>
         <module>restdude-boot</module>
     </modules>
 
@@ -883,6 +885,12 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -905,7 +913,7 @@
                         <stopKey>STOP</stopKey>
                         <webApp>
                             <!-- -->
-                            <contextPath>/restdude</contextPath>
+                            <contextPath>/calipso</contextPath>
                         </webApp>
                         <systemProperties>
                             <systemProperty>

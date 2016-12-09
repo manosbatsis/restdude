@@ -1,0 +1,68 @@
+<div class="tmpl-hint">start userProfile.hbs</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-title">
+                    <img class="img-avatar" src="http://www.gravatar.com/avatar/{{ emailHash }}?s=30&amp;d=404" alt="{{ name }}">
+                    {{ name }} {{#if credentials.username}}<small>( {{credentials.username}} )</small>{{/if}}
+                </h3>
+            </div>
+            <div class="card-header">Contact Details</div>
+            <div class="list-group">
+                {{#if address}}
+                <address class="list-group-item">
+                    <span class="glyphicon glyphicon glyphicon-inbox"></span>
+                    {{address}} {{postCode}} {{country.name}}
+                </address>
+                {{/if}}
+
+                {{#if telephone}} <a class="list-group-item"
+                    href="tel:{{ cellphone }}"><span
+                    class="glyphicon glyphicon-phone-alt"></span> {{ telephone }}</a>
+                {{/if}}
+            </div>
+            <div class="card-block">
+                {{#if email}} <a class="card-link" href="mailto://{{ email }}"><span
+                    class="glyphicon glyphicon-envelope"></span> {{ email }}</a> {{/if}}
+                {{#if cellphone}} <a class="card-link"
+                    href="tel:{{ cellphone }}"><span
+                    class="glyphicon glyphicon-phone"></span> {{ cellphone }}</a> {{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Account Information</div>
+
+            <table class="table">
+                <tr>
+                    <th>Active</th>
+                    <td>{{#if active}} <span class="text-success"><i
+                            class="fa fa-check"></i></span> {{else}} <span class="text-danger"><i
+                            class="fa fa-close"></i></span> {{/if}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Account Created</th>
+                    <td>{{momentFromNow createdDate}}: {{momentDateTime createdDate}}</td>
+                </tr>
+                <tr>
+                    <th>Last Visit</th>
+                    <td>{{momentFromNow lastVisit}}: {{momentDateTime lastVisit}}</td>
+                </tr>
+                <tr>
+                    <th>Locale</th>
+                    <td>{{locale}}</td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                    <td><a class="btn btn-danger btn-xs" href="/useCases/accounts/changePassword">Change
+                            Password</a> {{#if lastPassWordChangeDate}}Last updated
+                        {{momentFromNow lastPassWordChangeDate}}{{/if}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="tmpl-hint">end userProfile.hbs</div>

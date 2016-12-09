@@ -1,0 +1,174 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+
+        http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/util      http://www.springframework.org/schema/util/spring-util-4.3.xsd
+        http://www.springframework.org/schema/task      http://www.springframework.org/schema/task/spring-task-4.3.xsd
+        http://www.springframework.org/schema/mvc       http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+
+
+    <!-- read external properties config -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:calipso.defaults.properties</value>
+                <value>classpath:calipso.properties</value>
+            </list>
+        </property>
+        <property name="trimValues" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+    <!-- imports -->
+    <import resource="applicationContext-jackson.xml"/>
+    <import resource="applicationContext-encrypt.xml"/>
+    <import resource="applicationContext-email.xml"/>
+    <import resource="applicationContext-security.xml"/>
+    <import resource="applicationContext-scheduler.xml"/>
+    <!-- import resource="applicationContext-acl.xml" /-->
+    <import resource="applicationContext-social.xml"/>
+    <!--import resource="applicationContext-swagger.xml" /-->
+
+    <!--RESTify errors -->
+    <bean id="restExceptionResolver" class="com.restdude.domain.error.resolver.RestExceptionHandler">
+        <property name="order" value="100"></property>
+        <property name="errorResolver">
+            <bean class="com.restdude.domain.error.resolver.DefaultRestErrorResolver">
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <bean name="handlerAdapter"
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+                <property name="validator" ref="validator"/>
+            </bean>
+        </property>
+        <property name="messageConverters" ref="messageConverters"/>
+        <property name="responseBodyAdvice">
+            <util:list>
+                <bean id="responseBodyAdvice"
+                      class="org.springframework.web.servlet.mvc.method.annotation.JsonViewResponseBodyAdvice"/>
+            </util:list>
+        </property>
+    </bean>
+
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+    <mvc:default-servlet-handler/>
+
+
+    <!-- needed by javers -->
+    <!--     <aop:aspectj-autoproxy /> -->
+
+
+    <!-- Setup default file storage adapter -->
+    <bean class="com.restdude.domain.fs.FilePersistenceConfigPostProcessor">
+    </bean>
+
+    <!--  By defining this object as a Bean, Spring Security is exposed as SpEL expressions for creating Sp	ring Data queries.  -->
+    <bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
+
+    <!-- Generate controllers, services and repositories for entities with @ModelResource -->
+    <bean id="entityPostProcessor" class="com.restdude.mdd.processor.ModelDrivenBeanGeneratingRegistryPostProcessor"/>
+
+
+    <!-- auth config -->
+    <bean id="userDetailsConfig"
+          class="com.restdude.auth.userdetails.util.SimpleUserDetailsConfig">
+        <constructor-arg value="calipso-sso"/>
+    </bean>
+
+    <context:component-scan base-package="**.calipso, **.restdude">
+    </context:component-scan>
+
+    <!-- THYMELEAF: Template Resolver for email templates -->
+    <bean id="emailTemplateResolver"
+          class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
+        <property name="prefix" value="mail/"/>
+        <property name="templateMode" value="HTML5"/>
+        <property name="characterEncoding" value="UTF-8"/>
+        <property name="order" value="1"/>
+    </bean>
+    <!--bean id="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <property name="prefix" value="/WEB-INF/templates/" /> <property name="suffix"
+        value=".html" /> <property name="templateMode" value="HTML5" /> <property
+        name="characterEncoding" value="UTF-8" /> </bean -->
+    <!-- THYMELEAF: Template Engine (Spring3-specific version) -->
+
+    <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+        <property name="templateResolvers">
+            <set>
+                <ref bean="emailTemplateResolver"/>
+                <!-- ref bean="webTemplateResolver" / -->
+            </set>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
+
+    <!-- Executor for the methods marked with @async annotations -->
+    <task:executor id="asyncExecutor" pool-size="25"/>
+    <!-- Configuration for the Runtime -->
+    <task:annotation-driven executor="asyncExecutor"/>
+
+    <util:list id="messageConverters">
+        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"
+              p:objectMapper-ref="jsonObjectMapperFactory"/>
+        <!--bean class="org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter"
+              p:objectMapper-ref="xmlObjectMapperFactory"/-->
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+        <bean class="com.restdude.domain.base.binding.CsvMessageConverter"/>
+    </util:list>
+
+    <mvc:resources mapping="/static/**" location="/static/"/>
+
+    <!--mvc:default-servlet-handler/ -->
+
+    <!-- Message externalization/internationalization -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="i18n/messages"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+
+
+    <!-- JSP views setup -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView"/>
+    </bean>
+
+
+    <bean id="userService" class="com.restdude.domain.users.service.impl.UserServiceImpl">
+    </bean>
+    <alias name="userService" alias="localUserService"/>
+
+    <!-- Springfox/Swagger config -->
+    <!-- Enables swgger ui-->
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+    <!--     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/> -->
+    <mvc:resources mapping="/webjars/**" location="/webjars/"/>
+
+    <!-- Include a swagger configuration-->
+    <!-- 	<bean name="applicationSwaggerConfig" class="gr.abiss.calipso.web.spring.ApplicationSwaggerConfig"/> -->
+
+    <!-- actuator stats -->
+    <!-- 	<beans> -->
+    <!--         <context:annotation-config /> -->
+    <!--         <bean name="endpointAutoConfiguration" class="org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration"/> -->
+    <!--     </beans> -->
+
+</beans>

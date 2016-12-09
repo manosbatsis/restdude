@@ -28,7 +28,6 @@ import org.hibernate.annotations.Formula;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @ShallowReference
 @Entity
@@ -52,7 +51,6 @@ public class UserRegistrationCode extends AbstractSystemUuidPersistable implemen
     @JoinColumn(name = "credentials_id", unique = true)
     private UserCredentials credentials;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "batch_id", referencedColumnName = "id", nullable = false, updatable = false)
     private UserRegistrationCodeBatch batch;
@@ -72,6 +70,7 @@ public class UserRegistrationCode extends AbstractSystemUuidPersistable implemen
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", this.getId())
+                .append("batch", this.getBatch())
                 .toString();
     }
 

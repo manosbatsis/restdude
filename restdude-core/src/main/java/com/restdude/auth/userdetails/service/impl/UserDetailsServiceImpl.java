@@ -17,15 +17,16 @@
  */
 package com.restdude.auth.userdetails.service.impl;
 
-import com.restdude.auth.userAccount.model.PasswordResetRequest;
+import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
+import com.restdude.domain.details.contact.model.ContactDetails;
+import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.users.model.User;
-import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
@@ -157,27 +158,26 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	@Transactional(readOnly = false)
-    public ICalipsoUserDetails resetPassword(PasswordResetRequest passwordResetRequest) {
+    public ICalipsoUserDetails resetPassword(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
         ICalipsoUserDetails userDetails = this.getPrincipal();
 		User u = null;
-		// Case 1: if authorized as current user, require current password
-		if (userDetails != null && StringUtils.isNotBlank(passwordResetRequest.getCurrentPassword())) {
-			u = this.userService.changePassword(
+        // Case 1: if authorized as current user and in an attempt to directly change password, require current password
+        if (userDetails != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
+            u = this.userService.changePassword(
 					userDetails.getUsername(),
 					passwordResetRequest.getCurrentPassword(),
 					passwordResetRequest.getPassword(),
 					passwordResetRequest.getPasswordConfirmation());
-			//userDetails = this.create(new UserDetails( new LoginSubmission(u.getEmail(), passwordResetRequest.getPassword())));
 		}
-		// Case 2: if authorized using reset token
-		else if (!StringUtils.isAnyBlank(passwordResetRequest.getEmailOrUsername(), passwordResetRequest.getPassword(), passwordResetRequest.getResetPasswordToken())) {
-			// password and password confirmation must match
-			if (!passwordResetRequest.getPassword().equals(passwordResetRequest.getPasswordConfirmation())) {
-				throw new BadRequestException("Both password and password confirmation are required and must be equal");
-			}
+        // Case 2: if using reset token
+        else if (StringUtils.isNotBlank(passwordResetRequest.getResetPasswordToken())) {
+            // password and password confirmation must match
+            if (passwordResetRequest.getPassword() != null && StringUtils.isBlank(passwordResetRequest.getPassword()) || !passwordResetRequest.getPassword().equals(passwordResetRequest.getPasswordConfirmation())) {
+                throw new BadRequestException("A password, when given, must be non-blank and equal to the password confirmation");
+            }
 			// update matching user credentials
-			u = this.userService.handlePasswordResetToken(passwordResetRequest.getEmailOrUsername(), passwordResetRequest.getResetPasswordToken(), passwordResetRequest.getPassword());
-			//userDetails = this.create(new UserDetails( new LoginSubmission(u.getEmail(), passwordResetRequest.getPassword())));
+            u = this.userService.handleConfirmationOrPasswordResetToken(passwordResetRequest.getEmailOrUsername(), passwordResetRequest.getResetPasswordToken(), passwordResetRequest.getPassword());
+            //userDetails = this.create(new UserDetails( new LoginSubmission(u.getEmail(), passwordResetRequest.getPassword())));
 		}
 		// Case 3: forgotten password
 		else {
@@ -186,7 +186,7 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 			userDetails = new UserDetails();
 		}
 		userDetails = u != null ? UserDetails.fromUser(u) : new UserDetails();
-		userDetails.setPassword(passwordResetRequest.getPassword());
+        userDetails.setPassword(u.getCredentials().getPassword());
 
 		return userDetails;
 	}
@@ -255,34 +255,37 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 		String socialLastName = profile.getLastName();
 
 		User user = this.getPrincipalLocalUser();
-		
-		if (!StringUtils.isBlank(socialEmail)) {
-            user = userService.findOneByUserNameOrEmail(socialEmail);
-            //
 
-			if (user == null) {
-				if(LOGGER.isDebugEnabled()){
-					LOGGER.debug("ConnectionSignUp#execute, Email did not match an local user, trying to create one");
-				}
+        if (user == null) {
+            if (!StringUtils.isBlank(socialEmail)) {
+                user = userService.findOneByUserNameOrEmail(socialEmail);
+                //
 
-				user = new User();
-                user.setCredentials(new UserCredentials.Builder().email(socialEmail).build());
-                user.setFirstName(socialFirstName);
-				user.setLastName(socialLastName);
-				try {
-					user = userService.createForImplicitSignup(user);
-					
-					//username = user.getUsername();
-                } catch (Exception e) {
-                    LOGGER.error("ConnectionSignUp#executeError while implicitly registering user", e);
-				}
+                if (user == null) {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("ConnectionSignUp#execute, Email did not match an local user, trying to create one");
+                    }
 
-			}
-		}
-		else {
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("ConnectionSignUp#execute, Social email was not accessible, unable to implicitly sign in user");
-			}
+                    user = new User();
+                    EmailDetail email = new EmailDetail();
+                    email.setEmail(socialEmail);
+                    user.setContactDetails(new ContactDetails.Builder().primaryEmail(email).build());
+                    user.setFirstName(socialFirstName);
+                    user.setLastName(socialLastName);
+                    try {
+                        user = userService.createForImplicitSignup(user);
+
+                        //username = user.getUsername();
+                    } catch (Exception e) {
+                        LOGGER.error("ConnectionSignUp#executeError while implicitly registering user", e);
+                    }
+
+                }
+            } else {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("ConnectionSignUp#execute, Social email was not accessible, unable to implicitly sign in user");
+                }
+            }
 		}
 		//userService.createAccount(account);
 		String result = user != null && user.getId() != null ? user.getId().toString() : null;

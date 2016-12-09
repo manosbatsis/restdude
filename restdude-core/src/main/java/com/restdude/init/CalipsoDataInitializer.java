@@ -18,6 +18,8 @@
 package com.restdude.init;
 
 import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.domain.details.contact.model.ContactDetails;
+import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.service.ErrorLogService;
@@ -159,10 +161,11 @@ public class CalipsoDataInitializer {
 			system.setUsername("system");
 			system.setFirstName("System");
 			system.setLastName("User");
-			system.setCredentials(new UserCredentials.Builder().active(false).email("system@abiss.gr").password("system").build());
-			system.setLastVisit(now);
-			system = userService.createTest(system);
-			users.add(system);
+            system.setCredentials(new UserCredentials.Builder().password("system").build());
+            system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@abiss.gr")).build());
+            system.setLastVisit(now);
+            system = userService.createAsConfirmed(system);
+            users.add(system);
 
 			User adminUser = new User();
 			adminUser.setUsername("admin");
@@ -170,10 +173,11 @@ public class CalipsoDataInitializer {
 			adminUser.setLastName("User");
 			adminUser.setLastVisit(now);
 			adminUser.addRole(adminRole);
-			adminUser.setCredentials(new UserCredentials.Builder().active(true).email("info@abiss.gr").password("admin").build());
+            adminUser.setCredentials(new UserCredentials.Builder().password("admin").build());
+            adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("info@abiss.gr")).build());
 //			adminUser.setCreatedBy(system);
-			adminUser = userService.createTest(adminUser);
-			users.add(adminUser);
+            adminUser = userService.createAsConfirmed(adminUser);
+            users.add(adminUser);
 
 			SecurityContextHolder.getContext().setAuthentication(
 					new UsernamePasswordAuthenticationToken(system, system.getCredentials().getPassword(), system.getRoles()));
@@ -183,12 +187,13 @@ public class CalipsoDataInitializer {
 			opUser.setUsername("operator");
 			opUser.setFirstName("Operator");
 			opUser.setLastName("User");
-			opUser.setCredentials(new UserCredentials.Builder().active(true).email("operator@abiss.gr").password("operator").build());
-			opUser.setLastVisit(now);
+            opUser.setCredentials(new UserCredentials.Builder().password("operator").build());
+            opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@abiss.gr")).build());
+            opUser.setLastVisit(now);
             opUser.addRole(operatorRole);
 //			opUser.setCreatedBy(system);
-			opUser = userService.createTest(opUser);
-			users.add(opUser);
+            opUser = userService.createAsConfirmed(opUser);
+            users.add(opUser);
 
 			int usersMax =  10;
 			int usersCreated = 0;
@@ -199,11 +204,12 @@ public class CalipsoDataInitializer {
 					u.setUsername(userName);
 					u.setFirstName(fullName.substring(0, fullName.indexOf(" ")));
 					u.setLastName(fullName.substring(fullName.indexOf(" ") + 1));
-					u.setCredentials(new UserCredentials.Builder().active(true).email(userName + "@abiss.gr").password(userName).build());
-					u.setLastVisit(now);
+                    u.setCredentials(new UserCredentials.Builder().password(userName).build());
+                    u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userName + "@abiss.gr")).build());
+                    u.setLastVisit(now);
 //					u.setCreatedBy(system);
-					u = userService.createTest(u);
-					users.add(u);
+                    u = userService.createAsConfirmed(u);
+                    users.add(u);
 					
 					usersCreated++;
 					LOGGER.info("Created user: " + u);

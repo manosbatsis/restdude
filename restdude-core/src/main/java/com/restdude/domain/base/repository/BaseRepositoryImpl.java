@@ -22,34 +22,39 @@ import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.MetadataSubject;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.specifications.SpecificationsBuilder;
+import com.restdude.mdd.util.EntityUtil;
 import com.restdude.mdd.util.ParameterMapBackedPageRequest;
+import com.restdude.util.exception.http.BeanValidationException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.security.access.method.P;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
 
 @NoRepositoryBean
 public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ModelRepository<T, ID> {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
-
 
 	private SpecificationsBuilder<T, ID> specificationsBuilder;
 	private EntityManager entityManager;
 	private Class<T> domainClass;
-
+	protected Validator validator;
 
     /**
 	 * Creates a new {@link SimpleJpaRepository} to manage objects of the given {@link JpaEntityInformation}.
@@ -57,13 +62,13 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
      * @param domainClass must not be {@literal null}.
      * @param entityManager must not be {@literal null}.
 	 */
-	public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
+	public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager, Validator validator) {
 		super(domainClass, entityManager);
 		this.entityManager = entityManager;
 		this.domainClass = domainClass;
 		this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.domainClass);
-
-    }
+		this.validator = validator;
+	}
 
 	/***
      * {@inheritDoc}
@@ -82,16 +87,58 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 	}
 
 
-	
+	/***
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T merge(T entity) {
-		return this.getEntityManager().merge(entity);
+		this.validate(entity);
+		Map<String, Metadatum> metadata = noteMetadata(entity);
+		entity = this.getEntityManager().merge(entity);
+		persistNotedMetadata(metadata, entity);
+		return entity;
 	}
-	
+
+	/***
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T persist(T entity) {
+		this.validate(entity);
+		Map<String, Metadatum> metadata = noteMetadata(entity);
 		this.getEntityManager().persist(entity);
+		persistNotedMetadata(metadata, entity);
 		return entity;
+	}
+
+	/***
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <S extends T> S save(S entity) {
+		this.validate(entity);
+		Map<String, Metadatum> metadata = noteMetadata(entity);
+		entity = super.save(entity);
+		persistNotedMetadata(metadata, entity);
+		return entity;
+	}
+
+
+	/***
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T patch(@P("resource") T delta) {
+		// load existing
+		T persisted = this.getOne(delta.getId());
+		LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);
+		// update it by copying all non-null properties from the given transient instance
+		BeanUtils.copyProperties(delta, persisted, EntityUtil.getNullPropertyNames(delta));
+		LOGGER.debug("patch, patched persisted: {}", persisted);
+		// validate
+		this.validate(persisted);
+		// persist changes
+		return super.save(persisted);
 	}
 
 	public Optional<T> findOptional(ID id){
@@ -294,11 +341,32 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
         return metadata;
     }
 
-    @Override
-    public <S extends T> S save(S entity) {
-        Map<String, Metadatum> metadata = noteMetadata(entity);
-        entity = super.save(entity);
-        persistNotedMetadata(metadata, entity);
-        return entity;
-    }
+	/***
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<ConstraintViolation<T>> validateConstraints(T resource) {
+		LOGGER.debug("validateConstraints, validator: {}, resource: {}", validator, resource);
+		Set<ConstraintViolation<T>> constraintViolations = validator.<T>validate(resource);
+
+		return constraintViolations;
+	}
+
+	protected void validate(T resource) {
+		LOGGER.debug("validate resource: {}", resource);
+		resource.preSave();
+
+		// un-proxy for validation to work
+		resource = (T) entityManager.unwrap(SessionImplementor.class).getPersistenceContext().unproxy(resource);
+		LOGGER.debug("validate resource after preSave: {}", resource);
+		Set<ConstraintViolation<T>> violations = this.validateConstraints(resource);
+		LOGGER.debug("validate violations: {}", violations);
+		if (!CollectionUtils.isEmpty(violations)) {
+			Set<ConstraintViolation> errors = new HashSet<ConstraintViolation>();
+			errors.addAll(violations);
+			throw new BeanValidationException("Validation failed", errors);
+		}
+
+
+	}
 }

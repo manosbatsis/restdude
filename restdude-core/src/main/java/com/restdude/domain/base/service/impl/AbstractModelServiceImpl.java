@@ -28,7 +28,6 @@ import com.restdude.domain.util.email.service.EmailService;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,15 +71,9 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 	public User getPrincipalLocalUser() {
 		ICalipsoUserDetails principal = getPrincipal();
 		User user = null;
-		if (principal != null) {
-			String username = principal.getUsername();
-			if(StringUtils.isBlank(username)){
-				username = principal.getEmail();
-			}
-			if(StringUtils.isNotBlank(username) && !"anonymous".equals(username)){
-				user = this.userRepository.findByUsernameOrEmail(username);
-			}
-		}
+        if (principal != null && principal.getId() != null) {
+            user = this.userRepository.getOne(principal.getId());
+        }
 
 		if(LOGGER.isDebugEnabled()){
 			LOGGER.debug("getPrincipalUser, user: " + user);

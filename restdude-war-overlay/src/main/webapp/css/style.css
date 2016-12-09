@@ -1,0 +1,65 @@
+/* Sticky footer styles 
+-------------------------------------------------- */
+body, html {
+    height: 100%;
+
+}
+
+.full-height-column {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.full-height-row {
+    display: table-row;
+    height: 1px;
+}
+
+.full-height-row-expanded {
+    display: table-row;
+}
+
+#calipsoMainContentRegion {
+    /* padding according to nav/header height;*/
+    padding-top: 70px;
+}
+
+/*
+ * Visual styles for this demo
+ */
+
+.panel-title a[data-toggle="collapse"] {
+    display: block;
+}
+
+/*.control-label{
+	margin-right: 10px;
+}*/
+.list-group-horizontal,
+.list-group-horizontal .list-group-item {
+    display: inline-block;
+    margin-bottom: 0px;
+}
+
+.list-group-horizontal .list-group-item {
+    margin-left: -4px;
+    margin-right: 0;
+}
+
+.list-group-horizontal .list-group-item:first-child {
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 4px;
+}
+
+.list-group-horizontal .list-group-item:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 0;
+}
+
+.panel-default hr {
+    background-color: rgb(204, ​ 204, ​ 204) !important;
+    border-color: rgb(204, ​ 204, ​ 204) !important;
+    color: rgb(204, ​ 204, ​ 204) !important;
+    height: 1px !important;
+}

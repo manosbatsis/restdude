@@ -1,0 +1,17 @@
+{{#if accessible }}
+    <a href='#step{{colIndex}}' class="wizard-step" data-step='{{colIndex}}'> 
+	    {{#if completed }}
+	        <span class="text-success"><i class="fa fa-check-square"></i> {{title}}</span>
+	    {{/if}}
+	    {{#unless completed }}
+	        <span class="{{#unless active }}text-warning{{/unless}}"><i class="fa fa-pencil-square"></i> {{title}}</span>
+	    {{/unless}}
+	    
+    </a>
+{{/if}}
+{{#unless accessible }}
+    <a title="{{shownIndex}}: {{title}}" disabled> <i class="fa fa-minus-square-o"></i> {{title}}</a>
+{{/unless}}
+<!--
+  <li><a>Step 3 - Not Yet Reached</a></li>
+-->

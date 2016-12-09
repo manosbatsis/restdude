@@ -44,8 +44,8 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	@Transactional(readOnly = false)
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public Friendship createTest(Friendship resource) {
-		LOGGER.debug("createTest: {}", resource);
-		return this.repository.save(resource);
+        LOGGER.debug("createAsConfirmed: {}", resource);
+        return this.repository.save(resource);
 	}
 
 	/**
@@ -143,9 +143,12 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 		if (resource.getStatus().equals(FriendshipStatus.PENDING)
 				|| resource.getStatus().equals(FriendshipStatus.CONFIRMED)) {
 			// notify this side of pending request
-			String username = this.userRepository.findCompactUserById(resource.getId().getOwner().getId())
-					.getUsername();
-			LOGGER.debug("Sending friendship DTO to " + username);
+            String username = this.userRepository.findUsernameById(
+                    resource
+                            .getId()
+                            .getOwner()
+                            .getId());
+            LOGGER.debug("Sending friendship DTO to " + username);
 			this.messagingTemplate.convertAndSendToUser(username, Destinations.USERQUEUE_FRIENDSHIPS,
 					new FriendshipDTO(resource));
 		}

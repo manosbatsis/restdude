@@ -19,6 +19,7 @@ package com.restdude.domain.geography.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,13 @@ public class Continent extends AbstractFormalRegion<Continent> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
 
+    @Id
+    private String id;
+
+    @Formula(" (id) ")
+    private String savedId;
+
+
 	public Continent() {
 		super();
 	}
@@ -43,7 +51,10 @@ public class Continent extends AbstractFormalRegion<Continent> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof Continent) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Continent) {
 			final Continent other = (Continent) obj;
 			return new EqualsBuilder().appendSuper(super.equals(other))
 					.isEquals();
@@ -59,4 +70,37 @@ public class Continent extends AbstractFormalRegion<Continent> {
 				.append(Continent.class)
 				.toHashCode();
 	}
+
+
+    /**
+     * Get the entity's primary key
+     *
+     * @see org.springframework.data.domain.Persistable#getId()
+     */
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Set the entity's primary key
+     *
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String getSavedId() {
+        return savedId;
+    }
+
+    /**
+     * @see org.springframework.data.domain.Persistable#isNew()
+     */
+    @Override
+    public boolean isNew() {
+        return null == getSavedId();
+    }
+
 }

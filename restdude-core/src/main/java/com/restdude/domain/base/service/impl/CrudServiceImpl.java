@@ -1,18 +1,13 @@
 package com.restdude.domain.base.service.impl;
 
 
-import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.CrudService;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.Metadatum;
-import com.restdude.mdd.util.EntityUtil;
-import com.restdude.util.exception.http.BeanValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +19,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,29 +35,17 @@ import java.util.Set;
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
 public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>> implements
-        CrudService<T, ID>, InitializingBean {
+        CrudService<T, ID> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudServiceImpl.class);
 
     protected R repository;
-    private Validator validator;
 
     @Autowired
     public void setRepository(R repository) {
         this.repository = repository;
     }
 
-    @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        // init unique field names
-        //this.uniqueFieldNames =
-        ValidatorUtil.getUniqueFieldNames(this.getDomainClass());
-    }
 
     /**
      * {@inheritDoc}
@@ -82,7 +63,6 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @PreAuthorize(T.PRE_AUTHORIZE_CREATE)
     public T create(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
-        this.validate(resource);
         resource = repository.persist(resource);
         this.postCreate(resource);
         return resource;
@@ -101,7 +81,6 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
     public T update(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
-        this.validate(resource);
         return repository.save(resource);
     }
 
@@ -112,13 +91,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
     @Transactional(readOnly = false)
     @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
     public T patch(@P("resource") T resource) {
-        // make sure entity is set to support partial updates
-        T persisted = this.findById(resource.getId());
-        // copy non-null properties to persisted
-        BeanUtils.copyProperties(resource, persisted, EntityUtil.getNullPropertyNames(resource));
-        resource = persisted;
-        // FW to normal update
-        return this.update(persisted);
+        return repository.patch(resource);
     }
 
     /**
@@ -219,9 +192,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     public Set<ConstraintViolation<T>> validateConstraints(T resource) {
-        Set<ConstraintViolation<T>> constraintViolations = validator.<T>validate(resource);
-
-        return constraintViolations;
+        return this.repository.validateConstraints(resource);
     }
 
     /**
@@ -269,67 +240,4 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
         return this.repository.getUploadsForProperty(subjectId, propertyName);
     }
 
-    /*
-        protected List<String> validateColumnConstraints(T resource) {
-            LOGGER.debug("validateColumnConstraints, uniqueFieldNames: {}", this.uniqueFieldNames);
-            List<String> errors = new LinkedList<String>();
-
-            EntityManager em = this.repository.getEntityManager();
-            CriteriaBuilder criteriaBuilder = this.repository.getEntityManager().getCriteriaBuilder();
-            CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(this.getDomainClass());
-            Root<T> root = criteriaQuery.from(this.getDomainClass());
-            List<Predicate> predicates = new ArrayList<Predicate>(this.uniqueFieldNames.size());
-            try {
-                for (String propertyName : this.uniqueFieldNames) {
-
-                    LOGGER.debug("validateColumnConstraints, adding predicate for: {}", propertyName);
-                    Object propertyValue = PropertyUtils.getProperty(resource, propertyName);
-                    Predicate predicate = criteriaBuilder.equal(root.get(propertyName), propertyValue);
-                    predicates.add(predicate);
-                }
-
-                criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
-                TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
-                List<T> resultSet = typedQuery.getResultList();
-                LOGGER.debug("validateColumnConstraints, resultSet size: {}", resultSet.size());
-                if (!resultSet.isEmpty()) {
-                    Set<String> unavailableValueFieldNames = new HashSet<String>();
-                    for (T match : resultSet) {
-                        if (!match.getId().equals(resource.getId())) {
-                            for (String propertyName : this.uniqueFieldNames) {
-                                Object newValue = PropertyUtils.getProperty(resource, propertyName);
-                                Object existingValue = PropertyUtils.getProperty(match, propertyName);
-
-                                LOGGER.debug("validateColumnConstraints, newValue: {}, existingValue: {}", newValue, existingValue);
-                                if (newValue != null && newValue.equals(existingValue)) {
-                                    unavailableValueFieldNames.add(propertyName);
-                                }
-                            }
-                        }
-                    }
-
-                    for (String propertyName : unavailableValueFieldNames) {
-                        errors.add("Value already exists for field " + propertyName);
-                    }
-                }
-            } catch (Exception e) {
-                LOGGER.error("Error while validating constraints", e);
-            }
-
-            LOGGER.debug("validateColumnConstraints, errors: {}", errors);
-            return errors;
-        }
-    */
-    protected void validate(T resource) {
-        LOGGER.debug("validate resource: {}", resource);
-        resource.preSave();
-        Set<ConstraintViolation<T>> violations = this.validateConstraints(resource);
-        if (!CollectionUtils.isEmpty(violations)) {
-            Set<ConstraintViolation> errors = new HashSet<ConstraintViolation>();
-            errors.addAll(violations);
-            throw new BeanValidationException("Validation failed", errors);
-        }
-
-
-    }
 }

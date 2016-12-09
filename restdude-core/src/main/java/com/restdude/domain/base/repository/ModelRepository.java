@@ -25,10 +25,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Generic repository that provides SCRUD and utility methods based on domain and id type variables.
@@ -106,6 +108,15 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 	 */
 	T persist(T entity);
 
+
+    /**
+     * Partially update an existing resource.
+     *
+     * @param delta the patch to apply
+     * @return resource updated
+     */
+    T patch(T delta);
+
 	Metadatum addMetadatum(ID subjectId, String predicate, String object);
 
 	List<Metadatum> addMetadata(ID subjectId, Map<String, String> metadata);
@@ -123,4 +134,12 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 	List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName);
 
 
+    /**
+     * Validate the given resource using bean validator. {@link javax.persistence.Column} annotations are
+     * also used to validate uniqueness and non-nullable values.
+     *
+     * @param resource
+     * @return the set of failed constraints
+     */
+    Set<ConstraintViolation<T>> validateConstraints(T resource);
 }

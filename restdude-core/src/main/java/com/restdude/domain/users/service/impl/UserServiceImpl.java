@@ -19,6 +19,10 @@ package com.restdude.domain.users.service.impl;
 
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.domain.details.contact.model.ContactDetails;
+import com.restdude.domain.details.contact.model.EmailDetail;
+import com.restdude.domain.details.contact.service.ContactDetailsService;
+import com.restdude.domain.details.contact.service.EmailDetailService;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.domain.users.model.*;
 import com.restdude.domain.users.repository.RoleRepository;
@@ -60,9 +64,14 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	private static final String USERDTO_CLASS = UserDTO.class.getCanonicalName();
 
 	private final StringKeyGenerator generator = KeyGenerators.string();
-	
-	private RoleRepository roleRepository;
+
+
 	private UserCredentialsService credentialsService;
+	private ContactDetailsService contactDetailsService;
+	private EmailDetailService emailDetailService;
+
+
+	private RoleRepository roleRepository;
 	private UserRegistrationCodeRepository userRegistrationCodeRepository;
 
 	private PasswordEncoder passwordEncoder;
@@ -72,16 +81,24 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@Autowired
+	public void setCredentialsService(UserCredentialsService credentialsService) {
+		this.credentialsService = credentialsService;
+	}
+
+	@Autowired
+	public void setContactDetailsService(ContactDetailsService contactDetailsService) {
+		this.contactDetailsService = contactDetailsService;
+	}
+
+	@Autowired
+	public void setEmailDetailService(EmailDetailService emailDetailService) {
+		this.emailDetailService = emailDetailService;
+	}
 
 	@Autowired
 	public void setRoleRepository(RoleRepository roleRepository) {
 		this.roleRepository = roleRepository;
-	}
-
-
-	@Autowired
-	public void setCredentialsRepository(UserCredentialsService credentialsService) {
-		this.credentialsService = credentialsService;
 	}
 
 	@Autowired
@@ -125,67 +142,136 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Transactional(readOnly = false)
     public User create(User resource) {
 
+		// create
+		resource = this.create(resource, false);
+
+		// force any errors to occur sooner rather than later
+		this.repository.flush();
+
+		// sent email confirmation message if no errors occurred
+		emailService.sendAccountConfirmation(resource);
+
+		// done
+		return resource;
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public User createAsConfirmed(User resource) {
+		return this.create(resource, true);
+	}
+
+	private User create(User resource, boolean skipConfirmation) {
+
 		// note any credential info
+		UserCredentials credentials = this.noteCredentials(resource);
+		// note contact details
+		ContactDetails contactDetails = this.noteContactDetails(resource);
+		// note any registration code info
+		UserRegistrationCode code = noteRegistrationCode(credentials);
+
+		// skip or force confirmation etc.
+		if (contactDetails.getPrimaryEmail() != null) {
+			contactDetails.getPrimaryEmail().setVerified(skipConfirmation);
+		}
+		credentials.setActive(skipConfirmation);
+		credentials.setResetPasswordToken(skipConfirmation ? null : generator.generateKey());
+
+		// create hash and default username if missing
+		this.addHashDefaultUsername(resource, contactDetails);
+
+		// set user role in advance if no confirmation is needed,
+		// clear roles otherwise
+		if (skipConfirmation) {
+			Role userRole = roleRepository.findByName(Role.ROLE_USER);
+			resource.addRole(userRole);
+		} else {
+			resource.setRoles(null);
+		}
+
+		// save user
+		resource = super.create(resource);
+
+		// attach and persist credentials
+		credentials.setUser(resource);
+		credentials = this.credentialsService.create(credentials);
+		resource.setCredentials(credentials);
+
+		// attach and persist contact details
+		contactDetails.setUser(resource);
+		contactDetails = this.contactDetailsService.create(contactDetails);
+		resource.setContactDetails(contactDetails);
+
+		// update registration code
+		if (code != null && code.getId() != null) {
+			code.setCredentials(resource.getCredentials());
+			this.userRegistrationCodeRepository.patch(code);
+		}
+
+		return resource;
+	}
+
+
+	protected UserRegistrationCode noteRegistrationCode(UserCredentials credentials) {
+		UserRegistrationCode code = credentials.getRegistrationCode();
+		credentials.setRegistrationCode(null);
+		if (code != null && code.getId() != null) {
+			boolean available = this.userRegistrationCodeRepository.isAvailable(code.getId());
+			if (!available) {
+				throw new BadRequestException("Invalid registration code");
+			}
+		} else {
+			code = null;
+		}
+		return code;
+	}
+
+
+	protected UserCredentials noteCredentials(User resource) {
 		UserCredentials credentials = resource.getCredentials();
 		// init credentials if empty
 		if (credentials == null) {
 			credentials = new UserCredentials();
 		}
-		resource.setCredentials(null);
-		addUserRoleEmailHashDefaultUsername(resource, credentials);
 
-
-		// save
-		resource = super.create(resource);
-
-		credentials.setActive(false);
-		credentials.setUser(resource);
-		credentials.setResetPasswordToken(generator.generateKey());
-
-		// note any registration code info
-		UserRegistrationCode code = credentials.getRegistrationCode();
-        credentials.setRegistrationCode(null);
-        if (code != null && code.getId() != null) {
-            code = this.userRegistrationCodeRepository.getOne(code.getId());
-			if (!code.getAvailable()) {
-				throw new BadRequestException("Invalid registration code");
-			}
-		}
-
-		// encrypt password
+		// encrypt password if provided
 		if (credentials.getPassword() != null) {
+			LOGGER.debug("createAsConfirmed, new password: " + credentials.getPassword());
 			credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
 		}
 
-		// attach credentials
-		credentials = this.credentialsService.create(credentials);
-		resource.setCredentials(credentials);
+		// clean transient/unpersisted relationship
+		resource.setCredentials(null);
 
-		// update code
-        if (code != null && code.getId() != null) {
-            code.setCredentials(resource.getCredentials());
-			this.userRegistrationCodeRepository.save(code);
-		}
-
-		// sent email confirmation message
-		emailService.sendAccountConfirmation(resource);
-
-		return resource;
+		return credentials;
 	}
 
-	public void addUserRoleEmailHashDefaultUsername(User resource, UserCredentials credentials) {
-		// add user role
-		Role userRole = roleRepository.findByName(Role.ROLE_USER);
-		resource.addRole(userRole);
+	protected ContactDetails noteContactDetails(User resource) {
+		ContactDetails contactDetails = resource.getContactDetails();
+		// init credentials if empty
+		if (contactDetails == null) {
+			contactDetails = new ContactDetails();
+		} else if (contactDetails.getPrimaryEmail() != null && StringUtils.isNotBlank(contactDetails.getPrimaryEmail().getEmail())) {
+			resource.setEmailHash(HashUtils.md5Hex(contactDetails.getPrimaryEmail().getEmail()));
+		}
+
+		// clean transient/unpersisted relationship
+		resource.setContactDetails(null);
+
+		return contactDetails;
+	}
+
+
+	private void addHashDefaultUsername(User resource, ContactDetails contactDetails) {
 
 		// add email hash
-		if (credentials.getEmail() != null) {
-			resource.setEmailHash(HashUtils.md5Hex(credentials.getEmail()));
+		if (contactDetails.getPrimaryEmail() != null) {
+			resource.setEmailHash(HashUtils.md5Hex(contactDetails.getPrimaryEmail().getValue()));
 		}
 
 		// fallback username
 		if (!StringUtils.isNotBlank(resource.getUsername())) {
-			String username = credentials.getEmail();
+			String username = contactDetails.getPrimaryEmail().getValue();
 			if (StringUtils.isNotBlank(username)) {
 				username = username.replace("@", "_").replaceAll("\\.", "_");
 			}
@@ -196,7 +282,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public void expireResetPasswordTokens() {
+	public void expireConfirmationOrPasswordResetTokens() {
 		// get a hibernate session suitable for read-only access to large datasets
 		StatelessSession session = ((Session) this.repository.getEntityManager().getDelegate()).getSessionFactory().openStatelessSession();
 		Date yesterday = DateUtils.addDays(new Date(), -1);
@@ -221,69 +307,50 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
         // expire tokens, including password reset requests
         this.repository.expireResetPasswordTokens(yesterday);
 	}
-	
-	@Override
-	@Transactional(readOnly = false)
-    public User createTest(User resource) {
-
-		// note any credential info
-		UserCredentials credentials = resource.getCredentials();
-		// init credentials if empty
-		if (credentials == null) {
-			credentials = new UserCredentials();
-		}
-		resource.setCredentials(null);
-
-		// add user role
-		addUserRoleEmailHashDefaultUsername(resource, credentials);
-
-
-		// save
-		resource = super.create(resource);
-
-		credentials.setUser(resource);
-
-		// require password for active
-		if (credentials.getActive() && credentials.getPassword() == null) {
-			throw new BadRequestException("User to create is active but has no password set");
-		}
-
-		// encrypt password
-		if (credentials.getPassword() != null) {
-			LOGGER.debug("createTest, new password: " + credentials.getPassword());
-			credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
-		}
-
-		credentials = this.credentialsService.create(credentials);
-		
-		resource.setCredentials(credentials);
-		
-		return resource;
-	}
 
 	@Override
 	@Transactional(readOnly = false)
-    public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword) {
-        Assert.notNull(userNameOrEmail);
+	public User handleConfirmationOrPasswordResetToken(String userNameOrEmail, String token, String newPassword) {
+
+		// require email and token
+		if (StringUtils.isBlank(userNameOrEmail) || StringUtils.isBlank(token)) {
+			throw new BadRequestException("The following parameters are required: email, resetPasswordToken");
+		}
+
+		// ensure the user exists
 		User user = this.findOneByUserNameOrEmail(userNameOrEmail);
 		if (user == null) {
-			throw new UsernameNotFoundException("Could not match username: " + userNameOrEmail);
-		}
-		UserCredentials credentials = user.getCredentials();
-		if (!token.equals(credentials.getResetPasswordToken())) {
-			throw new UsernameNotFoundException("Could not match token: " + userNameOrEmail);
+			throw new InvalidCredentialsException("Could not match username: " + userNameOrEmail);
 		}
 
-		// remove token and token date
+		// validate the provided token
+		UserCredentials credentials = user.getCredentials();
+		if (!token.equals(credentials.getResetPasswordToken())) {
+			throw new InvalidCredentialsException("Could not match token: " + userNameOrEmail);
+		}
+
+		// token is valid, clear matching record
 		credentials.setResetPasswordToken(null);
 		credentials.setResetPasswordTokenCreated(null);
 
-		// update password
-		LOGGER.debug("handlePasswordResetToken, new password: " + newPassword);
-		credentials.setPassword(this.passwordEncoder.encode(newPassword));
+		// update password if given, ensure a password exists otherwise
+		if (StringUtils.isNotBlank(newPassword)) {
+			LOGGER.debug("handleConfirmationOrPasswordResetToken, new password: " + newPassword);
+			credentials.setPassword(this.passwordEncoder.encode(newPassword));
+		} else if (StringUtils.isBlank(credentials.getPassword())) {
+			throw new BadRequestException("The following parameters are required: password, passwordConfirmation");
+		}
 
-		// activate user
-		credentials.setActive(true);
+		// activate user, set (verified) user role and verify email if this is a registration confirmation
+		if (!credentials.getActive()) {
+			credentials.setActive(true);
+			EmailDetail email = user.getContactDetails().getPrimaryEmail();
+			user.getContactDetails().setPrimaryEmail(this.emailDetailService.forceVerify(email));
+
+			Role userRole = roleRepository.findByName(Role.ROLE_USER);
+			user.addRole(userRole);
+			user = this.repository.save(user);
+		}
 
 		// persist
 		credentials = this.credentialsService.update(credentials);
@@ -413,23 +480,23 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
     public User createForImplicitSignup(User userAccountData) {
-
+		// simplify further condition checks
+		if (userAccountData.getCredentials() == null) {
+			userAccountData.setCredentials(new UserCredentials());
+		}
 
         User existing = this.getPrincipalLocalUser();
 		if (existing == null) {
-			String email = userAccountData.getCredentials() != null ? userAccountData.getCredentials().getEmail() : null;
+			String email = userAccountData.getContactDetails().getPrimaryEmail() != null ? userAccountData.getContactDetails().getPrimaryEmail().getValue() : null;
 			if (StringUtils.isNotBlank(email) && email.contains("@")) {
 				existing = this.repository.findByEmail(email);
 			}
 		}
 		if (existing == null) {
-			if (userAccountData.getCredentials() == null) {
-				userAccountData.setCredentials(new UserCredentials());
-			}
 
 			userAccountData.getCredentials().setPassword(this.passwordEncoder.encode(this.generator.generateKey()));
 			userAccountData.getCredentials().setActive(true);
-			existing = this.createTest(userAccountData);
+			existing = this.createAsConfirmed(userAccountData);
 		}
 		
 		return existing;
@@ -479,7 +546,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		if(!CollectionUtils.isEmpty(invitations.getRecepients())){
 			// Proces recepients
 			for(UserDTO dto : invitations.getRecepients()){
-				User u = this.repository.findByUsernameOrEmail(dto.getEmail());
+				User u = this.repository.findByEmail(dto.getEmail());
 				if(u == null){
 					if(results.getInvited().contains(dto.getEmail())){
 						// Ignore duplicate user
@@ -487,7 +554,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 					}
 					else{
 						// invite user
-						results.getInvited().add(this.create(dto.toUser()).getCredentials().getEmail());
+						results.getInvited().add(this.create(dto.toUser()).getContactDetails().getPrimaryEmail().getValue());
 					}
 				}
 				else{
@@ -508,11 +575,10 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 							results.getDuplicate().add(email.getAddress());
 						}
 						else{
-							User u = this.repository.findByUsernameOrEmail(email.getAddress());
+							User u = this.repository.findByEmail(email.getAddress());
 							if(u == null){
 								u = new User();
-								u.setCredentials(new UserCredentials());
-								u.getCredentials().setEmail(email.getAddress());
+								u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(email.getAddress())).build());
 								String personal = email.getPersonal();
 								if(StringUtils.isNotBlank(personal)){
 									String[] names = personal.split(" ");
@@ -530,7 +596,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 									}
 								}
 								// invite user
-								results.getInvited().add(this.create(u).getCredentials().getEmail());
+								results.getInvited().add(this.create(u).getContactDetails().getPrimaryEmail().getValue());
 							}
 						}
 					}

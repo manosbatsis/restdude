@@ -18,17 +18,19 @@
 package com.restdude.auth.userAccount.model;
 
 import com.restdude.auth.userAccount.validation.RegistrationCodeConstraint;
+import com.restdude.domain.details.contact.model.ContactDetails;
+import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.model.UserRegistrationCode;
 import io.swagger.annotations.ApiModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @ApiModel(value = "UserAccountRegistration", description = "User registration")
 public class UserAccountRegistration implements Serializable {
@@ -43,13 +45,10 @@ public class UserAccountRegistration implements Serializable {
 	private String password;
 	private String passwordConfirmation;
 	@NotNull
-	private String registrationEmail;
+    private String email;
     private String firstName;
 	private String lastName;
-	private String telephone;
-	private String cellphone;
 	private String locale = "en";
-    private LocalDate birthDay;
     private String redirectUrl = null;
 
 	/**
@@ -60,17 +59,23 @@ public class UserAccountRegistration implements Serializable {
 	}
 
 	public User asUser() {
-		User newUser = new User.Builder()
-                .credentials(new UserCredentials.Builder().email(this.registrationEmail).password(this.password)
+        EmailDetail email = null;
+        if (StringUtils.isNotBlank(this.getEmail())) {
+            email = new EmailDetail();
+            email.setEmail(this.getEmail());
+        }
+        User newUser = new User.Builder()
+                .contactDetails(new ContactDetails.Builder().primaryEmail(email).build())
+                .credentials(new UserCredentials.Builder().password(this.password)
                         .registrationCode(new UserRegistrationCode(this.registrationCode)).build())
-                .username(this.username).firstName(this.firstName).lastName(this.lastName).telephone(this.telephone)
-                .cellphone(this.cellphone).locale(this.locale).birthDay(this.birthDay).build();
-		return newUser;
+                .username(this.username).firstName(this.firstName).lastName(this.lastName)
+                .locale(this.locale).build();
+        return newUser;
 	}
 
 	@Override
 	public String toString() {
-        return new ToStringBuilder(this).append("username", username).append("registrationEmail", registrationEmail).toString();
+        return new ToStringBuilder(this).append("username", username).append("email", email).toString();
     }
 
 	public String getRegistrationCode() {
@@ -105,12 +110,12 @@ public class UserAccountRegistration implements Serializable {
 		this.passwordConfirmation = passwordConfirmation;
 	}
 
-    public String getRegistrationEmail() {
-        return registrationEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRegistrationEmail(String registrationEmail) {
-        this.registrationEmail = registrationEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 	public String getFirstName() {
@@ -129,36 +134,12 @@ public class UserAccountRegistration implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public String getCellphone() {
-		return cellphone;
-	}
-
-	public void setCellphone(String cellphone) {
-		this.cellphone = cellphone;
-	}
-
 	public String getLocale() {
 		return locale;
 	}
 
 	public void setLocale(String locale) {
 		this.locale = locale;
-	}
-
-    public LocalDate getBirthDay() {
-        return birthDay;
-	}
-
-    public void setBirthDay(LocalDate birthDay) {
-        this.birthDay = birthDay;
 	}
 
 	public String getRedirectUrl() {
@@ -177,10 +158,7 @@ public class UserAccountRegistration implements Serializable {
         private String registrationEmail;
         private String firstName;
 		private String lastName;
-		private String telephone;
-		private String cellphone;
 		private String locale;
-        private LocalDate birthDay;
         private String redirectUrl;
 
 		public Builder registrationCode(String registrationCode) {
@@ -218,23 +196,8 @@ public class UserAccountRegistration implements Serializable {
 			return this;
 		}
 
-		public Builder telephone(String telephone) {
-			this.telephone = telephone;
-			return this;
-		}
-
-		public Builder cellphone(String cellphone) {
-			this.cellphone = cellphone;
-			return this;
-		}
-
 		public Builder locale(String locale) {
 			this.locale = locale;
-			return this;
-		}
-
-        public Builder birthDay(LocalDate birthDay) {
-            this.birthDay = birthDay;
 			return this;
 		}
 
@@ -253,13 +216,10 @@ public class UserAccountRegistration implements Serializable {
 		this.username = builder.username;
 		this.password = builder.password;
 		this.passwordConfirmation = builder.passwordConfirmation;
-        this.registrationEmail = builder.registrationEmail;
+        this.email = builder.registrationEmail;
         this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
-		this.telephone = builder.telephone;
-		this.cellphone = builder.cellphone;
 		this.locale = builder.locale;
-		this.birthDay = builder.birthDay;
 		this.redirectUrl = builder.redirectUrl;
 	}
 }

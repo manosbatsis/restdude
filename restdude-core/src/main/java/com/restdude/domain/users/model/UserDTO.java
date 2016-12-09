@@ -19,6 +19,8 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restdude.domain.details.contact.model.ContactDetails;
+import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.websocket.message.IMessageResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,12 +32,10 @@ public class UserDTO implements IMessageResource<String> {
     public static UserDTO fromUser(User user) {
         UserDTO dto = null;
         if (user != null) {
-
-            UserCredentials credentials = user.getCredentials();
             return new UserDTO(user.getId(),
                     user.getFirstName(),
                     user.getLastName(),
-                    credentials != null ? credentials.getEmail() : null,
+                    user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
                     user.getUsername(),
                     user.getEmailHash(),
                     user.getAvatarUrl(),
@@ -77,7 +77,12 @@ public class UserDTO implements IMessageResource<String> {
         this(user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getCredentials() != null ? user.getCredentials().getEmail() : null, user.getUsername(), user.getEmailHash(), user.getAvatarUrl(), user.getBannerUrl(), user.getStompSessionCount());
+                user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
+                user.getUsername(),
+                user.getEmailHash(),
+                user.getAvatarUrl(),
+                user.getBannerUrl(),
+                user.getStompSessionCount());
     }
 
     private UserDTO(Builder builder) {
@@ -108,8 +113,9 @@ public class UserDTO implements IMessageResource<String> {
                 .id(this.id)
                 .firstName(this.firstName)
                 .lastName(this.lastName)
-                .credentials(new UserCredentials.Builder()
-                        .email(this.email).build())
+                .credentials(new UserCredentials())
+                .contactDetails(new ContactDetails.Builder()
+                        .primaryEmail(new EmailDetail(this.email)).build())
                 .username(this.username)
                 .emailHash(this.emailHash)
                 .avatarUrl(this.avatarUrl)

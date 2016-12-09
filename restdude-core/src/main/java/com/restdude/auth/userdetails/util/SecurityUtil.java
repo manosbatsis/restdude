@@ -136,9 +136,9 @@ public class SecurityUtil {
 	public static Optional<ICalipsoUserDetails> getPrincipalOptional() {
 		return Optional.ofNullable(getPrincipal()); 
 	}
-	
-	
-	public static ICalipsoUserDetails getPrincipal() {
+
+
+    public static ICalipsoUserDetails getPrincipal() {
 		Object principal = null;
 		Authentication auth = getAuthentication();
 		if (auth != null) {
@@ -146,12 +146,13 @@ public class SecurityUtil {
 
 		}
 
-		
 		if (principal != null) {
 			if(String.class.isAssignableFrom(principal.getClass())){
 				LOGGER.warn("getPrincipal1, principal is {}, forcing anonymous: ",  principal.toString());
-				principal = null;
-				
+                // tmp
+                principal = null;
+                throw new RuntimeException("getPrincipal1, principal is a string: " + principal);
+
 			}
 			else if (User.class.isAssignableFrom(principal.getClass())) {
 				principal = UserDetails.fromUser((User) principal);

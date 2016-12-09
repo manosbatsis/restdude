@@ -1,0 +1,89 @@
+
+# ----------------------------------------------
+# Calipso build README
+# ----------------------------------------------
+#
+# BUILD HOWTO
+# ----------------------------------------------
+# 0: (Optional): Eclipse users run: mvn eclipse:eclipse 
+# 1: RENAME this file to dev.properties  
+# 2: Run in this directory: mvn clean install
+# 3: cd calipso-hub-webapp
+# 4: Run in the calipso-hub-webapp directory: mvn clean install jetty:run
+# 5: Point your browser to http://localhost:8080/calipso/client
+# 6: Login with username: admin, password: admin
+#
+#
+# CONFIG PROPERTIES
+# ----------------------------------------------
+build.calipso.appName=Calipso
+build.calipso.initData=true
+build.calipso.cookies.httpOnly=false
+build.calipso.cookies.secure=false
+build.calipso.registration.forceCodes=false
+build.log.rootlevel=warn
+
+# Email
+build.mail.enabled=true
+build.mail.test.enable=true
+build.mail.test.user=system
+build.mail.server.host=
+build.mail.server.port=2525
+build.mail.server.protocol=smtp
+build.mail.server.from=YOU@YOU.YOU
+build.mail.server.username=USERNAME
+build.mail.server.password=PASSWORD
+
+# H2 Database
+# RESThub JPA default properties are:
+build.dataSource.driverClassName=org.h2.Driver
+build.dataSource.url=jdbc:h2:mem:resthub;DB_CLOSE_DELAY=-1;MVCC=TRUE
+build.dataSource.maxActive=50
+build.dataSource.maxWait=1000
+build.dataSource.poolPreparedStatements=true
+build.dataSource.username=sa
+build.dataSource.password =
+build.dataSource.validationQuery=SELECT 1
+build.hibernate.dialect=org.hibernate.dialect.H2Dialect
+build.hibernate.show_sql=false
+build.hibernate.format_sql=false
+build.hibernate.hbm2ddl.auto=update
+build.hibernate.cache.use_second_level_cache=true
+build.hibernate.cache.provider_class=net.sf.ehcache.hibernate.SingletonEhCacheProvider
+build.hibernate.id.new_generator_mappings=true
+
+
+# MySQL Database (it needs to be created first!)
+#build.dataSource.driverClassName=com.mysql.jdbc.Driver
+#build.dataSource.url =jdbc:mysql://localhost:3306/YOURS?characterEncoding=UTF-8
+#build.dataSource.maxActive=50
+#build.dataSource.maxWait=1000
+#build.dataSource.poolPreparedStatements=true
+#build.dataSource.username=root
+#build.dataSource.password=YOURS
+#build.dataSource.validationQuery=SELECT 1
+#build.hibernate.dialect =org.hibernate.dialect.MySQL5InnoDBDialect
+#build.hibernate.show_sql=false
+#build.hibernate.format_sql=false
+#build.hibernate.hbm2ddl.auto=update
+#build.hibernate.cache.use_second_level_cache=true
+#build.hibernate.cache.provider_class=net.sf.ehcache.hibernate.SingletonEhCacheProvider
+#build.hibernate.id.new_generator_mappings=true
+
+
+# social APIs
+build.github.clientId=
+build.github.clientSecret=
+build.facebook.clientId=
+build.facebook.clientSecret=
+build.twitter.consumerKey=
+build.twitter.consumerSecret=
+build.linkedin.consumerKey=
+build.linkedin.consumerSecret=
+build.google.consumerKey=
+build.google.consumerSecret=
+
+# AWS S3
+build.aws_access_key_id=
+build.aws_secret_access_key=
+build.aws_namecard_bucket=

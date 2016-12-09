@@ -1,0 +1,14 @@
+<!-- templateBasedItemView -->
+{{#if url}}<a href="{{url}}">{{/if}}
+
+
+<div>
+    <strong>{{actor.firstName}} {{actor.lastName}}</strong>
+    <span class="pull-right text-muted">
+        <em>{{createdDate}}</em>
+    </span>
+</div>
+<div>{{description}}</div>
+{{#if url}}</a>{{/if}}
+<span class="divider"></span>
+<!-- /templateBasedItemView -->

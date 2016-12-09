@@ -1,0 +1,11 @@
+<!-- headerNotificationsItemView -->
+<a href="{{#if url}}{{url}}{{else}}#{{/if}}" class="notification-{{#if seen}}seen{{else}}unseen{{/if}}">
+    <span class="pull-right text-muted">
+        <em>{{momentFromNow createdDate}}</em>
+    </span>
+    <strong>{{actor.firstName}} {{actor.lastName}}</strong>
+    <br class="clear" />
+    <div>{{description}}</div>
+</a>
+<div class="divider"></div>
+<!-- /headerNotificationsItemView -->

@@ -39,7 +39,7 @@ public class UserTasks {
 	}
 	
 	public void expireResetPasswordTokens(){
-		this.service.expireResetPasswordTokens();
-	}
+        this.service.expireConfirmationOrPasswordResetTokens();
+    }
 	
 }

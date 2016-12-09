@@ -17,7 +17,7 @@
  */
 package com.restdude.auth.userAccount.controller;
 
-import com.restdude.auth.userAccount.model.PasswordResetRequest;
+import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
@@ -84,8 +84,8 @@ public class UserAccountController {
 		boolean forceCodes = config.getBoolean(ConfigurationFactory.FORCE_CODES, false);
 
 		// require email
-		if (StringUtils.isBlank(resource.getRegistrationEmail())) {
-			throw new BadRequestException("Email is required");
+        if (StringUtils.isBlank(resource.getEmail())) {
+            throw new BadRequestException("Email is required");
 		}
 		// force registration codes?
 		if (forceCodes && StringUtils.isBlank(resource.getRegistrationCode())) {
@@ -106,10 +106,10 @@ public class UserAccountController {
 	}
 
     @RequestMapping(method = RequestMethod.PUT)
-    @ApiOperation(value = "Update account password", notes = "Update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
+    @ApiOperation(value = "Confirm registration email and/or update account password", notes = "Confirm registration email and/or update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
             "currentPassword, password and passwordConfirmation to immediately change password. 2) when anonymous, provide resetPasswordToken, password and passwordConfirmation to immediately" +
             "change password. 3) when anonymous, provide email or username to have a password reset token and link sent to your inbox.")
-    public ICalipsoUserDetails update(@RequestBody PasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
+    public ICalipsoUserDetails update(@RequestBody EmailConfirmationOrPasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.debug("update, resource: {}", resource);
 
         ICalipsoUserDetails userDetails = this.userDetailsService.resetPassword(resource);

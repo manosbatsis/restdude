@@ -33,14 +33,14 @@ public interface UserService extends ModelService<User, String>{
      * @param tokens the username or email tokens to search for
      * @return the matching user, if any
      */
-    public User findOneByUserNameOrEmail(String... tokens);
+	User findOneByUserNameOrEmail(String... tokens);
 
     /**
      * Find an active user matching the given username or email
      * @param userNameOrEmail the username or email of the user
 	 * @return the matching user, if any
 	 */
-    public User findActiveByUserNameOrEmail(String userNameOrEmail);
+	User findActiveByUserNameOrEmail(String userNameOrEmail);
 
     /**
      * Find an active user matching the given username
@@ -48,7 +48,7 @@ public interface UserService extends ModelService<User, String>{
      * @param username the username of the user
      * @return the matching user, if any
      */
-    public User findActiveByUsername(String username);
+	User findActiveByUsername(String username);
 
     /**
      * Find an active user matching the given email
@@ -56,7 +56,7 @@ public interface UserService extends ModelService<User, String>{
      * @param email the email of the user
      * @return the matching user, if any
      */
-    public User findActiveByEmail(String email);
+	User findActiveByEmail(String email);
 
     /**
 	 * Update the password for the user matching the given credentials
@@ -66,7 +66,7 @@ public interface UserService extends ModelService<User, String>{
 	 * @param newPasswordConfirm the confirmation for the new password
 	 * @return the matching user, if any, with the persistent password already updated 
 	 */
-    public User changePassword(String userNameOrEmail, String oldPassword, String newPassword, String newPasswordConfirm);
+	User changePassword(String userNameOrEmail, String oldPassword, String newPassword, String newPasswordConfirm);
 
     /**
      * Find an active  user with the given ID
@@ -74,15 +74,15 @@ public interface UserService extends ModelService<User, String>{
      * @param userId
      * @return
      */
-    public User findActiveById(String userId);
+	User findActiveById(String userId);
 	/**
 	 * Find the user with the given ID
 	 * @param userId
 	 * @return
 	 */
-	public User findById(String userId);
+	User findById(String userId);
 
-    public User createForImplicitSignup(User user);
+	User createForImplicitSignup(User user);
 
 	/**
 	 * Get a local application user matching the given credentials, after adding
@@ -98,8 +98,8 @@ public interface UserService extends ModelService<User, String>{
 	 * @return the local user or null if no match was found for the given
      *         credentials
      */
-    public User findActiveByCredentials(String userNameOrEmail, String userPassword,
-                                        Map<String, String> metadata);
+	User findActiveByCredentials(String userNameOrEmail, String userPassword,
+								 Map<String, String> metadata);
 
     /**
      * Get a local application user matching the given credentials,
@@ -109,21 +109,27 @@ public interface UserService extends ModelService<User, String>{
      * @return the local user or null if no match was found for the given
      * credentials
      */
-    public User findActiveByCredentials(String userNameOrEmail, String userPassword);
+	User findActiveByCredentials(String userNameOrEmail, String userPassword);
 
-	//public User confirmPrincipal(String confirmationToken);
+	//User confirmPrincipal(String confirmationToken);
 
-    public void handlePasswordResetRequest(String userNameOrEmail);
+	void handlePasswordResetRequest(String userNameOrEmail);
 
-    public User handlePasswordResetToken(String userNameOrEmail, String token, String newPassword);
+	User handleConfirmationOrPasswordResetToken(String userNameOrEmail, String token, String newPassword);
 
-    public User createTest(User resource);
+	/**
+	 * Create pre-confirmed users. Used for testing and social signup
+	 *
+	 * @param resource
+	 * @return
+	 */
+	User createAsConfirmed(User resource);
 
-	public void updateLastLogin(ICalipsoUserDetails u);
+	void updateLastLogin(ICalipsoUserDetails u);
 
-	public void expireResetPasswordTokens();
+	void expireConfirmationOrPasswordResetTokens();
 
 
-    public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations);
+	UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations);
 
 }

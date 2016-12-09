@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.restdude</groupId>
+        <artifactId>restdude</artifactId>
+        <version>2.1.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.restdude</groupId>
+    <artifactId>restdude-war-overlay</artifactId>
+    <version>2.1.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <properties>
+        <project.parent.basedir>../</project.parent.basedir>
+        <jetty.daemon>true</jetty.daemon>
+        <maven.build.timestamp.format>EEE, d MMM yyyy HH:mm:ss Z</maven.build.timestamp.format>
+        <dev.build.timestamp>${maven.build.timestamp}</dev.build.timestamp>
+        <build.profile.filters>dev.properties</build.profile.filters>
+        <requirejs.resources>etc/licence</requirejs.resources>
+    </properties>
+
+    <build>
+        <filters>
+            <filter>${project.parent.basedir}/${build.profile.filters}</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+        <plugins>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <httpConnector>
+                        <port>${jetty.port}</port>
+                    </httpConnector>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <stopPort>8005</stopPort>
+                    <stopKey>STOP</stopKey>
+                    <waitForChild>false</waitForChild>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.phasebash</groupId>
+                <artifactId>jsdoc3-maven-plugin</artifactId>
+                <configuration>
+                    <lenient>true</lenient>
+                    <recursive>true</recursive>
+                    <directoryRoots>
+                        <!--sourceFile>${basedir}/src/main/webapp/js/domain.js</sourceFile> <sourceFile>${basedir}/src/main/webapp/js/main.js</sourceFile -->
+                        <directoryRoot>${basedir}/src/main/webapp/js/lib/calipsolib</directoryRoot>
+                    </directoryRoots>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${requirejs.resources}</directory>
+                        </resource>
+                        <resource>
+                            <directory>etc/licence</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <!-- URL Rewrite Filter -->
+
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>${urlrewritefilter.version}</version>
+        </dependency>
+
+        <!--dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway-core.version}</version>
+        </dependency-->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.181</version>
+        </dependency>
+
+
+        <!-- restdude -->
+        <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <!-- ================================= -->
+            <!-- profile for integration testing -->
+            <!-- ================================= -->
+            <id>ci</id>
+            <build>
+                <plugins>
+                    <!-- activate integration tests -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- start/stop the container during p re-integration-test/post-integration-test -->
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <configuration>
+                            <httpConnector>
+                                <port>${jetty.port}</port>
+                            </httpConnector>
+                            <scanIntervalSeconds>10</scanIntervalSeconds>
+                            <stopPort>8005</stopPort>
+                            <stopKey>STOP</stopKey>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-jetty</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <!-- stop any previous instance to free up the port -->
+                                    <goal>stop</goal>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                                </configuration>
+                            </execution>
+                            <!--execution>
+                                <id>stop-jetty</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution-->
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>1.5.3</version>
+                        <executions>
+                            <execution>
+                                <id>output-html</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <sourceDirectory>target/swagger2asciidoc</sourceDirectory>
+                            <outputDirectory>target/swagger2html</outputDirectory>
+                            <backend>html5</backend>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <!-- 					        <doctype>book</doctype> -->
+                            <attributes>
+                                <toc>left</toc>
+                                <sectnums>true</sectnums>
+                                <!-- 					            <stylesheet>my-theme.css</stylesheet> -->
+                                <project-version>${project.version}</project-version>
+                                <endpoint-url>${build.calipso.baseurl}</endpoint-url>
+                                <sourcedir>${project.build.sourceDirectory}</sourcedir>
+                            </attributes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>optimize</id>
+            <properties>
+                <maven.build.timestamp.format>EEE, d MMM yyyy HH:mm:ss Z</maven.build.timestamp.format>
+                <dev.build.timestamp>${maven.build.timestamp}</dev.build.timestamp>
+                <jetty.daemon>true</jetty.daemon>
+                <jetty.jvmArgs>-XX:MaxPermSize=512m</jetty.jvmArgs>
+                <requirejs.resources>${basedir}/target/requirejs-optimized</requirejs.resources>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.bringking</groupId>
+                        <artifactId>requirejs-maven-plugin</artifactId>
+                        <version>2.0.4</version>
+                        <executions>
+                            <execution>
+                                <id>execution-id-requirejs-js</id>
+                                <goals>
+                                    <goal>optimize</goal>
+                                </goals>
+                                <phase>process-resources</phase>
+                                <configuration>
+                                    <!-- path to optimizer json config file(s) -->
+                                    <configFile>
+                                        ${basedir}/src/main/webapp/js/build/build-config.js
+                                    </configFile>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>execution-id-requirejs-css</id>
+                                <goals>
+                                    <goal>optimize</goal>
+                                </goals>
+                                <phase>process-resources</phase>
+
+                                <configuration>
+                                    <configFile>
+                                        ${basedir}/src/main/webapp/js/build/build-css-config.js
+                                    </configFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- optional path to optimizer executable -->
+                            <optimizerFile>
+                                ${basedir}/src/main/webapp/js/build/r.js
+                            </optimizerFile>
+                            <optimizerParameters>
+                                <parameter>optimize=uglify</parameter>
+                            </optimizerParameters>
+                            <!-- Whether or not to process configFile with maven filters. If you
+                                use this option, some options in your configFile must resolve to absolute
+                                paths (see below) -->
+                            <filterConfig>
+                                false
+                            </filterConfig>
+                            <!-- Skip requirejs optimization if true -->
+                            <skip>
+                                false
+                            </skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

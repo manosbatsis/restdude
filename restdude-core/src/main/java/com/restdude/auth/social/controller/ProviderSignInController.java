@@ -23,11 +23,14 @@ import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.auth.userdetails.util.SocialMediaService;
+import com.restdude.domain.details.contact.model.ContactDetails;
+import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.util.ConfigurationFactory;
 import io.swagger.annotations.Api;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -161,11 +164,13 @@ public class ProviderSignInController extends org.springframework.social.connect
 
         User user = new User();
         user.setCredentials(new UserCredentials());
+        user.getCredentials().setPassword(userAccountData.getPassword());
         user.setUsername(userAccountData.getUserName());
         user.setFirstName(userAccountData.getFirstName());
         user.setLastName(userAccountData.getLastName());
-        user.getCredentials().setEmail(userAccountData.getEmail());
-        user.getCredentials().setPassword(userAccountData.getPassword());
+        if (StringUtils.isNotBlank(userAccountData.getEmail())) {
+            user.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userAccountData.getEmail())).build());
+        }
 
         registered = userService.createForImplicitSignup(user);
 

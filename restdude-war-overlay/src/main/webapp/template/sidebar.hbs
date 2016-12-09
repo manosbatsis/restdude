@@ -1,0 +1,40 @@
+ <ul class="nav">
+     <!--li class="nav-title">
+       title
+    </li-->
+  {{#ifUserInRole "ROLE_ADMIN" "ROLE_SITE_OPERATOR"}}
+    <li class="nav-item nav-dropdown">
+      <a class="nav-link nav-dropdown-toggle" href="#">
+        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
+        {{labels.tmpl.header.tools}}
+      </a>
+      <ul class="nav-dropdown-items">
+          <li class="nav-item">
+              <a class="nav-link" href="/useCases/invitations/create"><i class="icon-puzzle"></i> {{ labels.models.invitations.plural.label }}</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/useCases/registrationCodeBatches"><i class="icon-puzzle"></i> {{ labels.models.registrationCodeBatches.plural.label }}</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/useCases/userRegistrationCodes"><i class="icon-puzzle"></i> {{ labels.models.userRegistrationCodes.plural.label }}</a>
+          </li>
+      </ul>
+    </li>
+  {{/ifUserInRole}}
+
+  {{#if browseMenu}}
+    <li class="nav-item nav-dropdown">
+      <a class="nav-link nav-dropdown-toggle" href="#">
+        <<i class="fa fa-cog fa-fw" aria-hidden="true"></i>
+       {{labels.tmpl.header.browse}}
+      </a>
+      <ul class="nav-dropdown-items">
+          {{#each browseMenu}}
+          <li class="nav-item">
+              <a class="nav-link" href="/useCases/{{@key}}"><i class="{{ this.labelIcon }}"></i> {{ this.label }}</a>
+          </li>
+          {{/each}}
+      </ul>
+    </li>
+    {{/if}}
+</ul>

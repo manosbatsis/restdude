@@ -18,6 +18,7 @@
 package com.restdude.domain.base.service;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.base.repository.ModelRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -131,11 +132,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
     Long count();
 
     /**
-     * Validate the given resource using bean validator. {@link javax.persistence.Column} annotations are
-     * also used to validate uniqueness and non-nullable values.
-     *
-     * @param resource
-     * @return the set of failed constraints
+     * @see ModelRepository#validateConstraints(com.restdude.domain.base.model.CalipsoPersistable)
      */
     Set<ConstraintViolation<T>> validateConstraints(T resource);
 

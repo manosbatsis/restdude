@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Template for HTML email with attachment</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p class="greetings" th:text="#{email.greeting(${user.getFirstName()})}"
+   th:unless="${#strings.isEmpty(user.getFirstName())}">
+    Hello, Peter Static!
+</p>
+<p class="greetings" th:text="#{email.greeting(${user.getUsername()})}"
+   th:if="${#strings.isEmpty(user.getFirstName())}">
+    Hello, Peter Static!
+</p>
+<p>
+    You have been successfully subscribed to the <b>Fake newsletter</b> on
+    <span th:text="${#dates.format(subscriptionDate)}">28-12-2012</span>
+</p>
+<p>Your hobbies are:</p>
+<ul th:remove="all-but-first">
+    <li th:each="hobby : ${hobbies}" th:text="${hobby}">Reading</li>
+    <li>Writing</li>
+    <li>Bowling</li>
+</ul>
+<p>
+    You can find <b>your uploaded attachment</b> attached to this message.
+</p>
+<p class="greetings">
+    &emsp;<span th:text="#{email.regards}"></span><br/>
+    &emsp; <em><span th:text="#{email.signature}"></span></em>
+</p>
+</body>
+</html>

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.restdude.domain.base.binding.SkipPropertySerializer;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.users.validation.UserRegistrationCodeConstraint;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -39,10 +40,6 @@ import java.time.LocalDateTime;
 public class UserCredentials extends AbstractSystemUuidPersistable implements CalipsoPersistable<String> {
 
     private static final long serialVersionUID = 1L;
-
-    @NotNull
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
 
     @NotNull
     @Column(name = "active", nullable = false)
@@ -79,17 +76,17 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
+    @UserRegistrationCodeConstraint
     @OneToOne(mappedBy = "credentials", fetch = FetchType.LAZY)
     private UserRegistrationCode registrationCode;
 
     public UserCredentials() {
     }
 
-    public UserCredentials(String email, Boolean active, String inactivationReason, LocalDateTime inactivationDate,
+    public UserCredentials(Boolean active, String inactivationReason, LocalDateTime inactivationDate,
                            String password, String resetPasswordToken, LocalDateTime resetPasswordTokenCreated,
                            LocalDateTime lastPassWordChangeDate, LocalDateTime lastLogin, Short loginAttempts, UserRegistrationCode registrationCode) {
         super();
-        this.email = email;
         this.active = active;
         this.inactivationReason = inactivationReason;
         this.inactivationDate = inactivationDate;
@@ -119,7 +116,6 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString())
-                .append("email", this.getEmail())
                 .append("active", this.getActive())
                 .append("inactivationReason", this.getInactivationReason())
                 .append("inactivationDate", this.getInactivationDate())
@@ -128,15 +124,6 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
                 .append("lastLogin", this.lastLogin)
                 .append("loginAttempts", this.loginAttempts)
                 .toString();
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setActive(Boolean active) {
@@ -235,7 +222,6 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     }
 
     public static class Builder {
-        private String email;
         private Boolean active;
         private String inactivationReason;
         private LocalDateTime inactivationDate;
@@ -247,11 +233,6 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
         private Short loginAttempts;
         private User user;
         private UserRegistrationCode registrationCode;
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
 
         public Builder active(Boolean active) {
             this.active = active;
@@ -314,7 +295,6 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     }
 
     private UserCredentials(Builder builder) {
-        this.email = builder.email;
         this.active = builder.active;
         this.inactivationReason = builder.inactivationReason;
         this.inactivationDate = builder.inactivationDate;

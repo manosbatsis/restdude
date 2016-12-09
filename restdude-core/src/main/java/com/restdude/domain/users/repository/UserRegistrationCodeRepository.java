@@ -19,8 +19,15 @@ package com.restdude.domain.users.repository;
 
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.users.model.UserRegistrationCode;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.io.Serializable;
 
 @Repository
 public interface UserRegistrationCodeRepository extends ModelRepository<UserRegistrationCode, String> {
+
+    @Query("select case when (count(regCode) > 0) then true else false end  from UserRegistrationCode regCode where regCode.id = ?1  and regCode.available = true")
+    Boolean isAvailable(Serializable id);
+
 }

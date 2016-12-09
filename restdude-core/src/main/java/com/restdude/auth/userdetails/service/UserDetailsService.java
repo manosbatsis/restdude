@@ -17,7 +17,7 @@
  */
 package com.restdude.auth.userdetails.service;
 
-import com.restdude.auth.userAccount.model.PasswordResetRequest;
+import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.users.model.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface UserDetailsService {
 
-    ICalipsoUserDetails resetPassword(PasswordResetRequest resource);
+    ICalipsoUserDetails resetPassword(EmailConfirmationOrPasswordResetRequest resource);
 
     @Transactional(readOnly = false)
     ICalipsoUserDetails create(ICalipsoUserDetails tryUserDetails);

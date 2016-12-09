@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
-@ApiModel(value = "PasswordResetRequest", description = "Submitting a password reset request triggers a reset token and email if resetPasswordToken is null, updates the password if resetPasswordToken is not null and valid, ")
-public class PasswordResetRequest implements Serializable {
+@ApiModel(value = "EmailConfirmationOrPasswordResetRequest", description = "Submitting a password reset request triggers a reset token and email if resetPasswordToken is null, updates the password if resetPasswordToken is not null and valid, ")
+public class EmailConfirmationOrPasswordResetRequest implements Serializable {
 
     private static final long serialVersionUID = 5206010308112791343L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PasswordResetRequest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailConfirmationOrPasswordResetRequest.class);
 
     private String username;
     private String email;
@@ -49,7 +49,7 @@ public class PasswordResetRequest implements Serializable {
     /**
      * Default constructor
      */
-    public PasswordResetRequest() {
+    public EmailConfirmationOrPasswordResetRequest() {
 
     }
 

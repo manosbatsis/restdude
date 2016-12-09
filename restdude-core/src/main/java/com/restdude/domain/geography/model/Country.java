@@ -21,6 +21,7 @@ import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +33,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "country")
-@AttributeOverrides({ 
-	@AttributeOverride(name = "id", column = @Column(unique = true, nullable = false, length = 2)),
-	@AttributeOverride(name = "name", column = @Column(unique = true, nullable = false, length = 50)), 
+@AttributeOverrides({
+        @AttributeOverride(name = "name", column = @Column(unique = true, nullable = false, length = 50)),
 })
 @ModelResource(path = "countries", apiName = "Countries", apiDescription = "Operations about countries")
 @ApiModel(value = "Country", description = "A model representing a country, meaning a region that is identified as a distinct entity in political geography.")
@@ -56,6 +56,13 @@ public class Country extends AbstractFormalRegion<Continent> {
 	public static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
 	public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
 	public static final String PRE_AUTHORIZE_COUNT = "denyAll";
+
+    @Id
+    @Column(unique = true, nullable = false, length = 2)
+    private String id;
+
+    @Formula(" (id) ")
+    private String savedId;
 
     @Column(name = "native_name", unique = true, nullable = true, length = 50)
     private String nativeName;
@@ -128,7 +135,38 @@ public class Country extends AbstractFormalRegion<Continent> {
 
 	public void setLanguages(String languages) {
 		this.languages = languages;
-	}
+    }
+
+    /**
+     * Get the entity's primary key
+     *
+     * @see org.springframework.data.domain.Persistable#getId()
+     */
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Set the entity's primary key
+     *
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String getSavedId() {
+        return savedId;
+    }
+
+    /**
+     * @see org.springframework.data.domain.Persistable#isNew()
+     */
+    @Override
+    public boolean isNew() {
+        return null == getSavedId();
+    }
 
 	@Override
 	public boolean equals(final Object obj) {

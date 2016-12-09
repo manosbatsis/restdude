@@ -1,0 +1,79 @@
+<button class="navbar-toggler mobile-toggler hidden-lg-up" type="button">&#9776;</button>
+<a class="navbar-brand"  href="/home">
+ <!--img src='{{baseUrl}}/img/logo.png' alt='{{configProperty "appName"}}' -->
+</a>
+<ul class="nav navbar-nav hidden-md-down">
+  <li class="nav-item">
+      <a class="nav-link navbar-toggler layout-toggler" href="#">&#9776;</a>
+  </li>
+
+
+  {{#if false}}
+  {{#ifUserInRole "ROLE_ADMIN" "ROLE_SITE_OPERATOR"}}
+  <li class="nav-item dropdown" style=>
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
+      {{labels.tmpl.header.tools}} <!--span class="caret"></span-->
+    </a>
+    <div class="dropdown-menu" aria-labelledby="Tools">
+     <a class="dropdown-item triggerCollapseMenu" href="/useCases/invitations/create"><i class="fa fa-envelope-o fa-fw"></i>&#160;{{ labels.models.invitations.plural.label }}</a>
+     <a class="dropdown-item triggerCollapseMenu" href="/useCases/registrationCodeBatches"><i class="fa fa-server fa-fw"></i>&#160;{{ labels.models.registrationCodeBatches.plural.label }}</a>
+     <a class="dropdown-item triggerCollapseMenu" href="/useCases/userRegistrationCodes"><i class="fa fa-server fa-fw"></i>&#160;{{ labels.models.userRegistrationCodes.plural.label }}</a>
+    </div>
+  </li>
+  {{/ifUserInRole}}
+  {{#if browseMenu}}
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
+      {{labels.tmpl.header.browse}} <!--span class="caret"></span-->
+    </a>
+    <div class="dropdown-menu" aria-labelledby="Preview">
+      {{#each browseMenu}}
+      <a class="dropdown-item triggerCollapseMenu" href="/useCases/{{@key}}"><i class="{{ this.labelIcon }}"></i>&#160;{{ this.label }}</a>
+      {{/each}}
+    </div>
+  </li>
+  {{/if}}
+  {{/if}}
+
+
+    <!--li class="nav-item p-x-1">
+        <a class="nav-link" href="#">Dashboard</a>
+    </li>
+    <li class="nav-item p-x-1">
+        <a class="nav-link" href="#">Users</a>
+    </li>
+    <li class="nav-item p-x-1">
+        <a class="nav-link" href="#">Settings</a>
+    </li-->
+</ul>
+<ul class="nav navbar-nav pull-right hidden-md-down">
+  <!-- /notifications menu -->
+  {{#ifLoggedIn}}
+  <li class="nav-item dropdown" id="calipsoHeaderView-notificationsRegion">
+  </li>
+  <!-- auth menu -->
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" role="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img class="img-avatar" alt="admin@bootstrapmaster.com" src="//www.gravatar.com/avatar/{{ emailHash }}?s=40/avatars/6.jpg"> {{firstName}} <!--{{lastName}} -->
+    </a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+      <a class="dropdown-item triggerCollapseMenu" href="/myProfile"><i class="fa fa-user fa-fw"></i>&#160;{{labels.tmpl.header.profile}}</a>
+      <a class="dropdown-item triggerCollapseMenu" href="/logout"><i class="fa fa-sign-out fa-fw"></i>&#160;{{labels.tmpl.header.logout}}</a>
+    </div>
+  </li>
+  {{/ifLoggedIn}}
+  {{#ifLoggedOut}}
+  <li class="nav-item">
+    <a href="/login" class="nav-link">
+      <i class="fa fa-sign-in fa-fw"></i> {{labels.tmpl.header.login}}
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/register" class="nav-link">
+      <i class="fa fa-user-plus fa-fw"></i> {{labels.tmpl.header.register}}
+    </a>
+  </li>
+  {{/ifLoggedOut}}
+</ul>

@@ -20,13 +20,11 @@ package com.restdude.domain.users.model;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistencePreview;
-import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.metadata.model.AbstractMetadataSubject;
-import com.restdude.mdd.uischema.annotation.FormSchemaEntry;
-import com.restdude.mdd.uischema.annotation.FormSchemas;
 import com.restdude.util.Constants;
 import com.restdude.websocket.model.StompSession;
 import io.swagger.annotations.ApiModel;
@@ -48,7 +46,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -122,26 +119,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@Column(name = "banner_url")
 	private String bannerUrl;
 
-	@Column(nullable = true)
-	private String telephone;
-
-	@Column(nullable = true)
-	private String cellphone;
-
-	@Column(nullable = true)
-	private String address;
-
-	@Column(nullable = true)
-	private String postCode;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "country_id", referencedColumnName = "id", nullable = true)
-	private Country country;
-
-	@Column(name = "birthday")
-	@FormSchemas({ @FormSchemaEntry(json = FormSchemaEntry.TYPE_DATE) })
-    private LocalDate birthDay;
-
 	@Column(name = "last_visit")
     private LocalDateTime lastVisit;
 
@@ -159,9 +136,9 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	UserCredentials credentials;
 
-	// @OneToOne(optional = true, fetch=FetchType.LAZY)
-	// @MapsId
-	// private LocalRegionMailingAddress mailingAddress;
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	ContactDetails contactDetails;
 
 	// @JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -399,30 +376,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		this.bannerUrl = bannerUrl;
 	}
 
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public String getCellphone() {
-		return cellphone;
-	}
-
-	public void setCellphone(String cellphone) {
-		this.cellphone = cellphone;
-	}
-
-    public LocalDate getBirthDay() {
-        return birthDay;
-	}
-
-    public void setBirthDay(LocalDate birthDay) {
-        this.birthDay = birthDay;
-	}
-
     public LocalDateTime getLastVisit() {
         return lastVisit;
 	}
@@ -441,30 +394,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
 	public List<? extends GrantedAuthority> getRoles() {
 		return this.roles;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPostCode() {
-		return postCode;
-	}
-
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
 	}
 
 	/**
@@ -516,6 +445,14 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		}
 	}
 
+	public ContactDetails getContactDetails() {
+		return contactDetails;
+	}
+
+	public void setContactDetails(ContactDetails contactDetails) {
+		this.contactDetails = contactDetails;
+	}
+
 	public static class Builder {
 		private String id;
 		private String firstName;
@@ -524,15 +461,10 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		private String emailHash;
 		private String avatarUrl;
 		private String bannerUrl;
-		private String telephone;
-		private String cellphone;
-		private String address;
-		private String postCode;
-		private Country country;
-        private LocalDate birthDay;
         private LocalDateTime lastVisit;
         private String locale;
 		private UserCredentials credentials;
+		private ContactDetails contactDetails;
 
 		public Builder id(String id) {
 			this.id = id;
@@ -569,36 +501,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 			return this;
 		}
 
-		public Builder telephone(String telephone) {
-			this.telephone = telephone;
-			return this;
-		}
-
-		public Builder cellphone(String cellphone) {
-			this.cellphone = cellphone;
-			return this;
-		}
-
-		public Builder address(String address) {
-			this.address = address;
-			return this;
-		}
-
-		public Builder postCode(String postCode) {
-			this.postCode = postCode;
-			return this;
-		}
-
-		public Builder country(Country country) {
-			this.country = country;
-			return this;
-		}
-
-        public Builder birthDay(LocalDate birthDay) {
-            this.birthDay = birthDay;
-			return this;
-		}
-
         public Builder lastVisit(LocalDateTime lastVisit) {
             this.lastVisit = lastVisit;
 			return this;
@@ -611,6 +513,11 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
 		public Builder credentials(UserCredentials credentials) {
 			this.credentials = credentials;
+			return this;
+		}
+
+		public Builder contactDetails(ContactDetails contactDetails) {
+			this.contactDetails = contactDetails;
 			return this;
 		}
 
@@ -627,14 +534,9 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		this.emailHash = builder.emailHash;
 		this.avatarUrl = builder.avatarUrl;
 		this.bannerUrl = builder.bannerUrl;
-		this.telephone = builder.telephone;
-		this.cellphone = builder.cellphone;
-		this.address = builder.address;
-		this.postCode = builder.postCode;
-		this.country = builder.country;
-		this.birthDay = builder.birthDay;
 		this.lastVisit = builder.lastVisit;
 		this.locale = builder.locale;
 		this.credentials = builder.credentials;
+		this.contactDetails = builder.contactDetails;
 	}
 }
