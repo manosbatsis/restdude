@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Demo: Bloodhound with Mustache Templates</title>
+	<link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<section id="blog">Loading...</section>
+
+<script type="text/javascript" src="../../bower_components/concrete-promise/src/promise.js"></script>
+<script type="text/javascript" src="../../bower_components/mustache/mustache.js"></script>
+<script type="text/javascript" src="../../src/bloodhound.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/rendering_engines/embedded_rendering_engine.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/view_resolvers/embedded_view_resolver.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/view_providers/mustache_view_provider.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/adapters/mustache_template.js"></script>
+
+<div style="display: none;" id="templates">
+	<script type="text/html" data-template-name="blog/posts/index">
+		<h1>{{title}}</h1>
+
+		{{> blog/posts/detail}}
+	</script>
+
+	<script type="text/html" data-template-name="blog/posts/detail">
+		{{#posts}}
+			<article>
+				<h2>{{title}}</h2>
+				<p>{{date}}</p>
+
+				<div>
+					{{{body}}}
+				</div>
+
+				<ol class="comments">
+					{{> blog/posts/comments}}
+				</ol>
+			</article>
+		{{/posts}}
+	</script>
+
+	<script type="text/html" data-template-name="blog/posts/comments">
+		{{#comments}}
+			<li>
+				<h3>{{name}}</h3>
+				<p>{{comment}} &mdash; {{date}}</p>
+			</li>
+		{{/comments}}
+	</script>
+</div>
+
+<script type="text/javascript">
+
+	var blog = {
+		title: "Mustache Templates",
+		posts: [{
+			title: "Mustache Templates Are Easy",
+			body: [
+				'<p>The Blog template is embedded in this page using a &lt;script&gt; tag.</p>',
+				'<p>The template for each blog post is aliased to a different URL using a &lt;script&gt; tag.</p>',
+				'<p>Lastly, the comments for each blog post are referenced by name, which is turned into a URL and then downloaded.</p>'
+			].join(""),
+			comments: [{
+				name: "Jane Doe",
+				comment: "Lorem ipsum",
+				date: "2014/02/16"
+			},{
+				name: "Anonymous Coward",
+				comment: "General trash talk",
+				date: "2014/02/15"
+			},{
+				name: "John Doe",
+				comment: "Witty retort.",
+				date: "2014/02/15"
+			}]
+		}]
+	};
+
+	var provider = new Bloodhound.ViewProviders.MustacheViewProvider(),
+	    resolver = new Bloodhound.ViewResolvers.EmbeddedViewResolver("templates", provider),
+	    renderingEngine = new Bloodhound.RenderingEngines.EmbeddedRenderingEngine(resolver);
+
+	var start = new Date().getTime();
+
+	console.log("Begin rendering...");
+
+	var result = renderingEngine.render("blog/posts/index", blog, "blog");
+
+	console.log("Done rendering! - " + (new Date().getTime() - start) + "ms");
+	console.log("Result:\n", result);
+
+</script>
+
+</body>
+</html>
