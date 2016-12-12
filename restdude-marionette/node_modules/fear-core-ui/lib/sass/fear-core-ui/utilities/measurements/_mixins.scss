@@ -1,0 +1,47 @@
+/// Sets rem values
+/// @link http://hugogiraudel.com/2013/03/18/ultimate-rem-mixin/
+/// @author Hugo Giraudel
+/// @param {string} $property - Font-size, margin, etc
+/// @param {number} $values - Measurement in px (15px 5px)
+/// @example @include rem(padding, 15px 5px);
+/// @output ie browsers - padding: 15px 5px; other browsers - padding: 1.5rem 0.5rem;
+/// @group Measurements
+
+@mixin rem($property, $values) {
+  $px: ();
+  $rem: ();
+
+  @each $value in $values {
+
+    $int: ();
+
+    @if $value != auto {
+      $int: parseInt($value);
+    } @else {
+      $int: $value;
+    }
+
+    @if $int == 0 or $value == auto {
+      $px: append($px, $value);
+      $rem: append($rem, $value);
+    } @else {
+      $unit: unit($value);
+      $val: parseInt($value);
+
+      @if $unit == 'px' {
+        $px: append($px, $value);
+        $rem: append($rem, ($val / 10 + rem));
+      }
+      @if $unit == 'rem' {
+        $px: append($px, ($val * 10 + px));
+        $rem: append($rem, $value);
+      }
+    }
+  }
+
+  @if $px == $rem {
+    #{$property}: $px;
+  } @else {
+    #{$property}: $rem;
+  }
+}

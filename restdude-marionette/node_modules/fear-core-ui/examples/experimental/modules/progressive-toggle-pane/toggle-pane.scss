@@ -1,0 +1,11 @@
+@import 'app-core/base';
+@import 'app-core/once';
+@import 'fear-core-ui/components/icons';
+@import 'fear-core-ui/components/buttons';
+@import 'fear-core-ui/experimental/modules/progressive-toggle-pane';
+@import 'layout';
+
+/// Create a toggle pane
+/// $pane-id is the ID of the checkbox. Required
+/// $display-show-value is the value used when displaying a pane
+@include toggle-pane($pane-id: 'my-toggle-pane', $display-show-value: flex);

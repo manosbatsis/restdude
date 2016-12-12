@@ -1,0 +1,27 @@
+.modal,
+.modal__black-out {
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  z-index: $z-lightbox;
+}
+
+.modal__black-out {
+
+  opacity: .3;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background-color: $color__brand--black;
+}
+
+.modal__content {
+
+  position: relative;
+  text-align: center;
+  z-index: $z-lightbox + 1;
+}

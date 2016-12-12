@@ -68,10 +68,6 @@ require.config({
 		underscore : {
 			exports : '_'
 		},
-		backbone : {
-			deps : ['jquery', 'underscore'],
-			exports : 'Backbone'
-		},
 		marionette : {
 			deps : ['jquery', 'underscore', 'backbone'],
 			exports : 'Marionette'
@@ -87,7 +83,107 @@ require.config({
 		},
 		templates : {
 			deps : ['underscore']}
-		},    
+		},
+		'underscore-string' : {
+			deps : [ 'underscore' ]
+		},
+		'underscore-inflection' : {
+			deps : [ 'underscore' ]
+		},
+		'handlebars-orig' : {
+			exports : 'Handlebars'
+		},
+
+		'backbone' : {
+			deps : [ 'underscore' ],
+			exports : function() {
+				return this.Backbone;
+			}
+		},
+		'marionette' : {
+			deps : [ 'backbone', 'underscore', 'backbone.radio' ],
+			exports : 'Marionette'
+		},
+		'backgrid' : {
+			deps : [ 'jquery', 'underscore', 'backbone', 'backbone.paginator' ],
+			exports : 'Backgrid',
+			init : function(jQuery, underscore, Backbone, PageableCollection) {
+				Backbone.PageableCollection = PageableCollection;
+			}
+		},
+		'backbone-bootstrap-modal' : {
+			deps : [ 'jquery', 'underscore', 'backbone'],
+			exports : 'Backbone.BootstrapModal'
+		},
+		'backbone-forms' : {
+			deps : [ 'jquery', 'underscore', 'backbone' ],
+			exports : 'Backbone.Form'
+		},
+//		'backbone-forms-list' : {
+//			deps : [ 'backbone-forms' ],
+//			exports : 'Backbone.Form.editors.List'
+//		},
+		'backbone.paginator' : {
+			deps : [ 'underscore', 'backbone' ],
+			exports : 'PageableCollection'
+		},
+		'backbone-forms-bootstrap3' : {
+			deps : [ 'jquery', 'underscore', 'backbone', 'backbone-forms' ]
+		},
+		'backgrid-paginator' : {
+			deps : [ 'underscore', 'backbone', 'backgrid', 'backbone.paginator' ],
+			exports : 'Backgrid.Extension.Paginator'
+		},
+		'backgrid-moment' : {
+			deps : [ 'backgrid', 'moment' ],
+			exports : 'Backgrid.Extension.Moment'
+		},
+		'backgrid-text' : {
+			deps : [ 'backgrid' ],
+			exports : 'Backgrid.Extension.Text'
+		},
+//		'tether' : {
+//			deps : [ 'tether-orig' ]
+//		},
+		'calendar' : {
+			deps : [ 'jquery' ]
+		},
+		'bootstrap-markdown' : {
+			deps : [ 'jquery' ],
+			exports : 'Markdown'
+		},
+		'bootstrap-switch' : {
+			deps : [ 'jquery' ],
+		},
+		'keymaster' : {
+			exports : 'key'
+		},
+		'async' : {
+			exports : 'async'
+		},
+		'calipso' : {
+			deps : [ "i18n!nls/labels", "i18n!nls/labels-custom", 'underscore', 'handlebars', 'calipso-hbs', 'moment', 'backbone', 'backbone.paginator', 'backbone-forms', 'backbone-forms-bootstrap3', 'backbone-bootstrap-modal', 'backbone-forms-list', 'marionette', 'backgrid', 'backgrid-moment', 'backgrid-text', 'backgrid-paginator', 'bloodhound', 'typeahead', 'bootstrap-datetimepicker', 'bootstrap-switch', 'jquery-color', 'intlTelInput', 'q', 'chart' ],
+			exports : 'calipso',
+		},
+
+		'cookie' : {
+			deps : [ 'jquery' ]
+		},
+		'chai-jquery' : {
+			deps : [ 'jquery', 'chai' ]
+		},
+		'jquery-color' : {
+			deps : [ 'jquery' ],
+			exports : 'jQuery.Color'
+		},
+
+		'intlTelInputUtil' : {
+			deps : [ 'jquery' ]
+		},
+		'intlTelInput' : {
+			deps : [ 'intlTelInputUtil' ]
+		},
+	   
 });
 
 require([

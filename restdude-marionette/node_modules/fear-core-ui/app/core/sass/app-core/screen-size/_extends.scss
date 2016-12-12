@@ -1,0 +1,10 @@
+%screen-size-icon {
+  padding: 10px;
+  cursor: pointer;
+}
+
+%screen-size-icon-selected {
+  padding: 10px;
+  border-radius: 6px;
+  background-color: $color__brand--green;
+}

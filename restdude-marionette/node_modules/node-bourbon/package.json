@@ -1,0 +1,90 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "node-bourbon@4.2.3",
+        "scope": null,
+        "escapedName": "node-bourbon",
+        "name": "node-bourbon",
+        "rawSpec": "4.2.3",
+        "spec": "4.2.3",
+        "type": "version"
+      },
+      "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\fear-core-ui"
+    ]
+  ],
+  "_from": "node-bourbon@4.2.3",
+  "_id": "node-bourbon@4.2.3",
+  "_inCache": true,
+  "_location": "/node-bourbon",
+  "_npmUser": {
+    "name": "iamlacroix",
+    "email": "michael@lacroixdesign.net"
+  },
+  "_npmVersion": "1.4.14",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "node-bourbon@4.2.3",
+    "scope": null,
+    "escapedName": "node-bourbon",
+    "name": "node-bourbon",
+    "rawSpec": "4.2.3",
+    "spec": "4.2.3",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/fear-core-ui"
+  ],
+  "_resolved": "https://registry.npmjs.org/node-bourbon/-/node-bourbon-4.2.3.tgz",
+  "_shasum": "bee114f4805b5eb2b5d274470bc4d3a6c9049cc4",
+  "_shrinkwrap": null,
+  "_spec": "node-bourbon@4.2.3",
+  "_where": "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\fear-core-ui",
+  "author": {
+    "name": "Michael LaCroix",
+    "email": "michael@lacroixdesign.net",
+    "url": "http://www.lacroixdesign.net"
+  },
+  "bugs": {
+    "url": "https://github.com/lacroixdesign/node-bourbon/issues"
+  },
+  "dependencies": {
+    "bourbon": "4.2.3"
+  },
+  "description": "node-sass wrapper for thoughtbot's bourbon library",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "node-sass": "^3.0.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "bee114f4805b5eb2b5d274470bc4d3a6c9049cc4",
+    "tarball": "https://registry.npmjs.org/node-bourbon/-/node-bourbon-4.2.3.tgz"
+  },
+  "gitHead": "330f53aa9da8daf039af289a95c47fe99fd5981e",
+  "homepage": "https://github.com/lacroixdesign/node-bourbon",
+  "keywords": [
+    "sass",
+    "css"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "iamlacroix",
+      "email": "michael@lacroixdesign.net"
+    }
+  ],
+  "name": "node-bourbon",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lacroixdesign/node-bourbon.git"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec --recursive --growl"
+  },
+  "version": "4.2.3"
+}

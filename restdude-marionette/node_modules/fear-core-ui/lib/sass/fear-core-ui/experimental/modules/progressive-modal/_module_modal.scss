@@ -1,0 +1,86 @@
+%m-modal__frame {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.m-modal {
+  @extend %m-modal__frame;
+  display: none;
+
+  &:target {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    @include ie-only(9) {
+      display: table-cell;
+    }
+  }
+}
+
+.m-modal__overlay {
+  @extend %m-modal__frame;
+  z-index: $z-modal-overlay;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: $color__brand--black;
+  opacity: .3;
+}
+
+.m-modal__popup {
+  @extend %m-modal__frame;
+  z-index: $z-modal-popup;
+  background-color: $color__brand--white;
+  box-shadow: 0 0 25px $modal-shadow;
+
+  @include ie-only(9) {
+    margin: 0 auto;
+  }
+
+  @include media-query-small {
+    position: relative;
+
+    max-width: 90rem;
+    max-height: 61.5rem;
+
+    @include ie-only(9) {
+      margin: 30px auto;
+    }
+
+  }
+}
+
+.popup__title {
+  margin: .6rem 0 3rem;
+  font-size: 2.4rem;
+  font-family: $font__mns-london;
+  line-height: 100%;
+}
+
+.popup__content {
+  padding: 2rem 3rem 3rem 3rem;
+}
+
+.popup__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: $z-modal-close;
+  margin: 2rem;
+  padding: 1rem;
+  background-color: $color__brand--white;
+  color: $color__brand--black;
+  text-decoration: none;
+  font-size: 2rem;
+  line-height: 0;
+  cursor: pointer;
+
+  &:hover {
+    opacity: .6;
+  }
+}

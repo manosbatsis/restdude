@@ -1,0 +1,13 @@
+# Dependencies
+markdown: redcarpet
+
+# Permalinks
+permalink:        pretty
+
+# Server
+source:           docs
+destination:      _gh_pages
+host:             0.0.0.0
+port:             9001
+encoding:         UTF-8
+baseurl:          /fear-core-ui

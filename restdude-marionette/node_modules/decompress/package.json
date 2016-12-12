@@ -1,0 +1,108 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "decompress@^1.0.7",
+        "scope": null,
+        "escapedName": "decompress",
+        "name": "decompress",
+        "rawSpec": "^1.0.7",
+        "spec": ">=1.0.7 <2.0.0",
+        "type": "range"
+      },
+      "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\download"
+    ]
+  ],
+  "_from": "decompress@>=1.0.7 <2.0.0",
+  "_id": "decompress@1.0.7",
+  "_inCache": true,
+  "_location": "/decompress",
+  "_npmUser": {
+    "name": "kevva",
+    "email": "kevinmartensson@gmail.com"
+  },
+  "_npmVersion": "1.4.23",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "decompress@^1.0.7",
+    "scope": null,
+    "escapedName": "decompress",
+    "name": "decompress",
+    "rawSpec": "^1.0.7",
+    "spec": ">=1.0.7 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/download"
+  ],
+  "_resolved": "https://registry.npmjs.org/decompress/-/decompress-1.0.7.tgz",
+  "_shasum": "e0a8df66f6ba8b1f945dc6097e02cca27c9b7152",
+  "_shrinkwrap": null,
+  "_spec": "decompress@^1.0.7",
+  "_where": "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\download",
+  "author": {
+    "name": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "https://github.com/kevva"
+  },
+  "bin": {
+    "decompress": "cli.js"
+  },
+  "bugs": {
+    "url": "https://github.com/kevva/decompress/issues"
+  },
+  "dependencies": {
+    "decompress-tar": "^1.0.0",
+    "decompress-tarbz2": "^1.0.1",
+    "decompress-targz": "^1.0.0",
+    "decompress-unzip": "^1.0.0",
+    "each-async": "^1.0.0",
+    "fs-extra": "^0.11.0",
+    "nopt": "^3.0.1",
+    "ware": "^0.3.0"
+  },
+  "description": "Easily extract archives",
+  "devDependencies": {
+    "ava": "0.0.4",
+    "rimraf": "^2.2.8"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "e0a8df66f6ba8b1f945dc6097e02cca27c9b7152",
+    "tarball": "https://registry.npmjs.org/decompress/-/decompress-1.0.7.tgz"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "files": [
+    "cli.js",
+    "index.js"
+  ],
+  "gitHead": "d3550337a672cc9176f1ef0802a394f53225aefd",
+  "homepage": "https://github.com/kevva/decompress",
+  "keywords": [
+    "decompress",
+    "extract",
+    "tar",
+    "tar.gz",
+    "zip"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    }
+  ],
+  "name": "decompress",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevva/decompress.git"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "version": "1.0.7"
+}
