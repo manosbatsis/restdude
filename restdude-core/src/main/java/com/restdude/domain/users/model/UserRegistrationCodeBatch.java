@@ -18,6 +18,11 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.auth.spel.annotations.PreAuthorizeCreate;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
+import com.restdude.auth.spel.annotations.PreAuthorizePatch;
+import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
+import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.annotation.CurrentPrincipal;
@@ -46,16 +51,15 @@ import java.time.LocalDateTime;
 @ApiModel(description = "UserRegistrationCodeBatch")
 @Table(name = "registration_codes_batch")
 @Inheritance(strategy = InheritanceType.JOINED)
+
+@PreAuthorizeCreate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizePatch(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
+//TODO
+@PreAuthorizeFindPaginated(controller = SpelUtil.PERMIT_ALL/*HAS_ROLE_ADMIN*/, service = SpelUtil.PERMIT_ALL)
 public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable implements CalipsoPersistable<String> {
 
     private static final long serialVersionUID = 1L;
-
-    public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('" + Role.ROLE_ADMIN + "', '" + Role.ROLE_SITE_OPERATOR + "')";
-    public static final String PRE_AUTHORIZE_VIEW = PRE_AUTHORIZE_SEARCH;
-    public static final String PRE_AUTHORIZE_CREATE = PRE_AUTHORIZE_SEARCH;
-    public static final String PRE_AUTHORIZE_UPDATE = PRE_AUTHORIZE_CREATE;
-    public static final String PRE_AUTHORIZE_PATCH = PRE_AUTHORIZE_UPDATE;
-
 
     @CreatedDate
     @DiffIgnore

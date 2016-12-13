@@ -10,7 +10,6 @@ import com.restdude.domain.users.model.User;
 import com.restdude.util.HashUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
@@ -30,7 +29,6 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(ContactDetails.PRE_AUTHORIZE_CREATE)
     public ContactDetails create(@P("resource") ContactDetails resource) {
         // note email if provided
         EmailDetail emailDetail = resource.getPrimaryEmail();
@@ -55,7 +53,6 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(ContactDetails.PRE_AUTHORIZE_UPDATE)
     public ContactDetails update(@P("resource") ContactDetails resource) {
         return super.patch(resource);
     }
@@ -65,7 +62,6 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(ContactDetails.PRE_AUTHORIZE_UPDATE)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") ContactDetail detail) {
         if (EmailDetail.class.isAssignableFrom(detail.getClass())) {
             resource = this.setPrimary(resource, (EmailDetail) detail);
@@ -84,7 +80,6 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(ContactDetails.PRE_AUTHORIZE_UPDATE)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") EmailDetail detail) {
         ContactDetails contactDetails = this.repository.getOne(resource.getId());
         if (detail.getPrimary() || resource.getPrimaryEmail() == null) {
@@ -102,7 +97,6 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(ContactDetails.PRE_AUTHORIZE_UPDATE)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") CellphoneDetail detail) {
         ContactDetails contactDetails = this.repository.getOne(resource.getId());
         if (detail.getPrimary() || resource.getPrimaryCellphone() == null) {
@@ -117,7 +111,6 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(ContactDetails.PRE_AUTHORIZE_UPDATE)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") PostalAddressDetail detail) {
         ContactDetails contactDetails = this.repository.getOne(resource.getId());
         if (detail.getPrimary() || resource.getPrimaryCellphone() == null) {

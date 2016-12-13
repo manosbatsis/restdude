@@ -27,29 +27,26 @@
         </encoder>
     </appender>
 
-    <!--     <logger name="org.hibernate"> -->
+    <!--     <LOGGER name="org.hibernate"> -->
     <!--         <level value="ERROR" /> -->
-    <!--     </logger> -->
-    <!--     <logger name="org.hibernate.SQL"> -->
+    <!--     </LOGGER> -->
+    <!--     <LOGGER name="org.hibernate.SQL"> -->
     <!--         <level value="ERROR" /> -->
-    <!--     </logger> -->
-    <!--     <logger name="org.hibernate.type"> -->
+    <!--     </LOGGER> -->
+    <!--     <LOGGER name="org.hibernate.type"> -->
     <!--         <level value="ERROR" /> -->
-    <!--     </logger> -->
-    <!--     <logger name="org.springframework.messaging"> -->
+    <!--     </LOGGER> -->
+    <!--     <LOGGER name="org.springframework.messaging"> -->
     <!--         <level value="debug" /> -->
-    <!--     </logger> -->
-    <!--     <logger name="gr.abiss.calipso.websocket"> -->
+    <!--     </LOGGER> -->
+    <!--     <LOGGER name="gr.abiss.calipso.websocket"> -->
     <!--         <level value="debug" /> -->
-    <!--     </logger> -->
+    <!--     </LOGGER> -->
 
-    <logger name="com.restdude.test">
+    <logger name="com.restdude">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.base">
-        <level value="debug"/>
-    </logger>
-    <logger name="com.restdude.domain.error">
+    <logger name="org.springframework.security">
         <level value="debug"/>
     </logger>
 

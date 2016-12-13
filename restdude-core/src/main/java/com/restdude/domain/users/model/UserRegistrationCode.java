@@ -40,8 +40,8 @@ public class UserRegistrationCode extends AbstractSystemUuidPersistable implemen
 
     private static final long serialVersionUID = 1L;
 
-    public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('" + Role.ROLE_ADMIN + "', '" + Role.ROLE_SITE_OPERATOR + "')";
-    public static final String PRE_AUTHORIZE_VIEW = PRE_AUTHORIZE_SEARCH;
+    public static String SERVICE_PRE_AUTHORIZE_SEARCH = "hasAnyRole('" + Role.ROLE_ADMIN + "', '" + Role.ROLE_SITE_OPERATOR + "')";
+    public static String SERVICE_PRE_AUTHORIZE_VIEW = SERVICE_PRE_AUTHORIZE_SEARCH;
 
     @Formula(" (credentials_id IS NULL) ")
     private Boolean available;

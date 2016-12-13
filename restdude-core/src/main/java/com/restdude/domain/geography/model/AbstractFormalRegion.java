@@ -18,6 +18,7 @@
 package com.restdude.domain.geography.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.domain.base.model.AbstractPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -35,7 +36,7 @@ import javax.validation.constraints.NotNull;
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 @ModelResource(path = "countries")
 @ApiModel(value = "Region", description = "A model representing a geographcal region.")
-public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> implements CalipsoPersistable<String> {
+public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> extends AbstractPersistable<String> implements CalipsoPersistable<String> {
 
 	private static final String PATH_SEPARATOR = ": ";
 

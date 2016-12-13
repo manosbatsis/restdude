@@ -84,7 +84,11 @@
 
         <build.profile.filters>dev.properties</build.profile.filters>
 
-        <maven-compiler-plugin.failOnError>true</maven-compiler-plugin.failOnError>
+        <maven.compiler.failOnError>true</maven.compiler.failOnError>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <maven.compiler.source>${java-version}</maven.compiler.source>
+        <maven.compiler.target>${java-version}</maven.compiler.target>
 
         <!-- Spring -->
         <!--
@@ -926,12 +930,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.6.0</version>
                     <configuration>
-                        <failOnError>${maven-compiler-plugin.failOnError}</failOnError>
-                        <encoding>${encoding}</encoding>
                         <source>${java-version}</source>
                         <target>${java-version}</target>
+                        <debug>${maven.compiler.debug}</debug>
+                        <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+                        <encoding>${encoding}</encoding>
                     </configuration>
                 </plugin>
                 <plugin>

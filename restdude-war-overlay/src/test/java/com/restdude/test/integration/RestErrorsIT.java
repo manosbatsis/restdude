@@ -57,7 +57,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                         .username("admin")
                         .firstName("Firstname")
                         .lastName("LastName")
-                        .registrationEmail("testDuplicateUsername@" + this.getClass().getSimpleName() + ".com")
+                        .email("testDuplicateUsername@" + this.getClass().getSimpleName() + ".com")
                         .build())
                 .post("/calipso/api/auth/account")
                 .then()
@@ -78,7 +78,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         SystemError error = given().spec(spec)
                 .log().all()
                 .body(new UserAccountRegistration.Builder()
-                        .registrationEmail("operator@abiss.gr")
+                        .email("operator@abiss.gr")
                         .build())
                 .post("/calipso/api/auth/account")
                 .then()
@@ -205,4 +205,5 @@ public class RestErrorsIT extends AbstractControllerIT {
                     .extract().as(ClientError.class);
         }
     }
+
 }

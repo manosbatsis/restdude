@@ -17,6 +17,7 @@
  */
 package com.restdude.domain.geography.model;
 
+import com.restdude.domain.users.model.Role;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Formula;
@@ -33,7 +34,31 @@ import javax.persistence.*;
 public class Continent extends AbstractFormalRegion<Continent> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
+    public static String CONTROLLER_PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_USER')";
+    public static String CONTROLLER_PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
+    public static String CONTROLLER_PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
+    public static String CONTROLLER_PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
+    public static String CONTROLLER_PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_USER')";
+    public static String CONTROLLER_PRE_AUTHORIZE_DELETE = "denyAll";
+    public static String CONTROLLER_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
+    public static String CONTROLLER_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
+    public static String CONTROLLER_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
+    public static String CONTROLLER_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
+    public static String CONTROLLER_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
+    public static String CONTROLLER_PRE_AUTHORIZE_COUNT = "denyAll";
 
+    static final String SERVICE_PRE_AUTHORIZE_SEARCH = "permitAll";
+    static final String SERVICE_PRE_AUTHORIZE_CREATE = "hasRole('" + Role.ROLE_ADMIN + "')";
+    static final String SERVICE_PRE_AUTHORIZE_UPDATE = "hasRole('" + Role.ROLE_ADMIN + "')";
+    static final String SERVICE_PRE_AUTHORIZE_PATCH = "hasRole('" + Role.ROLE_ADMIN + "')";
+    static final String SERVICE_PRE_AUTHORIZE_VIEW = "permitAll";
+    static final String SERVICE_PRE_AUTHORIZE_DELETE = "denyAll";
+    static final String SERVICE_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
+    static final String SERVICE_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
+    static final String SERVICE_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
+    static final String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
+    static final String SERVICE_PRE_AUTHORIZE_FIND_ALL = "denyAll";
+    static final String SERVICE_PRE_AUTHORIZE_COUNT = "permitAll";
     @Id
     private String id;
 

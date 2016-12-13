@@ -42,7 +42,8 @@ public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistab
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNoDeleteModelController.class);
 
-	@Override
+
+    @Override
 	@ApiOperation(hidden = true, value = "Delete a resource (unsupported)")
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)

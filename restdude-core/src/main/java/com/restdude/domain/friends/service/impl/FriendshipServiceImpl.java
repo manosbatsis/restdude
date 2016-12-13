@@ -15,7 +15,6 @@ import com.restdude.websocket.message.ActivityNotificationMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
@@ -31,7 +30,6 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
     public Friendship create(Friendship resource) {
         LOGGER.debug("create: {}", resource);
 		return this.saveRelationship(resource);
@@ -42,7 +40,6 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
 	public Friendship createTest(Friendship resource) {
         LOGGER.debug("createAsConfirmed: {}", resource);
         return this.repository.save(resource);
@@ -53,7 +50,6 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
     public Friendship update(Friendship resource) {
         LOGGER.debug("update: {}", resource);
 		return this.saveRelationship(resource);
@@ -64,7 +60,6 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
     public void delete(Friendship resource) {
         resource.setStatus(FriendshipStatus.DELETE);
 		this.saveRelationship(resource);
@@ -156,13 +151,11 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_USER')")
 	public Iterable<UserDTO> findAllMyFriends() {
 		return repository.findAllFriends(this.getPrincipal().getId());
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_USER')")
 	public void sendStompActivityMessageToOnlineFriends(ActivityNotificationMessage msg) {
 
 		// get online friends

@@ -26,7 +26,6 @@ import com.restdude.domain.error.service.UserAgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -55,7 +54,6 @@ public abstract class AbstractErrorServiceImpl<T extends PersistableError<ID>, I
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_CREATE)
     public T create(T resource) {
         LOGGER.debug("create PersistableError: {}", resource);
 

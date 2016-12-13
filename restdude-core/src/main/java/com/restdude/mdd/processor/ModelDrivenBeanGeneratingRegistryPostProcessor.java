@@ -17,7 +17,7 @@
  */
 package com.restdude.mdd.processor;
 
-import com.restdude.domain.base.controller.ModelController;
+import com.restdude.domain.base.controller.AbstractModelController;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.repository.ModelRepositoryFactoryBean;
 import com.restdude.domain.base.service.ModelService;
@@ -340,9 +340,9 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 			if (d instanceof AbstractBeanDefinition) {
 				AbstractBeanDefinition def = (AbstractBeanDefinition) d;
 				// if controller
-				if (isOfType(def, ModelController.class)) {
-					Class<?> entity = GenericTypeResolver.resolveTypeArguments(
-							ClassUtils.getClass(def.getBeanClassName()), ModelController.class)[0];
+                if (isOfType(def, AbstractModelController.class)) {
+                    Class<?> entity = GenericTypeResolver.resolveTypeArguments(
+                            ClassUtils.getClass(def.getBeanClassName()), AbstractModelController.class)[0];
 
 					ModelContext modelContext = entityModelContextsMap.get(entity);
 					if (modelContext != null) {

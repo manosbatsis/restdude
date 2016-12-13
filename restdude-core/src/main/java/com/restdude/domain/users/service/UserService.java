@@ -17,6 +17,7 @@
  */
 package com.restdude.domain.users.service;
 
+import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.users.model.User;
@@ -115,7 +116,7 @@ public interface UserService extends ModelService<User, String>{
 
 	void handlePasswordResetRequest(String userNameOrEmail);
 
-	User handleConfirmationOrPasswordResetToken(String userNameOrEmail, String token, String newPassword);
+    User handleConfirmationOrPasswordResetToken(EmailConfirmationOrPasswordResetRequest passwordResetRequest);
 
 	/**
 	 * Create pre-confirmed users. Used for testing and social signup

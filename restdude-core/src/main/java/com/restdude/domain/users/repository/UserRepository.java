@@ -60,8 +60,14 @@ public interface UserRepository extends ModelRepository<User, String> {
 	@Query("select u from User u left join u.contactDetails.emails as email where UPPER(email.email) = UPPER(?1) ")
 	public User findByEmail(String email);
 
-	//@Query("select u from User u where u.id = ?1 or UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
-	//public User findByIdOrUsernameOrEmail(String idOrUsernameOrEmail);
+    @Query("select u from User u left join u.contactDetails.emails as email " +
+            "where u.credentials.active = true " +
+            "    and (" +
+            "       (u.id = ?1)" +
+            "       or (UPPER(u.username) = UPPER(?1)) " +
+            "       or (UPPER(email.email) = UPPER(?1) and email.verified = true)" +
+            "    )")
+    public User findActiveByIdOrUsernameOrEmail(String idOrUsernameOrEmail);
 
 	//@Query("select u from User u where UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
 	//public User findByUsernameOrEmail(String idOrUsernameOrEmail);

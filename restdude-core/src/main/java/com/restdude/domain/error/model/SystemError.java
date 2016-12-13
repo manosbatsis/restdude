@@ -61,6 +61,10 @@ public class SystemError extends BaseError {
 	@Transient
 	private Map<String, String> responseHeaders;
 
+    @JsonIgnore
+    @Transient
+    private Throwable throwable;
+
 
 	private SystemError() {
 		super();
@@ -68,7 +72,8 @@ public class SystemError extends BaseError {
 
 	public SystemError(HttpServletRequest request, String message, Integer httpStatusCode, Throwable throwable) {
 		super(request, message);
-		if (httpStatusCode == null) {
+        this.throwable = throwable;
+        if (httpStatusCode == null) {
 			throw new NullPointerException("httpStatusCode argument cannot be null.");
 		}
 		// set status
@@ -165,7 +170,15 @@ public class SystemError extends BaseError {
 
 	public void setResponseHeaders(Map<String, String> responseHeaders) {
 		this.responseHeaders = responseHeaders;
-	}
+    }
+
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
+    }
 
 	public static class Builder {
 

@@ -3,36 +3,24 @@
        xmlns:sec="http://www.springframework.org/schema/security"
        xsi:schemaLocation="http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 
-
-
-
-
-
-
-        http://www.springframework.org/schema/data/jpa  http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
 		http://www.springframework.org/schema/security  http://www.springframework.org/schema/security/spring-security-4.1.xsd">
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- setting maximum upload size -->
         <property name="maxUploadSize" value="100000000"/>
-        <!-- 		"maxUploadSize", "maxInMemorySize" and "defaultEncoding" -->
+        <!-- "maxUploadSize", "maxInMemorySize" and "defaultEncoding" -->
     </bean>
 
     <sec:global-method-security pre-post-annotations="enabled" secured-annotations="enabled">
         <sec:expression-handler ref="expressionHandler"/>
     </sec:global-method-security>
 
-    <!-- To use hasPermission() expressions, we have to configure a PermissionEvaluator -->
-    <!-- See 15.3.2 Built-In Expression 
-            @http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html#el-permission-evaluator     
-    -->
     <bean id="expressionHandler"
-          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+          class="com.restdude.auth.spel.binding.MethodSecurityExpressionHandler">
         <property name="parameterNameDiscoverer" ref="parameterNameDiscoverer"/>
-        <!--         <property name="permissionEvaluator" ref="customPermissionEvaluator" /> -->
-        <!--property name = "roleHierarchy" ref="roleHierarchy"/-->
+        <property name="permissionEvaluator" ref="permissionEvaluator"/>
     </bean>
-
+    <bean id="permissionEvaluator" class="com.restdude.auth.spel.binding.ModelPermissionEvaluator"/>
     <bean id="parameterNameDiscoverer"
           class="org.springframework.security.core.parameters.AnnotationParameterNameDiscoverer">
         <constructor-arg>
@@ -45,4 +33,5 @@
             </set>
         </constructor-arg>
     </bean>
+
 </beans>

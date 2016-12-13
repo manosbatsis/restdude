@@ -17,7 +17,7 @@
  */
 package com.restdude.domain.friends.controller;
 
-import com.restdude.domain.base.controller.BuildPageable;
+import com.restdude.domain.base.controller.PageableUtil;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipStatus;
 import com.restdude.domain.friends.service.FriendshipService;
@@ -46,7 +46,7 @@ import java.util.Map;
 @RestController
 @Api(tags = "Friends", description = "Friend searches")
 @RequestMapping(value = "/api/rest/friends", produces = { "application/json", "application/xml" })
-public class FriendsController implements BuildPageable{
+public class FriendsController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FriendsController.class);
 
@@ -115,12 +115,12 @@ public class FriendsController implements BuildPageable{
 		parameters.put("id.owner.id", new String[]{ownerId});
 		parameters.put("status", status);
 
-		ParameterMapBackedPageRequest pageable = buildPageable(page, size, sort, direction, parameters);
-		
-		LOGGER.debug("Build pageable {}", pageable.getParameterMap());		
+        ParameterMapBackedPageRequest pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
+
+        LOGGER.debug("Build pageable {}", pageable.getParameterMap());
 		MapUtils.verbosePrint(System.out, "pageable", pageable.getParameterMap());
-		Page<Friendship> friendshipPage = this.friendshipService.findAll(pageable);
-		LOGGER.debug("Found {} friendships for status {}", friendshipPage.getTotalElements(), status);
+        Page<Friendship> friendshipPage = this.friendshipService.findPaginated(pageable);
+        LOGGER.debug("Found {} friendships for status {}", friendshipPage.getTotalElements(), status);
 		// TODO: move DTO selection to query
 		List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());
 		for(Friendship friendship : friendshipPage){

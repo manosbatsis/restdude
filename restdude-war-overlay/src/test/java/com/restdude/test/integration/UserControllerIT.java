@@ -17,11 +17,9 @@
  */
 package com.restdude.test.integration;
 
-import com.restdude.auth.userAccount.model.UserAccountRegistration;
 import com.restdude.domain.users.model.User;
 import com.restdude.test.AbstractControllerIT;
 import com.restdude.util.Constants;
-import com.restdude.util.HashUtils;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.io.IOUtils;
@@ -39,36 +37,6 @@ import static org.hamcrest.Matchers.notNullValue;
 public class UserControllerIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerIT.class);
-
-    @Test(description = "Test logging in with correct credentials")
-    public void testCorrectLogin() throws Exception {
-        this.getLoggedinContext("admin", "admin");
-    }
-
-    @Test(priority = 10, description = "Test registration")
-    public void testRegistration() throws Exception {
-
-        String email = "ittestreg@UserControllerIT.com";
-
-        RequestSpecification spec = this.getRequestSpec(null);
-        User user = given().spec(spec)
-                .log().all()
-                .body(new UserAccountRegistration.Builder()
-                        .firstName("Firstname")
-                        .lastName("LastName")
-                        .registrationEmail(email)
-                        .build())
-                .post("/calipso/api/auth/account")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(201)
-                // test assertions
-                .body("id", notNullValue())
-                .body("emailHash", equalTo(HashUtils.md5Hex(email)))
-                // get model
-                .extract().as(User.class);
-    }
 
     @Test(priority = 20, description = "Test registration")
     public void testPatch() throws Exception {
@@ -99,8 +67,8 @@ public class UserControllerIT extends AbstractControllerIT {
                 .extract().as(User.class);
     }
 
-    @Test(priority = 30, description = "Test C2 use cases")
-    public void testUploadsPreserveOtherProperties() throws Exception {
+    @Test(priority = 30, description = "Test image upload")
+    public void testImageUpload() throws Exception {
 
         // --------------------------------
         // Login

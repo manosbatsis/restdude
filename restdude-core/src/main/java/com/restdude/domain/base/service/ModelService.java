@@ -26,7 +26,10 @@ import com.restdude.domain.users.model.User;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +44,8 @@ import java.util.List;
 @Service
 public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Serializable>
         extends CrudService<T, ID> {
+
+    public static final String PRE_AUTHORIZATION_PREFIX = "SERVICE_";
 
 	/**
      * Get the entity Class corresponding to the generic T
@@ -83,4 +88,15 @@ public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Seria
 	public void sendStompStateChangeMessage(IMessageResource msg, String useername);
 
 	public void sendStompStateChangeMessage(IMessageResource msg, Iterable<String> useernames);
+
+
+    /**
+     * Utility method to be called by implementations
+     *
+     * @param id
+     * @param filenames
+     */
+    public void deleteFiles(ID id, String... filenames);
+
+    public T updateFiles(@PathVariable ID id, MultipartHttpServletRequest request, HttpServletResponse response);
 }

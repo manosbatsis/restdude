@@ -31,7 +31,6 @@ import java.util.Map;
 @JsonDeserialize(as=UserDetails.class)
 public interface ICalipsoUserDetails extends SocialUserDetails, Principal, CalipsoPersistable<String> {
 
-	public String getEmailOrUsername();
 
 	public String getId();
 
@@ -48,10 +47,6 @@ public interface ICalipsoUserDetails extends SocialUserDetails, Principal, Calip
     public LocalDateTime getLastPassWordChangeDate();
 
     public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate);
-
-	public String getEmail();
-
-	public void setEmail(String email);
 
 	public String getEmailHash();
 

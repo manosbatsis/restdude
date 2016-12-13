@@ -22,19 +22,33 @@ import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.ModelService;
+import com.restdude.domain.fs.FilePersistence;
+import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
-import com.restdude.domain.util.email.service.EmailService;
+import com.restdude.mdd.specifications.GenericSpecifications;
+import com.restdude.util.email.service.EmailService;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
 		extends AbstractAclAwareServiceImpl<T, ID, R>
@@ -47,6 +61,13 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 	
 	protected SimpMessageSendingOperations messagingTemplate;
 
+	FilePersistenceService filePersistenceService;
+
+	@Inject
+	@Qualifier(FilePersistenceService.BEAN_ID)
+	public void setFilePersistenceService(FilePersistenceService filePersistenceService) {
+		this.filePersistenceService = filePersistenceService;
+	}
 	@Autowired
 	public void setEmailService(EmailService emailService) {
 		this.emailService = emailService;
@@ -115,47 +136,66 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 		this.messagingTemplate.convertAndSendToUser(useername, Destinations.USERQUEUE_UPDATES_STATE, msg);
 	}
 
-/*
+	@Transactional(readOnly = false)
+	public T updateFiles(@PathVariable ID id, MultipartHttpServletRequest request, HttpServletResponse response) {
+		T entity = this.findById(id);
+		LOGGER.debug("Entity before uploading files: {}", entity);
+		try {
+			String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
+					.append('/').append(id).append('/').toString();
+			String propertyName;
+			for (Iterator<String> iterator = request.getFileNames(); iterator.hasNext(); ) {
+				// get the property name
+				propertyName = iterator.next();
 
-	// TODO: refactor to single query then parse results to find errors
-	protected List<String> validateUniqueConstraintss(T resource) {
-		List<String> errors = new LinkedList<String>();
-		Field[] fields = FieldUtils.getFieldsWithAnnotation(this.getDomainClass(), Column.class);
-		if(fields.length > 0){
-			for(int i = 0; i < fields.length; i++){
-				Field field = fields[i];
-				Column column = field.getAnnotation(Column.class);
-
-				try {
-					// if unique field
-					if(column.unique() && !field.getName().equals("id")){
-						Object value = PropertyUtils.getProperty(resource, field.getName());
-						// match the given value if any
-						if(value != null){
-							// unwrap ID if entity type
-							if(CalipsoPersistable.class.isAssignableFrom(value.getClass())){
-								value = ((CalipsoPersistable) value).getId();
-							}
-							// create criteria
-							HashMap<String, String[]> parameters = new HashMap<String, String[]>();
-							String[] match = {value.toString()};
-							parameters.put(field.getName(), match);
-							Page<T> page = this.findAll(new ParameterMapBackedPageRequest(parameters, 0 , 1, Direction.ASC, "id"));
-							// if a match exists and is not given resource
-							if(page.hasContent() && !page.getContent().get(0).getId().equals(resource.getId())){
-								errors.add("Value already exists for field " + field.getName());
-							}
-						}
-					}
-				} catch (Exception e) {
-					LOGGER.warn("Failed validating unique constrains for property: " + field.getName(), e);
+				// verify the property exists
+				Field fileField = GenericSpecifications.getField(this.getDomainClass(), propertyName);
+				if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
+					throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
 				}
 
+				// store the file and update the property URL
+				String url = this.filePersistenceService.saveFile(fileField, request.getFile(propertyName), basePath + propertyName);
+				BeanUtils.setProperty(entity, propertyName, url);
+
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to update files", e);
+		}
+		// return the updated entity
+		entity = this.update(entity);
+
+		LOGGER.debug("Entity after uploading files: {}", entity);
+		return entity;
+	}
+
+	/**
+	 * Utility method to be called by implementations
+	 *
+	 * @param id
+	 * @param filenames
+	 */
+	@Override
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@Transactional(readOnly = false)
+	public void deleteFiles(ID id, String... filenames) {
+		String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
+				.append('/').append(id).append('/').toString();
+		List<String> keys = new LinkedList<String>();
+
+		for (String propertyName : filenames) {
+			// verify the property exists
+			Field fileField = GenericSpecifications.getField(this.getDomainClass(), propertyName);
+			if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
+				throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
 			}
 
-
+			// store the file key
+			keys.add(basePath + propertyName);
 		}
-		return errors;
+
+		// delete files
+		this.filePersistenceService.deleteFiles(keys.toArray(new String[keys.size()]));
 	}
- */
+
 }

@@ -2,6 +2,7 @@ package com.restdude.domain.base.validation;
 
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.util.EntityUtil;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.proxy.HibernateProxyHelper;
 import org.slf4j.Logger;
@@ -31,9 +32,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
     @PersistenceContext
     private EntityManager entityManager;
 
-
     public void initialize(Unique annotation) {
-
     }
 
     @Override
@@ -68,14 +67,21 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                             for (String propertyName : uniqueFieldNames) {
                                 Object newValue = PropertyUtils.getProperty(value, propertyName);
                                 Object existingValue = PropertyUtils.getProperty(match, propertyName);
-
-                                if (newValue != null && newValue.equals(existingValue)) {
-                                    LOGGER.debug("isValid, adding violation for property name: {}", propertyName);
-                                    valid = false;
-                                    // report violation
-                                    constraintValidatorContext
-                                            .buildConstraintViolationWithTemplate("Unique value not available")
-                                            .addPropertyNode(propertyName).addConstraintViolation();
+                                if (newValue != null) {
+                                    // ignore case for strings?
+                                    if (newValue instanceof String && !EntityUtil.isCaseSensitive(domainClass, propertyName)) {
+                                        newValue = ((String) newValue).toLowerCase();
+                                        existingValue = existingValue != null ? ((String) existingValue).toLowerCase() : null;
+                                    }
+                                    // match?
+                                    if (newValue.equals(existingValue)) {
+                                        LOGGER.debug("isValid, adding violation for property name: {}, value: {}", propertyName, newValue);
+                                        valid = false;
+                                        // report violation
+                                        constraintValidatorContext
+                                                .buildConstraintViolationWithTemplate("Unique value not available")
+                                                .addPropertyNode(propertyName).addConstraintViolation();
+                                    }
                                 }
                             }
                         }

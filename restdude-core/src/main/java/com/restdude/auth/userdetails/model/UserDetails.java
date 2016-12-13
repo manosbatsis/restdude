@@ -63,7 +63,6 @@ public class UserDetails implements  ICalipsoUserDetails{
 
 	private LocalDateTime lastPassWordChangeDate;
 
-	private String email;
 	private String emailHash;
 
 	private String firstName;
@@ -147,8 +146,8 @@ public class UserDetails implements  ICalipsoUserDetails{
 		return new ToStringBuilder(this)
 			.append("id", id)
 			.append("username", username)
-			.append("email", email)
-				.append("password", this.password)
+                //.append("email", email)
+                .append("password", this.password)
 				.append("active", this.active)
 			.append("metadata", metadata)
 			.append("authorities", authorities)
@@ -230,30 +229,6 @@ public class UserDetails implements  ICalipsoUserDetails{
 	@Override
 	public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate) {
 		this.lastPassWordChangeDate = lastPassWordChangeDate;
-	}
-
-	/**
-     * @see ICalipsoUserDetails#getEmail()
-     */
-	@Override
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-     * @see ICalipsoUserDetails#setEmail(java.lang.String)
-     */
-	@Override
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-     * @see ICalipsoUserDetails#getEmailOrUsername()
-     */
-	@Override
-	public String getEmailOrUsername() {
-		return email != null ? email : username;
 	}
 	
 	/**

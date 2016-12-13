@@ -60,6 +60,7 @@ import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Base class for rest-assured based controller integration testing
@@ -189,6 +190,7 @@ public class AbstractControllerIT {
     }
 
 
+
     /**
      * Login using the given credentials and return the Single Sign-On token
      *
@@ -197,6 +199,17 @@ public class AbstractControllerIT {
      * @return
      */
     protected Loggedincontext getLoggedinContext(String username, String password) {
+        return this.getLoggedinContext(username, password, false);
+    }
+
+    /**
+     * Login using the given credentials and return the Single Sign-On token
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    protected Loggedincontext getLoggedinContext(String username, String password, boolean assertFailed) {
         Loggedincontext lctx = new Loggedincontext();
         // create a login request body
         Map<String, String> loginSubmission = new HashMap<String, String>();
@@ -208,7 +221,7 @@ public class AbstractControllerIT {
                 .post("/calipso/api/auth/userDetails");
 
         // validate login
-        rs.then().log().all().assertThat().statusCode(200).content("id", notNullValue());
+        rs.then().log().all().assertThat().statusCode(200).content("id", assertFailed ? nullValue() : notNullValue());
 
         // Get result cookie and user id
         lctx.ssoToken = rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME);

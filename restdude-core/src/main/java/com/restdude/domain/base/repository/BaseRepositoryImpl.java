@@ -24,7 +24,9 @@ import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.specifications.SpecificationsBuilder;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.mdd.util.ParameterMapBackedPageRequest;
+import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BeanValidationException;
+import org.apache.commons.configuration.Configuration;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.security.access.method.P;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -46,10 +47,10 @@ import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
 
-@NoRepositoryBean
 public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ModelRepository<T, ID> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
+    private final boolean skipValidation;
 
 	private SpecificationsBuilder<T, ID> specificationsBuilder;
 	private EntityManager entityManager;
@@ -64,11 +65,14 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 	 */
 	public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager, Validator validator) {
 		super(domainClass, entityManager);
-		this.entityManager = entityManager;
+        Configuration config = ConfigurationFactory.getConfiguration();
+        this.entityManager = entityManager;
 		this.domainClass = domainClass;
 		this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.domainClass);
 		this.validator = validator;
-	}
+        String[] validatorExcludeClasses = config.getStringArray(ConfigurationFactory.VALIDATOR_EXCLUDES_CLASSESS);
+        this.skipValidation = Arrays.asList(validatorExcludeClasses).contains(domainClass.getCanonicalName());
+    }
 
 	/***
      * {@inheritDoc}
@@ -355,17 +359,20 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 	protected void validate(T resource) {
 		LOGGER.debug("validate resource: {}", resource);
 		resource.preSave();
-
-		// un-proxy for validation to work
-		resource = (T) entityManager.unwrap(SessionImplementor.class).getPersistenceContext().unproxy(resource);
-		LOGGER.debug("validate resource after preSave: {}", resource);
-		Set<ConstraintViolation<T>> violations = this.validateConstraints(resource);
-		LOGGER.debug("validate violations: {}", violations);
-		if (!CollectionUtils.isEmpty(violations)) {
-			Set<ConstraintViolation> errors = new HashSet<ConstraintViolation>();
-			errors.addAll(violations);
-			throw new BeanValidationException("Validation failed", errors);
-		}
+        if (!this.skipValidation) {
+            // un-proxy for validation to work
+            resource = (T) entityManager.unwrap(SessionImplementor.class).getPersistenceContext().unproxy(resource);
+            LOGGER.debug("validate resource after preSave: {}", resource);
+            Set<ConstraintViolation<T>> violations = this.validateConstraints(resource);
+            LOGGER.debug("validate violations: {}", violations);
+            if (!CollectionUtils.isEmpty(violations)) {
+                Set<ConstraintViolation> errors = new HashSet<ConstraintViolation>();
+                errors.addAll(violations);
+                BeanValidationException ex = new BeanValidationException("Validation failed", errors);
+                ex.setModelType(this.getDomainClass().getCanonicalName());
+                throw ex;
+            }
+        }
 
 
 	}

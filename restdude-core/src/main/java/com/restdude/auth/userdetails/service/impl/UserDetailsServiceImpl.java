@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
@@ -112,18 +113,19 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	@Transactional(readOnly = false)
 	@Override
     public ICalipsoUserDetails create(final ICalipsoUserDetails tryUserDetails) {
-
-		ICalipsoUserDetails userDetails = null;
+        LOGGER.debug("create, userDetails: {}", tryUserDetails);
+        ICalipsoUserDetails userDetails = null;
 		if (tryUserDetails != null) {
 			String usernameOrEmail = tryUserDetails.getUsername();
-			if (StringUtils.isBlank(usernameOrEmail)) {
-				usernameOrEmail = tryUserDetails.getEmail();
-			}
+            /*if (StringUtils.isBlank(usernameOrEmail)) {
+                usernameOrEmail = tryUserDetails.getEmail();
+			}*/
 			String password = tryUserDetails.getPassword();
 			// TODO
 			Map<String, String> metadata = tryUserDetails.getMetadata();
 
-			// make sure we have credentials to send
+            LOGGER.debug("create, usernameOrEmail: {}, pw: {}", usernameOrEmail, password);
+            // make sure we have credentials to send
 			if (StringUtils.isNotBlank(usernameOrEmail)
 					&& StringUtils.isNotBlank(password)) {
 
@@ -172,11 +174,11 @@ public class UserDetailsServiceImpl implements UserDetailsService,
         // Case 2: if using reset token
         else if (StringUtils.isNotBlank(passwordResetRequest.getResetPasswordToken())) {
             // password and password confirmation must match
-            if (passwordResetRequest.getPassword() != null && StringUtils.isBlank(passwordResetRequest.getPassword()) || !passwordResetRequest.getPassword().equals(passwordResetRequest.getPasswordConfirmation())) {
+            if (passwordResetRequest.getPassword() != null && (StringUtils.isBlank(passwordResetRequest.getPassword()) || !passwordResetRequest.getPassword().equals(passwordResetRequest.getPasswordConfirmation()))) {
                 throw new BadRequestException("A password, when given, must be non-blank and equal to the password confirmation");
             }
 			// update matching user credentials
-            u = this.userService.handleConfirmationOrPasswordResetToken(passwordResetRequest.getEmailOrUsername(), passwordResetRequest.getResetPasswordToken(), passwordResetRequest.getPassword());
+            u = this.userService.handleConfirmationOrPasswordResetToken(passwordResetRequest);
             //userDetails = this.create(new UserDetails( new LoginSubmission(u.getEmail(), passwordResetRequest.getPassword())));
 		}
 		// Case 3: forgotten password
@@ -192,7 +194,12 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 	}
 
 	@Override
-	public ICalipsoUserDetails getPrincipal() {
+    public Authentication getAuthentication() {
+        return SecurityUtil.getAuthentication();
+    }
+
+    @Override
+    public ICalipsoUserDetails getPrincipal() {
 		return SecurityUtil.getPrincipal();
 	}
 
@@ -202,12 +209,14 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 		User user = null;
 		if (principal != null) {
 			String username = principal.getUsername();
-			if(StringUtils.isBlank(username)){
+            /*
+            if(StringUtils.isBlank(username)){
 				username = principal.getEmail();
 			}
 			if(StringUtils.isNotBlank(username) && !"anonymous".equals(username)){
                 user = this.userService.findActiveByUserNameOrEmail(username);
             }
+            */
 		}
 
 		if(LOGGER.isDebugEnabled()){

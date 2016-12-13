@@ -60,8 +60,6 @@ import java.util.Map;
  * <td>Converts Exceptions to {@link SystemError} instances.  Should be suitable for most needs.</td>
  * </tr>
  * </table>
- *
- * @author Les Hazlewood
  * @see DefaultRestErrorResolver
  * @see HttpMessageConverter
  * @see org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -107,7 +105,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        LOGGER.info("Configured as HandlerExceptionResolver");
     }
 
     //leverage Spring's existing default setup behavior:
@@ -134,7 +132,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
      */
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception originalException) {
-        LOGGER.debug("doResolveException called", originalException);
+
         ModelAndView mav = null;
 
 
@@ -143,10 +141,10 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         SystemError error = resolver.resolveError(webRequest, handler, originalException);
 
         if (error != null) {
-            // persist?
-            if (true) {
-                error = this.systemErrorService.create(error);
-            }
+
+            LOGGER.error("doResolveException, error stacktrace:", error.getThrowable());
+            error = handlePersist(error);
+
 
             try {
                 mav = getModelAndView(webRequest, handler, error);
@@ -159,6 +157,18 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         }
 
         return mav;
+    }
+
+    private SystemError handlePersist(SystemError error) {
+        try {
+            // persist?
+            if (true) {
+                error = this.systemErrorService.create(error);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed persisting error", e);
+        }
+        return error;
     }
 
     protected ModelAndView getModelAndView(ServletWebRequest webRequest, Object handler, SystemError error) throws Exception {
@@ -202,6 +212,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
     }
 
     private ModelAndView handleResponseBody(Object body, ServletWebRequest webRequest) throws ServletException, IOException {
+        LOGGER.error("handleResponseBody");
 
         HttpInputMessage inputMessage = new ServletServerHttpRequest(webRequest.getRequest());
 

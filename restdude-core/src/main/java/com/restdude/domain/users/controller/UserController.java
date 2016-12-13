@@ -19,9 +19,7 @@ package com.restdude.domain.users.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.restdude.domain.base.controller.AbstractNoDeleteModelController;
-import com.restdude.domain.base.controller.IFilesModelController;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
-import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
@@ -31,30 +29,18 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @Api(tags = "Users", description = "User management operations")
 @RequestMapping(value = "/api/rest/users", produces = {"application/json", "application/xml"})
-public class UserController extends AbstractNoDeleteModelController<User, String, UserService> implements IFilesModelController<User, String, UserService> {
+public class UserController extends AbstractNoDeleteModelController<User, String, UserService> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    FilePersistenceService filePersistenceService;
-
-    @Inject
-    @Qualifier(FilePersistenceService.BEAN_ID)
-    public void setFilePersistenceService(FilePersistenceService filePersistenceService) {
-        this.filePersistenceService = filePersistenceService;
-    }
-
-    @Override
-    public FilePersistenceService getFilePersistenceService() {
-        return this.filePersistenceService;
-    }
 
     @RequestMapping(value = "byUserNameOrEmail/{userNameOrEmail}", method = RequestMethod.GET)
     @ApiOperation(value = "Get one by username or email", notes = "Get the single user with the given username or email.")
@@ -78,6 +64,28 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     public User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
+    }
+
+    @ApiOperation(value = "Update files",
+            notes = "The files are saved using the parameter names of the multipart files contained in this request. "
+                    + "These are the field names of the form (like with normal parameters), not the original file names.")
+    @RequestMapping(value = "{id}/files",
+            method = {RequestMethod.POST},
+            headers = ("content-type=multipart/*"),
+            produces = {"application/json", "application/xml"})
+    public User updateFiles(@PathVariable String id,
+                            MultipartHttpServletRequest request, HttpServletResponse response) {
+        return this.service.updateFiles(id, request, response);
+    }
+
+    /**
+     * Utility method to be called by implementations
+     *
+     * @param id
+     * @param filenames
+     */
+    public void deleteFiles(String id, String... filenames) {
+        this.service.deleteFiles(id, filenames);
     }
 
 }

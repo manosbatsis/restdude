@@ -68,7 +68,6 @@ public class SecurityUtil {
 		
 	}
 
-
 	public static void logout(HttpServletRequest request, HttpServletResponse response, UserDetailsConfig userDetailsConfig) {
 		addCookie(request, response, userDetailsConfig.getCookiesBasicAuthTokenName(), null, true, userDetailsConfig);
 		addCookie(request, response, COOKIE_NAME_SESSION, null, true, userDetailsConfig);
@@ -131,7 +130,6 @@ public class SecurityUtil {
 		}
 		return auth;
 	}
-	
 
 	public static Optional<ICalipsoUserDetails> getPrincipalOptional() {
 		return Optional.ofNullable(getPrincipal()); 
@@ -149,10 +147,7 @@ public class SecurityUtil {
 		if (principal != null) {
 			if(String.class.isAssignableFrom(principal.getClass())){
 				LOGGER.warn("getPrincipal1, principal is {}, forcing anonymous: ",  principal.toString());
-                // tmp
                 principal = null;
-                throw new RuntimeException("getPrincipal1, principal is a string: " + principal);
-
 			}
 			else if (User.class.isAssignableFrom(principal.getClass())) {
 				principal = UserDetails.fromUser((User) principal);
@@ -162,4 +157,6 @@ public class SecurityUtil {
 		return (ICalipsoUserDetails) principal;
 	}
 
+	public static void anonymous() {
+	}
 }

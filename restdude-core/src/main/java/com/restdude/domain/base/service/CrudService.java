@@ -117,12 +117,12 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
     Iterable<T> findAll();
 
     /**
-     * Find all resources (pageable).
+     * Find resources page-by-page
      *
      * @param pageRequest page request
      * @return resources
      */
-    Page<T> findAll(Pageable pageRequest);
+    Page<T> findPaginated(Pageable pageRequest);
 
     /**
      * Count all resources.

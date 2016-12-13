@@ -36,13 +36,14 @@ import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.RoleService;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.domain.util.email.service.EmailService;
 import com.restdude.util.ConfigurationFactory;
+import com.restdude.util.email.service.EmailService;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -55,6 +56,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -138,9 +140,15 @@ public class CalipsoDataInitializer {
 	@PostConstruct
 	@Transactional(readOnly = false)
 	public void postInitialize() {
-		
-		Configuration config = ConfigurationFactory.getConfiguration();
+
+
+        Configuration config = ConfigurationFactory.getConfiguration();
 		boolean initData = config.getBoolean(ConfigurationFactory.INIT_DATA, true);
+
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
+                        Arrays.asList(new Role[]{new Role(Role.ROLE_USER, "Logged in user"), new Role(Role.ROLE_ADMIN, "System Administrator.")})));
 
 		if (initData && this.userRepository.count() == 0) {
             LOGGER.debug("postInitialize, creating data");
@@ -242,8 +250,8 @@ public class CalipsoDataInitializer {
 
     protected void initRoles() {
         if (this.roleService.count() == 0) {
-            LOGGER.debug("#initRoles, creating");
             Role adminRole = new Role(Role.ROLE_ADMIN, "System Administrator.");
+            LOGGER.debug("#initRoles, creating");
             adminRole = this.roleService.create(adminRole);
             Role siteAdminRole = new Role(Role.ROLE_SITE_OPERATOR, "Site Operator.");
             siteAdminRole = this.roleService.create(siteAdminRole);

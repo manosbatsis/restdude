@@ -26,6 +26,7 @@ import com.restdude.domain.users.model.UserRegistrationCode;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,8 @@ public class UserAccountRegistration implements Serializable {
 	private String username;
 	private String password;
 	private String passwordConfirmation;
-	@NotNull
+    @Email
+    @NotNull
     private String email;
     private String firstName;
 	private String lastName;
@@ -66,8 +68,9 @@ public class UserAccountRegistration implements Serializable {
         }
         User newUser = new User.Builder()
                 .contactDetails(new ContactDetails.Builder().primaryEmail(email).build())
-                .credentials(new UserCredentials.Builder().password(this.password)
-                        .registrationCode(new UserRegistrationCode(this.registrationCode)).build())
+                .credentials(
+                        new UserCredentials.Builder().password(this.password)
+                                .registrationCode(new UserRegistrationCode(this.registrationCode)).build())
                 .username(this.username).firstName(this.firstName).lastName(this.lastName)
                 .locale(this.locale).build();
         return newUser;
@@ -155,11 +158,10 @@ public class UserAccountRegistration implements Serializable {
 		private String username;
 		private String password;
 		private String passwordConfirmation;
-        private String registrationEmail;
+        private String email;
         private String firstName;
 		private String lastName;
 		private String locale;
-        private String redirectUrl;
 
 		public Builder registrationCode(String registrationCode) {
 			this.registrationCode = registrationCode;
@@ -181,8 +183,8 @@ public class UserAccountRegistration implements Serializable {
 			return this;
 		}
 
-        public Builder registrationEmail(String registrationEmail) {
-            this.registrationEmail = registrationEmail;
+        public Builder email(String registrationEmail) {
+            this.email = registrationEmail;
             return this;
 		}
 
@@ -201,10 +203,6 @@ public class UserAccountRegistration implements Serializable {
 			return this;
 		}
 
-		public Builder redirectUrl(String redirectUrl) {
-			this.redirectUrl = redirectUrl;
-			return this;
-		}
 
 		public UserAccountRegistration build() {
 			return new UserAccountRegistration(this);
@@ -216,10 +214,9 @@ public class UserAccountRegistration implements Serializable {
 		this.username = builder.username;
 		this.password = builder.password;
 		this.passwordConfirmation = builder.passwordConfirmation;
-        this.email = builder.registrationEmail;
+        this.email = builder.email;
         this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.locale = builder.locale;
-		this.redirectUrl = builder.redirectUrl;
 	}
 }

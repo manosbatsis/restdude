@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/calipsolib/util"
             /** @lends Calipso.model.UserAccountModel.prototype */
             {
                 isNew: function () {
-                    return this.get("registrationEmail") ? true : false;
+                    return this.get("email") && !this.get("resetPasswordToken") ? true : false;
                 },
                 url: function () {
                     var sUrl = Calipso.getBaseUrl() + this.getBaseFragment() + this.getPathFragment();
@@ -45,8 +45,8 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/calipsolib/util"
                     create: function () {
                         return {
                             view: Calipso.view.UserAccountLayout,
-                            fieldIncludes: Calipso.getConfigProperty("registration.forceCodes") ? ["firstName", "lastName", "registrationEmail", "registrationCode"] : ["firstName", "lastName", "registrationEmail"],
-                            defaultNext: "resetPassword",
+                            fieldIncludes: Calipso.getConfigProperty("registration.forceCodes") ? ["firstName", "lastName", "email", "registrationCode", "password", "passwordConfirmation"] : ["firstName", "lastName", "email", "password", "passwordConfirmation"],
+                            defaultNext: "confirmRegistration",
                             overrides: {
                                 contentRegion: {
                                     viewOptions: {
@@ -131,7 +131,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/calipsolib/util"
                     },
                 },
                 fields: {
-                    registrationEmail: {
+                    email: {
                         fieldType: "String",
                         form: {
                             type: "Text",

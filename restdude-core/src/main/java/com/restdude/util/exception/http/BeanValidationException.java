@@ -10,6 +10,7 @@ import java.util.Set;
 public class BeanValidationException extends BadRequestException implements ConstraintViolationException {
 
     private Set<ConstraintViolation> constraintViolations;
+    private String modelType;
 
 
     /**
@@ -64,5 +65,13 @@ public class BeanValidationException extends BadRequestException implements Cons
 
     public void setConstraintViolations(Set<ConstraintViolation> constraintViolations) {
         this.constraintViolations = constraintViolations;
+    }
+
+    public String getModelType() {
+        return modelType;
+    }
+
+    public void setModelType(String modelType) {
+        this.modelType = modelType;
     }
 }

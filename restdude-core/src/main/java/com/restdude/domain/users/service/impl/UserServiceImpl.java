@@ -17,6 +17,7 @@
  */
 package com.restdude.domain.users.service.impl;
 
+import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.details.contact.model.ContactDetails;
@@ -121,28 +122,24 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
     public User findActiveByCredentials(String userNameOrEmail, String password, Map metadata) {
 
         User user = null;
-		try {
-			user = this.findActiveByCredentials(userNameOrEmail, password);
-			if (user != null) {
-				if (!CollectionUtils.isEmpty(metadata)) {
-					List<Metadatum> saved = this.repository.addMetadata(user.getId(), metadata);
-					for (Metadatum meta : saved) {
-						user.addMetadatum((UserMetadatum) meta);
-					}
+        user = this.findActiveByCredentials(userNameOrEmail, password);
+        if (user != null) {
+            if (!CollectionUtils.isEmpty(metadata)) {
+                List<Metadatum> saved = this.repository.addMetadata(user.getId(), metadata);
+                for (Metadatum meta : saved) {
+                    user.addMetadatum((UserMetadatum) meta);
+                }
 
-				}
 			}
-        } catch (Throwable e) {
-            throw new InvalidCredentialsException();
         }
-		return user;
+        return user;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
     public User create(User resource) {
-
-		// create
+        LOGGER.debug("create resource: {}", resource);
+        // create
 		resource = this.create(resource, false);
 
 		// force any errors to occur sooner rather than later
@@ -158,12 +155,14 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	public User createAsConfirmed(User resource) {
+
 		return this.create(resource, true);
 	}
 
 	private User create(User resource, boolean skipConfirmation) {
 
-		// note any credential info
+        LOGGER.debug("create resource: {}, skipConfirmation: {}", resource, skipConfirmation);
+        // note any credential info
 		UserCredentials credentials = this.noteCredentials(resource);
 		// note contact details
 		ContactDetails contactDetails = this.noteContactDetails(resource);
@@ -189,21 +188,24 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 			resource.setRoles(null);
 		}
 
-		// save user
-		resource = super.create(resource);
 
-		// attach and persist credentials
-		credentials.setUser(resource);
+        LOGGER.debug("create, save user: {}", resource);
+        resource = super.create(resource);
+
+        LOGGER.debug("create, sttach and persist credentials: {}", credentials);
+        credentials.setUser(resource);
 		credentials = this.credentialsService.create(credentials);
 		resource.setCredentials(credentials);
 
-		// attach and persist contact details
-		contactDetails.setUser(resource);
+
+        LOGGER.debug("create, attach and persist contact details: {}", contactDetails);
+        contactDetails.setUser(resource);
 		contactDetails = this.contactDetailsService.create(contactDetails);
 		resource.setContactDetails(contactDetails);
 
-		// update registration code
-		if (code != null && code.getId() != null) {
+
+        LOGGER.debug("create, aupdate registration code: {}", contactDetails);
+        if (code != null && code.getId() != null) {
 			code.setCredentials(resource.getCredentials());
 			this.userRegistrationCodeRepository.patch(code);
 		}
@@ -310,34 +312,35 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	public User handleConfirmationOrPasswordResetToken(String userNameOrEmail, String token, String newPassword) {
+    public User handleConfirmationOrPasswordResetToken(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
+
 
 		// require email and token
-		if (StringUtils.isBlank(userNameOrEmail) || StringUtils.isBlank(token)) {
-			throw new BadRequestException("The following parameters are required: email, resetPasswordToken");
+        if (StringUtils.isBlank(passwordResetRequest.getEmailOrUsername()) || StringUtils.isBlank(passwordResetRequest.getResetPasswordToken())) {
+            throw new BadRequestException("The following parameters are required: email, resetPasswordToken");
 		}
 
 		// ensure the user exists
-		User user = this.findOneByUserNameOrEmail(userNameOrEmail);
-		if (user == null) {
-			throw new InvalidCredentialsException("Could not match username: " + userNameOrEmail);
-		}
+        User user = this.findOneByUserNameOrEmail(passwordResetRequest.getEmailOrUsername());
+        if (user == null) {
+            throw new InvalidCredentialsException("Could not match a user: " + passwordResetRequest.getEmailOrUsername());
+        }
 
 		// validate the provided token
 		UserCredentials credentials = user.getCredentials();
-		if (!token.equals(credentials.getResetPasswordToken())) {
-			throw new InvalidCredentialsException("Could not match token: " + userNameOrEmail);
-		}
+        if (!passwordResetRequest.getResetPasswordToken().equals(credentials.getResetPasswordToken())) {
+            throw new InvalidCredentialsException("Could not match token: " + passwordResetRequest.getEmailOrUsername());
+        }
 
 		// token is valid, clear matching record
 		credentials.setResetPasswordToken(null);
 		credentials.setResetPasswordTokenCreated(null);
 
 		// update password if given, ensure a password exists otherwise
-		if (StringUtils.isNotBlank(newPassword)) {
-			LOGGER.debug("handleConfirmationOrPasswordResetToken, new password: " + newPassword);
-			credentials.setPassword(this.passwordEncoder.encode(newPassword));
-		} else if (StringUtils.isBlank(credentials.getPassword())) {
+        String password = passwordResetRequest.getPassword();
+        if (StringUtils.isNotBlank(password)) {
+            credentials.setPassword(this.passwordEncoder.encode(password));
+        } else if (StringUtils.isBlank(credentials.getPassword())) {
 			throw new BadRequestException("The following parameters are required: password, passwordConfirmation");
 		}
 
@@ -428,8 +431,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		if (StringUtils.isNotBlank(userNameOrEmail) && StringUtils.isNotBlank(password)) {
 			User unmatched = this.findActiveByUserNameOrEmail(userNameOrEmail);
 			// match password
-			if (passwordEncoder.matches(password, unmatched.getCredentials().getPassword())) {
-				found = unmatched;
+            if (unmatched != null && passwordEncoder.matches(password, unmatched.getCredentials().getPassword())) {
+                found = unmatched;
 			}
 		}
 		return found;
@@ -539,7 +542,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize(" hasRole('ROLE_USER') ")
     public UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations) {
         UserInvitationResultsDTO results = new UserInvitationResultsDTO();
 		// add from list

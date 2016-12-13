@@ -6,13 +6,13 @@ import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.CrudService;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.Metadatum;
+import com.restdude.mdd.annotation.ModelDrivenPreAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -34,7 +34,7 @@ import java.util.Set;
  * @param <R>  The repository class
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>> implements
+public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>> implements
         CrudService<T, ID> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudServiceImpl.class);
@@ -55,18 +55,21 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
         return this.repository.getDomainClass();
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_CREATE)
+    @ModelDrivenPreAuth
     public T create(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
+        LOGGER.debug("create resource: {}", resource);
         resource = repository.persist(resource);
         this.postCreate(resource);
         return resource;
     }
+
 
     @Override
     public void postCreate(T resource) {
@@ -78,9 +81,10 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
+    @ModelDrivenPreAuth
     public T update(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
+        LOGGER.debug("update resource: {}", resource);
         return repository.save(resource);
     }
 
@@ -89,8 +93,9 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
+    @ModelDrivenPreAuth
     public T patch(@P("resource") T resource) {
+        LOGGER.debug("patch resource: {}", resource);
         return repository.patch(resource);
     }
 
@@ -99,7 +104,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_DELETE)
+    @ModelDrivenPreAuth
     public void delete(T resource) {
         Assert.notNull(resource, "Resource can't be null");
         repository.delete(resource);
@@ -110,7 +115,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_DELETE_BY_ID)
+    @ModelDrivenPreAuth
     public void delete(ID id) {
         Assert.notNull(id, "Resource ID can't be null");
         repository.delete(id);
@@ -121,7 +126,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_DELETE_ALL)
+    @ModelDrivenPreAuth
     public void deleteAll() {
         repository.deleteAll();
     }
@@ -131,7 +136,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_DELETE_WITH_CASCADE)
+    @ModelDrivenPreAuth
     public void deleteAllWithCascade() {
         Iterable<T> list = repository.findAll();
         for (T entity : list) {
@@ -143,7 +148,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(T.PRE_AUTHORIZE_VIEW)
+    @ModelDrivenPreAuth
     public T findById(ID id) {
         Assert.notNull(id, "Resource ID can't be null");
         return repository.findOne(id);
@@ -153,7 +158,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(T.PRE_AUTHORIZE_FIND_BY_IDS)
+    @ModelDrivenPreAuth
     public Iterable<T> findByIds(Set<ID> ids) {
         Assert.notNull(ids, "Resource ids can't be null");
         return repository.findAll(ids);
@@ -163,7 +168,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(T.PRE_AUTHORIZE_FIND_ALL)
+    @ModelDrivenPreAuth
     public Iterable<T> findAll() {
         return repository.findAll();
     }
@@ -172,8 +177,8 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(T.PRE_AUTHORIZE_SEARCH)
-    public Page<T> findAll(Pageable pageRequest) {
+    @ModelDrivenPreAuth
+    public Page<T> findPaginated(Pageable pageRequest) {
         Assert.notNull(pageRequest, "page request can't be null");
         return repository.findAll(pageRequest);
     }
@@ -182,7 +187,7 @@ public class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serial
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(T.PRE_AUTHORIZE_COUNT)
+    @ModelDrivenPreAuth
     public Long count() {
         return repository.count();
     }

@@ -17,6 +17,11 @@
  */
 package com.restdude.domain.geography.model;
 
+import com.restdude.auth.spel.annotations.PreAuthorizeFindAll;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
+import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -38,24 +43,14 @@ import javax.persistence.*;
 })
 @ModelResource(path = "countries", apiName = "Countries", apiDescription = "Operations about countries")
 @ApiModel(value = "Country", description = "A model representing a country, meaning a region that is identified as a distinct entity in political geography.")
+
+@PreAuthorizeFindPaginated(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizeFindByIds(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizeFindAll(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 public class Country extends AbstractFormalRegion<Continent> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
-
-
-	public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_USER')";
-	public static final String PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
-	public static final String PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
-	public static final String PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
-	public static final String PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_USER')";
-	public static final String PRE_AUTHORIZE_DELETE = "denyAll";
-
-	public static final String PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-	public static final String PRE_AUTHORIZE_COUNT = "denyAll";
 
     @Id
     @Column(unique = true, nullable = false, length = 2)

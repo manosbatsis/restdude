@@ -37,7 +37,7 @@
 
     <!--RESTify errors -->
     <bean id="restExceptionResolver" class="com.restdude.domain.error.resolver.RestExceptionHandler">
-        <property name="order" value="100"></property>
+        <property name="order" value="10"></property>
         <property name="errorResolver">
             <bean class="com.restdude.domain.error.resolver.DefaultRestErrorResolver">
             </bean>

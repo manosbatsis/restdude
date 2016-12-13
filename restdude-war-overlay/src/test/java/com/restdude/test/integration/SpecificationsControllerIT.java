@@ -42,8 +42,8 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
         // parse JSON by default
         // RestAssured.defaultParser = Parser.JSON;
 
-        adminLoginContext = this.getLoggedinContext("admin", "admin");
-        adminRequestSpec = adminLoginContext.requestSpec;
+        this.adminLoginContext = this.getLoggedinContext("admin", "admin");
+        this.adminRequestSpec = adminLoginContext.requestSpec;
     }
 
     @Test(description = "Test simple type properties")

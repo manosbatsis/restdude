@@ -3,10 +3,10 @@ package com.restdude.domain.base.service.impl;
 import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.AbstractAssignedIdModelService;
+import com.restdude.mdd.annotation.ModelDrivenPreAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -25,7 +25,7 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_CREATE)
+    @ModelDrivenPreAuth
     public T findOrCreate(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
         Assert.notNull(resource.getId(), "Resource ID can't be null");

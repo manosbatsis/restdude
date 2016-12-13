@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -59,7 +58,6 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<I
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_CREATE)
     public T create(@P("resource") T resource) {
         resource = super.create(resource);
         if (!resource.getVerified()) {
@@ -75,7 +73,6 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<I
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
     public T update(@P("resource") T resource) {
         return this.patch(resource);
     }
@@ -85,7 +82,6 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<I
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(T.PRE_AUTHORIZE_UPDATE)
     public T patch(@P("resource") T resource) {
         // verify?
         String verificationCode = resource.getVerificationToken();

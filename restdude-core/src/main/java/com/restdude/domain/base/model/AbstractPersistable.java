@@ -17,6 +17,7 @@
  */
 package com.restdude.domain.base.model;
 
+import com.restdude.auth.spel.annotations.*;
 import com.restdude.domain.base.validation.Unique;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -37,6 +38,20 @@ import java.io.Serializable;
 @MappedSuperclass
 @Unique
 @EntityListeners(AuditingEntityListener.class)
+
+@PreAuthorizeCount
+@PreAuthorizeCreate
+@PreAuthorizeDelete
+@PreAuthorizeDeleteAll
+@PreAuthorizeDeleteById
+@PreAuthorizeDeleteWithCascade
+@PreAuthorizeFindAll
+@PreAuthorizeFindById
+@PreAuthorizeFindByIds
+@PreAuthorizeFindOrCreate
+@PreAuthorizeFindPaginated
+@PreAuthorizePatch
+@PreAuthorizeUpdate
 public abstract class AbstractPersistable<ID extends Serializable> implements CalipsoPersistable<ID> {
 
 	private static final long serialVersionUID = -6009587976502456848L;

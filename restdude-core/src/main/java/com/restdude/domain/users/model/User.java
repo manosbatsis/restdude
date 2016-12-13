@@ -17,8 +17,14 @@
  */
 package com.restdude.domain.users.model;
 
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.auth.spel.annotations.PreAuthorizeCreate;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
+import com.restdude.auth.spel.annotations.PreAuthorizePatch;
+import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
+import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
@@ -52,31 +58,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- */
 
 @ShallowReference
 @Entity
 @ApiModel(description = "Human users")
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
+@PreAuthorizeCreate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizePatch(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizeUpdate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
+@PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 public class User extends AbstractMetadataSubject<UserMetadatum> implements CalipsoPersistable<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
 	private static final long serialVersionUID = -7942906897981646998L;
-	public static final String PRE_AUTHORIZE_SEARCH = "isAuthenticated()";
-	public static final String PRE_AUTHORIZE_CREATE = "hasAnyRole('" + Role.ROLE_ADMIN + "', '" + Role.ROLE_SITE_OPERATOR + "')";
-	public static final String PRE_AUTHORIZE_UPDATE = " #id == principal.id or " + PRE_AUTHORIZE_CREATE;
-	public static final String PRE_AUTHORIZE_PATCH = PRE_AUTHORIZE_UPDATE;
-	public static final String PRE_AUTHORIZE_VIEW = "isAuthenticated()";
-	public static final String PRE_AUTHORIZE_DELETE = "denyAll";
 
-	public static final String PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_ALL = "denyAll";
-	public static final String PRE_AUTHORIZE_COUNT = "denyAll";
 
 	@ApiModelProperty(hidden = true)
 	@Formula("concat(first_name, ' ', last_name )")
@@ -223,7 +219,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("firstName", this.getFirstName()).append("lastName", this.getLastName())
 				.append("username", this.getUsername()).append("new", this.isNew()).append("roles", this.getRoles())
 				.toString();
 	}

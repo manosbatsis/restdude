@@ -79,7 +79,7 @@ public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize(StompSession.PRE_AUTHORIZE_CREATE)
+    @PreAuthorize(" hasRole('ROLE_USER') ")
     public StompSession create(StompSession resource) {
         validateUser(resource);
 		
@@ -122,7 +122,7 @@ public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
 
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize(StompSession.PRE_AUTHORIZE_UPDATE)
+    @PreAuthorize(" hasRole('ROLE_USER') ")
     public StompSession update(StompSession resource) {
         validateUser(resource);
 		return super.update(resource);
@@ -133,7 +133,7 @@ public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
      */
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize(StompSession.PRE_AUTHORIZE_DELETE)
+    @PreAuthorize(" hasRole('ROLE_USER') ")
     public void delete(@P("resource") StompSession sess) {
         sess = this.repository.getOne(sess.getId());
 		long count = this.repository.countForUser(sess.getUser().getId()).longValue();
@@ -149,7 +149,7 @@ public void onSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
      */
 	@Override
 	@Transactional(readOnly = false)
-	@PreAuthorize(StompSession.PRE_AUTHORIZE_DELETE)
+    @PreAuthorize(" hasRole('ROLE_USER') ")
     public void delete(String id) {
         StompSession sess = this.repository.findOne(id);
 		if(sess != null){

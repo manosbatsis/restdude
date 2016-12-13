@@ -25,7 +25,6 @@ import com.restdude.domain.users.service.UserCredentialsService;
 import com.restdude.util.exception.http.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
@@ -46,7 +45,6 @@ public class UserCredentialsServiceImpl extends AbstractModelServiceImpl<UserCre
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(UserCredentials.PRE_AUTHORIZE_CREATE)
     public UserCredentials create(@P("resource") UserCredentials resource) {
         // require password for active
         if (resource.getActive() && resource.getPassword() == null) {

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.util.email.service;
+package com.restdude.util.email.service;
 
 
 import com.restdude.domain.users.model.User;
@@ -131,8 +131,8 @@ public class EmailService {
 				.append('>')
 				.toString();
 		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("getDefaultSender: " + emailFrom);
-		}
+            LOGGER.debug("getDefaultSender: {}", emailFrom);
+        }
 		return emailFrom;
 	}
 
@@ -150,8 +150,8 @@ public class EmailService {
 			final String htmlContent = this.templateEngine.process(templateName, ctx);
 
 			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("Sending email body: " + htmlContent);
-			}
+                LOGGER.debug("Sending email body: \n {}", htmlContent);
+            }
 			message.setText(htmlContent, true /* isHtml */);
 	
 			// Send email
@@ -196,13 +196,14 @@ public class EmailService {
 
         // Create the HTML body using Thymeleaf
         final String htmlContent = this.templateEngine.process("email-withattachment.html", ctx);
-		LOGGER.info("Sending email body: " + htmlContent);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Sending email body: \n {}", htmlContent);
+        }
         message.setText(htmlContent, true /* isHtml */);
         
         // Add the attachment
         final InputStreamSource attachmentSource = new ByteArrayResource(attachmentBytes);
-        message.addAttachment(
-                attachmentFileName, attachmentSource, attachmentContentType);
+        message.addAttachment(attachmentFileName, attachmentSource, attachmentContentType);
         
         // Send mail
         this.mailSender.send(mimeMessage);

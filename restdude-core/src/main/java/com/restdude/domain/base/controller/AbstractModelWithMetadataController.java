@@ -21,6 +21,7 @@ package com.restdude.domain.base.controller;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.metadata.model.MetadatumDTO;
+import com.restdude.mdd.annotation.ModelDrivenPreAuth;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,14 +40,16 @@ public abstract class AbstractModelWithMetadataController<T extends CalipsoPersi
 
 	@RequestMapping(value = "{subjectId}/metadata", method = RequestMethod.PUT)
     @ApiOperation(value = "Add metadatum", notes = "Add or updated a resource metadatum")
-	public void addMetadatum(@PathVariable ID subjectId,
+    @ModelDrivenPreAuth
+    public void addMetadatum(@PathVariable ID subjectId,
 			@RequestBody MetadatumDTO dto) {
 		service.addMetadatum(subjectId, dto);
 	}
 
 	@RequestMapping(value = "{subjectId}/metadata/{predicate}", method = RequestMethod.DELETE)
     @ApiOperation(value = "Remove metadatum", notes = "Remove a resource metadatum if it exists")
-	public void removeMetadatum(@PathVariable ID subjectId,
+    @ModelDrivenPreAuth
+    public void removeMetadatum(@PathVariable ID subjectId,
 			@PathVariable String predicate) {
 		service.removeMetadatum(subjectId, predicate);
 	}

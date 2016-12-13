@@ -42,25 +42,12 @@ import java.util.Collection;
 public class Role extends AbstractSystemUuidPersistable implements GrantedAuthority {
 
 	private static final long serialVersionUID = 3558291745762331656L;
-	
-	public static final String PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-	public static final String PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
-	public static final String PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
-	public static final String PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
-	public static final String PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-	public static final String PRE_AUTHORIZE_DELETE = "denyAll";
-
-	public static final String PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-	public static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-	public static final String PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-	public static final String PRE_AUTHORIZE_COUNT = "denyAll";
 
 	// global roles
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_SITE_OPERATOR = "ROLE_SITE_OPERATOR";
 	public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_UNCONFIRMED_USER = "UNCONFIRMED_USER";
 
 
     @NotNull

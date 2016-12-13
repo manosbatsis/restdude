@@ -17,8 +17,8 @@
  */
 package com.restdude.mdd.annotation;
 
+import com.restdude.domain.base.controller.AbstractModelController;
 import com.restdude.domain.base.controller.AbstractNoDeleteModelController;
-import com.restdude.domain.base.controller.ModelController;
 
 import java.io.Serializable;
 import java.lang.annotation.*;
@@ -79,11 +79,11 @@ public @interface ModelResource {
     Class<? extends Serializable> idClass() default String.class;
     /**
      * The superclass for the generated controller. must implement 
-     * {@link ModelController}. The default
+     * {@link AbstractModelController}. The default
      * is {@link AbstractNoDeleteModelController}.
      */
     @SuppressWarnings("rawtypes")
-	Class<? extends ModelController> controllerSuperClass() default AbstractNoDeleteModelController.class;
+    Class<? extends AbstractModelController> controllerSuperClass() default AbstractNoDeleteModelController.class;
 
     /**
      * The request mapping path for the generated controller

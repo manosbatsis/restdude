@@ -26,21 +26,6 @@ import java.io.Serializable;
  */
 public interface CalipsoPersistable<ID extends Serializable> extends Persistable<ID>{
 
-    static final String PRE_AUTHORIZE_SEARCH = "isAuthenticated()";
-    static final String PRE_AUTHORIZE_CREATE = "isAuthenticated()";
-    static final String PRE_AUTHORIZE_UPDATE = "isAuthenticated()";
-    static final String PRE_AUTHORIZE_PATCH = "isAuthenticated()";
-    static final String PRE_AUTHORIZE_VIEW = "isAuthenticated()";
-    static final String PRE_AUTHORIZE_DELETE = "denyAll";
-
-
-    static final String PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-    static final String PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    static final String PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    static final String PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-    static final String PRE_AUTHORIZE_FIND_ALL = "denyAll";
-    static final String PRE_AUTHORIZE_COUNT = "denyAll";
-
 
     ID getId();
 

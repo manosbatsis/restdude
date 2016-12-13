@@ -17,9 +17,11 @@
  */
 package com.restdude.mdd.util;
 
+import com.restdude.domain.base.validation.CaseSensitive;
 import com.restdude.mdd.annotation.ModelRelatedResource;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.ClassUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
@@ -35,11 +37,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityUtil {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityUtil.class);
 
+    private static ConcurrentHashMap<String, Boolean> fieldCaseSensitivity = new ConcurrentHashMap<String, Boolean>();
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getParentEntity(Object child){
@@ -109,4 +113,27 @@ public class EntityUtil {
 	    String[] result = new String[emptyNames.size()];
 	    return emptyNames.toArray(result);
 	}
+
+    public static boolean isCaseSensitive(Class domainClass, String propertyName) {
+        boolean caseSensitive = false;
+        String fieldKey = new StringBuffer(domainClass.getCanonicalName()).append('.').append(propertyName).toString();
+
+
+        if (!fieldCaseSensitivity.containsKey(fieldKey)) {
+            Field field = FieldUtils.getField(domainClass, propertyName, true);
+
+            if (field != null && String.class.isAssignableFrom(field.getType())) {
+
+                CaseSensitive annotation = field.getAnnotation(CaseSensitive.class);
+                if (annotation != null) {
+                    caseSensitive = annotation.value();
+                }
+                fieldCaseSensitivity.put(fieldKey, caseSensitive);
+            }
+        } else {
+            caseSensitive = fieldCaseSensitivity.get(fieldKey);
+        }
+
+        return caseSensitive;
+    }
 }

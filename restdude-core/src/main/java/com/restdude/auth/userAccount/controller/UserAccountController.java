@@ -99,9 +99,9 @@ public class UserAccountController {
 		}
 
 		// create user
-		User u = resource.asUser();
-		LOGGER.debug("create, user: {}", u);
-		return this.service.create(u);
+        User u = this.service.create(resource.asUser());
+        LOGGER.debug("created, user: {}", u);
+        return u;
 
 	}
 
@@ -118,7 +118,6 @@ public class UserAccountController {
 		if (userDetails == null) {
 			userDetails = new UserDetails();
 		} else if (userDetails.getId() != null) {
-			userDetails.setPassword(resource.getPassword());
 			//userDetails = this.userDetailsService.create(userDetails);
 			//userDetails.setPassword(resource.getPassword());
 			LOGGER.debug("update, loggin-in userDetails: {}", userDetails);

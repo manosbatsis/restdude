@@ -18,11 +18,16 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.restdude.auth.spel.annotations.*;
+import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.base.binding.SkipPropertySerializer;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
+import com.restdude.domain.base.model.AbstractPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.validation.UserRegistrationCodeConstraint;
+import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -32,14 +37,30 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+
 @ShallowReference
 @Entity
-@ApiModel(description = "UserCredentials")
 @Table(name = "user_credentials")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class UserCredentials extends AbstractSystemUuidPersistable implements CalipsoPersistable<String> {
+@ModelResource(path = "userCredentials", apiName = "User Credentials", apiDescription = "Operations about user credentials", controllerSuperClass = AbstractReadOnlyModelController.class)
+@ApiModel(value = "UserCredentials", description = "User login information")
+
+@PreAuthorizeCount(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeCreate(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeDeleteAll(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeDeleteById(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeDelete(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeDeleteWithCascade(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeFindAll(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeFindByIds(controller = SpelUtil.DENY_ALL)
+@PreAuthorizePatch(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeUpdate(controller = SpelUtil.DENY_ALL)
+@PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN)
+public class UserCredentials extends AbstractPersistable<String> implements CalipsoPersistable<String> {
 
     private static final long serialVersionUID = 1L;
+
+    @Id
+    private String id;
 
     @NotNull
     @Column(name = "active", nullable = false)
@@ -56,11 +77,9 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     @Column(name = "user_password")
     private String password;
 
-    @JsonIgnore
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
-    @JsonIgnore
     @Column(name = "reset_password_token_date")
     private LocalDateTime resetPasswordTokenCreated;
 
@@ -73,9 +92,13 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     @Column(name = "login_attempts")
     private Short loginAttempts = 0;
 
+    @JsonIgnore
+    @MapsId
     @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, unique = true)
     private User user;
 
+    @JsonIgnore
     @UserRegistrationCodeConstraint
     @OneToOne(mappedBy = "credentials", fetch = FetchType.LAZY)
     private UserRegistrationCode registrationCode;
@@ -126,6 +149,33 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
                 .toString();
     }
 
+    /**
+     * Get the entity's primary key
+     *
+     * @see org.springframework.data.domain.Persistable#getId()
+     */
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Set the entity's primary key
+     *
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * @see org.springframework.data.domain.Persistable#isNew()
+     */
+    @Override
+    public boolean isNew() {
+        return null == getId();
+    }
+
     public void setActive(Boolean active) {
         this.active = active;
     }
@@ -151,10 +201,12 @@ public class UserCredentials extends AbstractSystemUuidPersistable implements Ca
     }
 
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

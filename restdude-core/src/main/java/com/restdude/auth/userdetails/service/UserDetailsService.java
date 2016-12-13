@@ -20,6 +20,7 @@ package com.restdude.auth.userdetails.service;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.users.model.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -36,7 +37,10 @@ public interface UserDetailsService {
 
     ICalipsoUserDetails createForImplicitSignup(User user);
 
-	ICalipsoUserDetails getPrincipal();
+
+    Authentication getAuthentication();
+
+    ICalipsoUserDetails getPrincipal();
 
 	User getPrincipalLocalUser();
 

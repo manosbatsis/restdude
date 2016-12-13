@@ -15,6 +15,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -46,8 +49,9 @@ public class DefaultRestErrorResolver implements RestErrorResolver, MessageSourc
 
     static {
         exceptionStatuses.put(NoSuchRequestHandlingMethodException.class, HttpServletResponse.SC_NOT_FOUND);
-        //exceptionStatuses.put(AuthenticationException.class, HttpServletResponse.SC_UNAUTHORIZED);
-        //exceptionStatuses.put(UsernameNotFoundException.class, HttpServletResponse.SC_UNAUTHORIZED);
+        exceptionStatuses.put(AuthenticationException.class, HttpServletResponse.SC_UNAUTHORIZED);
+        exceptionStatuses.put(UsernameNotFoundException.class, HttpServletResponse.SC_UNAUTHORIZED);
+        exceptionStatuses.put(AccessDeniedException.class, HttpServletResponse.SC_UNAUTHORIZED);
         exceptionStatuses.put(ObjectNotFoundException.class, HttpServletResponse.SC_NOT_FOUND);
         exceptionStatuses.put(EntityNotFoundException.class, HttpServletResponse.SC_NOT_FOUND);
         exceptionStatuses.put(EntityExistsException.class, HttpServletResponse.SC_CONFLICT);

@@ -27,7 +27,6 @@ import com.restdude.domain.users.service.UserRegistrationCodeBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +52,6 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
      */
     @Override
     @Transactional(readOnly = false)
-    @PreAuthorize(UserRegistrationCodeBatch.PRE_AUTHORIZE_CREATE)
     public UserRegistrationCodeBatch create(UserRegistrationCodeBatch resource) {
         resource = super.create(resource);
 
@@ -77,7 +75,6 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(UserRegistrationCodeBatch.PRE_AUTHORIZE_SEARCH)
     public List<UserRegistrationCodeInfo> findBatchCodes(String batchId) {
 
         LOGGER.info("findBatchCodes, id: {}", batchId);
@@ -91,7 +88,6 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(UserRegistrationCodeBatch.PRE_AUTHORIZE_SEARCH)
     public List<UserRegistrationCodeInfo> findBatchCodes() {
 
         List<UserRegistrationCodeInfo> rows = this.repository.findBatchCodes();
@@ -104,7 +100,6 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
      * {@inheritDoc}
      */
     @Override
-    @PreAuthorize(UserRegistrationCodeBatch.PRE_AUTHORIZE_SEARCH)
     public String findBatchName(String batchId) {
         UserRegistrationCodeBatch batch = this.repository.getOne(batchId);
         LOGGER.debug("findBatchName, batchId: {}, batch: {}", batchId, batch);

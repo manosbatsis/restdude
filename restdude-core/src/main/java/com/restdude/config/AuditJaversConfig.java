@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
 
@@ -34,7 +33,7 @@ import java.util.Optional;
 @Configuration
 //@ComponentScan(basePackages = "**.calipso")
 //@EnableTransactionManagement
-@EnableAspectJAutoProxy
+//@EnableAspectJAutoProxy
 //@EnableJpaRepositories(basePackages = "org.javers.spring.repository.jpa")
 public class AuditJaversConfig {
 

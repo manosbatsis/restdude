@@ -103,7 +103,7 @@ public class CsvControllerIT extends AbstractControllerIT {
                         .body(new UserAccountRegistration.Builder()
                                 .firstName("Firstname")
                                 .lastName("LastName")
-                                .registrationEmail("BetaCodeBatch_" + i + "_" + (j++) + "@" + this.getClass().getSimpleName() + ".com")
+                                .email("BetaCodeBatch_" + i + "_" + (j++) + "@" + this.getClass().getSimpleName() + ".com")
                                 .registrationCode(rowAsMap.get("id"))
                                 .build())
                         .post("/calipso/api/auth/account")
