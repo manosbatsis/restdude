@@ -1,0 +1,30 @@
+//   ========================================================
+// * @name       _link.scss
+// * @desc       Anchor tag styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Link styles
+// * --------------------------------------------------------
+a,
+a:link,
+a:active,
+a:visited,
+a:focus {
+    color: $cui-link-color;
+    font-weight: $cui-font-weight-semibold;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+    color: $cui-link-color-hover;
+}
+
+a:visited,
+a:visited:hover {
+    color: $cui-link-color-visited;
+}

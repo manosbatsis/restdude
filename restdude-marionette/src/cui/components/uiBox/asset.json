@@ -1,0 +1,5 @@
+{
+    "name": "uiBox",
+    "lazy": false,
+    "sources": [ "style", "script"]
+}

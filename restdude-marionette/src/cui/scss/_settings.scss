@@ -1,0 +1,277 @@
+//   ========================================================
+// * @desc       Global Sass variables
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Typography
+// * --------------------------------------------------------
+$cui-font-basic:           Arial, sans-serif !default;
+$cui-font-family:          "Open Sans", $cui-font-basic !default;
+$cui-text-font:            $cui-font-family !default;
+$cui-font-monospace:       Menlo, Consolas, monospace !default;
+$cui-font-size:            16px !default;
+$cui-text-size:            16px !default;
+$cui-font-weight-light:    400 !default;
+$cui-font-weight-semibold: 600 !default;
+$cui-line-height:          normal !default;
+
+// Headings
+$cui-font-heading:         $cui-font-family !default;
+
+// Required asterisk
+$cui-required-font-size:   ($cui-font-size - 2px) !default;
+$cui-required-font-family: $cui-font-family !default;
+$cui-required-font-weight: $cui-font-weight-semibold !default;
+
+
+// * @section    Colors
+// * --------------------------------------------------------
+$cui-color-white:                #ffffff !default;
+$cui-color-dark-gray:            #333333 !default;
+$cui-color-dark-gray-alt:        #454545 !default;
+$cui-color-dark-gray-alt-2:      #646460 !default;
+$cui-color-light-gray:           #dededc !default;
+$cui-color-light-gray-alt:       #eeeeec !default;
+$cui-color-light-gray-alt-2:     #bfbfbd !default;
+$cui-color-light-gray-alt-3:     #e7e7e5 !default;
+$cui-color-light-gray-alt-4:     #e6ebec !default;
+$cui-color-error-text:           #b52c2c !default;
+$cui-color-error-background:     #f9e7e7 !default;
+$cui-color-error-border:         #f4d2d2 !default;
+$cui-color-warning-text:         #806900 !default;
+$cui-color-warning-background:   #fff6cc !default;
+$cui-color-warning-border:       #ffe366 !default;
+$cui-color-info-text:            #128ec3 !default;
+$cui-color-info-background:      #f0fafe !default;
+$cui-color-info-border:          #90dcfd !default;
+$cui-color-success-text:         #3C763D !default;
+$cui-color-success-background:   #DFF0D8 !default;
+$cui-color-success-border:       #D6E9C6 !default;
+$cui-color-required-red:         #ee3300 !default;
+$cui-color-light-blue:           #19a6e2 !default;
+
+// Partials
+$cui-text-color:    $cui-color-dark-gray !default;
+$cui-bg-color:      $cui-color-white !default;
+$cui-heading-color: $cui-text-color !default;
+$cui-input-color:   $cui-text-color !default;
+$cui-code-color:    $cui-color-success-text !default;
+$cui-link-color:    $cui-color-light-blue !default;
+$cui-link-color-hover:    lighten($cui-color-light-blue, 10%) !default;
+$cui-link-color-visited:  darken($cui-color-light-blue, 10%) !default;
+
+
+// * @section    General
+// * --------------------------------------------------------
+$cui-border-radius:        4px !default;
+$cui-border-radius-small:  2px !default;
+$cui-margin-center-h:      0 auto !default;
+$cui-margin-center-v:      auto 0 !default;
+$cui-images-path:          "/dist/images/" !default;
+$cui-touch-min-height:     44px !default;
+
+
+// * @section    Inputs
+// * --------------------------------------------------------
+$cui-input-border-color:    $cui-color-light-gray-alt-2 !default;
+$cui-input-border-width:    1px !default;
+$cui-input-border:          $cui-input-border-width solid $cui-input-border-color !default;
+$cui-input-border-color-focus:  #66afe9 !default;
+$cui-input-border-radius:   $cui-border-radius !default;
+$cui-input-padding-top:     4px !default;
+$cui-input-padding-right:   6px !default;
+$cui-input-padding-bottom:  $cui-input-padding-top !default;
+$cui-input-padding-left:    $cui-input-padding-right !default;
+$cui-input-padding:         $cui-input-padding-top $cui-input-padding-right $cui-input-padding-bottom $cui-input-padding-left !default;
+$cui-input-bg-color:        $cui-color-white !default;
+$cui-input-bg-hover-color:  $cui-color-light-gray !default;
+$cui-input-font-size:       $cui-font-size !default;
+$cui-input-font-weight:     $cui-font-weight-light !default;
+$cui-input-boxshadow-focus: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6) !default;
+
+$cui-input-difference-in-padding-value: 1px !default;
+
+$cui-inputgroup-padding-top:    (1.5 * $cui-input-padding-top) !default;
+$cui-inputgroup-padding-right:  (2 * $cui-input-padding-right) !default;
+$cui-inputgroup-padding-bottom: (1.5 * $cui-input-padding-bottom) !default;
+$cui-inputgroup-padding-left:   (2 * $cui-input-padding-left) !default;
+$cui-inputgroup-padding:        $cui-inputgroup-padding-top $cui-inputgroup-padding-right $cui-inputgroup-padding-bottom $cui-inputgroup-padding-left !default;
+
+$cui-input-prepend-width: ($cui-input-padding-left + (0.25 * $cui-input-font-size)) !default;
+$cui-input-append-width:  ($cui-input-padding-left + (1 * $cui-input-font-size)) !default;
+
+$cui-textarea-resize: vertical !default;
+
+
+// * @section    Fields
+// * --------------------------------------------------------
+$cui-field-line-height:        1.4 !default; // This corresponds to `normal` for many browsers
+$cui-inline-field-line-height: (2 * $cui-field-line-height) !default;
+$cui-field-flex-order: 99999 !default;
+$cui-field-space-between-field-elements: 0 !default;
+$cui-field-space-between-controls: (0.5 * $cui-field-space-between-field-elements) !default;
+$cui-field-use-asterisk-for-required-fields: true !default;
+
+
+// * @section    Buttons
+// * --------------------------------------------------------
+$cui-button-hover-color:     $cui-color-light-gray !default;
+$cui-button-padding-top:     8px !default;
+$cui-button-padding-right:   12px !default;
+$cui-button-padding-bottom:  8px !default;
+$cui-button-padding-left:    12px !default;
+$cui-button-padding:         $cui-button-padding-top $cui-button-padding-right $cui-button-padding-bottom $cui-button-padding-left !default;
+$cui-button-margin-top:      0 !default;
+$cui-button-margin-right:    0 !default;
+$cui-button-margin-bottom:   0 !default;
+$cui-button-margin-left:     0.5em !default;
+$cui-button-margin:          $cui-button-margin-top $cui-button-margin-right $cui-button-margin-bottom $cui-button-margin-left !default;
+$cui-button-border-color:    #a5a5a3 !default;
+$cui-button-border-style:    solid !default;
+$cui-button-border-width:    1px !default;
+$cui-button-border:          $cui-button-border-width $cui-button-border-style $cui-button-border-color !default;
+$cui-button-color:           $cui-color-dark-gray !default;
+$cui-button-bg-color:        #d0d0ce !default;
+$cui-button-text-shadow:     rgb(255, 255, 255) 0 1px 0 !default;
+$cui-button-border-radius:   $cui-input-border-radius !default;
+$cui-button-font-size:       $cui-input-font-size !default;
+$cui-button-font-weight:     $cui-input-font-weight !default;
+$cui-button-text-wrapping:   nowrap !default; // Value provided to the `white-space` property
+$cui-button-text-decoration: none !default;
+
+// Primary button
+$cui-button-primary-color:              $cui-color-white !default;
+$cui-button-primary-color-hover:        $cui-color-white !default;
+$cui-button-primary-color-active:       $cui-button-primary-color-hover !default;
+$cui-button-primary-bg-color:           $cui-color-dark-gray-alt-2 !default;
+$cui-button-primary-border-color:       #5a5a56 !default;
+$cui-button-primary-border:             $cui-button-border-width solid $cui-button-primary-border-color !default;
+$cui-button-primary-text-shadow:        rgb(90, 90, 90) 0 1px 0 !default;
+$cui-button-primary-border-hover-color: #444440 !default;
+$cui-button-primary-bg-color-hover:     #50504b !default;
+$cui-button-primary-text-decoration:    none !default;
+
+// Icon buttons
+$cui-button-icon-padding-top:    0 !default;
+$cui-button-icon-padding-right:  0 !default;
+$cui-button-icon-padding-bottom: 0 !default;
+$cui-button-icon-padding-left:   0 !default;
+$cui-button-icon-padding:        $cui-button-icon-padding-top $cui-button-icon-padding-right $cui-button-icon-padding-bottom $cui-button-icon-padding-left !default;
+$cui-button-icon-margin-top:     0 !default;
+$cui-button-icon-margin-right:   0 !default;
+$cui-button-icon-margin-bottom:  0 !default;
+$cui-button-icon-margin-left:    0 !default;
+$cui-button-icon-margin:         $cui-button-icon-margin-top $cui-button-icon-margin-right $cui-button-icon-margin-bottom $cui-button-icon-margin-left !default;
+
+$cui-button-icon-width:    24px !default;
+$cui-button-icon-height:   24px !default;
+
+
+// * @section    Grid
+// * --------------------------------------------------------
+
+// This flag determines whether to use legacy styles for the grid classes (i.e., standard `float` and `width` properties) rather than flex box
+// Set this to `true` in src/project/scss/_settings.scss if your project needs to support older browsers (e.g. IE 9 and below)
+$cui-grid-use-legacy-styles: false !default;
+
+// Grid generator properties
+$cui-grid-column-count:      12 !default;
+
+// Sizes for fixed column classes
+$cui-grid-fixed-sizes: (100px, 200px, 400px, 33pc, 67pc) !default;
+// Sizes for flexible column classes -- these should generally mirror and/or complement the fixed column sizes defined above
+$cui-grid-flex-sizes:  (100px, 200px, 300px, 400px, 33pc, 67pc) !default;
+
+$cui-grid-flex-row-wrap: wrap !default;
+
+// Grid appearance
+$cui-grid-column-min-height:   1.5em !default;
+$cui-grid-gutter-width:        0 !default;
+$cui-grid-gutter-width-half:   $cui-grid-gutter-width / 2 !default;
+$cui-grid-gutter-width-double: $cui-grid-gutter-width * 2 !default;
+$cui-grid-row-margin:          0 auto $cui-grid-gutter-width auto !default;
+$cui-grid-column-padding:      0 $cui-grid-gutter-width !default;
+
+
+// * @section    Headers
+// * --------------------------------------------------------
+$cui-header-padding-top:    0 !default;
+$cui-header-padding-right:  0 !default;
+$cui-header-padding-bottom: 0.4em !default;
+$cui-header-padding-left:   0 !default;
+$cui-header-padding: $cui-header-padding-top $cui-header-padding-right $cui-header-padding-bottom $cui-header-padding-left !default;
+
+
+// * @section    Sections
+// * --------------------------------------------------------
+
+
+// * @section    Text (<p>, free text, etc.)
+// * --------------------------------------------------------
+$cui-color-text-line-height: 1.4 !default;
+$cui-paragraph-padding:      0.7em !default;
+
+
+// * @section    Tables
+// * --------------------------------------------------------
+$cui-table-header-bg-color:     $cui-color-light-gray !default;
+$cui-table-header-padding:      8px 12px !default;
+$cui-table-row-bg-alt-color:    $cui-color-light-gray-alt !default;
+$cui-table-cell-border-width:   1px !default;
+$cui-table-cell-border-style:   solid !default;
+$cui-table-cell-border-color:   $cui-color-light-gray-alt-2 !default;
+$cui-table-cell-border:         $cui-table-cell-border-width $cui-table-cell-border-style $cui-table-cell-border-color !default;
+$cui-table-cell-padding-top:    4px !default;
+$cui-table-cell-padding-right:  8px !default;
+$cui-table-cell-padding-bottom: 4px !default;
+$cui-table-cell-padding-left:   8px !default;
+$cui-table-cell-padding:        $cui-table-cell-padding-top $cui-table-cell-padding-right $cui-table-cell-padding-bottom $cui-table-cell-padding-left !default;
+$cui-table-button-padding:      $cui-table-cell-padding !default;
+$cui-table-footer-cell-padding: 8px !default;
+$cui-table-row-bg-hover-color:  $cui-color-light-gray-alt-3;
+
+
+// * @section    Lists
+// * --------------------------------------------------------
+$cui-list-margin-top:     0 !default;
+$cui-list-margin-right:   0 !default;
+$cui-list-margin-bottom:  0 !default;
+$cui-list-margin-left:    0 !default;
+$cui-list-margin:         $cui-list-margin-top $cui-list-margin-right $cui-list-margin-bottom $cui-list-margin-left !default;
+$cui-list-inline-spacing: 1em !default;
+
+
+// * @section    Messages
+// * --------------------------------------------------------
+$cui-messages-margin-top:     0 !default;
+$cui-messages-margin-right:   1em !default;
+$cui-messages-margin-bottom:  0 !default;
+$cui-messages-margin-left:    0 !default;
+$cui-messages-margin:         $cui-messages-margin-top $cui-messages-margin-right $cui-messages-margin-bottom $cui-messages-margin-left !default;
+
+
+// * @section    Breakpoint
+// * --------------------------------------------------------
+$cui-bp-medium:        480px !default;
+$cui-bp-medium-minus:  $cui-bp-medium - 1px !default;
+$cui-bp-large:         786px !default;
+$cui-bp-large-minus:   $cui-bp-large - 1px !default;
+
+// Breakpoints used for generating grid classes -- this should match the list above
+$cui-grid-breakpoints: (
+    ("medium" $cui-bp-medium),
+    ("large" $cui-bp-large)
+);
+
+// Other breakpoints
+$cui-bp-inline-labels: $cui-bp-medium !default; // Below this point, inline labels will not be inline (i.e., labels will display above the data even if you use `.cui-inline-field`). This is helpful if you want to force labels to display above the data on smaller screens. To disable the feature and allow inline labels at any screen size, set this variable to `0`.
+
+
+// * @section    Print
+// * --------------------------------------------------------
+
+// Apply large-screen styles for printing
+//     Setting this to `true` will produce prints that look like the `$cui-bp-large` styles, regardless of the paper size
+//     Setting this to `false` will, in most cases, apply the appropriate media query based on the paper size (e.g. standard letter-sized paper will typically use `$cui-bp-medium` styles)
+$print-using-large-styles: false !default;

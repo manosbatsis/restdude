@@ -1,0 +1,22 @@
+//   ========================================================
+// * @name       _iconbutton.scss
+// * @desc       Icon-based button styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Default icon-based button styles
+// * --------------------------------------------------------
+.cui-icon {
+    @include button-icon;
+    background-color: pink;
+}
+
+// `<button>` and `<a>` won't vertically align. It's only noticeable when they're right next to each other. This will handle the case where the link follows the button; there's no way in CSS to address the other way around (the link is the one that's off by a pixel, not the button). (CP 6/21/2016)
+.cui-controls {
+    button.cui-icon + a.cui-icon {
+        top: -1px;
+    }
+}

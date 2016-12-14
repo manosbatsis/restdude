@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <title>UIBox Test - Core UI</title>
+    <link href="/dist/css/main.css" rel="stylesheet" type="text/css" media="all">
+<style>
+body{
+    padding:15px;
+}
+/*#main{
+    padding-bottom:2000px;
+}*/
+</style>
+
+</head>
+<body>
+    <!-- Skip navigation for accessibility purposes -->
+    <div class="cui-hide-from-screen">
+        <a href="#nav">Go to navigation</a>
+        <a href="#main">Go to content</a>
+    </div>
+    <header class="cui-row">
+        <div class="cui-col-small-12">
+            <h1>Core UI</h1>
+        </div>
+        <div class="cui-col-small-12">
+            <h2>UI Position Tests</h2>
+        </div>
+    </header>
+    <main role="main" id="main">
+        <form name="form_content" id="form_content" action="www.ny.gov" method="post">
+            <section>
+                <div class="cui-row">
+                     <div class="cui-col-small-12">
+                        <h3>Basic Modal Tests</h3>
+                    </div>
+                </div>
+                <div class="cui-row">
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Reset:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button" id="reset" tabindex="1">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="cui-row">
+                     <div class="cui-col-small-12">
+                        <h3>Basic Modal Tests</h3>
+                    </div>
+                </div>
+                <div class="cui-row">
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Top Left:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="topLeft" data-location="top-left" tabindex="1">Test</button>
+                        </div>
+                    </div>
+
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Top Center</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="topCenter" data-location="top-center" tabindex="1">Test</button>
+                        </div>
+                    </div>
+
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Top Right</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="topRigth" data-location="top-right" tabindex="1">Test</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cui-row">
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Center Left:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="testh1" data-location="center-left" tabindex="1">Test</button>
+                        </div>
+                    </div>
+
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Center Center:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="testh2" data-location="center-center" tabindex="1">Test</button>
+                        </div>
+                    </div>
+
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Center Right:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="testh3" data-location="center-right" tabindex="1">Test</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cui-row">
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Bottom Left:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="testh1" data-location="bottom-left" tabindex="1">Test</button>
+                        </div>
+                    </div>
+
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Bottom Center:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="testh2" data-location="bottom-center" tabindex="1">Test</button>
+                        </div>
+                    </div>
+
+                    <div class="cui-col-small-4">
+                        <div class="cui-field-header">Bottom Right:</div>
+                        <div class="cui-field-body">
+                            <button type="button" class="cui-button location-button" id="testh3" data-location="bottom-right" tabindex="1">Test</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="uiPosition-Block" class="cui-uiPosition-testBlock">
+                Testing Element
+            </div>
+
+        </form>
+        <hr>
+    </main>
+    <script id="require" src="/dist/js/main.js"></script>
+    <script>
+        require(['jquery', 'cui','modal', 'popover', 'uiPosition', 'domReady!'], function($, cui, modal, popover) {
+
+            var testElement = $("#uiPosition-Block");
+
+            $('#reset').click(function(){
+                testElement.html("Testing Element");
+                testElement.css({"margin":"auto",
+                        "top":"auto",
+                        "left":"auto",
+                        "right":"auto",
+                        "bottom":"auto",
+                        "position" : ""});
+            });
+
+            $('.location-button').click(function(){
+                var location = $(this).data('location');
+                testElement.html(location);
+                testElement.uiPosition({
+                    positionType:location,
+                    offset:10
+                });
+            });
+
+        });
+    </script>
+    <style>
+    /* Demo page styles */
+
+    .cui-uiPosition-testBlock{
+        width:250px;
+        height:250px;
+        background:teal;
+
+        text-align:center;
+        color:white;
+        margin:auto;
+        top:auto;
+        bottom:auto;
+        left:auto;
+        right:auto;
+    }
+
+    section > .cui-row {
+        margin-bottom: 2em;
+    }
+    </style>
+</body>
+
+</html>

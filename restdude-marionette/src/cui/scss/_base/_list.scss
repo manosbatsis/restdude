@@ -1,0 +1,40 @@
+//   ========================================================
+// * @name       _list.scss
+// * @desc       List styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Lists and bullets
+// * --------------------------------------------------------
+ol,
+ul {
+    padding-left: 0;
+    margin: $cui-list-margin;
+}
+
+li {
+    list-style-position: inside;
+
+    img {
+        vertical-align: middle;
+        line-height: normal;
+    }
+
+    .cui-list-inline & {
+        list-style-position: $cui-list-inline-spacing;
+        list-style-type: none;
+        padding-right: $cui-list-inline-spacing;
+    }
+}
+
+// Displays list items horizontally
+.cui-inline-list {
+    list-style: none outside none;
+
+    li {
+        display: inline-block;
+    }
+}

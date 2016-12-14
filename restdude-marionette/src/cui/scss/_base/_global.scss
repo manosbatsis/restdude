@@ -1,0 +1,26 @@
+//   ========================================================
+// * @desc       Global styles
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Additional resets
+// * --------------------------------------------------------
+body {
+    line-height: $cui-line-height;
+    @include clearfix;
+    color: $cui-text-color;
+    background-color: $cui-bg-color;
+}
+
+// * @section    Browser box model consistency
+// * --------------------------------------------------------
+html {
+    @include box-sizing;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}

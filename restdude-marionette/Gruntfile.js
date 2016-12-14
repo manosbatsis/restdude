@@ -53,6 +53,16 @@ module.exports = function(grunt) {
                 dest: "<%= pathConfig.rootDir %>server"
             }
         },
+         // https://github.com/gruntjs/grunt-contrib-clean
+        clean: {
+            options: {
+                force:true
+            },
+            dist: [
+                'dist',
+                'docs',
+            ],
+        },
         uglify: {
             options: {
                 compress: true
@@ -138,8 +148,10 @@ module.exports = function(grunt) {
                 }
             },
             css: {
-                files: ["<%= pathConfig.rootDir %>preprocess/scss/**.scss"],
-                tasks: ["compass"]
+               // files: ["<%= pathConfig.rootDir %>preprocess/scss/**.scss"],
+                //tasks: ["compass"]
+                files: '**/*.scss',
+				tasks: ['sass']
             },
             // Project styles
             styles: {
@@ -162,7 +174,7 @@ module.exports = function(grunt) {
                      'copy',
                     // 'svgmin',
                     'sass',
-                    // 'requirejs',
+                     'requirejs',
                     'concat:css',
                      'copy',
                     'usebanner',
@@ -289,10 +301,30 @@ module.exports = function(grunt) {
                     script: "server/server.js"
                 },
             },
+             fileblocks: {  
+            options: {
+                templates: {
+                    'js': '<script data-main="app/main" src="${file}"></script>',
+                },
+                removeFiles : true
+            },                    
+            prod: {
+                src: 'index.html',
+                blocks: {
+                    'app': { src: 'build/prod.js' }
+                }
+            },
+            develop: {
+                src: 'index.html',
+                blocks: {
+                    'app': { src: 'bower_components/requirejs/require.js' }
+                }
+            },             
+        },
         },
     
     },
-},
+},//end of watch {}
 });
 
      grunt.registerTask('prod', 'Production', function (args) {
@@ -309,8 +341,8 @@ module.exports = function(grunt) {
         // ===========
         var sass = grunt.config.get('sass');
 
-        sass.options.sourceMap = false;
-        sass.options.outputStyle = "compressed";
+       // sass.options.sourceMap = false;
+       // sass.options.outputStyle = "compressed";
 
         grunt.config.set('sass', sass);
 
@@ -320,8 +352,8 @@ module.exports = function(grunt) {
 
         var requireJS = grunt.config.get('requirejs');
 
-        requireJS.compile.options.generateSourceMaps = false;
-        requireJS.compile.options.optimize = "uglify2";
+       // requireJS.compile.options.generateSourceMaps = false;
+       // requireJS.compile.options.optimize = "uglify2";
 
         grunt.config.set('requirejs', requireJS);
 
@@ -330,16 +362,28 @@ module.exports = function(grunt) {
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         grunt.task.run([
-            'clean',
-            'copy',
-            'sass',
-            'requirejs',
-            'concat',
-            'copy',
+            //'clean',
+            //'copy',
+            //'sass',
+            //'requirejs',
+            //'concat',
+            //'copy',
         ]);
     });
-
-        // grunt.config.set('requirejs', requireJS);
+    grunt.loadNpmTasks('grunt-contrib-clean');
+	//grunt.loadNpmTasks('grunt-contrib-connect');
+	//grunt.loadNpmTasks('grunt-contrib-cssmin');
+	//grunt.loadNpmTasks('grunt-contrib-concat');	
+	grunt.loadNpmTasks('grunt-contrib-requirejs');
+	//grunt.loadNpmTasks('grunt-contrib-watch');
+	//grunt.loadNpmTasks('grunt-contrib-jst');
+    grunt.loadNpmTasks('grunt-contrib-sass');
+    //grunt.loadNpmTasks('grunt-contrib-jasmine');
+    //grunt.loadNpmTasks('grunt-file-blocks');
+   // grunt.loadNpmTasks('grunt-contrib-jshint');
+	//grunt.registerTask('default',['watch']);
+   
+    grunt.registerTask("sass",     [ "jshint" ]);    
     grunt.registerTask("test",     [ "karma" ]);
     grunt.registerTask("frontend", [ "connect" ]);
     grunt.registerTask("backend",  [ "express:dev" ]);
@@ -348,5 +392,18 @@ module.exports = function(grunt) {
     grunt.registerTask("build",    [ "test", "sca", "compile", "uglify" ]);
 
     grunt.registerTask("default",  [ "prod"]);
-// grunt.registerTask("default",  [ "react", "sass", "requirejs"]);
+    //grunt.registerTask("default",  [ "requirejs", "sass"]);
+  //  grunt.registerTask('build', [
+       // 'jshint',
+       // 'clean:dist',
+       // 'jst',
+      //  'sass',
+      //  'requirejs',
+     //   'cssmin',
+      //  'jasmine',
+ //]);
+
+    //grunt.registerTask('develop', ['build', 'fileblocks:develop', 'watch']);
+
+   // grunt.registerTask('release', ['build', 'fileblocks:prod']);
 };

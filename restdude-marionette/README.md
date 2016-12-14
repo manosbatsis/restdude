@@ -7,18 +7,13 @@ Prerequisites
 Before you Start make sure that you have installed Node/Npm. Otherwise download it
 from here: Node/Npm - http://nodejs.org/download/
 
-a) Open a cmd promt or a terminal and run: 
-        
-        npm install -g yo
                           
-b) In order to install Grunt run:
+a) In order to install Grunt run:
         
         npm install -g grunt-cli
 
-c) Install Compass:
-        gem install compass
 
-d) Install Sass:
+b) Install Sass:
         gem install sass
 
 In order to install Compass and Sass you must have installed "rubygems". If there are some problems installing
@@ -32,7 +27,7 @@ compass Follow the next steps: 1. Download rubygems-update-2.6.7.gem . Please do
 
                                 4. Run the update_rubygems command
 
-                                5. Run gem install compass
+                                5. Run gem install sass
 
 1. Clone the repository:
 
@@ -40,10 +35,12 @@ compass Follow the next steps: 1. Download rubygems-update-2.6.7.gem . Please do
 
 2. Change to the project's root directory.
 
-3. Install project dependencies by running from the command promt or terminal :
+3. Install project dependencies(node_modules files) by running from the command promt or terminal :
         npm install
 
-4. Run Grunt with: grunt  
+   If you want to remove any dependencies just run: npm remove dependencie_tobe_deleted --save
+
+4. Run Grunt to build the project with: grunt  
 
 5. Browse the app client: http://localhost:9000       
 

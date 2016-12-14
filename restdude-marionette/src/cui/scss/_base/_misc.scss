@@ -1,0 +1,22 @@
+//   ========================================================
+// * @name       _misc.scss
+// * @desc       Miscellaneous styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Miscellaneous default ui patterns
+// * --------------------------------------------------------
+.cui-no-wrap {
+    white-space: nowrap;
+}
+
+.cui-align-right {
+    @include align-right;
+}
+
+.cui-align-center {
+    @include align-center;
+}

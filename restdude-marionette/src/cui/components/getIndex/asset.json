@@ -1,0 +1,5 @@
+{
+    "name": "getIndex",
+    "lazy": false,
+    "sources": ["script"]
+}

@@ -1,0 +1,5 @@
+{
+    "name": "modal",
+    "lazy": true,
+    "sources": ["script", "style"]
+}

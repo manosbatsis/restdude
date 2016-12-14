@@ -1,0 +1,445 @@
+//   ========================================================
+// * @desc       Form field styles
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Form tag
+// * --------------------------------------------------------
+form {
+    @include clearfix;
+}
+
+
+// * @section    Form input elements
+// * --------------------------------------------------------
+input,
+textarea,
+select {
+    font-family: $cui-font-family;
+    font-size: 100%;
+    font-weight: $cui-input-font-weight;
+    border-radius: $cui-input-border-radius;
+    border: $cui-input-border;
+    padding: $cui-input-padding;
+    color: $cui-color-dark-gray;
+    @include input-shadow;
+    @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+
+    &:focus{
+        border-color: $cui-input-border-color-focus;
+        box-shadow: $cui-input-boxshadow-focus;
+        outline: 0;
+    }
+}
+
+select {
+    padding: ($cui-input-padding-top - $cui-input-difference-in-padding-value) $cui-input-padding-right ($cui-input-padding-bottom - $cui-input-difference-in-padding-value) $cui-input-padding-left;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    position: relative;
+    top: 1px;
+    line-height: $cui-field-line-height;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="image"] {
+    border: none;
+}
+
+.cui-input-align-right {
+    input,
+    select,
+    textarea {
+        text-align: right;
+    }
+}
+
+textarea {
+    resize: $cui-textarea-resize;
+
+    .cui-field & {
+        line-height: $cui-line-height; // We don't want this to use `inherit` as defined in `_normalize.scss` because the parent has a much larger value
+
+        // Prevent textareas with large `cols` values from expanding off the right edge of small screens
+        //     Note that this style alone likely isn't enough. Depending on your project, you will need to remove any padding/margin on parent elements like this:
+        //     max-width: calc(100% - $parent-margin - $parent-padding);
+        max-width: 100%;
+    }
+}
+
+fieldset {
+    @include no-padding-margin;
+    border: none;
+
+    // Use the whole available width when inside a form field, otherwise the contents may wrap prematurely
+    form section & {
+        width: 100%;
+    }
+}
+
+
+// * @section    Labels
+// * --------------------------------------------------------
+label,
+legend {
+    color: $cui-color-dark-gray;
+    width: auto;
+}
+
+legend {
+    white-space: normal;
+    display: inline-block;
+}
+
+.cui-desc {
+    cursor: default; // Ensures all "labels" get the same arrowhead cursor whether or not they contain a `<label>` element
+}
+
+// Required field asterisk
+.cui-required {
+    .cui-label {
+        label,
+        legend,
+        span {
+            position: relative;
+
+            &:after {
+                @include required-asterisk;
+
+                .cui-inline-field & {
+                    @include required-asterisk($isInlineField: true);
+                }
+            }
+        }
+    }
+}
+
+
+// * @section    Fields, i.e. a collection of label + data
+// * --------------------------------------------------------
+.cui-field {
+    &:not([class*="cui-layout-order"]) {
+        margin-bottom: $cui-input-font-size;
+    }
+
+    .cui-field-main {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline; // Vertically alignment. This is mainly for the inline label layout, but it doesn't hurt to put the style here where it has less specificity
+    }
+
+    .cui-label,
+    .cui-data,
+    .cui-controls {
+        flex: 0 1 auto;
+        order: $cui-field-flex-order; // This makes it easy to move any element(s) to the front of the row by applying `order` with a small value
+        position: relative;
+        padding-left: 0;
+        padding-right: 0;
+        margin-right: $cui-field-space-between-field-elements; // Space between adjacent containers
+
+        // Apply the same styles that `<legend>` gets in any context (further up in this file)
+        .cui-desc,
+        label {
+            display: inline-block;
+            white-space: normal;
+        }
+    }
+
+    .cui-label {
+        min-height: (2 * $cui-font-size);
+    }
+
+    // Label uses up the whole "row" (except for alternate layouts) which forcing the data and controls down below. This visually converts the `.cui-label` flexbox column into a row.
+    &:not([class*="cui-layout-order"]) {
+        .cui-label {
+            width: 100%;
+        }
+    }
+
+    .cui-controls {
+        display: flex;
+        align-items: baseline;
+
+        & > * {
+            // Space between adjacent controls
+            &:not(:last-child) {
+                margin-right: $cui-field-space-between-controls;
+            }
+        }
+
+        // Smaller text buttons (excluding icon buttons)
+        button:not([class*="cui-icon"]) {
+            padding: (0.5 * $cui-button-padding-top) (0.5 * $cui-button-padding-right);
+            line-height: $cui-field-line-height;
+        }
+    }
+
+    .cui-data {
+        .cui-desc,
+        label {
+            display: inline-block;
+        }
+    }
+
+    .cui-messages {
+        display: inline-block; // Override the default `display: flex` that it normally uses
+    }
+
+    // Alternate layouts:
+
+    // Data first, then label, and lastly controls
+    &.cui-layout-order-data-label-controls {
+        .cui-label {
+            order: 2;
+        }
+
+        .cui-data {
+            order: 1;
+        }
+
+        .cui-controls {
+            order: 3;
+        }
+    }
+
+    // Other layouts can be added here by changing `order` for the applicable flexbox column(s)
+}
+
+
+// * @section    Fields with inline label and data on the same line
+// * @desc       The label and data text wrap independently
+// *             such that they are top-aligned.
+// * --------------------------------------------------------
+@include pointbreak($cui-bp-inline-labels) {
+    .cui-inline-field {
+        .cui-field {
+            margin-bottom: 0;
+
+            .cui-label,
+            .cui-data,
+            .cui-controls {
+                @include col;
+                line-height: $cui-inline-field-line-height;
+            }
+
+            .cui-label {
+                align-items: baseline; // Vertically align controls with the label text
+                width: auto;
+
+                .cui-desc,
+                label,
+                legend {
+                    display: block;
+                    line-height: normal;
+                }
+            }
+
+            .cui-data {
+                line-height: normal;
+            }
+
+            .cui-value {
+                line-height: normal;
+            }
+
+            .cui-controls {
+                flex-wrap: wrap; // This is typically needed on small/medium screens when there are multiple controls next to a fixed-width field such as currency input. Without this style, the `cui-controls` element would spill outside of the field and likely give the page a horizontal scrollbar.
+            }
+
+            .cui-label + .cui-controls {
+                padding-left: 0; // Removes the space between label & controls when there is no data. Without this, the controls won't vertically align with the data in other fields that have labels of the same length.
+            }
+        }
+
+        .cui-field-main {
+            flex-wrap: nowrap;
+        }
+    }
+}
+
+// IE-specific fixes for fields
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .cui-field {
+        width: 100%; // Needed for IE11 to force long paragraphs to wrap instead of extending beyond the container
+
+        .cui-field-main {
+            align-items: baseline; // Better vertical alignment, especially for radio/check groups with inline labels and for fields with both long labels and long data
+        }
+    }
+
+    @include pointbreak($cui-bp-medium) {
+        .cui-inline-field {
+            .cui-field {
+                .cui-data + .cui-controls {
+                    flex-wrap: wrap; // Only needed when `.cui-data` is very wide. Without this, the contents of `.cui-controls` will spill out of their container instead of being allotted enough room to fit.
+                }
+            }
+        }
+    }
+}
+
+
+// * @section    Selection groups
+// * --------------------------------------------------------
+.cui-selection-group {
+    .cui-field-main {
+        align-items: center; // Needed for IE because with `baseline` the data is shifted upward. Doesn't seem to affect other browsers.
+    }
+
+    .cui-data {
+        display: flex;
+
+        label {
+            flex: 0 1 auto;
+            @include user-select;
+            line-height: $cui-field-line-height;
+
+            // Colors and paddings matches buttons styles
+            background-color: $cui-color-white;
+            text-shadow: $cui-color-white 0px 1px 0px;
+            padding: $cui-inputgroup-padding;
+            border: $cui-input-border;
+            border-right: none; // This line must come after default `border` definition
+
+            // First label in the group
+            &:first-of-type {
+                border-top-left-radius: $cui-input-border-radius;
+                border-bottom-left-radius: $cui-input-border-radius;
+            }
+
+            // Last label in the group
+            &:last-of-type {
+                border-top-right-radius: $cui-input-border-radius;
+                border-bottom-right-radius: $cui-input-border-radius;
+                border-right: $cui-input-border; // Color matches buttons styles
+            }
+
+            &:focus,
+            &:hover {
+                background-color: $cui-color-white; // Color matches buttons
+            }
+
+            &:active {
+                @include button-primary-active;
+            }
+        }
+
+        // Hide inputs off screen
+        input {
+            @include hide;
+        }
+
+        // Highlighted label
+        input:checked + label {
+            background-color: $cui-input-bg-hover-color; // Color matches buttons styles
+
+            &:hover {
+                background-color: $cui-button-bg-color; // Color matches buttons
+            }
+
+            &:active {
+                @include button-primary-active;
+            }
+        }
+    }
+}
+
+// List of check boxes or radio buttons in a single field
+.cui-selection-list {
+    .cui-data {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cui-selection-list-item {
+        flex: 0 1 auto;
+        line-height: normal; // Prevent having too much space between items. That problem only affects inline fields, but it doesn't hurt to put the style here where it has less specificity
+
+        label {
+            margin-left: (0.5 * $cui-field-space-between-field-elements);
+        }
+    }
+}
+
+
+// * @section    Input groups and field appends/prepends
+// * --------------------------------------------------------
+.cui-input-wrapper {
+    display: table;
+    border-collapse: separate; // Prevent input groups from inheriting border styles from table cells when placed within a `<table>`
+
+    input,
+    select,
+    .cui-input-prepend,
+    .cui-input-append {
+        display: table-cell;
+        border-radius: 0;
+    }
+
+    // Keep borders rounded if no prepend
+    *:first-child:not(.cui-input-prepend) {
+        border-top-left-radius: $cui-input-border-radius;
+        border-bottom-left-radius: $cui-input-border-radius;
+    }
+
+    // Keep borders rounded if no append
+    *:last-child:not(.cui-input-append) {
+        border-top-right-radius: $cui-input-border-radius;
+        border-bottom-right-radius: $cui-input-border-radius;
+    }
+
+    .cui-input-prepend,
+    .cui-input-append {
+        padding: $cui-input-padding;
+        white-space: nowrap;
+        border: $cui-input-border;
+        background: $cui-input-bg-hover-color;
+    }
+
+    .cui-input-prepend {
+        text-align: right;
+        border-right: none;
+        border-top-left-radius: $cui-input-border-radius;
+        border-bottom-left-radius: $cui-input-border-radius;
+    }
+
+    .cui-input-append {
+        text-align: left;
+        border-left: none;
+        border-top-right-radius: $cui-input-border-radius;
+        border-bottom-right-radius: $cui-input-border-radius;
+    }
+
+    .cui-currency & {
+        input {
+            padding-right: 4px; // Keep the input value closer to the append
+        }
+
+        .cui-input-prepend {
+            width: $cui-input-prepend-width;
+        }
+
+        .cui-input-append {
+            width: $cui-input-append-width;
+            padding-left: 4px; // Keep the append closer to the input value
+        }
+    }
+}
+
+
+// * @section    Suppress spinners on numeric inputs
+// * --------------------------------------------------------
+input[type=number].cui-hide-spinner::-webkit-inner-spin-button,
+input[type=number].cui-hide-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number].cui-hide-spinner {
+    -moz-appearance: textfield;
+}

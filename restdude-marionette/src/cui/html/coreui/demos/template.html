@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <title>Template - Core UI</title>
+    <link href="../../../dist/css/main.css" rel="stylesheet" type="text/css" media="all">
+    <style>
+        .demo-margin {
+            margin: 1em;
+        }
+
+        .demo-margin-right {
+            margin-right: 1em;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        section > .cui-row {
+            margin: 10px;
+        }
+
+        section > header {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="demo-margin">
+    <!-- Skip navigation for accessibility purposes -->
+    <div class="cui-hide-from-screen">
+        <a href="#nav">Go to navigation</a>
+        <a href="#main">Go to content</a>
+    </div>
+
+    <header class="cui-row">
+        <div class="cui-col-small-12">
+            <h1>Site Title</h1>
+        </div>
+        <div class="cui-col-small-12">
+            <h2>Page title</h2>
+        </div>
+    </header>
+
+    <nav id="nav">
+        <header>Navigation</header>
+        <div class="cui-row">
+            <div class="cui-col-small-12">
+                <ul class="cui-inline-list">
+                    <li><a href="#">Menu 1</a></li>
+                    <li><a href="#">Menu 2</a></li>
+                    <li><a href="#">Menu 3</a></li>
+                    <li><a href="#">Menu 4</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Actual meat of the page goes here, broken up into sections which may or may not have their own headers -->
+    <!-- The attribute `role="main"` is for assistive technologies that don't yet know the `<main>` element holds the main content. The ID is for the skip link at the top. -->
+    <main role="main" id="main">
+
+        <div class="cui-row cui-messages">
+            <div class="cui-col">
+                <div class="cui-error">
+                    <p>Error message</p>
+                </div>
+                <div class="cui-success">
+                    <p>Success message</p>
+                </div>
+                <div class="cui-warning">
+                    <p>Warning message</p>
+                </div>
+                <div class="cui-informational">
+                    <p>Informational message</p>
+                </div>
+            </div>
+        </div>
+
+        <form name="form_content" id="form_content" action="www.ny.gov" method="post">
+
+            <section>
+                <header>
+                    <h3>Form fields</h3>
+                    <!-- Other "header" items could go here that don't belong in the H3, like icons or section-level controls -->
+                </header>
+
+                <div class="cui-row">
+                    <div class="cui-col">
+                        <fieldset>
+                            <div class="cui-field cui-required">
+                                <div class="cui-field-main">
+                                    <div class="cui-label">
+                                        <legend class="cui-desc">Name:</legend>
+                                    </div>
+                                    <div class="cui-data">
+                                        <label for="name_first" class="cui-hide-from-screen">First</label>
+                                        <input type="text" class="cui-value" id="name_first" size="15" maxlength="20" value="John" tabindex="1">
+                                        <label for="name_middle" class="cui-hide-from-screen">Middle initial</label>
+                                        <input type="text" class="cui-value" id="name_middle" size="1" maxlength="1" value="Q" tabindex="1">
+                                        <label for="name_last" class="cui-hide-from-screen">Last</label>
+                                        <input type="text" class="cui-value" id="name_last" size="20" maxlength="30" value="Public" tabindex="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="cui-row">
+                    <div class="cui-col">
+                        <div class="cui-field">
+                            <div class="cui-field-main">
+                                <div class="cui-label">
+                                    <label for="taxType" class="cui-desc">Tax type:</label>
+                                </div>
+                                <div class="cui-data">
+                                    <select class="cui-value" id="taxType" tabindex="1">
+                                        <option selected="selected" value="1">Personal income</option>
+                                        <option value="2">Sales</option>
+                                        <option value="3">Corporation</option>
+                                    </select>
+                                </div>
+                                <div class="cui-controls">
+                                    <button type="button" class="cui-button">Verify</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ************************************************************************************************************************ -->
+            <!-- ************************************************************************************************************************ -->
+            <!-- ************************************************************************************************************************ -->
+            <!-- Inline labels -->
+            <!-- ************************************************************************************************************************ -->
+            <!-- ************************************************************************************************************************ -->
+            <!-- ************************************************************************************************************************ -->
+
+            <section class="cui-inline-field">
+                <header>
+                    <h3>Inline labels</h3>
+                    <p>These fields are displayed with the labels next to the inputs.</p>
+                </header>
+
+                <div class="cui-row">
+                    <div class="cui-col">
+                        <fieldset>
+                            <div class="cui-field cui-required">
+                                <div class="cui-field-main">
+                                    <div class="cui-label">
+                                        <legend class="cui-desc">Name:</legend>
+                                    </div>
+                                    <div class="cui-data">
+                                        <label for="name_first_inline" class="cui-hide-from-screen">First</label>
+                                        <input type="text" class="cui-value" id="name_first_inline" size="15" maxlength="20" value="John" tabindex="1">
+                                        <label for="name_middle_inline" class="cui-hide-from-screen">Middle initial</label>
+                                        <input type="text" class="cui-value" id="name_middle_inline" size="1" maxlength="1" value="Q" tabindex="1">
+                                        <label for="name_last_inline" class="cui-hide-from-screen">Last</label>
+                                        <input type="text" class="cui-value" id="name_last_inline" size="20" maxlength="30" value="Public" tabindex="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="cui-row">
+                    <div class="cui-col">
+                        <div class="cui-field">
+                            <div class="cui-field-main">
+                                <div class="cui-label">
+                                    <label for="taxType_inline" class="cui-desc">Tax type:</label>
+                                </div>
+                                <div class="cui-data">
+                                    <select id="taxType_inline" class="cui-value" tabindex="1">
+                                        <option selected="selected" value="1">Personal income</option>
+                                        <option value="2">Sales</option>
+                                        <option value="3">Corporation</option>
+                                    </select>
+                                </div>
+                                <div class="cui-controls">
+                                    <button type="button" class="cui-button">Verify</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <header>
+                    <h3>Table</h3>
+                    <!-- Other "header" items would go here that doesn't belong in the H3, like icons or section-level controls -->
+                </header>
+
+                <div class="cui-row">
+                    <div class="cui-col-small-12">
+                        <h4>Table title</h4>
+                        <p>Table description</p>
+                    </div>
+                    <div class="cui-col-small-12">
+                        <div class="cui-row">
+                            <table class="cui-sortable">
+                                <thead>
+                                    <tr>
+                                        <th>First name</th>
+                                        <th data-sort="alpha">Last name</th>
+                                        <th data-sort="date">Birth date</th>
+                                        <th data-sort="numeric">Amount ($)</th>
+                                        <th class="cui-width-icon"><span class="cui-hide-from-screen">Remove person</span></th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3">Total:</td>
+                                        <td>2171.74</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr>
+                                        <td>Thomas</td>
+                                        <td>Müller</td>
+                                        <td>03/04/1986</td>
+                                        <td>120</td>
+                                        <td class="cui-width-icon"><button type="button" tabindex="1">Remove person</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cesc</td>
+                                        <td>Fàbregas</td>
+                                        <td>01/01/1990</td>
+                                        <td>80</td>
+                                        <td class="cui-width-icon"><button type="button" tabindex="1">Remove person</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Olivier</td>
+                                        <td>Giroud</td>
+                                        <td>12/31/1990</td>
+                                        <td>75</td>
+                                        <td class="cui-width-icon"><button type="button" tabindex="1">Remove person</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lionel</td>
+                                        <td>Messi</td>
+                                        <td>12/31/1988</td>
+                                        <td>205</td>
+                                        <td class="cui-width-icon"><button type="button" tabindex="1">Remove person</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <header>
+                    <h3>General content</h3>
+                </header>
+
+                <div class="cui-row">
+                    <div class="cui-col">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu enim ante. Nulla facilisi. Nunc eget lectus egestas, malesuada erat at, rutrum enim. Curabitur vitae ipsum varius, dignissim libero quis, imperdiet tellus. Vestibulum quis risus mattis, faucibus quam ut, maximus erat. Vestibulum ac tempor arcu, et iaculis sapien. Suspendisse et vehicula nibh, id placerat arcu.</p>
+                        <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac quam eget diam laoreet porta sit amet eu nisi. Curabitur mattis erat maximus, varius risus a, fringilla purus. Mauris non odio nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae ligula dolor.</p>
+                    </div>
+                </div>
+
+                <div class="cui-row">
+                    <div class="cui-col-small-12 cui-col-medium">
+                        <p class="demo-margin-right">Vestibulum sit amet justo venenatis, imperdiet lorem gravida, maximus quam. In quis lacus posuere, vestibulum urna nec, viverra mauris. Integer hendrerit odio vitae neque porta, ac consectetur mi malesuada. In molestie elit a interdum fringilla. Mauris venenatis fermentum magna vel facilisis.</p>
+                    </div>
+                    <div class="cui-col-small-12 cui-col-medium">
+                        <p>Suspendisse quis feugiat augue. Nunc semper, ante et dictum viverra, dui leo consectetur elit, a malesuada nisl tellus ac orci. Nunc eget ipsum eget sem viverra rutrum at in lorem. Praesent efficitur volutpat elit, non commodo diam pulvinar id.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="cui-row">
+                    <div class="cui-col cui-align-center">
+                        <button class="cui-button-primary">Submit</button>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </main>
+
+    <footer class="demo-margin">
+        <div class="cui-col cui-align-center">
+            <ul class="cui-inline-list">
+                <li><a href="#footer1">Footer link 1</a></li>
+                <li><a href="#footer2">Footer link 2</a></li>
+                <li><a href="#footer3">Footer link 3</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script id="require" src="../../../dist/js/main.js"></script>
+    <script>
+        require(['jquery', 'cui', 'domReady!'], function ($, cui) {
+
+            // console.log('Page is ready...');
+
+            // Example: Ask cui to load a test component
+            // cui.load('shortcut', function() {
+            //     console.log('Loaded shortcut: ', cui.shortcut);
+            // });
+
+        });
+    </script>
+</body>
+</html>

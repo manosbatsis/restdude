@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+        <title>getIndex Test Page</title>
+        <link href="../../dist/css/main.css" rel="stylesheet" type="text/css" media="all">
+
+        <style>
+            body {
+                padding: 1em 0;
+            }
+
+            code {
+                display: block;
+            }
+
+            code span {
+                color: blue;
+            }
+
+            .cui-row {
+                margin-bottom: 2em;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="cui-row">
+            <div class="cui-col-small-12">
+                <p>Test 1:</p>
+            </div>
+            <div class="cui-col-small-12">
+                <code>var arr = [{id: 'alpha'}, {id: 'bravo'}, {id: 'charlie'}];</code>
+                <code>getIndex(arr, 'charlie') = <span id="result1"></span> // Should be `2`</code>
+            </div>
+        </div>
+        <div class="cui-row">
+            <div class="cui-col-small-12">
+                <p>Test 2:</p>
+            </div>
+            <div class="cui-col-small-12">
+                <code>var arr = [{id: 'alpha', num: 123}, {id: 'bravo', num: 456}, {id: 'charlie', num: 789}];</code>
+                <code>getIndex(arr, 789, 'num') = <span id="result2"></span> // Should be `2`</code>
+            </div>
+        </div>
+        <div class="cui-row">
+            <div class="cui-col-small-12">
+                <p>Test 3:</p>
+            </div>
+            <div class="cui-col-small-12">
+                <code>var arr = [{id: 'alpha', num: 123}, {id: 'bravo', num: 456}, {id: 'charlie', num: 789}];</code>
+                <code>getIndex(arr, "789", 'num') = <span id="result3"></span> // Should be `-1` since we specified a string for the value</code>
+            </div>
+        </div>
+        <script id="require" src="../../dist/js/main.js"></script>
+        <script>
+            require(['cui', 'getIndex'], function (cui, getIndex) {
+                // `cui` is ready to use
+                var arr = [{id: 'alpha'}, {id: 'bravo'}, {id: 'charlie'}];
+
+                document.getElementById('result1').innerHTML = getIndex(arr, 'charlie');
+
+                arr = [{id: 'alpha', num: 123}, {id: 'bravo', num: 456}, {id: 'charlie', num: 789}];
+                document.getElementById('result2').innerHTML = getIndex(arr, 789, 'num');
+
+                arr = [{id: 'alpha', num: 123}, {id: 'bravo', num: 456}, {id: 'charlie', num: 789}];
+                document.getElementById('result3').innerHTML = getIndex(arr, '789', 'num');
+            });
+        </script>
+    </body>
+</html>

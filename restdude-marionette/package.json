@@ -1,9 +1,12 @@
 {
-  "name": "Application-built-with-generator-react-require",
+  "name": "restdude-marionette",
   "description": "This is an application built with the react-require Yeoman generator",
   "version": "0.0.0",
   "url": "https://www.example.com/",
-  "repository": "https://github.com/ny/coreui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ny/coreui.git"
+  },
   "keywords": [
     "Uber",
     "Application"
@@ -31,10 +34,11 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-connect": "^0.8.0",
     "grunt-contrib-copy": "^0.5.0",
-    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-requirejs": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "~0.5.0",
-    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.19",
     "grunt-jscs-checker": "~0.6.1",
     "grunt-jsx": "^0.1.8",
@@ -59,5 +63,16 @@
     "node": ">=0.10",
     "npm": ">=1.2.10"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ny/coreui/issues"
+  },
+  "homepage": "https://github.com/ny/coreui#readme",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }

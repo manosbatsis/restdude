@@ -1,0 +1,48 @@
+//   ========================================================
+// * @name       _header.scss
+// * @desc       H1-H6 default styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    H1-H6
+// * @see        http://css-tricks.com/rems-ems/
+// * --------------------------------------------------------
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-style: normal;
+    font-weight: normal;
+    padding: $cui-header-padding;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2.4em;
+}
+
+h2 {
+    font-size: 1.9em;
+}
+
+h3 {
+    font-size: 1.4em;
+}
+
+h4 {
+    font-size: 1.2em;
+}
+
+h5,
+h6 {
+    font-size: 1em;
+}
+
+h6 {
+    color: $cui-color-dark-gray-alt;
+}
