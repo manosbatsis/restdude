@@ -1,0 +1,68 @@
+//   ========================================================
+// * @name       _table.scss
+// * @desc       Table styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Default table styles
+// * --------------------------------------------------------
+table {
+    empty-cells: show;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th,
+td {
+    font-weight: normal;
+    text-align: left;
+    border: $cui-table-cell-border;
+}
+
+th {
+    padding: $cui-table-header-padding;
+    background-color: $cui-table-header-bg-color;
+    vertical-align: top;
+}
+
+td {
+    padding: $cui-table-cell-padding;
+
+    a[role="button"]
+    input[type="button"],
+    input[type="reset"],
+    input[type="submit"],
+    button {
+        padding: $cui-table-button-padding;
+        margin: 0;
+    }
+
+    tfoot & {
+        padding: $cui-table-footer-cell-padding;
+        border: 0;
+        border-top: 3px $cui-table-cell-border-style $cui-table-cell-border-color;
+    }
+}
+
+// Table stripes
+table:not([class*="cui-no-stripes"]) tbody tr:not(.cui-hidden):not(.cui-ui-only):nth-child(even) {
+    background-color: $cui-table-row-bg-alt-color;
+}
+
+tbody tr:hover,
+table tbody tr:nth-child(even):hover {
+    background-color: $cui-table-row-bg-hover-color;
+}
+
+
+// * @section    Column width classes
+// * --------------------------------------------------------
+
+.cui-width-icon {
+    // This should be wide enough to actually contain an icon (no hacks like 1%) otherwise the page can get a horizontal scroll bar
+    width: $cui-button-icon-width + $cui-table-cell-padding-left + $cui-table-cell-padding-right;
+}

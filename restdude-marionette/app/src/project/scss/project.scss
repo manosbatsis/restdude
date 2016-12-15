@@ -1,0 +1,18 @@
+// Project settings
+@import "_settings";
+
+// Core UI default settings
+@import "../../cui/scss/_settings";
+// Core UI mixins
+@import "../../cui/scss/_utilities/_mixins";
+// Core UI styles
+@import '../../cui/scss/_cui';
+
+// Project utilities
+// -----------------
+@import "_utilities/_fonts";
+@import "_utilities/_mixins";
+
+// Project styles
+// --------------
+@import "_base/_global";

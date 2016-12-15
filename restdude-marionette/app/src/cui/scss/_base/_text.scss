@@ -1,0 +1,88 @@
+//   ========================================================
+// * @name      _text.scss
+// * @desc       Text styles
+// * @author     Manolo Farfan, Craig Patik
+// * @version    1.0.0.20141231
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Text styles
+// * --------------------------------------------------------
+body {
+    font-size: $cui-font-size;
+    font-family: $cui-font-family;
+    color: $cui-text-color;
+}
+
+p {
+    margin: 0;
+    padding-bottom: $cui-paragraph-padding;
+    line-height: $cui-color-text-line-height;
+}
+
+code {
+    font-family: $cui-font-monospace;
+    color: $cui-code-color;
+}
+
+input,
+select,
+button,
+[role="button"],
+textarea {
+    // In many (older?) browsers, inputs do not inherit color from the `<body>`
+    color: $cui-input-color;
+}
+
+// Elements that generally contain only text and no other elements
+// Note that `<span>` is purposely not listed because it may be used for other purposes. Text-containing `<span>`s should likely be inside another element like `<p>` or `<label>`.
+p,
+label,
+legend,
+input,
+select,
+textarea,
+button,
+[role="button"],
+.cui-field-body {
+    font-size: $cui-text-size;
+    font-family: $cui-text-font;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $cui-font-heading;
+    color: $cui-heading-color;
+}
+
+// Font smoothing
+body,
+input,
+select,
+textarea,
+button,
+[role="button"] {
+    // Note that Android 2.x can crash or ignore some font styles if this is set
+    text-rendering: optimizeLegibility;
+
+    // More about the kerning settings and browser support: http://blog.typekit.com/2014/02/05/kerning-on-the-web/
+    -webkit-font-feature-settings: "kern";
+       -moz-font-feature-settings: "kern";
+       -moz-font-feature-settings: "kern=1";
+            font-feature-settings: "kern" 1;
+    font-kerning: normal;
+}
+
+body,
+input,
+select,
+textarea {
+    // Not for buttons or elements with a dark background and light text
+    // Use `-webkit-font-smoothing: subpixel-antialiased;` on specific elements to disable this and use the operating system's default rendering instead
+    -webkit-font-smoothing: antialiased;
+}

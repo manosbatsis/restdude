@@ -1,0 +1,5 @@
+{
+    "name": "journal",
+    "lazy": false,
+    "sources": ["script"]
+}

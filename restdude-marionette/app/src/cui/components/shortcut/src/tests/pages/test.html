@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <title>Shortcut Test - Core UI</title>
+    <link href="/dist/css/main.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+    <!-- Skip navigation for accessibility purposes -->
+    <div class="cui-hide-from-screen">
+        <a href="#nav">Go to navigation</a>
+        <a href="#main">Go to content</a>
+    </div>
+
+    <header class="cui-row">
+        <div class="cui-col-small-12">
+            <h1>Core UI</h1>
+        </div>
+        <div class="cui-col-small-12">
+            <h2>Shortcut Test</h2>
+        </div>
+    </header>
+
+    <main role="main" id="main">
+        <form name="form_content" id="form_content" action="www.ny.gov" method="post">
+            <section>
+                <div class="cui-row">
+                    <div class="cui-col-small-12">
+                        <p>Press <strong><code>?</code></strong> to view available shortcuts on any page</p>
+                    </div>
+                </div>
+                <div class="cui-row">
+                    <div class="cui-col-small-12">
+                        <label for="exampleInput">Shortcuts should have no effect when inputs have focus:</label>
+                    </div>
+                    <div class="cui-col-small-12">
+                        <input type="text" id="exampleInput" tabindex="1">
+                    </div>
+                </div>
+            </section>
+        </form>
+    </main>
+    <script id="require" src="/dist/js/main.js"></script>
+    <script>
+        require(['cui', 'shortcut'], function (cui, shortcut) {
+            // Standard/longhand example
+            shortcut.register({
+                keys: 'shift+a',
+                callback: function () { alert('Pressed A'); },
+                description: 'Displays a simple alert',
+            });
+
+            // Shorthand example with no description
+            shortcut.register('shift+b', function () {
+                // jQuery and `modal` were already loaded by `shortcut` so we can use them here immediately
+                $.modal({
+                    html: 'You pressed Shift+B',
+                    display: {
+                        css: {
+                            'max-width': '50%',
+                        },
+                    },
+                    overlay: {
+                        opacity: 0.25,
+                    },
+                    closeDestroy: true,
+                    closeOnEscape: true,
+                }).show();
+            });
+
+            // Example with multiple keys
+            shortcut.register({
+                keys: 'alt+shift+g',
+                callback: function _shortcut_bgColor () {
+                    var currColor = document.body.style.backgroundColor;
+
+                    // Change to a different bg color
+                    switch (currColor) {
+                        case 'rgb(255, 204, 204)':
+                            document.body.style.backgroundColor = 'rgb(204, 255, 204)';
+                            break;
+
+                        case 'rgb(204, 255, 204)':
+                            document.body.style.backgroundColor = 'rgb(204, 204, 255)';
+                            break;
+
+                        case 'rgb(204, 204, 255)':
+                            document.body.style.backgroundColor = 'rgb(255, 255, 255)';
+                            break;
+
+                        default:
+                            document.body.style.backgroundColor = 'rgb(255, 204, 204)';
+                            break;
+                    }
+                },
+                description: 'Change the background color',
+            });
+
+            // Set an initial color value so the last shortcut will work properly (otherwise the value may be RGB)
+            document.body.style.backgroundColor = 'rgb(255, 255, 255)';
+        });
+    </script>
+</body>
+</html>

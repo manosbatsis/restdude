@@ -1,0 +1,32 @@
+{
+    "type": "library",
+    "lazy": false,
+    "sources": {
+        "script": {
+            "ext": ["js"]
+        },
+        "style": {
+            "ext": ["scss"]
+        }
+    },
+    "preferences": {
+        "files": {
+            "css": {
+                "preferred": "css"
+                },
+            "domReady": {
+                "preferred": "domReady"
+                },
+            "json": {
+                "preferred": "json"
+                },
+            "lazyLoader": {
+                "preferred": "lazyLoader"
+                },
+            "text": {
+                "preferred": "text"
+            }
+        }
+    }
+
+}

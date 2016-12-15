@@ -1,0 +1,544 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <title>Simple Grid | Core UI</title>
+    <link href="../../../dist/css/main.css" rel="stylesheet" type="text/css" media="all">
+    <style>
+        body {
+            padding: 1em 0;
+        }
+
+        .content {
+            background: #ddd;
+            padding: 2px;
+            text-align: center;
+        }
+
+        /* Faux borders that don't consume any space */
+        [class*="cui-col"] .content {
+            box-shadow: inset 0 2px 2px -2px #444, inset -2px -2px 2px -2px #444;
+        }
+
+        [class*="cui-col"]:first-child .content {
+            box-shadow: inset 0 2px 2px -2px #444, inset -2px -2px 2px -2px #444;
+        }
+
+        a,
+        a:link {
+            font-weight: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cui-row">
+        <div class="cui-col-small-12">
+            <p>See also the <a href="grid.html">main grid documentation</a>.</p>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12">
+            <p>Current breakpoint:
+                <strong class="cui-hide-for-medium cui-hide-for-large">small</strong>
+                <strong class="cui-hide-for-small cui-hide-for-large">medium</strong>
+                <strong class="cui-hide-for-small cui-hide-for-medium">large</strong>
+            </p>
+        </div>
+    </div>
+    <!-- Grid 1/2 -->
+    <div class="cui-row">
+        <div class="cui-col-small-6">
+            <div class="content">6</div>
+        </div>
+        <div class="cui-col-small-6">
+            <div class="content">6</div>
+        </div>
+    </div>
+
+    <!-- Grid 1/3 -->
+    <div class="cui-row">
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+    </div>
+    <!-- Grid 1/4 -->
+    <div class="cui-row">
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+    </div>
+    <!-- Grid 1/6 -->
+    <div class="cui-row">
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+    </div>
+    <!-- Grid 1/12 -->
+    <div class="cui-row">
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12">
+            <div class="content">12</div>
+        </div>
+    </div>
+
+    <!-- Pairs -->
+    <div class="cui-row">
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-11">
+            <div class="content">11</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-10">
+            <div class="content">10</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-9">
+            <div class="content">9</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-8">
+            <div class="content">8</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-5">
+            <div class="content">5</div>
+        </div>
+        <div class="cui-col-small-7">
+            <div class="content">7</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-6">
+            <div class="content">6</div>
+        </div>
+        <div class="cui-col-small-6">
+            <div class="content">6</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-7">
+            <div class="content">7</div>
+        </div>
+        <div class="cui-col-small-5">
+            <div class="content">5</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-8">
+            <div class="content">8</div>
+        </div>
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-9">
+            <div class="content">9</div>
+        </div>
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-10">
+            <div class="content">10</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-11">
+            <div class="content">11</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12">
+            <div class="content">12</div>
+        </div>
+    </div>
+
+    <!-- Three columns with equal outer columns -->
+    <div class="cui-row">
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-4">
+            <div class="content">4</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-6">
+            <div class="content">6</div>
+        </div>
+        <div class="cui-col-small-3">
+            <div class="content">3</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-8">
+            <div class="content">8</div>
+        </div>
+        <div class="cui-col-small-2">
+            <div class="content">2</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-10">
+            <div class="content">10</div>
+        </div>
+        <div class="cui-col-small-1">
+            <div class="content">1</div>
+        </div>
+    </div>
+
+    <h2>Responsive</h2>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-6">
+            <div class="content">6</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-6">
+            <div class="content">6</div>
+        </div>
+    </div>
+    <!-- Grid 1/3 -->
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+    </div>
+    <!-- Grid 1/4 -->
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+    </div>
+    <!-- Grid 1/6 -->
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+    </div>
+    <!-- Grid 1/12 -->
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-12">
+            <div class="content">12</div>
+        </div>
+    </div>
+
+    <!-- Pairs -->
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-11">
+            <div class="content">11</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-10">
+            <div class="content">10</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-9">
+            <div class="content">9</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-8">
+            <div class="content">8</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-5">
+            <div class="content">5</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-7">
+            <div class="content">7</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-6">
+            <div class="content">6</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-6">
+            <div class="content">6</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-7">
+            <div class="content">7</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-5">
+            <div class="content">5</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-8">
+            <div class="content">8</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-9">
+            <div class="content">9</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-10">
+            <div class="content">10</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-11">
+            <div class="content">11</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-12">
+            <div class="content">12</div>
+        </div>
+    </div>
+
+    <!-- Three columns with equal outer columns -->
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-4">
+            <div class="content">4</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-6">
+            <div class="content">6</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-3">
+            <div class="content">3</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-8">
+            <div class="content">8</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-2">
+            <div class="content">2</div>
+        </div>
+    </div>
+    <div class="cui-row">
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-10">
+            <div class="content">10</div>
+        </div>
+        <div class="cui-col-small-12 cui-col-large-1">
+            <div class="content">1</div>
+        </div>
+    </div>
+    <script id="require" src="../../../dist/js/main.js"></script>
+    <script>
+        require(['cui'], function (cui) {
+            // `cui` is ready to use
+        });
+    </script>
+</body>
+</html>

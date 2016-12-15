@@ -1,0 +1,161 @@
+// Core settings
+@import "../../../../../cui/scss/_settings";
+@import "../../../../../cui/scss/_utilities/_mixins";
+// Implementer settings
+@import "../../_settings";
+// Project settings
+@import "../../../../scss/_settings";
+// Component settings
+@import "_utilities/_variables";
+
+
+// Component styles:
+
+// Outer modal wrapper
+.cui-modal {
+    border-radius: $cui-border-radius;
+    border: solid 1px #808589;
+    background: $cui-modal-background-color;
+    padding: 1px; // This is the visual border of the outer container
+    z-index: 1100;
+
+    // Center it on the viewport
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    // Height & width
+    // This serves as a base default but it will be overwritten by javascript with a hard px value
+    max-width: 95%;
+    max-height: 95%;
+
+    &.cui-modal-use-close {
+        padding-top: 36px;
+
+        .cui-modal-content {
+            padding-top: 10px;
+        }
+    }
+}
+
+.cui-modal-use-close {
+    .cui-modal-header {
+        padding-top: 36px;
+    }
+
+    .cui-modal-header-content {
+        padding-top: 0;
+    }
+}
+
+.cui-modal *:not(.cui-modal-hide),
+.cui-modal *:not(.cui-modal-hide):focus {
+    outline: none !important;
+}
+
+// Content wrapper
+.cui-modal-body {
+    border-radius: $cui-border-radius - 1px;
+
+    // Cover the modal
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+
+    // Let the contents scroll
+    overflow: auto;
+}
+
+.cui-modal-body-content {
+    padding: 10px;
+}
+
+.cui-modal-use-header {
+    .cui-modal-header {
+        background: darken($cui-modal-background-color, 5);
+    }
+
+    .cui-modal-header-content {
+        padding:10px;
+    }
+}
+
+.cui-modal-header {
+    display: block;
+    border-radius: ($cui-border-radius - 1px) ($cui-border-radius - 1px) 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.cui-modal-use-footer {
+    .cui-modal-footer {
+        background: darken($cui-modal-background-color, 5);
+    }
+}
+
+.cui-modal-footer {
+    display: block;
+
+    padding: 10px;
+    border-radius: 0 0 ($cui-border-radius - 1px) ($cui-border-radius - 1px);
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+// Close button
+.cui-modal-hide {
+    border: 0;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    display: block;
+    width: 36px;
+    height: 36px;
+    text-indent: -9999px;
+    color: #666666;
+    z-index: 1110;
+    background: none;
+
+    .cui-modal &:hover {
+        color: #000000;
+        background:none;
+    }
+
+    &:after {
+        content: "\00D7";
+        position: absolute;
+        top: 4px;
+        right: 10px;
+        text-indent: 0;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 28px;
+        overflow: hidden; // This prevents awkward bumps from appearing in the outline when the button has focus since the pseudo-element is taller than the button itself
+    }
+}
+
+// Shield that blocks the underlying page
+.cui-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+    z-index: 1000;
+}
+
+.cui-modal-inivisible {
+    visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+}

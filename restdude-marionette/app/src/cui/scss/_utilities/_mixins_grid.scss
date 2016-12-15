@@ -1,0 +1,272 @@
+//   ========================================================
+// * @name       _utilities/_mixins_grid.scss
+// * @desc       Sass mixins
+//   ========================================================
+
+
+// * @section    Grid
+// * @see        https://css-tricks.com/using-flexbox/
+// * --------------------------------------------------------
+
+// Standard row styles
+@mixin row($wrap: $cui-grid-flex-row-wrap, $direction: row, $margin: $cui-grid-row-margin, $width: false) {
+    display: flex;
+    margin: $margin;
+    flex: 0 1 auto;
+
+    @include clearfix;
+
+    @if $width != false {
+        width: $width;
+    }
+
+    @if $direction != false {
+        @if $direction == row {
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+        }
+
+        -ms-flex-direction: $direction;
+        flex-direction: $direction;
+    }
+
+    @if $wrap != false {
+        -ms-flex-wrap: $wrap;
+        flex-wrap: $wrap;
+    }
+}
+
+// Standard column
+// Note that the width must have units for IE11 support! Instead of `0`, use `0px` or `0%`, etc. You may also use `auto`.
+@mixin col($flexShorthandValue: 0 1 auto, $width: false, $padding: $cui-grid-column-padding) {
+    flex: $flexShorthandValue;
+    position: relative;
+    @include clearfix;
+    padding: $padding;
+    min-height: $cui-grid-column-min-height;
+
+    // Only apply these properties if a width was defined
+    @if $width != false {
+        flex-basis: $width;
+        max-width: $width;
+    }
+}
+
+// Fixed-width column
+@mixin col-fixed($width: 100%, $breakpointName: "small") {
+    @if $breakpointName == "small" {
+        @include col(0 1 $width);
+        max-width: $width;
+    }
+    @elseif $breakpointName == "medium" {
+        @include pointbreak($cui-bp-medium) {
+            @include col(0 1 $width);
+            max-width: $width;
+        }
+    }
+    @else {
+        @include pointbreak($cui-bp-large) {
+            @include col(0 1 $width);
+            max-width: $width;
+        }
+    }
+}
+
+@mixin grid-col-fixed() {
+    @warn "The `grid-col-fixed` mixin is deprecated. Use `col-fixed` instead.";
+}
+
+// Fluid-width column
+// If `$width` is not defined, all sibling columns will get equal widths
+// Otherwise, this will create a column based around that width (usually a percentage so it retains some fluidity)
+// Note that the width must have units for IE11 support! Instead of `0`, use `0px` or `0%`, etc. You may also use `auto`.
+@mixin col-fluid($width: false, $breakpointName: "small") {
+    // Fluid-column (most common; used for classes like `.cui-col`)
+    @if $width == false {
+        @include col(1 1 0px); // The key is `flex-basis: 0` (third parameter) which prevents the column from adapting its width to the size of its content
+        max-width: 100%;
+    }
+    @else {
+        @if $breakpointName == "small" {
+            @include col(0 1 $width);
+            max-width: $width;
+        }
+        @elseif $breakpointName == "medium" {
+            @include pointbreak($cui-bp-medium) {
+                @include col(0 1 $width);
+                max-width: $width;
+            }
+        }
+        @else {
+            @include pointbreak($cui-bp-large) {
+                @include col(0 1 $width);
+                max-width: $width;
+            }
+        }
+    }
+}
+
+@mixin grid-col-flex() {
+    @warn "The `grid-col-flex` mixin is deprecated. Use `col-fluid` instead.";
+}
+
+// Inline column
+@mixin inline-col() {
+    display: inline-block;
+    float: none;
+    width: auto;
+}
+
+@mixin grid-row($breakpointName: "small") {
+    @warn "The `grid-row` mixin is deprecated. Instead, wrap `@include row` with the appropriate media query";
+
+    @if $breakpointName == "small" {
+        @include row;
+    }
+    @elseif $breakpointName == "medium" {
+        @include pointbreak($cui-bp-medium) {
+            @include row;
+        }
+    }
+    @else {
+        @include pointbreak($cui-bp-large) {
+            @include row;
+        }
+    }
+}
+
+@function column-width-calc($colNumber, $colTotal) {
+    @return percentage($colNumber / $colTotal);
+}
+
+// Returns the helper for a single column
+@mixin grid-col($numerator: 1, $denominator: $cui-grid-column-count, $breakpointName: "small") {
+    @if $breakpointName == "small" {
+        @include col;
+        width: column-width-calc($numerator, $denominator);
+    }
+    @elseif $breakpointName == "medium" {
+        @include pointbreak($cui-bp-medium) {
+            @include col;
+            width: column-width-calc($numerator, $denominator);
+        }
+    }
+    @else {
+        @include pointbreak($cui-bp-large) {
+            @include col;
+            width: column-width-calc($numerator, $denominator);
+        }
+    }
+}
+
+
+// * @section    Column generation
+// * --------------------------------------------------------
+
+// Generates fixed and flex classes for a given breakpoint
+@mixin generate-fixed-flex-columns($breakpointName) {
+    // Fixed
+    @each $size in $cui-grid-fixed-sizes {
+        // Convert `33pc` and split it up into `33` and `%`
+        $x: getNumberAndUnit($size);
+        $value: nth($x, 1);
+        $unit: nth($x, 2);
+
+        .cui-fixed-col-#{$breakpointName}-#{$size} {
+            @include col-fixed($width: #{$value}#{$unit});
+        }
+    }
+
+    // Flex
+    @each $size in $cui-grid-flex-sizes {
+        // Convert `33pc` and split it up into `33` and `%`
+        $x: getNumberAndUnit($size);
+        $value: nth($x, 1);
+        $unit: nth($x, 2);
+
+        .cui-col-#{$breakpointName}-#{$size} {
+            @include col(1 0 #{$value}#{$unit});
+        }
+    }
+}
+
+// Breakpoint-specific utility columns that are not part of the standard N-column row/grid pattern
+@mixin utility-classes($breakpointName) {
+    .cui-hide-col-#{$breakpointName} {
+        @include hide-voluntary;
+    }
+
+    .cui-inline-col-#{$breakpointName} {
+        @include inline-col;
+    }
+}
+
+// Helper method that calls the actual class-creating mixins above
+// We need this because we loop through all of the breakpoints except "small" but we want to be sure we're outputting the same code for all sizes
+@mixin generate-classes($breakpointName: "", $numColumns: $cui-grid-column-count, $breakpointMaxWidth: "") {
+    @include generate-column($breakpointName, $numColumns, $breakpointMaxWidth);
+    @include utility-classes($breakpointName);
+    @include generate-fixed-flex-columns($breakpointName);
+}
+
+// Return width for a single division (column) as a percentage of the total container (row)
+@function column-width-calc($colNumber, $colTotal) {
+    @return percentage($colNumber / $colTotal);
+}
+
+// Generates column classes for all breakpoint sizes
+@mixin generate-grid($numColumns: $cui-grid-column-count) {
+
+    // Finally, generate the classes for each size:
+
+    // Base (small) size -- these styles are not wrapped in a media query
+    @include generate-classes("small", $numColumns, $cui-bp-medium);
+
+    // All other sizes
+    @each $b in $cui-grid-breakpoints {
+        $breakpointName: nth($b, 1);
+        $breakpointMinWidth: nth($b, 2);
+
+        // Create a new media query for the breakpoint
+        @include pointbreak($breakpointMinWidth) {
+            // Generate classes within the media query
+            @include generate-classes($breakpointName, $numColumns, $cui-bp-medium);
+        }
+    }
+}
+
+// Generates all of the column classes for all breakpoints
+// e.g. `cui-col-small-6`, `cui-col-medium-4`, etc
+@mixin generate-column($breakpointName: "", $numColumns: $cui-grid-column-count, $breakpointMaxWidth: "") {
+    // Loop through each column creating the grid
+    @for $i from 1 to $numColumns + 1 {
+        // Percentage-based width of the column
+        $width: column-width-calc($i, $numColumns);
+
+        // Create this column number and assign it the correct width.
+        .cui-col-#{$breakpointName}-#{$i} {
+            flex-basis: $width;
+            max-width: $width;
+        }
+    }
+
+    // Loop through again, this time creating the `push` classes
+    @for $i from 1 to $numColumns {
+        // Percentage-based width of the column
+        $width: column-width-calc($i, $numColumns);
+
+        .cui-push-#{$breakpointName}-#{$i} {
+            margin-left: $width;
+        }
+    }
+
+    // Loop through again, this time creating the `pull` classes
+    @for $i from 1 to $numColumns {
+        // Percentage-based width of the column
+        $width: column-width-calc($i, $numColumns);
+
+        .cui-pull-#{$breakpointName}-#{$i} {
+            margin-right: $width;
+        }
+    }
+}

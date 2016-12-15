@@ -1,0 +1,5 @@
+{
+    "name": "guid",
+    "lazy": false,
+    "sources": ["script"]
+}

@@ -1,0 +1,126 @@
+//   ========================================================
+// * @desc       Responsive grid styles
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+
+// * @section    Row and col structures
+// * @desc       The grid's row and columns (default cols 12)
+// *             - Fluid & fixed + fluid layouts with flexes
+// *             - Clearfix to force new row
+// * --------------------------------------------------------
+.cui-row {
+    @include row;
+}
+
+.cui-row-nowrap {
+    @include row(false);
+}
+
+.cui-legacy-row {
+    @include legacy-row;
+}
+
+[class*="cui-col-"] {
+    @include col;
+}
+
+[class*="cui-fixed-col-"] {
+    @include col-fixed;
+}
+
+[class*="cui-legacy-col-"] {
+    @include legacy-col;
+}
+
+section > header,
+nav > header {
+    padding: $cui-grid-column-padding;
+}
+
+.cui-clearfix {
+    @include clearfix;
+}
+
+
+// * @section    Generate column classes
+// * @note       These must be generated before the special classes such as `.col-col` so that the `flex-basis` and `max-width` properties will cascade properly
+// * --------------------------------------------------------
+@include generate-grid($cui-grid-column-count);
+
+
+// * @section    Special column classes
+// * --------------------------------------------------------
+
+// Fluid columns
+
+// These give all sibling columns equal width without having to specify a breakpoint or number. If used in conjunction with fixed columns, these columns will fill the remaining space.
+// Note that an element with `class="cui-col-small-12 cui-col-medium"` would use the and `max-width` applied to the small class even at medium screen size which is why we're repeating the property here.
+
+// Equal width for any screen size
+.cui-col {
+    @include col-fluid;
+}
+
+// Use these breakpoint-specific classes to restrict the behavior
+// For example, `<div class="cui-col-small-12 cui-col-medium">` will be full-width (stacked) on small screens but equal-width on medium screens
+
+.cui-col-small {
+    @include col-fluid;
+}
+
+@include pointbreak($cui-bp-medium) {
+    .cui-col-medium {
+        @include col-fluid;
+    }
+}
+
+@include pointbreak($cui-bp-large) {
+    .cui-col-large {
+        @include col-fluid;
+    }
+}
+
+
+// * @section    Visibility classes
+// * --------------------------------------------------------
+
+// Medium (tablet) column widths
+@media (min-width: $cui-bp-medium) and (max-width: $cui-bp-large-minus) {
+    .cui-hide-col-small,
+    .cui-hide-col-large {
+        display: block;
+    }
+}
+
+// Large (desktop) column widths
+@include pointbreak($cui-bp-large) {
+    .cui-hide-col-small,
+    .cui-hide-col-medium {
+        display: block;
+    }
+}
+
+
+// * @section    Push columns
+// * --------------------------------------------------------
+
+// Move the column element to the far right of the row
+.cui-push-right {
+    @if $cui-grid-use-legacy-styles == true {
+        float: right;
+    }
+    @else {
+        order: 1;
+    }
+}
+
+// Move the column element to the far left of the row
+.cui-push-left {
+    @if $cui-grid-use-legacy-styles == true {
+        float: left;
+    }
+    @else {
+        order: -1;
+    }
+}

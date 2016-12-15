@@ -1,0 +1,430 @@
+//   ========================================================
+// * @desc       Sass mixins
+// * @see        https://github.com/ny/coreui
+//   ========================================================
+
+@import "_mixins_grid";
+@import "_mixins_grid_legacy";
+
+
+// * @section    General
+// * --------------------------------------------------------
+@mixin no-padding-margin {
+    padding: 0;
+    margin: 0;
+}
+
+@mixin input-shadow {
+    box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px 0 inset;
+}
+
+@mixin transition($val...) {
+    -webkit-transition: $val;
+            transition: $val;
+}
+
+@mixin transform($val) {
+    -webkit-transform: $val;
+        -ms-transform: $val;
+            transform: $val;
+}
+
+@mixin clearfix {
+    &:after {
+       content: "";
+       display: table;
+       clear: both;
+    }
+}
+
+// Hide an element in place. Try to use this as much as possible
+// (rather than `hide-off-screen`) because it won't cause side
+// effects with the viewport and doesn't resort to hacks
+@mixin hide {
+    display: block !important;
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip: rect(0 0 0 0) !important;
+}
+
+// Hide item but let it be overridden if needed (i.e. by `!important`)
+@mixin hide-voluntary {
+    display: none;
+}
+
+// Force an item to be completely hidden
+@mixin hide-forced {
+    display: none !important;
+}
+
+// Hide an element by pushing it out of the viewport, to the left
+// This is necessary in some cases where the element may change
+// state and cause undesirable side effects. For example, if you
+// used `hide` on an input field, tapping on its label in Android
+// would cause an odd, seamingly misplaced blue flash as the input
+// temporarily gained focus.
+// Note that this may cause performance issues due to some
+// browsers considering the page to be 9999em wide, thereby using
+// more memory for visual rendering.
+@mixin hide-alternate {
+    display: block !important;
+    position: absolute !important;
+    left: -9999em !important;
+    top: 0 !important;
+}
+
+// Hides the inner text of an element (e.g. for icons)
+@mixin hide-text {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@mixin box-sizing($val: border-box) {
+    -moz-box-sizing: $val;
+         box-sizing: $val;
+}
+
+// Simple 2-color gradient
+@mixin vertical-gradient($top: transparent, $bottom: transparent) {
+    background-image: -webkit-linear-gradient(top, $top, $bottom);
+    background-image:         linear-gradient(to bottom, $top, $bottom);
+}
+
+// Gradient with more than 2 color stops
+@mixin vertical-gradient-multiple($val...) {
+    background-image: -webkit-linear-gradient($val);
+    background-image:         linear-gradient($val);
+}
+
+// Enable GPU acceleration when available. Use only on
+// animated/transitioned elements (rather than `<body>`
+// or other large containers)
+@mixin enable-gpu {
+    -webkit-backface-visibility: hidden;
+    -ms-transform: translate3d(0, 0, 0);
+}
+
+@mixin animation($value) {
+    @include enable-gpu;
+    -webkit-animation: $value;
+            animation: $value;
+}
+
+// Prevent the user from selecting text
+// http://caniuse.com/user-select-none
+@mixin user-select($type: none) {
+    -webkit-user-select: $type;
+       -moz-user-select: $type;
+        -ms-user-select: $type;
+            user-select: $type;
+}
+
+@mixin hyphenation($type: auto) {
+    // http://caniuse.com/css-hyphens
+    -webkit-hyphens: $type;
+       -moz-hyphens: $type;
+        -ms-hyphens: $type;
+            hyphens: $type;
+}
+
+@mixin align-right {
+    text-align: right;
+}
+
+@mixin align-center {
+    text-align: center;
+}
+
+
+// * @section    Sticky positioning
+// * --------------------------------------------------------
+// You must specify a `top` value, and no parent element may have `overflow: hidden`
+@mixin position-sticky {
+    position: -webkit-sticky;
+    position:         sticky;
+}
+
+
+// * @section    Triangle ◄ ▲ ► ▼
+// * @see        http://css-tricks.com/snippets/css/css-triangle/
+// * --------------------------------------------------------
+
+// To make it equilateral:
+// border-bottom-width = 0.866% * (border-left-width + border-right-width)
+@mixin triangle($dir: "down", $size: 10px, $color: black) {
+    width: 0;
+    height: 0;
+
+    @if $dir == "up" {
+        border-bottom: $size solid $color;
+        border-left:   $size solid transparent;
+        border-right:  $size solid transparent;
+        border-top:  none;
+    }
+    @elseif $dir == "right" {
+        border-left:   $size solid $color;
+        border-top:    $size solid transparent;
+        border-bottom: $size solid transparent;
+        border-right:  none;
+    }
+    @elseif $dir == "left" {
+        border-right:  $size solid $color;
+        border-top:    $size solid transparent;
+        border-bottom: $size solid transparent;
+        border-left:  none;
+    }
+    @else {
+        border-top:   $size solid $color;
+        border-left:  $size solid transparent;
+        border-right: $size solid transparent;
+        border-bottom:  none;
+    }
+}
+
+
+// * @section    Buttons
+// * --------------------------------------------------------
+
+// Standard button style
+@mixin button {
+    color: $cui-button-color;
+    border: $cui-button-border;
+    border-radius: $cui-button-border-radius;
+    margin: 0;
+    text-decoration: $cui-button-text-decoration;
+    font-size: $cui-button-font-size;
+    font-weight: $cui-button-font-weight;
+    background-color: $cui-button-bg-color;
+    text-shadow: $cui-button-text-shadow;
+    white-space: $cui-button-text-wrapping;
+}
+
+@mixin button-primary {
+    color: $cui-button-primary-color;
+    border: $cui-button-primary-border;
+    background-color: $cui-button-primary-bg-color;
+    text-decoration: $cui-button-primary-text-decoration;
+    text-shadow: $cui-button-primary-text-shadow;
+    -webkit-font-smoothing: antialiased;
+
+    &:hover {
+        @include button-primary-hover;
+    }
+
+    &:active {
+        @include button-primary-active;
+    }
+}
+
+@mixin button-primary-hover {
+    color: $cui-button-primary-color-hover; // Repeated for elements that only include this mixin and not the basic primary styles
+    border-color: $cui-button-primary-border-hover-color;
+    background-color: $cui-button-primary-bg-color-hover;
+}
+
+@mixin button-primary-active {
+    color: $cui-button-primary-color-active; // Repeated for elements that only include this mixin and not the basic primary styles
+    background-color: $cui-button-primary-bg-color;
+    text-shadow: $cui-button-primary-text-shadow;
+}
+
+@mixin button-icon($width: $cui-button-icon-width, $height: $cui-button-icon-height) {
+    position: relative;
+    display: inline-block;
+    width: $width;
+    height: $height;
+    padding: $cui-button-icon-padding;
+    margin: $cui-button-icon-margin;
+    font-size: $cui-font-size;
+    color: transparent;
+    border: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    vertical-align: top;
+    @include hide-text;
+}
+
+
+// * @section    Breakpoints
+// * --------------------------------------------------------
+// Breakpoint wrapper
+@mixin pointbreak($size: $cui-bp-medium, $max: false, $media: "") {
+    // Hi-res or retina only
+    @if $size == "hires" {
+        @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 192dpi) { @content; }
+    }
+    // All other media
+    @else {
+        // Standard mobile-first `min-width` MQ
+        @if $max == false {
+            @if $media != "" {
+                @media #{$media} and (min-width: $size) { @content; }
+            }
+            @else {
+                // Also include a `print` MQ for medium and large styles so that prints use the desktop styles
+                @if ($print-using-large-styles == true and ($size == $cui-bp-medium or $size == $cui-bp-large)) {
+                    @media print, (min-width: $size) { @content; }
+                }
+                @else {
+                    @media (min-width: $size) { @content; }
+                }
+            }
+        }
+        // Desktop-first `max-width` MQ
+        @else {
+            @if $media != "" {
+                @media #{$media} and (max-width: $size) { @content; }
+            }
+            @else {
+                // Exclude `print` so we don't apply mobile styles to prints
+                @if $print-using-large-styles == true {
+                    @media only screen and (max-width: $size) { @content; }
+                }
+                @else {
+                    @media (max-width: $size) { @content; }
+                }
+            }
+        }
+    }
+}
+
+// Alias for `pointbreak` with `$max:true` (i.e. for use with `max-width` media queries)
+// This makes it easier to notice `max-width` media queries when reading code. It's also easier to perform a find/replace than just plain `pointbreak` with multiple arguments
+@mixin pointbreak-max($size: $cui-bp-medium, $media: "") {
+    @include pointbreak($size, true, $media) {
+        @content;
+    }
+}
+
+
+// * @section    Pixel-em conversion
+// * --------------------------------------------------------
+
+// Pixels to ems
+@function pixelToEm($px: 16, $base: $cui-font-size) {
+    @return ($px / $base) * 1em;
+}
+
+// Ems to pixels
+@function emToPixel($em: 1em, $base: $cui-font-size) {
+    // Get unit-less value for ems
+    $em: toNumber($em);
+
+    // Get unitless value for pixels
+    $base: toNumber($base);
+
+    @return (($em * $base) * 1px); // Multiply by 1px because that will safely append 'px' to the result. See https://gist.github.com/awestmoreland/5554996
+}
+
+// Returns the unit from a value ("22px" -> "px")
+// Same as the native `unit()` method but it converts "pc" to "%"
+@function getUnit($val: "") {
+    // Default value
+    $unit: "";
+
+    // Make sure we're working with a string before checking the units
+    $str: quote($val);
+
+    @if str-index($str, "pc") {
+        $unit: "%";
+    }
+    @else {
+        $unit: unit($val);
+    }
+
+    @return $unit;
+}
+
+// Get numeric value from a string ("10.4px" -> 10.4)
+// Adopted and slightly modified from http://hugogiraudel.com/2014/01/15/sass-string-to-number/
+@function toNumber($string) {
+    // Make sure it's actually a string so the string methods below don't fail
+    $string: quote($string);
+
+    // Matrices
+    $strings: '0' '1' '2' '3' '4' '5' '6' '7' '8' '9';
+    $numbers:  0   1   2   3   4   5   6   7   8   9;
+
+    // Result
+    $result: 0;
+    $divider: 0;
+    $minus: false;
+
+    // Looping through all characters
+    @for $i from 1 through str-length($string) {
+        $character: str-slice($string, $i, $i);
+        $index: index($strings, $character);
+
+        @if $character == '-' {
+            $minus: true;
+        }
+
+        @else if $character == '.' {
+            $divider: 1;
+        }
+
+        @else {
+            @if not $index {
+                $result: if($minus, $result * -1, $result);
+
+                @return $result;
+            }
+
+            $number: nth($numbers, $index);
+
+            @if $divider == 0 {
+                $result: $result * 10;
+            }
+            @else {
+                // Move the decimal dot to the left
+                $divider: $divider * 10;
+                $number: $number / $divider;
+            }
+
+            $result: $result + $number;
+        }
+    }
+
+    @return if($minus, $result * -1, $result);
+}
+
+// Returns the numeric value and unit of a string as an array
+// Similar to calling both `toNumber` and `getUnit` at once
+// Also "fixes" the values 33, 66, and 67 to have repeating decimals so they become true thirds
+@function getNumberAndUnit($x) {
+    $unit: getUnit($x);
+    $value: toNumber($x);
+
+    // Handle special values that should have repeating units
+    @if $value == 33 {
+        $value: (1 / 3) * 100;
+    }
+    @elseif $value == 67 or $value == 66 {
+        $value: (2 / 3) * 100;
+    }
+
+    @return ($value, $unit);
+}
+
+@mixin required-asterisk($isInlineField: false) {
+    @if $cui-field-use-asterisk-for-required-fields == true {
+        content: "*";
+        position: absolute;
+        color: $cui-color-required-red;
+        font-family: $cui-required-font-family;
+        font-size: $cui-required-font-size;
+        line-height: normal;
+
+        // Label is above the data
+        @if $isInlineField == false {
+            top: -2px;
+            right: (-0.6 * $cui-input-font-size);
+        }
+        // Label is next to the data
+        @else {
+            top: -1px;
+            right: (-0.6 * $cui-input-font-size);
+        }
+    }
+}
