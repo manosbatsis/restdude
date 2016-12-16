@@ -17,6 +17,8 @@
  */
 package com.restdude.mdd.annotation;
 
+import com.restdude.domain.users.model.Role;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,6 +40,6 @@ public @interface CurrentPrincipal {
      *
      * <p> By default no roles are excluded.
      */
-    String[] ignoreforRoles() default {};
+    String[] ignoreforRoles() default {Role.ROLE_ANONYMOUS};
 
 }
