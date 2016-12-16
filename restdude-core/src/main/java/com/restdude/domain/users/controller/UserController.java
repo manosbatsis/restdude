@@ -18,6 +18,7 @@
 package com.restdude.domain.users.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.controller.AbstractNoDeleteModelController;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.metadata.model.MetadatumDTO;
@@ -76,6 +77,23 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     public User updateFiles(@PathVariable String id,
                             MultipartHttpServletRequest request, HttpServletResponse response) {
         return this.service.updateFiles(id, request, response);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
+    @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
+    @JsonView(AbstractSystemUuidPersistable.ItemView.class)
+    public User patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+        ICalipsoUserDetails principal = this.service.getPrincipal();
+        if (!principal.isAdmin() && !principal.isSiteAdmin()) {
+            resource.setRoles(null);
+        }
+        resource.setCredentials(null);
+        resource.setContactDetails(null);
+        resource.setUsername(null);
+        return super.patch(id, resource);
     }
 
     /**

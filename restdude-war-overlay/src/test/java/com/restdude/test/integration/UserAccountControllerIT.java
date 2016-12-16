@@ -19,10 +19,13 @@ package com.restdude.test.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.domain.users.model.User;
 import com.restdude.test.AbstractControllerIT;
 import com.restdude.util.Constants;
 import com.restdude.util.HashUtils;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -40,6 +43,83 @@ import static org.hamcrest.Matchers.notNullValue;
 public class UserAccountControllerIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountControllerIT.class);
+
+    @Test(priority = 10, description = "Test registration")
+    public void testUpdateUsername() throws Exception {
+
+        // --------------------------------
+        // Login
+        // --------------------------------
+        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+
+        // --------------------------------
+        // Update username
+        // --------------------------------
+        Response rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("adminnew").password("admin").build());
+
+
+        // --------------------------------
+        //  Update first/last name
+        // --------------------------------
+        User user = given().spec(adminLoginContext.requestSpec)
+                .body(new User.Builder()
+                        .firstName("Newfirst")
+                        .lastName("Newlast")
+                        .build())
+                .log().all()
+                .patch("/calipso/api/rest/users/" + adminLoginContext.userId)
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(200)
+                // test assertions
+                .body("id", equalTo(adminLoginContext.userId))
+                .body("firstName", equalTo("Newfirst"))
+                .body("lastName", equalTo("Newlast"))
+                .body("username", equalTo("adminnew"))
+                // get model
+                .extract().as(User.class);
+
+        // --------------------------------
+        //  Update username again
+        // --------------------------------
+        rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("admin").password("admin").build());
+    }
+
+    public Response changeUsername(Loggedincontext loginContext, UsernameChangeRequest usernameChangeRequest) {
+        Response rs = given().spec(loginContext.requestSpec)
+                .body(usernameChangeRequest)
+                .log().all()
+                .put("/calipso/api/auth/account/username")
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(200)
+                .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
+                .body("id", equalTo(loginContext.userId))
+                .body("username", equalTo(usernameChangeRequest.getUsername()))
+                // get model
+                .extract().response();
+
+        // Get result cookie and user id
+        loginContext.ssoToken = rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME);
+
+        RequestSpecification requestSpec = getRequestSpec(loginContext.ssoToken);
+        loginContext.requestSpec = requestSpec;
+
+        return rs;
+    }
+
+    @Test(description = "Test logging in with correct credentials")
+    public void testAnonymousRemember() throws Exception {
+
+        ExtractableResponse<Response> rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).when()
+                .get("/calipso/api/auth/userDetails")
+                .then()
+                .log().all()
+                .assertThat()
+                .body("username", equalTo("anonymousUser")).extract();
+    }
 
     @Test(description = "Test logging in with correct credentials")
     public void testCorrectLogin() throws Exception {
@@ -182,4 +262,5 @@ public class UserAccountControllerIT extends AbstractControllerIT {
         LOGGER.debug("getConfirmationToken returning credentials token: {}", token);
         return token;
     }
+
 }

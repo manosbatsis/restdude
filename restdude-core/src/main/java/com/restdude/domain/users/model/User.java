@@ -20,6 +20,7 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.PreAuthorizeCreate;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
@@ -53,7 +54,6 @@ import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -140,7 +140,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "user_id") })
-	private List<Role> roles = new ArrayList<Role>(0);
+	private List<Role> roles;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.owner")
@@ -258,6 +258,33 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
 	}
 
+	// serialize user name to response
+	@JsonProperty
+	public String getUsername() {
+		return username;
+	}
+
+	// but ignore when de-serializing from request
+	@JsonIgnore
+	public void setUsername(String userName) {
+		this.username = userName;
+	}
+
+	@JsonGetter("fullName")
+	public String getFullName() {
+		StringBuffer s = new StringBuffer("");
+		if (StringUtils.isNotBlank(this.getFirstName())) {
+			s.append(this.getFirstName());
+			if (StringUtils.isNotBlank(this.getLastName())) {
+				s.append(' ');
+			}
+		}
+		if (StringUtils.isNotBlank(this.getLastName())) {
+			s.append(this.getLastName());
+		}
+		return s.toString();
+
+	}
 	public String getSearchName() {
 		return searchName;
 	}
@@ -303,22 +330,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 		return firstName;
 	}
 
-	@JsonGetter("fullName")
-	public String getFullName() {
-		StringBuffer s = new StringBuffer("");
-		if (StringUtils.isNotBlank(this.getFirstName())) {
-			s.append(this.getFirstName());
-			if (StringUtils.isNotBlank(this.getLastName())) {
-				s.append(' ');
-			}
-		}
-		if (StringUtils.isNotBlank(this.getLastName())) {
-			s.append(this.getLastName());
-		}
-		return s.toString();
-
-	}
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -338,14 +349,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     public void setDescription(String description) {
         this.description = description;
     }
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String userName) {
-		this.username = userName;
-	}
 
 	public String getEmailHash() {
 		return emailHash;

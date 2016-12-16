@@ -18,6 +18,8 @@
 package com.restdude.domain.users.service.impl;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
+import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.domain.details.contact.model.ContactDetails;
@@ -51,11 +53,10 @@ import org.springframework.util.CollectionUtils;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //@Named("userService")
 public class UserServiceImpl extends AbstractModelServiceImpl<User, String, UserRepository> 
@@ -76,6 +77,13 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	private UserRegistrationCodeRepository userRegistrationCodeRepository;
 
 	private PasswordEncoder passwordEncoder;
+	private Validator validator;
+
+	@Autowired
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+
+	}
 
 	@Autowired
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -212,7 +220,6 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 		return resource;
 	}
-
 
 	protected UserRegistrationCode noteRegistrationCode(UserCredentials credentials) {
 		UserRegistrationCode code = credentials.getRegistrationCode();
@@ -382,8 +389,29 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		
 	}
 
+	@Override
+	@PreAuthorize(" hasRole('ROLE_USER') ")
+	@Transactional(readOnly = false)
+	public User updateUsername(UsernameChangeRequest usernameChangeRequest) {
+		Set<ConstraintViolation<UsernameChangeRequest>> constraintViolations = validator.<UsernameChangeRequest>validate(usernameChangeRequest);
+		ValidatorUtil.throwIfNonEmpty(constraintViolations, UsernameChangeRequest.class.getCanonicalName());
 
-//	@Override
+		User user = this.findActiveByCredentials(this.getPrincipal().getUsername(), usernameChangeRequest.getPassword());
+		if (user == null) {
+			throw new InvalidCredentialsException("Invalid password");
+		}
+		LOGGER.debug("updateUsername user: {}", user);
+		// Update username
+		user.setUsername(usernameChangeRequest.getUsername());
+		user = this.repository.save(user);
+		LOGGER.debug("updateUsername updated user: {}", user);
+		return user;
+
+
+	}
+
+
+	//	@Override
 //	@Transactional(readOnly = false)
 //	public User confirmPrincipal(String confirmationToken) {
 //		Assert.notNull(confirmationToken);

@@ -17,13 +17,19 @@
  */
 package com.restdude.auth.userdetails.controller.form;
 
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
+import com.restdude.util.exception.http.BeanValidationException;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.Column;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintViolation;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -71,5 +77,16 @@ public class ValidatorUtil {
 		Field f = object.getClass().getDeclaredField(fieldName);
 		f.setAccessible(true);
 		return f.get(object);
-	}
+    }
+
+
+    public static void throwIfNonEmpty(Set<ConstraintViolation<UsernameChangeRequest>> constraintViolations, String modelType) {
+        if (!CollectionUtils.isEmpty(constraintViolations)) {
+            Set<ConstraintViolation> errors = new HashSet<ConstraintViolation>();
+            errors.addAll(constraintViolations);
+            BeanValidationException ex = new BeanValidationException("Validation failed", errors);
+            ex.setModelType(modelType);
+            throw ex;
+        }
+    }
 }

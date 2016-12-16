@@ -18,6 +18,7 @@
 package com.restdude.domain.users.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.users.model.User;
@@ -133,4 +134,11 @@ public interface UserService extends ModelService<User, String>{
 
 	UserInvitationResultsDTO inviteUsers(UserInvitationsDTO invitations);
 
+    /**
+     * Update the username of the current user
+     *
+     * @param usernameChangeRequest
+     * @return
+     */
+    User updateUsername(UsernameChangeRequest usernameChangeRequest);
 }

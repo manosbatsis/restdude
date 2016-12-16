@@ -18,6 +18,7 @@
 package com.restdude.auth.userdetails.service.impl;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.model.UserDetails;
@@ -150,12 +151,22 @@ public class UserDetailsServiceImpl implements UserDetailsService,
 
 	@Override
 	@Transactional(readOnly = false)
-    public void handlePasswordResetRequest(String usernameOrEmail) {
-        // require user handle
+	public void handlePasswordResetRequest(String usernameOrEmail) {
+		// require user handle
 		if (StringUtils.isBlank(usernameOrEmail)) {
 			throw new BadRequestException("Unauthorised request must provide a username or email");
 		}
 		this.userService.handlePasswordResetRequest(usernameOrEmail);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public ICalipsoUserDetails updateUsername(UsernameChangeRequest usernameChangeRequest) {
+		String pw = usernameChangeRequest.getPassword();
+		User user = this.userService.updateUsername(usernameChangeRequest);
+		ICalipsoUserDetails userDetails = UserDetails.fromUser(user);
+		userDetails.setPassword(pw);
+		return userDetails;
 	}
 
 	@Override

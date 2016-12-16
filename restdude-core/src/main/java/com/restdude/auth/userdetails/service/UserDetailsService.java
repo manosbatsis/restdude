@@ -18,17 +18,18 @@
 package com.restdude.auth.userdetails.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.users.model.User;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 
 
 public interface UserDetailsService {
 
+    ICalipsoUserDetails updateUsername(UsernameChangeRequest usernameChangeRequest);
+
     ICalipsoUserDetails resetPassword(EmailConfirmationOrPasswordResetRequest resource);
 
-    @Transactional(readOnly = false)
     ICalipsoUserDetails create(ICalipsoUserDetails tryUserDetails);
 
     void handlePasswordResetRequest(String userNameOrEmail);

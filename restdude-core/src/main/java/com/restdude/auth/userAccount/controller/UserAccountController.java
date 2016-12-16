@@ -19,6 +19,7 @@ package com.restdude.auth.userAccount.controller;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
+import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.model.UserDetails;
@@ -124,9 +125,24 @@ public class UserAccountController {
 			SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
 		}
 		return userDetails;
-
     }
 
+
+	@RequestMapping(value = "username", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update username", notes = "Updates the username of the curent user and updates the auth token cookie.")
+	public ICalipsoUserDetails updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.debug("updateUsername, resource: {}", resource);
+
+		ICalipsoUserDetails userDetails = this.userDetailsService.updateUsername(resource);
+		if (userDetails.getUsername().equals(resource.getUsername())) {
+			LOGGER.debug("updateUsername updated, updating login userDetails: {}, pw: {}", userDetails, userDetails.getPassword());
+			SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
+		} else {
+			LOGGER.warn("updateUsername not updated, userDetails: {}", userDetails);
+		}
+		return userDetails;
+
+	}
 
 
 }
