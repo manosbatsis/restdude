@@ -128,7 +128,7 @@ public class SecurityUtil {
 		if (SecurityContextHolder.getContext() != null){
 			auth = SecurityContextHolder.getContext().getAuthentication();
 		}
-		LOGGER.warn("getAuthentication, auth: {}", auth);
+		LOGGER.debug("getAuthentication, auth: {}", auth);
 		return auth;
 	}
 
@@ -142,7 +142,7 @@ public class SecurityUtil {
 		Authentication auth = getAuthentication();
 		if (auth != null) {
 			principal = auth.getPrincipal();
-			LOGGER.warn("getPrincipal, auth principal: {}", principal);
+			LOGGER.debug("getPrincipal, auth principal: {}", principal);
 
 		}
 
