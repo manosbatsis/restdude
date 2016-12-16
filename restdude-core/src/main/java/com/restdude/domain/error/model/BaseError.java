@@ -129,6 +129,9 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     @Override
     public void preSave() {
         super.preSave();
+        if (this.getCreatedBy() != null && this.getCreatedBy().getId() == null) {
+            this.setCreatedBy(null);
+        }
         if (StringUtils.isNotEmpty(this.message) && this.message.length() > BaseError.MAX_MESSAGE_LENGTH) {
             this.message = StringUtils.abbreviate(this.message, BaseError.MAX_MESSAGE_LENGTH);
         }
