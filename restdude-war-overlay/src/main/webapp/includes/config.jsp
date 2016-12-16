@@ -3,8 +3,6 @@
 <%@ page import="com.restdude.util.HttpUtil" %>
 <%@ page import="org.apache.commons.configuration.Configuration" %>
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%
     HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
     String basePath = HttpUtil.setBaseUrl(req);
