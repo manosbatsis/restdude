@@ -43,7 +43,7 @@
     <!--         <level value="debug" /> -->
     <!--     </LOGGER> -->
 
-    <logger name="com.restdude">
+    <logger name="com.restdude.auth">
         <level value="debug"/>
     </logger>
     <logger name="org.springframework.security">

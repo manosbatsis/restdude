@@ -72,8 +72,9 @@ public class UserDetailsController {
     @ApiOperation(value = "Login",
             notes = "Login using a JSON object with email/password properties.")
     public ICalipsoUserDetails create(@RequestBody LoginSubmission resource) {
-        ICalipsoUserDetails userDetails = new UserDetails(resource);
         LOGGER.debug("#create, LoginSubmission: {}", resource);
+        ICalipsoUserDetails userDetails = new UserDetails(resource);
+        LOGGER.debug("#create, userDetails: {}", userDetails);
         userDetails = this.service.create(userDetails);
         if (userDetails != null && userDetails.getId() != null) {
 
@@ -92,12 +93,12 @@ public class UserDetailsController {
     @RequestMapping(method = RequestMethod.GET)
     public ICalipsoUserDetails remember() {
         ICalipsoUserDetails userDetails = this.service.getPrincipal();
-        if (userDetails == null || userDetails.getId() == null) {
+        LOGGER.debug("#remember userDetails: {}", userDetails);
+        if (userDetails == null) {
             LOGGER.debug("#remember failed, logging out");
             SecurityUtil.logout(request, response, userDetailsConfig);
             throw new InvalidCredentialsException("Not authenticated");
         } else {
-            LOGGER.debug("#remember successful, userDetails: {}", userDetails);
             return userDetails;
         }
 

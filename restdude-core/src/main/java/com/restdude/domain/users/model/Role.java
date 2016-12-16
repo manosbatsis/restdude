@@ -47,6 +47,7 @@ public class Role extends AbstractSystemUuidPersistable implements GrantedAuthor
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_SITE_OPERATOR = "ROLE_SITE_OPERATOR";
 	public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
     public static final String ROLE_UNCONFIRMED_USER = "UNCONFIRMED_USER";
 
 

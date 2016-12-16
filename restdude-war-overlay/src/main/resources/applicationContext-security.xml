@@ -31,7 +31,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 
 
     <bean id="anonymousAuthenticationFilter"
-          class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+          class="com.restdude.auth.userdetails.util.AnonymousAuthenticationFilter">
         <constructor-arg value="foobar"/>
     </bean>
 
@@ -80,8 +80,11 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         in a stateless domain
          -->
         <sec:csrf disabled="true"/>
-
         <sec:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
+
+        <sec:anonymous enabled="false"/>
+        <sec:custom-filter ref="anonymousAuthenticationFilter" position="ANONYMOUS_FILTER"/>
+
         <sec:logout invalidate-session="true" delete-cookies="true"/>
 
         <!-- allow anonymous register/login etc. -->

@@ -64,6 +64,8 @@ public final class RestAuthenticationEntryPoint implements AuthenticationEntryPo
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        LOGGER.error("commence", authException);
+
         SecurityUtil.logout(request, response, userDetailsConfig);
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -139,6 +139,9 @@ public class UserDetails implements  ICalipsoUserDetails{
 	public UserDetails(LoginSubmission loginSubmission) {
 		this();
 		BeanUtils.copyProperties(loginSubmission, this);
+		if (this.username == null) {
+			this.username = loginSubmission.getEmail();
+		}
 	}
 
 	@Override

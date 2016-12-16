@@ -164,8 +164,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
         ICalipsoUserDetails userDetails = this.getPrincipal();
 		User u = null;
         // Case 1: if authorized as current user and in an attempt to directly change password, require current password
-        if (userDetails != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
-            u = this.userService.changePassword(
+		if (userDetails != null && userDetails.getId() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
+			u = this.userService.changePassword(
 					userDetails.getUsername(),
 					passwordResetRequest.getCurrentPassword(),
 					passwordResetRequest.getPassword(),
