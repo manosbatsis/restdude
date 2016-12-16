@@ -35,7 +35,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@Test(/*singleThreaded = true, */description = "User entity tests")
+@Test(description = "Test user account endpoint")
 @SuppressWarnings("unused")
 public class UserAccountControllerIT extends AbstractControllerIT {
 
