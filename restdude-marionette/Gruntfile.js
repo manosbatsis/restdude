@@ -114,7 +114,11 @@ module.exports = function(grunt) {
             css: {
                 files: ["<%= pathConfig.rootDir %>preprocess/scss/**.scss"],
                 tasks: ["compass"]
-            }
+            },
+            sass: {
+                files: ["<%= pathConfig.rootDir %>preprocess/preprocess/scss/**/*.scss"],
+                tasks: ["sass"]
+            },
         },
 		 // Builds the default javascript CUI library using r.js compiler
         requirejs: {
@@ -122,6 +126,7 @@ module.exports = function(grunt) {
                 options: {
                     baseUrl: 'src/', // Where all our resources will be
                     name: '../tasks/libs/requireManager/temp/settings', // Where the generated temp file will be
+                    mainConfigFile: "path/to/config.js",
                     paths: {}, // Generate build file
                     include: [
                         'requirejs',
@@ -149,7 +154,7 @@ module.exports = function(grunt) {
                     outputStyle: 'nested', // Options: 'nested', 'compressed' (i.e. minified)
                 },
                 files: {
-                    'dist/css/main.css': 'src/project/scss/project.scss',
+                    'dist/css/main.css': 'preprocess/scss/style.scss',
                 },
             },
         },
