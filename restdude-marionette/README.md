@@ -46,15 +46,18 @@ compass Follow the next steps: 1. Download rubygems-update-2.6.7.gem . Please do
 
  > How to use
 
-Start the Node Express server using Grunt - This is used for persistent storage of your todo list entries.
+ In order to run the Project you have to: 
 
-Run : grunt backend
+        1) Run to a terminal : grunt backend
 
-Start the frontend server using Grunt - This is the Javascript application. Your terminal will tell you to point your browser at 0.0.0.0:9000 so see the application.
+        This command starts the local server
 
-Run : grunt frontend
+        2) Run to a different terminal the command : grunt frontend
+        
+        This command starts the frontend server using Grunt 
 
-You can then point as many tabs/browsers at 0.0.0.0:9000 as you like. Use the form to add items to your todo list, you will see your changes appear on the other tabs in real time. Thanks to Socket IO.
+        3) You can then point as many tabs/browsers at localhost:9000 as you like. 
+        Use the form to add items to your todo list, you will see your changes appear on the other tabs in real time. Thanks to Socket IO.
 
 Documentation
 
