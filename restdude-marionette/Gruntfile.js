@@ -64,6 +64,19 @@ module.exports = function(grunt) {
                 'docs',
             ],
         },
+        cssmin:{
+            my_target: {
+                files: [{
+                    expand: true,
+                    cwd: "www/css",
+                    src: ['*.css', '!*.min.css'],
+                    dest: "www/css",
+                    ext: '.min.css'
+                }]
+
+            }
+
+        },
         uglify: {
             options: {
                 compress: true
