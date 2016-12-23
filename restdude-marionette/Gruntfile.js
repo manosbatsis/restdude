@@ -40,6 +40,21 @@ module.exports = function(grunt) {
                 }
             }
         },
+        concat:{
+            options: {
+                seperator: ";",
+                stripBanners: true,
+                banner: '/*! <%= pkg.name %> - v<%=pkg.version %> - '+ '<%=grunt.template.today("yyyy-mm-dd") %> */',
+ 
+            },
+            dist: {
+                src: [''],
+                dest: "",
+
+
+            }
+
+        },
         copy: {
             js: {
                 expand: true,
