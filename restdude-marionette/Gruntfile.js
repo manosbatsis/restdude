@@ -145,7 +145,7 @@ module.exports = function(grunt) {
             },
             sass: {
                 files: ["<%= pathConfig.rootDir %>preprocess/preprocess/scss/**/*.scss"],
-                tasks: ["sass"]
+                tasks: ["sass","ccsmin"]
             },
         },
 		 // Builds the default javascript CUI library using r.js compiler

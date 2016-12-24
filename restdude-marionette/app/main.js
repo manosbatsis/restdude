@@ -1,5 +1,5 @@
 require.config({ 
-	baseUrl: "app",
+	baseUrl: "app"/*"www/js"*/,
     paths: {
 		'router'				: 'router',
 		'app'					: 'app',
@@ -59,7 +59,7 @@ require.config({
 		'humanize'				: '../bower_components/humanize/humanize',
 		'chart'					: '../bower_components/chartjs',
 		'template'				: '../bower_components/template/lib/template',
-		
+		'SocketIO'              : "//cdn.socket.io/socket.io-1.0.6"
 		},
 	shim : {
 		jquery : {
