@@ -68,6 +68,22 @@ module.exports = function(grunt) {
             }
 
         },
+        imagemin: {
+            jpg: {
+                options: {
+                    progressive: true
+                },
+                files: [{
+                    expand:true,
+                    cwd: 'www/img/',
+                    src: ['**/*.{png,JPG,gif}'],
+                    dest: 'www/img/'
+
+                }]
+
+            }
+
+        },
         copy: {
             js: {
                 expand: true,
