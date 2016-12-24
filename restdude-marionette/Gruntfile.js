@@ -55,6 +55,19 @@ module.exports = function(grunt) {
             }
 
         },
+        less: {
+            development: {
+                options: {
+                    paths: ["app\lib\bootstrap/less/"]
+                },
+                files: {
+
+                    "css/style.css" : "less/source.less" 
+                }
+
+            }
+
+        },
         copy: {
             js: {
                 expand: true,
