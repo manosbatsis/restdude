@@ -4,6 +4,7 @@ require.config({
 		'router'				: 'router',
 		'app'					: 'app',
 		'templates'				: '../build/templates',
+		'coreui-app'			: 'lib/coreui-app',
 		'jquery'				: '../bower_components/jquery/dist/jquery',
 		'backbone'				: '../bower_components/backbone/backbone',
 		'underscore'			: '../bower_components/lodash/dist/lodash',
