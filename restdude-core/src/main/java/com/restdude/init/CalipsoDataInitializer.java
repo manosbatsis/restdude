@@ -144,7 +144,7 @@ public class CalipsoDataInitializer {
 
         Configuration config = ConfigurationFactory.getConfiguration();
 		boolean initData = config.getBoolean(ConfigurationFactory.INIT_DATA, true);
-
+		String emailDomain = config.getString("calipso.testEmailDomain");
 
         SecurityContextHolder.getContext().setAuthentication(
                 new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
@@ -170,8 +170,8 @@ public class CalipsoDataInitializer {
 			system.setFirstName("System");
 			system.setLastName("User");
             system.setCredentials(new UserCredentials.Builder().password("system").build());
-            system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@abiss.gr")).build());
-            system.setLastVisit(now);
+			system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@" + emailDomain)).build());
+			system.setLastVisit(now);
             system = userService.createAsConfirmed(system);
             users.add(system);
 
@@ -182,7 +182,7 @@ public class CalipsoDataInitializer {
 			adminUser.setLastVisit(now);
 			adminUser.addRole(adminRole);
             adminUser.setCredentials(new UserCredentials.Builder().password("admin").build());
-            adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("info@abiss.gr")).build());
+			adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("ehadmin@" + emailDomain)).build());
 //			adminUser.setCreatedBy(system);
             adminUser = userService.createAsConfirmed(adminUser);
             users.add(adminUser);
@@ -196,8 +196,8 @@ public class CalipsoDataInitializer {
 			opUser.setFirstName("Operator");
 			opUser.setLastName("User");
             opUser.setCredentials(new UserCredentials.Builder().password("operator").build());
-            opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@abiss.gr")).build());
-            opUser.setLastVisit(now);
+			opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@" + emailDomain)).build());
+			opUser.setLastVisit(now);
             opUser.addRole(operatorRole);
 //			opUser.setCreatedBy(system);
             opUser = userService.createAsConfirmed(opUser);
@@ -213,8 +213,8 @@ public class CalipsoDataInitializer {
 					u.setFirstName(fullName.substring(0, fullName.indexOf(" ")));
 					u.setLastName(fullName.substring(fullName.indexOf(" ") + 1));
                     u.setCredentials(new UserCredentials.Builder().password(userName).build());
-                    u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userName + "@abiss.gr")).build());
-                    u.setLastVisit(now);
+					u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userName + "@" + emailDomain)).build());
+					u.setLastVisit(now);
 //					u.setCreatedBy(system);
                     u = userService.createAsConfirmed(u);
                     users.add(u);
