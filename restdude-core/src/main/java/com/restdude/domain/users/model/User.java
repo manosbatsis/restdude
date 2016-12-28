@@ -143,8 +143,8 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 	private List<Role> roles;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "id.owner")
-	private List<Friendship> friendships;
+    @OneToMany(mappedBy = "id.left")
+    private List<Friendship> friendships;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")

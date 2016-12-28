@@ -39,13 +39,11 @@ public class FriendshipDTO implements Serializable {
 		FriendshipId id = friendship.getId();
 		if(id != null){
 			this.id = id.toStringRepresentation();
-			this.owner = UserDTO.fromUser(id.getOwner());
-			this.friend = UserDTO.fromUser(id.getFriend());
-		}
+            this.owner = UserDTO.fromUser(id.getLeft());
+            this.friend = UserDTO.fromUser(id.getRight());
+        }
 		this.status = friendship.getStatus();
 	}
-
-	
 	
 	/**
 	 * @return the id

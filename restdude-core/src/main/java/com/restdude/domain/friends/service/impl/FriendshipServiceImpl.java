@@ -74,18 +74,18 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 		String userDetailsId = this.getPrincipal().getId();
 
 		// set current user as sender if the latter is empty
-		if (resource.getId().getOwner() == null) {
-			resource.getId().setOwner(new User(userDetailsId));
-		}
+        if (resource.getId().getLeft() == null) {
+            resource.getId().setLeft(new User(userDetailsId));
+        }
 
 		// verify principal == owner
-		if (!userDetailsId.equals(resource.getId().getOwner().getId())) {
+        if (!userDetailsId.equals(resource.getId().getLeft().getId())) {
             throw new BadRequestException("Invalid friendship owner.");
         }
 
 		// verify friend is set
-		User friend = resource.getId().getFriend();
-		if (friend == null || !StringUtils.isNotBlank(friend.getId())) {
+        User friend = resource.getId().getRight();
+        if (friend == null || !StringUtils.isNotBlank(friend.getId())) {
             throw new BadRequestException("A (friend) id is required");
         }
 		
@@ -141,7 +141,7 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
             String username = this.userRepository.findUsernameById(
                     resource
                             .getId()
-                            .getOwner()
+                            .getLeft()
                             .getId());
             LOGGER.debug("Sending friendship DTO to " + username);
 			this.messagingTemplate.convertAndSendToUser(username, Destinations.USERQUEUE_FRIENDSHIPS,

@@ -69,12 +69,6 @@ public interface UserRepository extends ModelRepository<User, String> {
             "    )")
     public User findActiveByIdOrUsernameOrEmail(String idOrUsernameOrEmail);
 
-	//@Query("select u from User u where UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
-	//public User findByUsernameOrEmail(String idOrUsernameOrEmail);
-
-	//@Query("select new com.restdude.domain.users.model.UserDTO(u.id, u.firstName, u.lastName, u.username, u.contactDetails.primaryEmail.email, u.emailHash, u.avatarUrl, u.bannerUrl, u.stompSessionCount) from User u where u.id = ?1 or UPPER(u.credentials.email) = UPPER(?1) or UPPER(u.username) = UPPER(?1)) ")
-	//public UserDTO findAsLink(String usernameOrEmailOrId);
-	
 	@Query(SELECT_USERDTO
 			+ "from User u where u.id = ?1")
 	public UserDTO findCompactUserById(String id);

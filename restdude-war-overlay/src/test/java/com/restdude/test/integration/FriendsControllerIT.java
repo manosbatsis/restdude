@@ -52,8 +52,8 @@ public class FriendsControllerIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FriendsControllerIT.class);
 
-    @Test(description = "Test logging in with correct credentials")
-    public void testFindMy() throws Exception {
+    @Test(description = "Test friendship request, aceptance and related notifications")
+    public void testFriendshipFlow() throws Exception {
 
         // --------------------------------
         // Login
@@ -124,6 +124,8 @@ public class FriendsControllerIT extends AbstractControllerIT {
         LOGGER.debug("Outbox: \n{}", JacksonUtils.prettyPrint(friendshipsNode));
         Assert.assertEquals(operatorLoginContext.userId, friendshipsNode.get("content").get(0).get("id").asText());
 
+        // validate oprator/inverse result
+        // -------------------------------------------
         LOGGER.info("Validate inbox (PENDING)");
         friendshipsNode = given().spec(operatorRequestSpec)
                 .log().all()
@@ -140,14 +142,12 @@ public class FriendsControllerIT extends AbstractControllerIT {
                 .extract().as(JsonNode.class);
         Assert.assertEquals(adminLoginContext.userId, friendshipsNode.get("content").get(0).get("id").asText());
 
-
-        // validate oprator/inverse result
+        // test operator user queue
         FriendshipDTO ioperatorFriendRequestNotification = operatorFriendshipsQueueBlockingQueue.poll(5, SECONDS);
         validateFriendship(ioperatorFriendRequestNotification, operatorLoginContext.userId, adminLoginContext.userId, FriendshipStatus.PENDING);
 
-        // test operator user queue
-        LOGGER.info("Accept request");
         // accept request by sending only the new status to the right URL
+        LOGGER.info("Accept request");
         Friendship friendshipInverse = given().spec(operatorRequestSpec).log().all()
                 .body(new Friendship(FriendshipStatus.CONFIRMED))
                 .put("/calipso/api/rest/" + Friendship.API_PATH + "/" + ioperatorFriendRequestNotification.getId())
@@ -161,7 +161,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         // validate result
         validateFriendship(friendshipInverse, operatorLoginContext.userId, adminLoginContext.userId, FriendshipStatus.CONFIRMED);
 
-        // validate admin/inverse result
+        // validate admin queue
         FriendshipDTO adminFriendRequestNotification = adminFriendshipsQueueBlockingQueue.poll(5, SECONDS);
         validateFriendship(adminFriendRequestNotification, adminLoginContext.userId, operatorLoginContext.userId, FriendshipStatus.CONFIRMED);
 

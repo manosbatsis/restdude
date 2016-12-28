@@ -19,30 +19,30 @@ import java.util.List;
 //@JaversSpringDataAuditable
 public interface FriendshipRepository extends ModelRepository<Friendship,FriendshipId> {
 
-	static final String SELECT_FRIEND_AS_USERDTO = "select new com.restdude.domain.users.model.UserDTO(friendship.id.friend.id, "
-			+ "		friendship.id.friend.firstName, "
-			+ "		friendship.id.friend.lastName, "
-			+ "		friendship.id.friend.username, "
-            + "		friendship.id.friend.contactDetails.primaryEmail.email, "
-            + "		friendship.id.friend.emailHash, "
-			+ "		friendship.id.friend.avatarUrl, "
-			+ "		friendship.id.friend.bannerUrl, "
-			+ "		friendship.id.friend.stompSessionCount"
-			+ ") ";
+    static final String SELECT_FRIEND_AS_USERDTO = "select new com.restdude.domain.users.model.UserDTO(friendship.id.right.id, "
+            + "		friendship.id.right.firstName, "
+            + "		friendship.id.right.lastName, "
+            + "		friendship.id.right.username, "
+            + "		friendship.id.right.contactDetails.primaryEmail.email, "
+            + "		friendship.id.right.emailHash, "
+            + "		friendship.id.right.avatarUrl, "
+            + "		friendship.id.right.bannerUrl, "
+            + "		friendship.id.right.stompSessionCount"
+            + ") ";
 
 
-	static final String IS_FRIEND = " (friendship.id.owner.id =  ?1 "
-			+ "and friendship.status = com.restdude.domain.friends.model.FriendshipStatus.CONFIRMED) ";
+    static final String IS_FRIEND = " (friendship.id.left.id =  ?1 "
+            + "and friendship.status = com.restdude.domain.friends.model.FriendshipStatus.CONFIRMED) ";
 
 
     static final String FROM__FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND;
 	// 
-	static final String FROM__STOMPONLINE_FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND + " and friendship.id.friend.stompSessionCount > 0 ";
+    static final String FROM__STOMPONLINE_FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND + " and friendship.id.right.stompSessionCount > 0 ";
 
-	static final String QUERY_FRIEND_USERNAMES_BY_USERID = "select friendship.id.friend.username " + FROM__FRIENDS_BY_USERID;
-	static final String QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID = "select friendship.id.friend.username " + FROM__STOMPONLINE_FRIENDS_BY_USERID;
-	
-	static final String QUERY_FRIENDS_BY_USERID = SELECT_FRIEND_AS_USERDTO + FROM__FRIENDS_BY_USERID;
+    static final String QUERY_FRIEND_USERNAMES_BY_USERID = "select friendship.id.right.username " + FROM__FRIENDS_BY_USERID;
+    static final String QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID = "select friendship.id.right.username " + FROM__STOMPONLINE_FRIENDS_BY_USERID;
+
+    static final String QUERY_FRIENDS_BY_USERID = SELECT_FRIEND_AS_USERDTO + FROM__FRIENDS_BY_USERID;
 	
 	@Query(QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID)
 	List<String> findAllStompOnlineFriendUsernames(String userId);

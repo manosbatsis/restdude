@@ -34,7 +34,7 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
 	
 	@NotNull
 	@ApiModelProperty(required = true)
-	@EmbeddedId	
+	@EmbeddedId
 	private FriendshipId id;
 	
 	@ApiModelProperty(required = true, allowableValues = "NEW, CONFIRMED, BLOCK, DELETE")
@@ -64,7 +64,10 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
 	}
 
 	public Friendship(User sender, User recipient) {
-		this.id = new FriendshipId(sender, recipient);
+
+		this.id = new FriendshipId();
+		this.id.setLeft(sender);
+		this.id.setRight(recipient);
 	}
 
 	@Override
@@ -78,8 +81,14 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
 
 	@JsonIgnore
 	public FriendshipId getInverseId() {
+		FriendshipId inverse = null;
 		FriendshipId thisId = this.getId();
-		return thisId != null ? new FriendshipId(thisId.getFriend(), thisId.getOwner()) : null;
+		if (thisId != null) {
+			inverse = new FriendshipId();
+			inverse.setLeft(thisId.getRight());
+			inverse.setRight(thisId.getLeft());
+		}
+		return inverse;
 	}
 	
 	@JsonIgnore

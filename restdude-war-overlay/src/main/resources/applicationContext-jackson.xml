@@ -48,6 +48,17 @@
                 <util:constant static-field="com.fasterxml.jackson.databind.MapperFeature.DEFAULT_VIEW_INCLUSION"/>
             </array>
         </property>
+        <property name="serializers">
+            <array>
+                <bean class="com.restdude.domain.base.binding.EmbeddableManyToManyIdSerializer"/>
+            </array>
+        </property>
+        <property name="deserializers">
+            <array>
+                <bean class="com.restdude.domain.base.binding.EmbeddableManyToManyIdDeserializer"/>
+            </array>
+        </property>
+
     </bean>
 
     <bean class="com.fasterxml.jackson.module.paramnames.ParameterNamesModule"/>
@@ -56,12 +67,13 @@
 
     <!-- 	<bean id="conversionService" -->
     <!-- 		class="org.springframework.context.support.ConversionServiceFactoryBean"> -->
-    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <bean id="conversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="converters">
             <set>
                 <!-- converters is a set of both converters and converterfactories -->
                 <bean class="com.restdude.domain.base.binding.CustomEnumConverterFactory"/>
-                <bean class="com.restdude.domain.friends.binding.FriendshipIdDeserializer"/>
+                <bean class="com.restdude.domain.base.binding.StringToEmbeddableManyToManyIdConverterFactory"/>
             </set>
         </property>
     </bean>

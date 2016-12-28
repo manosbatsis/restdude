@@ -112,8 +112,8 @@ public class FriendsController {
 			@RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
 		
 		Map<String, String[]> parameters = new HashMap<String, String[]>();
-		parameters.put("id.owner.id", new String[]{ownerId});
-		parameters.put("status", status);
+        parameters.put("id.left.id", new String[]{ownerId});
+        parameters.put("status", status);
 
         ParameterMapBackedPageRequest pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
 
@@ -124,8 +124,8 @@ public class FriendsController {
 		// TODO: move DTO selection to query
 		List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());
 		for(Friendship friendship : friendshipPage){
-			frieds.add(UserDTO.fromUser(friendship.getId().getFriend()));
-		}
+            frieds.add(UserDTO.fromUser(friendship.getId().getRight()));
+        }
 		
 		PageImpl<UserDTO> friends = new PageImpl<UserDTO>(frieds, pageable, friendshipPage.getTotalElements());
 		return friends;

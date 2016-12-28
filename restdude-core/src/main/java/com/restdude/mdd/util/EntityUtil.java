@@ -17,10 +17,12 @@
  */
 package com.restdude.mdd.util;
 
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.validation.CaseSensitive;
 import com.restdude.mdd.annotation.ModelRelatedResource;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -86,12 +89,12 @@ public class EntityUtil {
 		}
 		return provider;
     }
-    
+
     public static Class<?> getIdType(Class<?> modelType) {
-    	Class<?> idType = null;
-		Method testMethod = null;
+        Class<?> idType = null;
+        Method testMethod = null;
         try {
-			testMethod = modelType.getMethod("getId");
+            testMethod = modelType.getMethod("getId");
 		} catch (Exception e) {
 			LOGGER.error("Could not determine ID type", e);
 		}
@@ -100,6 +103,7 @@ public class EntityUtil {
 		}
 		return idType;
 	}
+
     
 	public static String[] getNullPropertyNames (Object source) {
 	    final BeanWrapper src = new BeanWrapperImpl(source);
@@ -135,5 +139,13 @@ public class EntityUtil {
         }
 
         return caseSensitive;
+    }
+
+    public static <ID extends Serializable> ID idOrNull(CalipsoPersistable<ID> user) {
+        return user != null ? user.getId() : null;
+    }
+
+    public static String idOrNEmpty(CalipsoPersistable user) {
+        return user != null ? user.getId().toString() : StringUtils.EMPTY;
     }
 }
