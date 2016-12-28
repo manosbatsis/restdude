@@ -20,6 +20,7 @@ package com.restdude.util.email.service;
 
 import com.restdude.domain.users.model.User;
 import com.restdude.util.ConfigurationFactory;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,12 +151,13 @@ public class EmailService {
 			final String htmlContent = this.templateEngine.process(templateName, ctx);
 
 			if(LOGGER.isDebugEnabled()){
-                LOGGER.debug("Sending email body: \n {}", htmlContent);
-            }
+				LOGGER.debug("Sending email, to: {}, body: \n {}", emailTo, htmlContent);
+			}
 			message.setText(htmlContent, true /* isHtml */);
 	
 			// Send email
-			if(StringUtils.isNotBlank(ConfigurationFactory.getConfiguration().getString("mail.server.host"))){
+			Configuration config = ConfigurationFactory.getConfiguration();
+			if (config.getBoolean("mail.enabled", false) && StringUtils.isNotBlank(config.getString("mail.server.host"))) {
 				this.mailSender.send(mimeMessage);
 			}
 			else{

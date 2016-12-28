@@ -314,14 +314,20 @@ public class AbstractControllerIT {
         private Class messageClazz;
         private StompSession session;
         private BlockingQueue<T> blockingQueue;
+        private String name = "";
 
         private DefaultStompFrameHandler() {
         }
 
         public DefaultStompFrameHandler(StompSession session, Class messageClazz, BlockingQueue<T> blockingQueue) {
+            this(session, messageClazz, blockingQueue, messageClazz.getSimpleName());
+        }
+
+        public DefaultStompFrameHandler(StompSession session, Class messageClazz, BlockingQueue<T> blockingQueue, String name) {
             this.session = session;
             this.blockingQueue = blockingQueue;
             this.messageClazz = messageClazz;
+            this.name = name;
         }
 
         @Override
@@ -332,7 +338,7 @@ public class AbstractControllerIT {
         @SuppressWarnings("unchecked")
         @Override
         public void handleFrame(StompHeaders headers, Object payload) {
-            LOGGER.info("handleFrame, headers: {}, payload: {}", headers, payload);
+            LOGGER.debug("{} handleFrame: {}, headers: {}, payload: {}", name, messageClazz.getSimpleName(), headers, payload);
             this.blockingQueue.offer((T) payload);
         }
 
