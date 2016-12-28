@@ -104,7 +104,7 @@ public class FriendsController {
 
 	
 	protected Page<UserDTO> findFriendsPaginated(
-			String ownerId,
+			String targetId,
 			String[] status,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
@@ -112,8 +112,8 @@ public class FriendsController {
 			@RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
 		
 		Map<String, String[]> parameters = new HashMap<String, String[]>();
-        parameters.put("id.left.id", new String[]{ownerId});
-        parameters.put("status", status);
+		parameters.put("id.left.id", new String[]{targetId});
+		parameters.put("status", status);
 
         ParameterMapBackedPageRequest pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
 

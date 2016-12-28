@@ -6,8 +6,6 @@ import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipId;
 import com.restdude.domain.friends.model.FriendshipStatus;
 import com.restdude.domain.users.model.UserDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -57,6 +55,6 @@ public interface FriendshipRepository extends ModelRepository<Friendship,Friends
 	@Query(QUERY_FRIENDS_BY_USERID)
 	Iterable<UserDTO> findAllFriends(String userId);
 
-	@Query(QUERY_FRIENDS_BY_USERID)
-	Page<UserDTO> findAllFriendsPaginated(String userId, Pageable pageRequest);
+	//@Query(QUERY_FRIENDS_BY_USERID)
+	//Page<UserDTO> findAllFriendsPaginated(String userId, Pageable pageRequest);
 }

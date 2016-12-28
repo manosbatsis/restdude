@@ -163,8 +163,9 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	public User createAsConfirmed(User resource) {
-
-		return this.create(resource, true);
+		resource = this.create(resource, true);
+		this.repository.flush();
+		return resource;
 	}
 
 	private User create(User resource, boolean skipConfirmation) {
@@ -200,8 +201,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
         LOGGER.debug("create, save user: {}", resource);
         resource = super.create(resource);
 
-        LOGGER.debug("create, sttach and persist credentials: {}", credentials);
-        credentials.setUser(resource);
+		LOGGER.debug("create, attach and persist credentials: {}", credentials);
+		credentials.setUser(resource);
 		credentials = this.credentialsService.create(credentials);
 		resource.setCredentials(credentials);
 
@@ -212,8 +213,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		resource.setContactDetails(contactDetails);
 
 
-        LOGGER.debug("create, aupdate registration code: {}", contactDetails);
-        if (code != null && code.getId() != null) {
+		LOGGER.debug("create, update registration code: {}", contactDetails);
+		if (code != null && code.getId() != null) {
 			code.setCredentials(resource.getCredentials());
 			this.userRegistrationCodeRepository.patch(code);
 		}
@@ -599,6 +600,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 			List<String> addresses = Arrays.asList(invitations.getAddressLines().replaceAll("\\r?\\n", ",").split(","));
 			if(!CollectionUtils.isEmpty(addresses)){
 				for(String sAddress : addresses){
+					sAddress = sAddress.toLowerCase();
 					InternetAddress email = isValidEmailAddress(sAddress);
 					if(email != null){
 						if(results.getInvited().contains(email.getAddress())){

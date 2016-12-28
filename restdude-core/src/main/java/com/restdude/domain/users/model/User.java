@@ -244,8 +244,12 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
      */
     @Override
     public void preSave() {
-        if (!StringUtils.isNotBlank(this.getLocale())) {
+		if (!StringUtils.isNotBlank(this.getLocale())) {
 			this.setLocale("en");
+		}
+		// enforce low-case
+		if (!StringUtils.isNotBlank(this.getUsername())) {
+			this.setUsername(this.getUsername().toLowerCase());
 		}
 		// fallback to gravatar
 		if (StringUtils.isBlank(this.getAvatarUrl())) {

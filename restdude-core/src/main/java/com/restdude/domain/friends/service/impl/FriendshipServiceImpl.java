@@ -26,12 +26,20 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FriendshipServiceImpl.class);
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Boolean exists(Friendship resource) {
+		return this.repository.exists(resource.getId());
+	}
+
+	/**
 	 * Create a friendship request
 	 */
 	@Override
 	@Transactional(readOnly = false)
-    public Friendship create(Friendship resource) {
-        LOGGER.debug("create: {}", resource);
+	public Friendship create(Friendship resource) {
+		LOGGER.debug("create: {}", resource);
 		return this.saveRelationship(resource);
 	}
 
@@ -41,8 +49,25 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	@Override
 	@Transactional(readOnly = false)
 	public Friendship createTest(Friendship resource) {
-        LOGGER.debug("createAsConfirmed: {}", resource);
-        return this.repository.save(resource);
+		LOGGER.debug("createTest, resource: {}, left: {}, right: {}", resource, resource.getId().getLeft().getUsername(), resource.getId().getRight().getUsername());
+		if (this.repository.exists(resource.getId())) {
+			throw new RuntimeException("Friendship id already exists: " + resource.getId());
+		}
+		resource.setStatus(FriendshipStatus.CONFIRMED);
+		FriendshipId InverseId = resource.getInverseId();
+		if (InverseId == null) {
+			throw new RuntimeException("Could not inverse friendship: " + resource);
+		}
+		if (resource.getId().getLeft().getId().equals(resource.getId().getRight().getId())) {
+			throw new RuntimeException("Friendships with oneself is not allowed");
+		}
+		resource = this.repository.persist(resource);
+		Friendship inverse = new Friendship(InverseId);
+		LOGGER.debug("createAsConfirmed, inverse: {}, left: {}, right: {}", inverse, inverse.getId().getLeft().getUsername(), inverse.getId().getRight().getUsername());
+		inverse.setStatus(FriendshipStatus.CONFIRMED);
+		inverse = this.repository.persist(inverse);
+		this.repository.flush();
+		return resource;
 	}
 
 	/**
@@ -50,8 +75,18 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 	 */
 	@Override
 	@Transactional(readOnly = false)
-    public Friendship update(Friendship resource) {
-        LOGGER.debug("update: {}", resource);
+	public Friendship patch(Friendship resource) {
+		return this.update(resource);
+	}
+
+
+	/**
+	 * Approve or reject a friendship request
+	 */
+	@Override
+	@Transactional(readOnly = false)
+	public Friendship update(Friendship resource) {
+		LOGGER.debug("update: {}", resource);
 		return this.saveRelationship(resource);
 	}
 
@@ -87,13 +122,12 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
         User friend = resource.getId().getRight();
         if (friend == null || !StringUtils.isNotBlank(friend.getId())) {
             throw new BadRequestException("A (friend) id is required");
-        }
-		
-		// verify principal != friend
-		else if (userDetailsId.equals(friend.getId())) {
-            throw new BadRequestException("Befriending yourself is not allowed.");
 		}
 
+		// verify not friend-to-self
+		if (resource.getId().getLeft().getId().equals(resource.getId().getRight().getId())) {
+			throw new BadRequestException("Friendships with oneself are not allowed");
+		}
 		LOGGER.debug("validateSender returns resource: {}", resource);
 	}
 
@@ -130,7 +164,7 @@ public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, 
 			this.repository.delete(resource);
 		} else {
 			// persist changes
-			resource = this.repository.save(resource);
+			resource = this.repository.exists(resource.getId()) ? this.repository.save(resource) : this.repository.persist(resource);
 
 		}
 

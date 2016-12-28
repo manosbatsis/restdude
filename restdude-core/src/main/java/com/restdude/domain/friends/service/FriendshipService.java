@@ -34,4 +34,9 @@ public interface FriendshipService extends ModelService<Friendship, FriendshipId
 	public void sendStompActivityMessageToOnlineFriends(ActivityNotificationMessage msg);
 
     Friendship createTest(Friendship resource);
+
+    /**
+     * Check if a friendship between the given parties already exists
+     */
+    public Boolean exists(Friendship resource);
 }

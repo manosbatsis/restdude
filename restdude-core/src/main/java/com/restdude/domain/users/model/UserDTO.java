@@ -19,10 +19,13 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.restdude.domain.base.binding.LowCaseDeserializer;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.websocket.message.IMessageResource;
 import io.swagger.annotations.ApiModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @ApiModel(value = "UserDTO", description = "UserDTO is a lightweight DTO version of User")
@@ -49,7 +52,9 @@ public class UserDTO implements IMessageResource<String> {
     private String name;
     private String firstName;
     private String lastName;
+    @JsonDeserialize(using = LowCaseDeserializer.class)
     private String username;
+    @JsonDeserialize(using = LowCaseDeserializer.class)
     private String email;
     private String emailHash;
     private String avatarUrl;
@@ -64,9 +69,9 @@ public class UserDTO implements IMessageResource<String> {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
+        this.username = StringUtils.lowerCase(username);
         this.name = new StringBuffer(firstName != null ? firstName : "").append(" ").append(lastName != null ? lastName : "").toString().trim();
-        this.email = email;
+        this.email = StringUtils.lowerCase(email);
         this.emailHash = emailHash;
         this.avatarUrl = avatarUrl;
         this.bannerUrl = bannerUrl;
@@ -89,8 +94,8 @@ public class UserDTO implements IMessageResource<String> {
         this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
-        this.username = builder.username;
-        this.email = builder.email;
+        this.username = StringUtils.lowerCase(builder.username);
+        this.email = StringUtils.lowerCase(builder.email);
         this.emailHash = builder.emailHash;
         this.avatarUrl = builder.avatarUrl;
         this.stompSessionCount = builder.stompSessionCount;

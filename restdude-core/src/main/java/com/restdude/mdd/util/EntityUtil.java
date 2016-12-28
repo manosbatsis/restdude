@@ -145,7 +145,7 @@ public class EntityUtil {
         return user != null ? user.getId() : null;
     }
 
-    public static String idOrNEmpty(CalipsoPersistable user) {
-        return user != null ? user.getId().toString() : StringUtils.EMPTY;
+    public static String idOrNEmpty(CalipsoPersistable entity) {
+        return entity != null ? entity.getId().toString() : StringUtils.EMPTY;
     }
 }
