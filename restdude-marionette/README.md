@@ -86,3 +86,42 @@ Every Gruntfile (and gruntplugin) uses this basic format, and all of your Grunt 
 module.exports = function(grunt) {
   // Do grunt-related things in here
 };
+
+Task configuration: 
+                1. Concat: this task is configured in order the files to be Concatenated. 
+
+                2. Less: this task is configured in order to compile LESS files of Core-UI to CSS. Run this task with the grunt less command.
+                Options: paths: It is the directory of input file. If you specify a function the source filepath will be the first argument. You can return either a string or 
+                an array of paths to be used. 
+                Options: files: first part is the path to the "result.css" and the second part is the path to "source.less".
+
+                3. Imagemin: this task is configured in order minify the images of the project(PNG, JPEG, GIF and SVG images). We need the src(source) and the dest(destination)
+                of the images that we want to minify.
+
+                4.Clean: this task is configured in order the files and the folders to get cleaned. Run this task with the grunt clean command.
+
+                5. Cssmin: this task is configured in order minify the css files of the project.
+                 my_target: files: here we specify the src, dest and the extension that the new file will have (here '.min.css').
+
+                6. Uglify: this task is configured in order minify JavaScript files. Run this task with the grunt uglify command.
+                Options: compression: Turn on or off source compression with default options.
+
+                7. Watch: this task is configured in order to run predefined tasks whenever watched file patterns are added, changed or deleted.
+                Run this task with the grunt watch command. At this task we include everything that we want to watch for changes like sass and css files.
+
+                8. Requirejs: this task is configured in order to optimize RequireJS projects using r.js. Run this task with the grunt requirejs command.
+                It builds the default javascript Core-UI library using r.js compiler.
+
+                9. Sass: this task is configured in order to Compile Sass to CSS. Run this task with the grunt sass command. 
+                Sass is a preprocessor that adds nested rules, variables, mixins and functions, selector inheritance, and more to CSS.
+                Sass files compile into well-formatted, standard CSS to use in your site or application.This task requires you to have Ruby and Sass installed.
+                Main: options: outputStyle: the output style can be nested, compact, compressed, expanded.
+
+                > Sass Customization : in order to customize the sass files of the core-ui you need to copy the .scss stylesheets to your sass directory
+                and remove the components tha you do not need. Therefore, you make the changes you want and then you compile the Sass file to Css  using grunt-contrib-sass.
+                Also we are using the grunt-contrib-watch plugin during development to automatically run the compilation whenever a SCSS file changes.
+
+                10. Core-UI configuration: we are using the CoreUI-Free-Bootstrap-Admin-Template/AJAX_Full_Project_GULP. In order to use it we updated the package.json,
+                with all the dependencies core-ui needs. Also we added to the preprocessor file the views, scss and js file of the core-ui project. Moreover, at the www file 
+                we added the index.html file, the libraries for the core-ui (lib & the coreui-app.js) , the images(img), the css files, the fonts and the javascript files. In order
+                to run we need to configure gulp task at the Gruntfile.js.   

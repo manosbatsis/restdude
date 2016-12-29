@@ -181,9 +181,9 @@ module.exports = function(grunt) {
         requirejs: {
             main: {
                 options: {
-                    baseUrl: 'src/', // Where all our resources will be
+                    baseUrl: 'src', // Where all our resources will be
                     name: '../tasks/libs/requireManager/temp/settings', // Where the generated temp file will be
-                    mainConfigFile: "path/to/config.js",
+                    mainConfigFile: "app/main.js",
                     paths: {}, // Generate build file
                     include: [
                         'requirejs',
@@ -203,7 +203,7 @@ module.exports = function(grunt) {
             },
         },
 
-        // https://github.com/sindresorhus/grunt-sass
+        // https://github.com/gruntjs/grunt-contrib-sass
         sass: {
             main: {
                 options: {
@@ -211,6 +211,7 @@ module.exports = function(grunt) {
                     outputStyle: 'nested', // Options: 'nested', 'compressed' (i.e. minified)
                 },
                 files: {
+                     // the first path is the output and the second is the input
                     'dist/css/main.css': 'preprocess/scss/style.scss',
                 },
             },
