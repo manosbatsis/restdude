@@ -96,7 +96,38 @@ module.exports = function(grunt) {
                 cwd: "<%= pathConfig.rootDir %>preprocess/server",
                 src: "**/**",
                 dest: "<%= pathConfig.rootDir %>server"
-            }
+            },
+            css: {
+                expand: true,
+                cwd: "<%= pathConfig.rootDir %>www/css",
+                src: "**/**",
+                dest: "<%= pathConfig.rootDir %>css"
+            },
+            img: {
+                expand: true,
+                cwd: "<%= pathConfig.rootDir %>www/img",
+                src: "**/**",
+                dest: "<%= pathConfig.rootDir %>img"
+            },
+            fonts: {
+                expand: true,
+                cwd: "<%= pathConfig.rootDir %>www/fonts",
+                src: "**/**",
+                dest: "<%= pathConfig.rootDir %>fonts"
+            },
+            views: {
+                expand: true,
+                cwd: "<%= pathConfig.rootDir %>preprocess/views",
+                src: "**/**",
+                dest: "<%= pathConfig.rootDir %>views"
+            },
+            html: {
+                expand: true,
+                cwd: "<%= pathConfig.rootDir %>'www/index.html",
+                src: "**/**",
+                dest: "<%= pathConfig.rootDir %>index.html"
+            },
+            
         },
 		// https://github.com/gruntjs/grunt-contrib-clean
         clean: {
