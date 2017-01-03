@@ -7,11 +7,15 @@ import com.restdude.domain.base.service.CrudService;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.annotation.ModelDrivenPreAuth;
+import com.restdude.mdd.specifications.SpecificationsBuilder;
+import com.restdude.mdd.util.ParameterMapBackedPageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.method.P;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +26,7 @@ import javax.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,10 +40,11 @@ import java.util.Set;
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
 public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>> implements
-        CrudService<T, ID> {
+        CrudService<T, ID>, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudServiceImpl.class);
 
+    private SpecificationsBuilder<T, ID> specificationsBuilder;
     protected R repository;
 
     @Autowired
@@ -46,6 +52,11 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
         this.repository = repository;
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
+        this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.getDomainClass());
+    }
 
     /**
      * {@inheritDoc}
@@ -54,6 +65,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     public Class<T> getDomainClass() {
         return this.repository.getDomainClass();
     }
+
 
 
     /**
@@ -178,9 +190,19 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      */
     @Override
     @ModelDrivenPreAuth
-    public Page<T> findPaginated(Pageable pageRequest) {
-        Assert.notNull(pageRequest, "page request can't be null");
-        return repository.findAll(pageRequest);
+    public Page<T> findPaginated(Pageable pageable) {
+        Assert.notNull(pageable, "page request can't be null");
+
+        // if
+        if (pageable instanceof ParameterMapBackedPageRequest) {
+            @SuppressWarnings("unchecked")
+            Map<String, String[]> params = ((ParameterMapBackedPageRequest) pageable).getParameterMap();
+            Specification<T> spec = this.specificationsBuilder.getMatchAll(getDomainClass(), params);
+
+            return this.repository.findAll(spec, pageable);
+        } else {
+            return this.repository.findAll(pageable);
+        }
     }
 
     /**

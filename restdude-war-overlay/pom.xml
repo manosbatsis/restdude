@@ -6,12 +6,12 @@
     <parent>
         <groupId>com.restdude</groupId>
         <artifactId>restdude</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.1.2-SNAPSHOT</version>
     </parent>
 
     <groupId>com.restdude</groupId>
     <artifactId>restdude-war-overlay</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <properties>
         <project.parent.basedir>../</project.parent.basedir>

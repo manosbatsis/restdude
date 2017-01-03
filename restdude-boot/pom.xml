@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.restdude</groupId>
         <artifactId>restdude</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.1.2-SNAPSHOT</version>
     </parent>
 
     <groupId>com.restdude</groupId>
     <artifactId>restdude-boot</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.2-SNAPSHOT</version>
 
     <name>restdude-boot</name>
     <packaging>jar</packaging>

@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.restdude</groupId>
         <artifactId>restdude</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.1.2-SNAPSHOT</version>
     </parent>
 
     <groupId>com.restdude</groupId>
     <artifactId>restdude-core</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.2-SNAPSHOT</version>
 
     <name>restdude-core</name>
     <packaging>jar</packaging>
@@ -370,7 +370,10 @@
             <groupId>com.github.fge</groupId>
             <artifactId>jackson-coreutils</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.kjetland</groupId>
+            <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
+        </dependency>
         <!-- OWASP HTML filtering -->
         <dependency>
             <groupId>org.owasp</groupId>

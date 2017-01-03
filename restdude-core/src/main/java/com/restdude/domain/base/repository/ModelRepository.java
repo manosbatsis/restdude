@@ -20,7 +20,11 @@ package com.restdude.domain.base.repository;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.metadata.model.Metadatum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -43,10 +47,10 @@ import java.util.Set;
  * @see org.springframework.data.domain.Page
  */
 @NoRepositoryBean
-public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
 
 	EntityManager getEntityManager();
-	
+
 	/**
 	 * Get the domain type class
 	 * @return the domain type class
@@ -142,4 +146,20 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
      * @return the set of failed constraints
      */
     Set<ConstraintViolation<T>> validateConstraints(T resource);
+
+    /**
+     * @param spec
+     * @param attributeGraph
+     * @return
+     */
+    List<T> findAll(Specification<T> spec, BaseRepositoryImpl.EntityGraphType type, String... attributeGraph);
+
+    /**
+     * @param spec
+     * @param pageable
+     * @param attributeGraph
+     * @return
+     */
+    Page<T> findAll(Specification<T> spec, Pageable pageable, BaseRepositoryImpl.EntityGraphType type, String... attributeGraph);
+
 }
