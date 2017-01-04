@@ -43,17 +43,21 @@ GET    | /api/rest/hosts/jsonschema | Get the JSONSchema for hosts
 
 Example screens for managing hosts: TODO
 
-## Reference
+## Developer's Overview
 
-### Model Driven Services
+### Model Driven Development
 
 #### Entity Models
 
 #### Graph Models
 
+#### Generated Components
+
 #### Validation
 
 #### Authorization
+
+#### I18n
 
 #### Custom Components
 
@@ -73,12 +77,21 @@ Example screens for managing hosts: TODO
 
 #### Auditing
 
+#### Error Management
+
 #### Indexing
+
+#### Email
 
 #### Websockets API
 
+### Browser Client
 
+#### Dynamic Componets
 
+#### Customization
+
+#### I18n
 
 
 
