@@ -1,0 +1,104 @@
+---
+layout: default
+title: Home
+description: Simple documentation template for Github pages
+isHome: true
+---
+<section class="bs-docs-section">
+    <h1 id="overview" class="page-header">Overview</h1>
+    <p>Experiments on a full stack, high level enterprise framework for MVP application hackers and
+        scalable developer teams.</p>
+    <p>Calipso feeds primarily on your entity models to provide simple and flexible scaffolding for
+        rapid application development. It also keeps your code base at a minimum and encourages
+        component-based development to improve quality and maintainability.</p>
+</section>
+<section class="bs-docs-section">
+    <h1 id="build-and-run" class="page-header">Quick Build and Run</h1>
+    <p>Follow the steps bellow to build.</p>
+    <p>a) Clone the repository:</p>
+    {% highlight bash %} git clone https://github.com/abissgr/calipso-hub.git {% endhighlight %}
+    <p>b) Copy HOWTO.txt to dev.properties:</p>
+    {% highlight bash %} cp HOWTO.txt dev.properties {% endhighlight %}
+    <p>
+        c) Build and install (
+        <code>-U</code>
+        forces the download of updated snapshot dependencies):
+    </p>
+    {% highlight bash %} mvn -U clean install {% endhighlight %}
+    <p>d) run embedded Jetty container:</p>
+    {% highlight bash %}
+    cd calipso-hub-webapp
+    mvn jetty:run
+    {% endhighlight %}
+    <p>
+        e) Browse the app client: <a
+            href="http://localhost:8080/calipso/client">http://localhost:8080/calipso/client</a>
+        or the API reference: <a href="http://localhost:8080/calipso/apidoc">http://localhost:8080/calipso/apidoc</a>.
+        See also the <a href="#api-reference">Swagger API Reference</a> section bellow.
+    </p>
+    <p>
+        If you are using chrome, ensure you have enabled <a
+            href="http://www.alphadevx.com/a/454-Google-Chrome-and-localhost-cookies">cookies for localhost</a>.
+    </p>
+    <h2 id="optimize_profile">Optimize Profile</h2>
+    <p>
+        If have [node](https://nodejs.org) installed, you can use the
+        <code>optimize</code>
+        profile and
+        <code>jetty:run-war</code>
+        to optimize client-side code:
+    </p>
+    {% highlight bash %}
+    cd calipso-hub-webapp
+    mvn -P optimize clean jetty:run-war
+    {% endhighlight %}
+    <h2 id="ci_profile">Integration Testing Profile</h2>
+    <p>
+        To run integration tests simply activate the
+        <code>ci</code>
+        profile:
+    </p>
+    {% highlight bash %}
+    mvn -P ci clean install
+    {% endhighlight %}
+    <p>
+        See also <a href="#tests">Tests</a>.
+    </p>
+</section>
+<section class="bs-docs-section">
+    <h1 id="documentation" class="page-header">Documentation</h1>
+
+    <div class="list-group">
+        <a href="checkout_and_build.html" class="list-group-item">
+            <h4 class="list-group-item-heading">Installation</h4>
+            <p class="list-group-item-text">Checkout and build for Eclipse IDE users</p>
+        </a>
+        <a href="client_stack.html" class="list-group-item">
+            <h4 class="list-group-item-heading">Client Stack</h4>
+            <p class="list-group-item-text">Use model metadata to create SCRUD and other use-case driven views.</p>
+        </a>
+        <a href="server_stack.html" class="list-group-item">
+            <h4 class="list-group-item-heading">Server Stack</h4>
+            <p class="list-group-item-text">Create 3-tier RESTful services without manually coding controllers, services
+                and repositories, unless you really want to.</p>
+        </a>
+    </div>
+</section>
+<section class="bs-docs-section">
+    <h1 id="api-reference" class="page-header">Swagger API Reference</h1>
+    <p>
+        The webapp provides automatically-generated API documentation based on
+        <a href="http://swagger.io/">Swagger</a> and created by <a href="http://springfox.github.io/springfox/">Springfox</a>.
+        To access
+        the documentation run the app and point your browser to <a href="http://localhost:8080/calipso/apidoc">http://localhost:8080/calipso/apidoc</a>.
+    </p>
+    <img src="{{ site.baseurl }}/assets/images/swagger-ui.png" class="img-responsive" alt="Responsive image">
+</section>
+<section class="bs-docs-section">
+    <h1 id="license" class="page-header">License</h1>
+    <p>
+        <img src="{{ site.baseurl }}/assets/images/agplv3-155x51.png" style="float: right"/>Calipso Hub DVD Rental is
+        distributed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU
+        Affero General Public License</a>
+    </p>
+</section>
