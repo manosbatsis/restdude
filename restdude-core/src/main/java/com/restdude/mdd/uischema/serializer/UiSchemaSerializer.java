@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@Deprecated
 public class UiSchemaSerializer extends JsonSerializer<UiSchema> {
 
 	private static final Logger LOGGER = LoggerFactory

@@ -26,6 +26,7 @@ import org.springframework.data.domain.Persistable;
  * schemas for UI views.
  */
 @JsonSerialize(using = UiSchemaSerializer.class)
+@Deprecated
 public class UiSchema {
 	
 	private Class domainClass = null;

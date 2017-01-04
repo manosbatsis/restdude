@@ -1,9 +1,15 @@
 package com.restdude.domain.base.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
+import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.base.model.RawJson;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.CurrentPrincipal;
@@ -65,6 +71,8 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelController.class);
 
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	protected HttpServletRequest request;
@@ -242,16 +250,30 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
         this.service.deleteAllWithCascade();
 	}
 
+	@RequestMapping(value = "jsonschema", produces = {"application/json"}, method = RequestMethod.GET)
+	@ApiOperation(value = "Get JSON Schema", notes = "Get the JSON Schema for the controller entity type")
+	public RawJson getJsonSchema() throws JsonProcessingException {
+		JsonSchemaConfig config = JsonSchemaConfig.nullableJsonSchemaDraft4();
+		JsonSchemaGenerator generator = new JsonSchemaGenerator(objectMapper, config);
+
+		JsonNode jsonSchema = generator.generateJsonSchema(this.getService().getDomainClass());
+
+		String jsonSchemaAsString = objectMapper.writeValueAsString(jsonSchema);
+		return new RawJson(jsonSchemaAsString);
+	}
+
 	@RequestMapping(value = "uischema", produces = {"application/json"}, method = RequestMethod.GET)
 	@ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
-    public UiSchema getSchema() {
-        UiSchema schema = new UiSchema(this.service.getDomainClass());
+	@Deprecated
+	public UiSchema getSchema() {
+		UiSchema schema = new UiSchema(this.service.getDomainClass());
 		return schema;
 	}
 
 	@RequestMapping(produces = {"application/json"}, method = RequestMethod.OPTIONS)
 	@ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
-    public UiSchema getSchemas() {
+	@Deprecated
+	public UiSchema getSchemas() {
         return this.getSchema();
 	}
 
