@@ -58,3 +58,4 @@ gems:
   - jemoji
   - jekyll-redirect-from
   - jekyll-sitemap
+theme: jekyll-theme-minimal
