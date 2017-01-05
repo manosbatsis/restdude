@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>RestDude</title>
+    <title>Restdude</title>
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -16,12 +16,6 @@
     <link href="/assets/css/docs.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
 
-    <style>
-        #content {
-            background: #080331;
-            background: linear-gradient(135deg, #080331, #673051);
-        }
-    </style>
 
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -41,7 +35,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/index.html">RestDude</a>
+            <a class="navbar-brand" href="/index.html">Restdude</a>
         </div>
         <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
@@ -98,9 +92,11 @@
                     on top of the <a href="https://projects.spring.io/spring-framework/">Spring Framework</a> and
                     provides dynamic, model driven <a
                         href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> services for
-                    your entities, including
+                    your entities,
+                    including
                     complete coverage of <a
-                        href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">SCRUD</a> use cases.
+                        href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">SCRUD</a> use
+                    cases.
                 </p>
             </section>
             <section class="bs-docs-section">
@@ -109,29 +105,30 @@
                     To have a SCRUD stack automatically generated for your entity model, simply annotate it with
                     <code>@ModelResource</code>:
                 </p>
-                <figure class="highlight"><pre><code class="language-java" data-lang="java">
-<span class="nd">@Entity</span>
-<span class="nd">@ModelResource</span><span class="o">(</span><span class="n">path</span> <span class="o">=</span> <span
-                        class="s">"books"</span><span class="o">,</span> <span class="n">apiName</span> <span class="o">=</span> <span
-                        class="s">"Books"</span><span class="o">,</span> <span class="n">apiDescription</span> <span
-                        class="o">=</span> <span class="s">"Operations about books"</span><span class="o">)</span>
-<span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span
-                        class="s">"book"</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span
-                        class="kd">extends</span> <span class="n">AbstractAuditable</span><span
-                        class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span
-                        class="o">{</span>
-  <span class="c1">//...</span>
-<span class="o">}</span>
-	</code></pre>
+                <figure class="highlight"><pre><code class="language-java" data-lang="java">	<span
+                        class="nd">@Entity</span>
+	<span class="nd">@ModelResource</span><span class="o">(</span><span class="n">path</span> <span
+                            class="o">=</span> <span class="s">"books"</span><span class="o">,</span> <span class="n">apiName</span> <span
+                            class="o">=</span> <span class="s">"Books"</span><span class="o">,</span> <span class="n">apiDescription</span> <span
+                            class="o">=</span> <span class="s">"Operations about books"</span><span class="o">)</span>
+	<span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span
+                            class="s">"book"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span
+                            class="kd">extends</span> <span class="n">AbstractAuditable</span>
+	<span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="o">{</span>
+		<span class="c1">//...</span>
+		<span class="o">}</span>
+		</code></pre>
                 </figure>
                 <p>During startup, the application will automatically generate and register Conteoller, Service (both
-                    interface and impl) and Repository beans for your entity model.</p>
+                    interface
+                    and impl) and Repository beans for your entity model.</p>
 
                 <h2 id="restful-service-urls">RESTful Service URLs
                 </h2>
                 <p>The generated beans will follow REST conventions to expose SCRUD service endpoints for your entity
-                    models in a regular way. Consider the RESTful URLs for the book an entity model above:</p>
+                    models
+                    in a regular way. Consider the RESTful URLs for the book an entity model above:</p>
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -192,9 +189,10 @@
 <code>GET http://localhost:8080/restdude/books?foo=bar&amp;foo.subFoo=baz </code>
 	</pre>
                 </h2>
-                <p>Get a paginated collection of all books matching the given criteria. No actual java implementation is
-                    required for your entity models, their properties are dynamically mapped to the HTTP parameters by
-                    the default. additionally, the following predefined parameters are supported:</p>
+                <p>Get a paginated collection of all books matching the given criteria. No actual java
+                    implementation is required for your entity models, their properties are dynamically mapped to
+                    the HTTP parameters by the default. additionally, the following predefined parameters are
+                    supported:</p>
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -221,7 +219,8 @@
                         <td>properties</td>
                         <td>false</td>
                         <td>"id"</td>
-                        <td>Ordered list of comma-separeted property names used for sorting results. Default is "id"
+                        <td>Ordered list of comma-separeted property names used for sorting results. Default is
+                            "id"
                         </td>
                     </tr>
                     <tr>
@@ -246,7 +245,8 @@
 	</pre>
                 </h2>
                 <p>
-                    Update the book matchign "id" using the request body and return the result in the response.
+                    Update the book matchign "id" using the request body and return the result in the
+                    response.
                 </p>
                 <h2 id="restful-service-urls-update">Partial Update
                     <pre>
@@ -254,8 +254,8 @@
 	</pre>
                 </h2>
                 <p>
-                    Update the book matchign "id" using non-null attributes of the request body and return the result in
-                    the response.
+                    Update the book matchign "id" using non-null attributes of the request body and return
+                    the result in the response.
 
                 </p>
                 <h2 id="restful-service-urls-delete">Delete
@@ -269,7 +269,8 @@
             <section class="bs-docs-section">
                 <h1 id="custom-tiers" class="page-header">Custom Tiers</h1>
                 <p>To get an idea of the generated beans or to manually create your own, just follow the examples given
-                    bellow. No SCRUD related code is needed other than extending the build-in interfaces or
+                    bellow. No
+                    SCRUD related code is needed other than extending the build-in interfaces or
                     classes as appropriate.</p>
 
                 <h2 id="custom-tiers-repository">Repository</h2>
@@ -279,16 +280,16 @@
                     interface, with <code>T</code> and <code>ID</code> being the entity model and id class respectively.
                 </p>
 
-                <figure class="highlight"><pre><code class="language-java" data-lang="java">
-<span class="kn">import</span> <span class="nn">gr.abiss.restdude.tiers.repository.ModelRepository</span><span
-                        class="o">;</span>
+                <figure class="highlight"><pre><code class="language-java" data-lang="java">	<span
+                        class="kn">import</span> <span
+                        class="nn">gr.abiss.restdude.tiers.repository.ModelRepository</span><span class="o">;</span>
 
-<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">BookRepository</span> <span
-                        class="kd">extends</span> <span class="n">ModelRepository</span><span class="o">&lt;</span><span
-                        class="n">Book</span><span class="o">,</span> <span class="n">String</span><span
-                        class="o">&gt;</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">BookRepository</span> <span
+                            class="kd">extends</span> <span class="n">ModelRepository</span>
+	<span class="o">&lt;</span><span class="n">Book</span>
+	<span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
 
-<span class="o">}</span>
+	<span class="o">}</span>
 	</code></pre>
                 </figure>
 
@@ -302,16 +303,16 @@
                 </code> interface, with <code>T</code> and <code>ID</code> being
                     the entity model and id class respectively.
                 </p>
-                <figure class="highlight"><pre><code class="language-java" data-lang="java">
-<span class="kn">import</span> <span class="nn">gr.abiss.restdude.tiers.service.ModelService</span><span
-                        class="o">;</span>
+                <figure class="highlight"><pre><code class="language-java" data-lang="java">	<span
+                        class="kn">import</span> <span
+                        class="nn">gr.abiss.restdude.tiers.service.ModelService</span><span class="o">;</span>
 
-<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">BookService</span> <span class="kd">extends</span> <span
-                        class="n">ModelService</span><span class="o">&lt;</span><span class="n">Book</span><span
-                        class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span
-                        class="o">{</span>
+	<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">BookService</span> <span
+                            class="kd">extends</span> <span class="n">ModelService</span>
+	<span class="o">&lt;</span><span class="n">Book</span>
+	<span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
 
-<span class="o">}</span>
+	<span class="o">}</span>
 	</code></pre>
                 </figure>
 
@@ -322,18 +323,20 @@
                     <code>ID</code> and <code>R</code> being the entity model, id class and repository interface types
                     respectively..
                 </p>
-                <figure class="highlight"><pre><code class="language-java" data-lang="java">
-<span class="nd">@Named</span><span class="o">(</span><span class="s">"bookService"</span><span class="o">)</span>
-<span class="nd">@Transactional</span><span class="o">(</span><span class="n">readOnly</span> <span
-                        class="o">=</span> <span class="kc">true</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BookServiceImpl</span> <span class="kd">extends</span> <span
-                        class="n">AbstractModelServiceImpl</span><span class="o">&lt;</span><span
-                        class="n">Book</span><span class="o">,</span> <span class="n">String</span><span
-                        class="o">,</span> <span class="n">BookRepository</span><span class="o">&gt;</span> <span
-                        class="kd">implements</span> <span class="n">BookService</span> <span class="o">{</span>
+                <figure class="highlight"><pre><code class="language-java" data-lang="java">	<span
+                        class="nd">@Named</span><span class="o">(</span><span class="s">"bookService"</span><span
+                        class="o">)</span>
+	<span class="nd">@Transactional</span><span class="o">(</span><span class="n">readOnly</span> <span
+                            class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BookServiceImpl</span> <span
+                            class="kd">extends</span> <span class="n">AbstractModelServiceImpl</span>
+	<span class="o">&lt;</span><span class="n">Book</span>
+	<span class="o">,</span> <span class="n">String</span><span class="o">,</span> <span class="n">BookRepository</span><span
+                            class="o">&gt;</span> <span class="kd">implements</span> <span class="n">BookService</span> <span
+                            class="o">{</span>
 
 
-<span class="o">}</span>
+	<span class="o">}</span>
 	</code></pre>
                 </figure>
 
@@ -345,19 +348,18 @@
                     respectively.
                 </p>
 
-                <figure class="highlight"><pre><code class="language-java" data-lang="java">
-<span class="nd">@Controller</span>
-<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span
-                        class="o">=</span> <span class="s">"/api/rest/books"</span><span class="o">,</span> <span
-                        class="n">produces</span> <span class="o">=</span> <span class="o">{</span> <span class="s">"application/json"</span><span
-                        class="o">,</span> <span class="s">"application/xml"</span> <span class="o">})</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BookController</span> <span class="kd">extends</span> <span
-                        class="n">AbstractModelController</span><span class="o">&lt;</span><span
-                        class="n">Book</span><span class="o">,</span> <span class="n">String</span><span
-                        class="o">,</span> <span class="n">BookService</span><span class="o">&gt;</span> <span
-                        class="o">{</span>
+                <figure class="highlight"><pre><code class="language-java" data-lang="java">	<span class="nd">@Controller</span>
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span
+                            class="s">"/api/rest/books"</span><span class="o">,</span> <span
+                            class="n">produces</span> <span class="o">=</span> <span class="o">{</span> <span class="s">"application/json"</span><span
+                            class="o">,</span> <span class="s">"application/xml"</span> <span class="o">})</span>
+	<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BookController</span> <span
+                            class="kd">extends</span> <span class="n">AbstractModelController</span>
+	<span class="o">&lt;</span><span class="n">Book</span>
+	<span class="o">,</span> <span class="n">String</span><span class="o">,</span> <span
+                            class="n">BookService</span><span class="o">&gt;</span> <span class="o">{</span>
 
-<span class="o">}</span>
+	<span class="o">}</span>
 	</code></pre>
                 </figure>
             </section>
@@ -378,19 +380,22 @@
                         href="https://www.mongodb.org/">MongoDB</a>, <a
                         href="http://cassandra.apache.org/">Cassandra</a>, <a
                         href="http://www.couchbase.com">Couchbase</a> and <a href="http://neo4j.com/">Neo4j</a> are
-                    supported as well, while application instances also contain their own clusterable <a
+                    supported as
+                    well, while application instances also contain their own clusterable <a
                         href="https://www.elastic.co/">ElasticSearch</a> node by default.
                 </p>
                 <h2 id="database_migrations">Database Migrations</h2>
                 <p>Relational database schema versioning and migration is supported using <a
-                        href="https://flywaydb.org/">Flyway</a>.</p>
+                        href="https://flywaydb.org/">Flyway</a>.
+                </p>
             </section>
 
             <section class="bs-docs-section">
                 <h1 id="email" class="page-header">Email</h1>
                 <p>
                     Easy email services with i18n support and Thymeleaf templates. Build-in services include email
-                    verification, password reset etc.
+                    verification,
+                    password reset etc.
                 </p>
             </section>
 
@@ -400,8 +405,8 @@
                     Translations can be added in the <a
                         href="/abissgr/restdude-hub/blob/master/tree/master/restdude-hub-webapp/src/main/resources/i18n">i18n
                     folder</a>. File names use the <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO_639-1
-                    standard</a>. To add Greek for example, copy and translate messages.properties to
-                    messages_el.properties.
+                    standard</a>. To add Greek for example, copy and
+                    translate messages.properties to messages_el.properties.
                 </p>
             </section>
         </div>

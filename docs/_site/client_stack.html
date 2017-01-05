@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>RestDude</title>
+    <title>Restdude</title>
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -15,12 +15,6 @@
     <link href="/assets/css/docs.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
 
-    <style>
-        #content {
-            background: #080331;
-            background: linear-gradient(135deg, #080331, #673051);
-        }
-    </style>
 
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -40,7 +34,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/index.html">RestDude</a>
+            <a class="navbar-brand" href="/index.html">Restdude</a>
         </div>
         <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
@@ -94,7 +88,8 @@
                 <h1 id="overview" class="page-header">Overview</h1>
                 <p>
                     The javascript stack provides a <a href="https://en.wikipedia.org/wiki/Responsive_web_design">responsive</a>,
-                    <a href="http://en.wikipedia.org/wiki/Single-page_application">SPA</a> client framework
+                    <a
+                            href="http://en.wikipedia.org/wiki/Single-page_application">SPA</a> client framework
                     based on libraries like <a href="http://marionettejs.com/">backbone.marionette</a>, <a
                         href="http://getbootstrap.com/">bootstrap</a> and <a href="http://requirejs.org/">requirejs</a>.
                 </p>
@@ -103,7 +98,8 @@
                     consistently
                     implement use cases or other functional requirements declaratively, via <a
                         href="#models">#model metadata</a>, making it natural for new code to be added in the form of
-                    reusable components.
+                    reusable
+                    components.
                 </p>
             </section>
 
@@ -116,7 +112,8 @@
 
                 <h2 id="implicit-routes">Implicit Routes</h2>
                 <p>Routers extending <code>Restdude.AppRouter</code> can define their own explicit routes but also
-                    inherit a set of implicit, dynamic routes described bellow.</p>
+                    inherit a set of
+                    implicit, dynamic routes described bellow.</p>
 
                 <h3 id="use-case-routes">Use Case Routes</h3>
                 <p>Use case routes are suffixed by "useCases/". Assuming the base webapp URL is
@@ -124,69 +121,74 @@
                     dynamic routes in the form of <code>/restdude/client/useCases/pathFragment/useCaseName</code> apply,
                     where <strong>pathFragment</strong> matches a model by it's
                     corresponding static property and <strong>useCaseName</strong> the use case defined within the model
-                    (or a super type)
+                    (or a super
+                    type)
                     under the same key. For example, <code>/restdude/client/useCases/books/publish</code> matches the
                     following:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
                         class="nx">Restdude</span><span class="p">.</span><span class="nx">model</span><span
                         class="p">.</span><span class="nx">GenericModel</span><span class="p">.</span><span class="nx">extend</span><span
                         class="p">({</span>
 
-<span class="p">},</span>
-<span class="c1">// static members</span>
-<span class="p">{</span>
+    <span class="p">},</span>
+    <span class="c1">// static members</span>
+    <span class="p">{</span>
     <span class="c1">// Use this model for routes starting with "books"</span>
     <span class="na">pathFragment</span> <span class="p">:</span> <span class="s2">"books"</span><span
-                        class="p">,</span>
+                            class="p">,</span>
     <span class="c1">// Define or override the use cases of this model type. See also  </span>
     <span class="c1">// the [Use Cases section](#use-cases) for more details.</span>
     <span class="na">useCases</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="c1">// Each use case matches it's own URL route, for example</span>
-        <span class="c1">// this one matches "books/publish"</span>
-        <span class="na">publish</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="c1">// use case configuration...</span>
-        <span class="p">}</span>
+    <span class="c1">// Each use case matches it's own URL route, for example</span>
+    <span class="c1">// this one matches "books/publish"</span>
+    <span class="na">publish</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// use case configuration...</span>
     <span class="p">}</span>
-<span class="p">});</span>
-	</code></pre>
+    <span class="p">}</span>
+    <span class="p">});</span>
+    </code></pre>
                 </figure>
 
                 <h3 id="search-routes">Search Routes</h3>
                 <p>In absence of a use case key like <code>/restdude/client/useCases/pathFragment?queryString</code>,
-                    the <strong>search</strong> use case is used by default, i.e.
+                    the <strong>search</strong>
+                    use case is used by default, i.e.
                     <code>/restdude/client/useCases/pathFragment/search?queryString</code>. The <a
                             href="https://en.wikipedia.org/wiki/Query_string">queryString</a> will
                     be used as search criteria if present.</p>
 
                 <h3 id="page-routes">Page Routes</h3>
                 <p> Page routes like <code>/restdude/client/page/pageFragment</code> are suffixed by "page" and will
-                    render an item view using the template matched by the
+                    render an item
+                    view using the template matched by the
                     <strong>pageFragment</strong>. For example, <code>/restdude/client/page/support</code> will use the
-                    template in <code>/restdude/templates/support.hbs</code></p>
+                    template in
+                    <code>/restdude/templates/support.hbs</code></p>
                 <p>The view model in page routes is the current userDetails (logged in user).</p>
 
                 <h2 id="explicit-routes">Explicit Routes</h2>
                 <p>Explicit routes are defined in the usual backbone/marionette way when needed. Your controller only
-                    needs to define it's own
+                    needs to
+                    define it's own
                     and those will extend <code>Restdude.AppRouter</code>'s routes, for example:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="c1">// This is an example of extending Restdude.Approuter in your app.</span>
-<span class="c1">// Any appRoutes you define here will be merged with</span>
-<span class="c1">// the super type routes.</span>
-<span class="kd">var</span> <span class="nx">MyRouter</span> <span class="o">=</span> <span
-                        class="nx">Restdude</span><span class="p">.</span><span class="nx">AppRouter</span><span
-                        class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="c1">// This is an example of extending Restdude.Approuter in your app.</span>
+    <span class="c1">// Any appRoutes you define here will be merged with</span>
+    <span class="c1">// the super type routes.</span>
+    <span class="kd">var</span> <span class="nx">MyRouter</span> <span class="o">=</span> <span
+                            class="nx">Restdude</span><span class="p">.</span><span class="nx">AppRouter</span><span
+                            class="p">.</span><span class="nx">extend</span><span class="p">({</span>
 
     <span class="na">controller</span> <span class="p">:</span> <span class="k">new</span> <span class="nx">MainController</span><span
-                        class="p">(),</span>
+                            class="p">(),</span>
     <span class="na">appRoutes</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="c1">// explicit routes here will be merged with</span>
-        <span class="c1">// those defined by Restdude.AppRouter automatically</span>
-        <span class="s2">"release/the/kraken"</span> <span class="p">:</span> <span class="s2">"releaseTheKraken"</span>
+    <span class="c1">// explicit routes here will be merged with</span>
+    <span class="c1">// those defined by Restdude.AppRouter automatically</span>
+    <span class="s2">"release/the/kraken"</span> <span class="p">:</span> <span class="s2">"releaseTheKraken"</span>
     <span class="p">}</span>
-<span class="p">});</span>
-	</code></pre>
+    <span class="p">});</span>
+    </code></pre>
                 </figure>
             </section>
 
@@ -194,11 +196,13 @@
                 <h1 id="views" class="page-header">Views</h1>
                 <p>
                     Build-in views extend those of <a href="http://marionettejs.com/docs/current/">Marionette</a> and
-                    include generic layouts, model-driven grids/forms etc.
+                    include
+                    generic layouts, model-driven grids/forms etc.
                 </p>
                 <p>
                     View templates use <a href="http://handlebarsjs.com/">Handlebars</a> by default. The build-in
-                    template helpers include:
+                    template helpers
+                    include:
                 </p>
                 <ul>
                     <li>baseUrl</li>
@@ -220,7 +224,8 @@
             <section class="bs-docs-section">
                 <h1 id="models" class="page-header">Models</h1>
                 <p>Restdude defines a metadata profile for it's backbone models. The metadata are used for dynamically
-                    handle URL routes, render fields of a form or grid and more.</p>
+                    handle URL
+                    routes, render fields of a form or grid and more.</p>
                 <p>
                     Metadata are typically defined/overriden declaratively as static properties (e.g.
                     <code>pathFragment</code>
@@ -232,44 +237,43 @@
                     The following is a typical example of model metadata, in this case
                     <code>pathFragment</code>, <code>fields</code> and <code>useCases</code>:
                 </p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
                         class="nx">Restdude</span><span class="p">.</span><span class="nx">Model</span><span
                         class="p">.</span><span class="nx">extend</span><span class="p">({</span>
 
-<span class="p">},</span>
-<span class="c1">// static members</span>
-<span class="p">{</span>
+    <span class="p">},</span>
+    <span class="c1">// static members</span>
+    <span class="p">{</span>
     <span class="c1">// Use this model for routes starting with "books"</span>
     <span class="na">pathFragment</span> <span class="p">:</span> <span class="s2">"books"</span><span
-                        class="p">,</span>
+                            class="p">,</span>
     <span class="c1">// Define the fields of this model type. See also  </span>
     <span class="c1">// the [Fields section](#fields) for more details</span>
     <span class="na">fields</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="na">name</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"datatype"</span> <span class="p">:</span> <span class="s2">"String"</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="na">isbn</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="c1">// custom field type</span>
-            <span class="s2">"datatype"</span> <span class="p">:</span> <span class="nx">MyIsbnType</span><span
-                        class="p">,</span>
-        <span class="p">},</span>
-        <span class="na">edit</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"datatype"</span> <span class="p">:</span> <span class="s2">"Edit"</span><span
-                        class="p">,</span>
-        <span class="p">},</span>
+    <span class="na">name</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"datatype"</span> <span class="p">:</span> <span class="s2">"String"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="na">isbn</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// custom field type</span>
+    <span class="s2">"datatype"</span> <span class="p">:</span> <span class="nx">MyIsbnType</span><span
+                            class="p">,</span>
+    <span class="p">},</span>
+    <span class="na">edit</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"datatype"</span> <span class="p">:</span> <span class="s2">"Edit"</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="p">},</span>
     <span class="c1">// Define or override the use cases of this model type. See also  </span>
     <span class="c1">// the [Use Cases section](#use-cases) for more details.</span>
     <span class="na">useCases</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="c1">// Each use case matches its own URL route, for example</span>
-        <span class="c1">// this one matches "books/publish"</span>
-        <span class="na">publish</span> <span class="p">:{</span>
-            <span class="c1">// ...</span>
-        <span class="p">}</span>
+    <span class="c1">// Each use case matches its own URL route, for example</span>
+    <span class="c1">// this one matches "books/publish"</span>
+    <span class="na">publish</span> <span class="p">:{</span>
+    <span class="c1">// ...</span>
     <span class="p">}</span>
-<span class="p">});</span>
-	</code></pre>
+    <span class="p">}</span>
+    <span class="p">});</span>
+    </code></pre>
                 </figure>
 
                 <h2 id="type-name">Type Name</h2>
@@ -279,198 +283,207 @@
                 <p>
                 <p>
                     The path fragment corresponding to the model type. This is used to map URL routes to a specific
-                    model and the use cases it defines. For example
+                    model and the
+                    use cases it defines. For example
                     <code>useCases/books/publish</code> maps to
                 </p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
                         class="nx">Restdude</span><span class="p">.</span><span class="nx">Model</span><span
                         class="p">.</span><span class="nx">extend</span><span class="p">({</span>
 
-<span class="p">},</span>
-<span class="c1">// static members</span>
-<span class="p">{</span>
+    <span class="p">},</span>
+    <span class="c1">// static members</span>
+    <span class="p">{</span>
     <span class="c1">// Use this model for routes starting with "books"</span>
     <span class="na">pathFragment</span> <span class="p">:</span> <span class="s2">"books"</span><span
-                        class="p">,</span>
+                            class="p">,</span>
     <span class="c1">// Define or override the use cases of this model type. See also  </span>
     <span class="c1">// the [Use Cases section](#use-cases) for more details.</span>
     <span class="na">useCases</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="c1">// Each use case matches its own URL route, for example</span>
-        <span class="c1">// this one matches "books/publish"</span>
-        <span class="na">publish</span> <span class="p">:{</span>
-            <span class="c1">// ...</span>
-        <span class="p">}</span>
+    <span class="c1">// Each use case matches its own URL route, for example</span>
+    <span class="c1">// this one matches "books/publish"</span>
+    <span class="na">publish</span> <span class="p">:{</span>
+    <span class="c1">// ...</span>
     <span class="p">}</span>
-<span class="p">});</span>
-	</code></pre>
+    <span class="p">}</span>
+    <span class="p">});</span>
+    </code></pre>
                 </figure>
 
                 <h2 id="use-cases">Use Cases</h2>
                 <p>Use cases allow you to declaratively define how a route should be handled.</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="kd">var</span> <span class="nx">BookModel</span> <span class="o">=</span> <span
                         class="nx">Restdude</span><span class="p">.</span><span class="nx">Model</span><span
                         class="p">.</span><span class="nx">extend</span><span class="p">({</span>
 
-<span class="p">},</span>
-<span class="c1">// static members</span>
-<span class="p">{</span>
-  <span class="c1">// Define or override the use cases of this model type. See also  </span>
-  <span class="c1">// the [Use Cases section](#use-cases) for more details.</span>
-  <span class="na">useCases</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="p">},</span>
+    <span class="c1">// static members</span>
+    <span class="p">{</span>
+    <span class="c1">// Define or override the use cases of this model type. See also</span>
+    <span class="c1">// the [Use Cases section](#use-cases) for more details.</span>
+    <span class="na">useCases</span> <span class="p">:</span> <span class="p">{</span>
     <span class="c1">// use case configuration here</span>
-  <span class="p">}</span>
-<span class="p">});</span>
-	</code></pre>
+    <span class="p">}</span>
+    <span class="p">});</span>
+    </code></pre>
                 </figure>
 
                 <h3 id="base-cases">Base Cases</h3>
                 <p>All models extending <code>Restdude.model</code> inherit the following use cases:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="nx">useCases</span> <span class="err">:</span> <span class="p">{</span>
-	<span class="nl">create</span> <span class="p">:</span> <span class="p">{</span>
-		<span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span
-                        class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">BrowseLayout</span><span
-                        class="p">,</span>
-		<span class="nx">viewOptions</span> <span class="err">:</span> <span class="p">{</span>
-			<span class="c1">//...</span>
-		<span class="p">}</span>
-	<span class="p">},</span>
-	<span class="nx">update</span> <span class="err">:</span> <span class="p">{</span>
-		<span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span
-                        class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">BrowseLayout</span><span
-                        class="p">,</span>
-		<span class="nx">viewOptions</span> <span class="err">:</span> <span class="p">{</span>
-			<span class="c1">//...</span>
-		<span class="p">}</span>
-	<span class="p">},</span>
-	<span class="nx">search</span> <span class="err">:</span> <span class="p">{</span>
-		<span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span
-                        class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">UseCaseSearchLayout</span><span
-                        class="p">,</span>
-		<span class="nx">viewOptions</span> <span class="err">:</span> <span class="p">{</span>
-			<span class="c1">//...</span>
-		<span class="p">}</span>
-	<span class="p">},</span>
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="nx">useCases</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">create</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
+                            class="nx">view</span><span class="p">.</span><span class="nx">BrowseLayout</span><span
+                            class="p">,</span>
+    <span class="nx">viewOptions</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">update</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
+                            class="nx">view</span><span class="p">.</span><span class="nx">BrowseLayout</span><span
+                            class="p">,</span>
+    <span class="nx">viewOptions</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">search</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
+                            class="nx">view</span><span class="p">.</span><span
+                            class="nx">UseCaseSearchLayout</span><span class="p">,</span>
+    <span class="nx">viewOptions</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="p">},</span>
 
-<span class="p">},</span>
-	</code></pre>
+    <span class="p">},</span>
+    </code></pre>
                 </figure>
 
                 <h3 id="deep-merging">Deep Merging</h3>
                 <p>Use cases of a model are <em>deeply</em> merged wth the use cases defined by the model it extends,
-                    for example:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="nx">useCases</span> <span class="err">:</span> <span class="p">{</span>
-  <span class="nl">create</span> <span class="p">:</span> <span class="p">{</span>
+                    for example:
+                </p>
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="nx">useCases</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">create</span> <span class="p">:</span> <span class="p">{</span>
     <span class="c1">// No need to define a view as it will be</span>
     <span class="c1">// inherited from Restdude.Model</span>
     <span class="c1">//view : Restdude.view.BrowseLayout,</span>
     <span class="nl">viewOptions</span> <span class="p">:</span> <span class="p">{</span>
-      <span class="c1">//...</span>
+    <span class="c1">//...</span>
     <span class="p">}</span>
-  <span class="p">},</span>
-  <span class="c1">//...</span>
-<span class="p">},</span>
-	</code></pre>
+    <span class="p">},</span>
+    <span class="c1">//...</span>
+    <span class="p">},</span>
+    </code></pre>
                 </figure>
 
                 <h3 id="use-case-properties">Use Case Properties</h3>
                 <ul>
-                    <li><code>fieldIncludes</code>: Include matching field names. Matches must not be matched by <code>fieldExcludes</code>.
+                    <li><code>fieldIncludes</code>: Include matching field names. Matches must not be matched by
+                        <code>fieldExcludes</code>.
                     </li>
                     <li><code>fieldExcludes</code>: Exclude matching field names.</li>
                     <li><code>view</code>: The view <strong>type</strong> to render e.g.
                         <code>Restdude.view.HomeLayout</code></li>
                     <li><code>viewOptions</code>: Options to merge with the ones given to the view</li>
                     <li><code>overrides</code>: Provides nested use case configuration to merge and apply to any view's
-                        region name or <code>schemaType</code>.
+                        region name
+                        or <code>schemaType</code>.
                     </li>
                     <li><code>fields</code>: Override the fields used by the region view</li>
                 </ul>
                 <p>Here's an example <code>useCases</code> configuration:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="nx">useCases</span> <span class="err">:</span> <span class="p">{</span>
-  <span class="nl">create</span> <span class="p">:</span> <span class="p">{</span>
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="nx">useCases</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">create</span> <span class="p">:</span> <span class="p">{</span>
     <span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
-                        class="nx">view</span><span class="p">.</span><span
-                        class="nx">UserRegistrationLayout</span><span class="p">,</span>
+                            class="nx">view</span><span class="p">.</span><span class="nx">UserRegistrationLayout</span><span
+                            class="p">,</span>
     <span class="nx">fieldIncludes</span> <span class="err">:</span> <span class="p">[</span> <span class="s2">"firstName"</span><span
-                        class="p">,</span> <span class="s2">"lastName"</span><span class="p">,</span> <span class="s2">"email"</span> <span
-                        class="p">]</span>
-  <span class="p">},</span>
-  <span class="nx">search</span> <span class="err">:</span> <span class="p">{</span>
+                            class="p">,</span> <span class="s2">"lastName"</span><span class="p">,</span> <span
+                            class="s2">"email"</span> <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nx">search</span> <span class="err">:</span> <span class="p">{</span>
     <span class="nl">view</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
-                        class="nx">view</span><span class="p">.</span><span class="nx">SearchLayout</span><span
-                        class="p">,</span>
+                            class="nx">view</span><span class="p">.</span><span class="nx">SearchLayout</span><span
+                            class="p">,</span>
     <span class="nx">overrides</span> <span class="err">:</span> <span class="p">{</span>
-      <span class="c1">//</span>
-      <span class="nl">backgridView</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="nl">fieldIncludes</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">"username"</span><span
-                        class="p">,</span> <span class="s2">"firstName"</span><span class="p">,</span> <span class="s2">"lastName"</span><span
-                        class="p">,</span> <span class="s2">"edit"</span> <span class="p">]</span>
-      <span class="p">},</span>
-      <span class="nx">formView</span> <span class="err">:</span> <span class="p">{</span>
-        <span class="nl">fieldIncludes</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">"username"</span><span
-                        class="p">,</span> <span class="s2">"firstName"</span><span class="p">,</span> <span class="s2">"lastName"</span><span
-                        class="p">,</span> <span class="s2">"email"</span> <span class="p">],</span>
-        <span class="nx">fields</span> <span class="err">:</span> <span class="p">{</span>
-          <span class="nl">username</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"datatype"</span> <span class="err">:</span> <span class="s2">"Boolean"</span><span
-                        class="p">,</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">},</span>
+    <span class="c1">//</span>
+    <span class="nl">backgridView</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="nl">fieldIncludes</span> <span class="p">:</span> <span class="p">[</span> <span
+                            class="s2">"username"</span><span class="p">,</span> <span
+                            class="s2">"firstName"</span><span class="p">,</span> <span
+                            class="s2">"lastName"</span><span class="p">,</span> <span class="s2">"edit"</span> <span
+                            class="p">]</span>
+    <span class="p">},</span>
+    <span class="nx">formView</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">fieldIncludes</span> <span class="p">:</span> <span class="p">[</span> <span
+                            class="s2">"username"</span><span class="p">,</span> <span
+                            class="s2">"firstName"</span><span class="p">,</span> <span
+                            class="s2">"lastName"</span><span class="p">,</span> <span class="s2">"email"</span> <span
+                            class="p">],</span>
+    <span class="nx">fields</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="nl">username</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"datatype"</span> <span class="err">:</span> <span class="s2">"Boolean"</span><span
+                            class="p">,</span>
     <span class="p">}</span>
-  <span class="p">},</span>
-<span class="p">},</span>
-	</code></pre>
+    <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">},</span>
+    </code></pre>
                 </figure>
 
                 <h2 id="fields">Fields</h2>
                 <p>Fields provide metadata about a model's properties, basically their data type and how they should be
-                    rendered in forms, grids or generic HTML markup.</p>
+                    rendered in
+                    forms, grids or generic HTML markup.</p>
                 <p>Here is an example model configuration:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="nx">Restdude</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span
-                        class="nx">ServerModel</span> <span class="o">=</span> <span class="nx">Restdude</span><span
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="nx">Restdude</span><span class="p">.</span><span class="nx">model</span><span
+                        class="p">.</span><span class="nx">ServerModel</span> <span class="o">=</span> <span class="nx">Restdude</span><span
                         class="p">.</span><span class="nx">Model</span><span class="p">.</span><span
                         class="nx">extend</span><span class="p">({},</span>
-<span class="c1">// static members</span>
-<span class="p">{</span>
-  <span class="na">fields</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// static members</span>
+    <span class="p">{</span>
+    <span class="na">fields</span> <span class="p">:</span> <span class="p">{</span>
     <span class="s2">"domain"</span> <span class="p">:</span> <span class="p">{</span>
-      <span class="nl">fieldType</span> <span class="p">:</span> <span class="s2">"string"</span><span
-                        class="p">,</span>
-      <span class="na">backgrid</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="na">cell</span> <span class="p">:</span> <span class="nx">Restdude</span><span
-                        class="p">.</span><span class="nx">components</span><span class="p">.</span><span class="nx">backgrid</span><span
-                        class="p">.</span><span class="nx">ViewRowCell</span><span class="p">,</span>
-      <span class="p">}</span>
+    <span class="nl">fieldType</span> <span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+    <span class="na">backgrid</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="na">cell</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
+                            class="nx">components</span><span class="p">.</span><span class="nx">backgrid</span><span
+                            class="p">.</span><span class="nx">ViewRowCell</span><span class="p">,</span>
+    <span class="p">}</span>
     <span class="p">},</span>
     <span class="s2">"ip"</span> <span class="p">:</span> <span class="p">{</span>
-      <span class="nl">fieldType</span> <span class="p">:</span> <span class="s2">"link"</span><span class="p">,</span>
+    <span class="nl">fieldType</span> <span class="p">:</span> <span class="s2">"link"</span><span class="p">,</span>
     <span class="p">},</span>
-  <span class="p">},</span>
-<span class="p">});</span>
-	</code></pre>
+    <span class="p">},</span>
+    <span class="p">});</span>
+    </code></pre>
                 </figure>
                 <p>Fields may also override a field type's component or component options used for rendering.</p>
                 <p>Here's an example where a model field overrides the default fieldType's backgrid configuration to use
-                    a custom backgrid cell:</p>
-                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">
-<span class="nx">fields</span> <span class="err">:</span> <span class="p">{</span>
-  <span class="s2">"domain"</span> <span class="err">:</span> <span class="p">{</span>
+                    a custom
+                    backgrid cell:</p>
+                <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span
+                        class="nx">fields</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="s2">"domain"</span> <span class="err">:</span> <span class="p">{</span>
     <span class="nl">fieldType</span> <span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
     <span class="nx">backgrid</span> <span class="err">:</span> <span class="p">{</span>
-      <span class="nl">cell</span> <span class="p">:</span> <span class="nx">Restdude</span><span
-                        class="p">.</span><span class="nx">components</span><span class="p">.</span><span class="nx">backgrid</span><span
-                        class="p">.</span><span class="nx">ViewRowCell</span><span class="p">,</span>
+    <span class="nl">cell</span> <span class="p">:</span> <span class="nx">Restdude</span><span class="p">.</span><span
+                            class="nx">components</span><span class="p">.</span><span class="nx">backgrid</span><span
+                            class="p">.</span><span class="nx">ViewRowCell</span><span class="p">,</span>
     <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-	</code></pre>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    </code></pre>
                 </figure>
 
                 <p>The build-in schemas types include:</p>
@@ -607,7 +620,8 @@
                 <h1 id="internationalization" class="page-header">Internationalization</h1>
                 <p>
                     i18n bundle support is provided by the <a href="http://requirejs.org/docs/api.html#i18n">requirejs
-                    i18n plugin</a>.
+                    i18n
+                    plugin</a>.
                     Bundles are contained in /src/main/webapp/js/nls/:lang/labels.js in your webapp project.
                 </p>
             </section>
@@ -615,7 +629,8 @@
                 <h1 id="optimization" class="page-header">Optimization</h1>
                 <p>
                     The Maven build provides an <code>optimize</code> profile that concats and comresses your js,css and
-                    hbs files. To use it:
+                    hbs files.
+                    To use it:
                 </p>
                 <pre>
 <code>mvn -P optimize clean jetty:run-war </code>
