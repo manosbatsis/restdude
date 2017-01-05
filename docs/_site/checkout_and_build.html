@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestDude</title>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/docs.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+    <style>
+        #content {
+            background: #080331;
+            background: linear-gradient(135deg, #080331, #673051);
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script>
+</head>
+
+<body>
+<!-- Main navigation
+=========================================== -->
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <div class="container">
+        <div class="navbar-header" role="banner">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index.html">RestDude</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+
+
+                <li>
+                    <a href="/client_stack.html">Client Stack</a>
+                </li>
+
+
+                <li>
+                    <a href="/howto_build.html">Server Stack</a>
+                </li>
+
+
+                <li>
+                    <a href="/server_stack.html">Server Stack</a>
+                </li>
+
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+                <li>
+                    <a href="https://github.com/manosbatsis/restdude">GitHub</a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<!-- Header
+=========================================== -->
+
+<div class="bs-docs-masthead" id="content">
+    <div class="container">
+        <h1 class="home-title">RestDude</h1>
+        <p class="lead">Simple documentation template for Github pages</p>
+        <p class="lead">
+            <a href="https://github.com/manosbatsis/restdude" class="btn btn-outline-inverse btn-lg">Download</a>
+        </p>
+        <p class="version">Currently v2.1.2-SNAPSHOT</p>
+    </div>
+</div>
+
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <!-- Content
+        =========================================== -->
+        <div class="col-md-9" role="main">
+            <h2 id="overview">Overview</h2>
+
+            <p>To build Calipso you need a Java Development Kit version (1.)7, Git and Apache Maven. Eclipse (Java or
+                JEE) IDE users need EGit and m2eclipse plugins, those are included in Eclipse Java/JEE Luna and above.
+                Read bellow for instructions to checkout the source using eclipse or the command line.</p>
+
+            <h2 id="contents">Contents</h2>
+
+            <ul>
+                <li><a href="#checkout-using-eclipse">Checkout using Eclipse</a></li>
+                <li><a href="#checkout-using-the-command-line">Checkout using the Command Line</a></li>
+                <li><a href="#maven-build">Maven build</a></li>
+                <li><a href="#browse-calipso">Browse Calipso</a></li>
+                <li><a href="#browse-the-database-console">Browse the Database Console</a></li>
+                <li><a href="#use-a-custom-database">Use a custom database</a></li>
+            </ul>
+
+            <h3 id="checkout-using-eclipse">Checkout using Eclipse</h3>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/010_import_dialog.png" alt="alt tag"/></p>
+
+            <p>Right-click in Eclipse’s Package/Project Explorer and click Import, then choose Git &gt; Projects from
+                Git</p>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/011_clone_uri.png" alt="alt tag"/></p>
+
+            <p>Select the “Clone URI” option, then click “Next”</p>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/012_import_from_git.png" alt="alt tag"/></p>
+
+            <p>Enter https://github.com/abissgr/calipso-hub.git as the clone URI</p>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/014_local_dest.png" alt="alt tag"/></p>
+
+            <p>Select your local files location (independent to your Eclipse workspace)</p>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/015_wizard.png" alt="alt tag"/></p>
+
+            <p>Select the “Import as general project” wizard</p>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/016_project_name.png" alt="alt tag"/></p>
+
+            <p>Use “calipso-hub” as the project name</p>
+
+            <p><img src="/restdude/assets/images/checkout_and_build/017_import_existing_maven.png" alt="alt tag"/></p>
+
+            <p>Right click on the “calipso-hub” then click on “Import”. Choose “Existing Maven projects”. Browse to the
+                project folder for eclipse to discover the maven submodules, then click “Finish”.</p>
+
+            <h3 id="checkout-using-the-command-line">Checkout using the Command Line</h3>
+
+            <p>See https://help.github.com/articles/importing-a-git-repository-using-the-command-line/</p>
+
+            <h3 id="maven-build">Maven build</h3>
+
+            <p><a href="https://travis-ci.org/abissgr/calipso-hub"><img
+                    src="https://travis-ci.org/abissgr/calipso-hub.png?branch=master" alt="Build Status"/></a></p>
+
+            <p>To build Calipso you need a Java Development Kit(JDK7 ) and Apache Maven installed.</p>
+
+            <p>1) Change to the root project directory:</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ cd calipso-hub
+</code></pre>
+            </div>
+
+            <p>2) Rename HOWTO.txt to dev.properties and (optionally) edit it:</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ mv HOWTO.txt dev.properties
+</code></pre>
+            </div>
+
+            <p>3) Build the project</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ mvn clean install
+</code></pre>
+            </div>
+
+            <p>4) Change to webapp module directory</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ cd calipso-hub-webapp
+</code></pre>
+            </div>
+
+            <p>5) Start the Jetty server</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ mvn clean install jetty:run
+</code></pre>
+            </div>
+
+            <p>Note: If you get a <code>[ERROR] No plugin found for prefix 'jetty' in the current project and in the
+                plugin groups </code> you probably forgot step 4 above.</p>
+
+            <h2 id="browse-calipso">Browse Calipso</h2>
+
+            <p>After you complete the steps above, you can access Calipso using your web browser:</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:8080/calipso
+</code></pre>
+            </div>
+
+            <h2 id="browse-the-database-console">Browse the Database Console</h2>
+
+            <p>By default, Calipso uses H2, an in-memory database that works great for development.
+                A fresh copy is created with test data each time you start Jetty using mvn:run.
+                The database console is available at:</p>
+
+            <div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:8080/calipso/console/database/
+</code></pre>
+            </div>
+
+            <h2 id="use-a-custom-database">Use a custom database</h2>
+
+            <p>You can use a database like MySQL by commenting out the H2 database section in your dev.properties,
+                then uncommenting the MySQL section. Other databases can be also be used.</p>
+
+            <h2 id="add-a-service">Add a Service</h2>
+
+            <p>See <a href="scrud_howto.md">How to implement CRUD, View and Search for a new Entity Model</a></p>
+
+        </div>
+
+        <!-- Page navigation
+        =========================================== -->
+        <div class="col-md-3" role="complementary">
+            <div class="bs-docs-sidebar hidden-print">
+                <!--ul class="nav">
+                    <li>
+                        <a href="https://travis-ci.org/abissgr/calipso-hub">
+                            <img src="https://travis-ci.org/abissgr/calipso-hub.svg?branch=master" />
+                        </a>
+                    </li>
+                </ul-->
+                <ul class="nav bs-docs-sidenav">
+                </ul>
+                <a class="back-to-top" href="#top">
+                    <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer
+=========================================== -->
+<footer class="bs-docs-footer" role="contentinfo">
+    <div class="container">
+        <div class="bs-docs-social">
+            <ul class="bs-docs-social-buttons">
+
+                <li>
+                    <iframe class="github-btn"
+                            src="http://ghbtns.com/github-btn.html?user=manosbatsis&amp;repo=restdude&amp;type=watch&amp;count=true"
+                            width="90" height="20" title="Star on GitHub"></iframe>
+                </li>
+                <li>
+                    <iframe class="github-btn"
+                            src="http://ghbtns.com/github-btn.html?user=manosbatsis&amp;repo=restdude&amp;type=fork&amp;count=true"
+                            width="90" height="20" title="Fork on GitHub"></iframe>
+                </li>
+
+
+            </ul>
+        </div>
+
+        <p>
+            Licensed under <a href="https://opensource.org/licenses/LGPL-3.0" target="_blank">LGPLv3</a>,
+            documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+        </p>
+        <p>
+            Documentation template by <a href="http://getbootstrap.com">Bootstrap team</a>,
+            generated with <a href="https://github.com/mistic100/jekyll-bootstrap-doc">Jekyll Bootstrap Doc</a>
+        </p>
+
+        <ul class="bs-docs-footer-links muted">
+            <li>Currently v2.1.2-SNAPSHOT</li>
+
+            <li>&middot;</li>
+            <li><a href="https://github.com/manosbatsis/restdude">GitHub</a></li>
+
+            <li>&middot;</li>
+            <li><a href="https://github.com/manosbatsis/restdude/issues?state=open">Issues</a></li>
+
+        </ul>
+    </div>
+</footer>
+
+
+<!-- Async scripts
+=========================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.2/trianglify.min.js"></script>
+<script>trianglify('#080331', '#673051');</script>
+
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+---
+layout: default
+title: Server Stack
+description: Documentation on the Restdude Hub server stack
+isHome: false
+---
+
+
+<section class="bs-docs-section">
+    <h1 id="build-and-run" class="page-header">Quick Build and Run</h1>
+    <p>Follow the steps bellow to build.</p>
+    <p>a) Clone the repository:</p>
+    {% highlight bash %} git clone https://github.com/manosbatsis/restdude.git {% endhighlight %}
+    <p>b) Copy HOWTO.txt to dev.properties:</p>
+    {% highlight bash %} cp HOWTO.txt dev.properties {% endhighlight %}
+    <p>
+        c) Build and install (
+        <code>-U</code>
+        forces the download of updated snapshot dependencies):
+    </p>
+    {% highlight bash %} mvn -U clean install {% endhighlight %}
+    <p>d) run embedded Jetty container:</p>
+    {% highlight bash %}
+    cd restdude-hub-webapp
+    mvn jetty:run
+    {% endhighlight %}
+    <p>
+        e) Browse the app client: <a
+            href="http://localhost:8080/restdude/client">http://localhost:8080/restdude/client</a>
+        or the API reference: <a href="http://localhost:8080/restdude/apidoc">http://localhost:8080/restdude/apidoc</a>.
+        See also the <a href="#api-reference">Swagger API Reference</a> section bellow.
+    </p>
+    <p>
+        If you are using chrome, ensure you have enabled <a
+            href="http://www.alphadevx.com/a/454-Google-Chrome-and-localhost-cookies">cookies for localhost</a>.
+    </p>
+    <h2 id="optimize_profile">Optimize Profile</h2>
+    <p>
+        If have [node](https://nodejs.org) installed, you can use the
+        <code>optimize</code>
+        profile and
+        <code>jetty:run-war</code>
+        to optimize client-side code:
+    </p>
+    {% highlight bash %}
+    cd restdude-war-overlay
+    mvn -P optimize clean jetty:run-war
+    {% endhighlight %}
+    <h2 id="ci_profile">Integration Testing Profile</h2>
+    <p>
+        To run integration tests simply activate the
+        <code>ci</code>
+        profile:
+    </p>
+    {% highlight bash %}
+    mvn -P ci clean install
+    {% endhighlight %}
+    <p>
+        See also <a href="#tests">Tests</a>.
+    </p>
+</section>

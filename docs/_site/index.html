@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestDude</title>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/docs.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+    <style>
+        #content {
+            background: #080331;
+            background: linear-gradient(135deg, #080331, #673051);
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script>
+</head>
+
+<body>
+<!-- Main navigation
+=========================================== -->
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <div class="container">
+        <div class="navbar-header" role="banner">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index.html">RestDude</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+
+
+                <li>
+                    <a href="/client_stack.html">Client Stack</a>
+                </li>
+
+
+                <li>
+                    <a href="/howto_build.html">Server Stack</a>
+                </li>
+
+
+                <li>
+                    <a href="/server_stack.html">Server Stack</a>
+                </li>
+
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+                <li>
+                    <a href="https://github.com/manosbatsis/restdude">GitHub</a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<!-- Header
+=========================================== -->
+
+<div class="bs-docs-masthead" id="content">
+    <div class="container">
+        <h1 class="home-title">RestDude</h1>
+        <p class="lead">Simple documentation template for Github pages</p>
+        <p class="lead">
+            <a href="https://github.com/manosbatsis/restdude" class="btn btn-outline-inverse btn-lg">Download</a>
+        </p>
+        <p class="version">Currently v2.1.2-SNAPSHOT</p>
+    </div>
+</div>
+
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <!-- Content
+        =========================================== -->
+        <div class="col-md-9" role="main">
+            <section class="bs-docs-section">
+                <h1 id="about" class="page-header">About</h1>
+                <p>Full stack, high level framework for horizontal, model-driven application hackers.</p>
+                <p>Usecases in RestDude are typically modeled while broken down to four major tiers: </p>
+
+                <ul>
+                    <li>Entity, transfer, or other models</li>
+                    <li>Controllers providing the relevant RESTful HTTP mappings</li>
+                    <li>Services providing business logic and integration methods</li>
+                    <li>Repositories for data operations like persistance, indexing, messaging etc.</li>
+                </ul>
+
+                <p>Model-based RESTful services for <a
+                        href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">SCRUD</a>, uploads,
+                    metadata,
+                    JSONSchema etc. are generated automatically.
+                    Models are just POJOs and can be JPA entities, ElasticSearch documents etc. Any <a
+                            href="http://projects.spring.io/spring-data/">Spring Data</a> module can be easily
+                    plugged-in to support other NoSQL datastores. </p>
+
+                <p>Models also include annotations and other metadata used to declaratively compose usecase
+                    implementation details
+                    like HTTP mappings, authorization rules, tier components,
+                    validation rules, model-to-model-mappings, applications events handlers etc. </p>
+            </section>
+
+
+            <section class="bs-docs-section">
+                <h1 id="ten_second_example" class="page-header">Ten Second Example</h1>
+                <p>Consider the following sample model</p>
+                <figure class="highlight"><pre><code class="language-java" data-lang="java">    <span
+                        class="nd">@Entity</span>
+    <span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span
+                            class="s">"host"</span><span class="o">)</span>
+    <span class="nd">@ModelResource</span><span class="o">(</span><span class="n">path</span> <span
+                            class="o">=</span> <span class="s">"hosts"</span><span class="o">,</span> <span
+                            class="n">c</span>
+        <span class="n">ontrollerSuperClass</span> <span class="o">=</span> <span
+                            class="n">AbstractModelController</span><span class="o">.</span><span
+                            class="na">class</span><span class="o">,</span>
+        <span class="n">apiName</span> <span class="o">=</span> <span class="s">"Hosts"</span><span class="o">,</span>
+        <span class="n">apiDescription</span> <span class="o">=</span> <span
+                            class="s">"Operations about hosts"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Host</span> <span
+                            class="kd">extends</span> <span class="n">AbstractSystemUuidPersistable</span> <span
+                            class="o">{</span>
+
+    <span class="nd">@NotNull</span>
+    <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span
+                            class="s">"name"</span><span class="o">,</span> <span class="n">nullable</span> <span
+                            class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">unique</span> <span
+                            class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="nd">@NotNull</span>
+    <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span
+                            class="s">"description"</span><span class="o">,</span> <span class="n">length</span> <span
+                            class="o">=</span> <span class="mi">500</span><span class="o">,</span> <span class="n">nullable</span> <span
+                            class="o">=</span> <span class="kc">false</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">description</span><span
+                            class="o">;</span>
+
+    <span class="nd">@ManyToOne</span><span class="o">(</span><span class="n">fetch</span> <span
+                            class="o">=</span> <span class="n">FetchType</span><span class="o">.</span><span class="na">EAGER</span><span
+                            class="o">)</span>
+    <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span
+                            class="o">=</span> <span class="s">"country_id"</span><span class="o">,</span> <span
+                            class="n">referencedColumnName</span> <span class="o">=</span> <span
+                            class="s">"id"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">Country</span> <span class="n">country</span><span
+                            class="o">;</span>
+
+    <span class="c1">// other properties, getters/setters etc.</span>
+    <span class="o">}</span>
+    </code></pre>
+                </figure>
+
+                <p>The following table lists some core services Restdude will dynamically implementfor the above
+                    model:</p>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Path</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>GET</td>
+                        <td>/api/rest/hosts/{id}</td>
+                        <td>Fetch the host matching the id</td>
+                    </tr>
+                    <tr>
+                        <td>GET</td>
+                        <td>/api/rest/hosts?country.code=GR&amp;name=%25startsWith </td>
+                        <td>Search based on model properties (paged)</td>
+                    </tr>
+                    <tr>
+                        <td>POST</td>
+                        <td>/api/rest/hosts</td>
+                        <td>Create a new host</td>
+                    </tr>
+                    <tr>
+                        <td>PUT</td>
+                        <td>/api/rest/hosts/{id}</td>
+                        <td>Update the host matching the id</td>
+                    </tr>
+                    <tr>
+                        <td>PATCH</td>
+                        <td>/api/rest/hosts/{id}</td>
+                        <td>Partially update the host matching the id</td>
+                    </tr>
+                    <tr>
+                        <td>DELETE</td>
+                        <td>/api/rest/hosts/{id}</td>
+                        <td>Delete the host matching the id</td>
+                    </tr>
+                    <tr>
+                        <td>GET</td>
+                        <td>/api/rest/hosts/jsonschema</td>
+                        <td>Get the JSONSchema for hosts</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="bs-docs-section">
+                <h1 id="overview" class="page-header">Overview</h1>
+                <h2>Working with Models</h2>
+                <h3>Entity Models</h3>
+                <h3>Graph Models</h3>
+                <h3>Generated Components</h3>
+                <p>Support for SCRUD and other utilities is generated automatically as RestController, Service and
+                    Repository
+                    classes on application startup. D
+                    evelopers can easily extend base components to override defaults or add custom functionality for any
+                    tier.
+                    RestDude will refrain from generating overlapping components.</p>
+
+                <p>A modern SPA wbapp that automatically adopts to the above and can be manageably customized and
+                    extended further
+                    is also provided.</p>
+                <h3>Validation.</h3>
+                Bean validation is supported.
+
+
+                <h2>Custom Components</h2>
+                <p> Backend is based on Spring 4.x. Support classes include controllers, converters, (de)serializers,
+                    services,
+                    repositories, base models and much more.
+                </p>
+
+                <h3>Controllers</h3>
+                <h3>Services</h3>
+                <h3>Repositories</h3>
+                <p> JPA repositories work with practically any relational database and support entity graphs. Popular
+                    NoSQL data
+                    stores can be easily setup thanks to spring-data modules.
+                </p>
+                <h2>I18n</h2>
+
+                <p>Standard Java message property resources are used in the backend by default. Those are placed in the
+                    classpath
+                    root and include properties for build-in functionality like
+                    registration, confirmation and password-reset emails. JSON labels are used on the client-side by
+                    default and
+                    similarly include standard Web UI messages for build-in models etc. Client i18n is based on
+                    <a href="http://requirejs.org/docs/api.html#i18n">requirejs</a>.</p>
+
+                <h2>Authentication and Authorization</h2>
+
+
+                <p>Very flexible, based on Spring Security. Integrates with practically anything.</p>
+                <h2>Social Networks Integration</h2>
+
+                <p>Social network support includes transparent registration and sign-in via any major social network.
+                    Spring social
+                    provides an API for implementing other integrations.</p>
+                <h2>Auditing</h2>
+
+                <p>Basic entity-based auditing is supported via using <a
+                        href="http://docs.spring.io/spring-data/data-jpa/docs/1.7.0.DATAJPA-580-SNAPSHOT/reference/html/auditing.html">Spring
+                    Data/Hibernate Envers</a> annotations
+                    <or></or>
+                    interfaces in your models.
+                    Complex auditing is supported via <a href="" http:>Javers
+                    </a></p>
+                .
+
+                <h2>Error Management</h2>
+
+                <p>All exceptions occurring as a result of REST processing will generate a SystemError instance, persist
+                    it and
+                    serialize as the JSON HTTP response.
+                    Stacktrace hashes, excluding line numbers, are used to group and efficiently manage and store
+                    records. Client
+                    applications can utilize the
+                    same infrastructure to persist ClientErrors.</p>
+
+                <p>Errors can be managed via the REST API or through the web UI.</p>
+                <h2>Indexing</h2>
+                <p> Indexing uses ElasticSearch by default.
+                </p>
+                <h2>Email</h2>
+                <h2>Web Sockets</h2>
+                <p>Controller message mappings provide access to request-response access and topic subscriptions via the
+                    “app” and
+                    “topic” destination prefixes
+                    respectively. Any service can easily message topics and collection or individual user queues.
+                    Websocket sessions
+                    and subscriptions are handled via
+                    application events
+                </p>
+                <h2>Browser Client</h2>
+                <p>Frontend is based on <a href="http://marionettejs.com/">backbone.marionette</a> and similarly
+                    provides base
+                    models, model-driven UI components views and layouts (forms, menus etc.), converters, formatters,
+                    routes and
+                    more.</p>
+                <h3> Dynamic Components
+                </h3>
+                <h3>Customization</h3>
+                <h3>I18n</h3>
+            </section>
+            <section class="bs-docs-section">
+                <h1 id="api-reference" class="page-header">Swagger API Reference</h1>
+                <p>
+                    The webapp provides automatically-generated API documentation based on
+                    <a href="http://swagger.io/">Swagger</a> and created by <a
+                        href="http://springfox.github.io/springfox/">Springfox</a>.
+                    To access
+                    the documentation run the app and point your browser to <a
+                        href="http://localhost:8080/restdude/apidoc">http://localhost:8080/restdude/apidoc</a>.
+                </p>
+                <img src="/restdude/assets/images/swagger-ui.png" class="img-responsive" alt="Responsive image">
+            </section>
+            <section class="bs-docs-section">
+                <h1 id="license" class="page-header">License</h1>
+                <p>
+                    <img src="/restdude/assets/images/agplv3-155x51.png" style="float: right">Restdude Hub DVD Rental is
+                    distributed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU
+                    Affero General Public License</a>
+                </p>
+            </section>
+
+        </div>
+
+        <!-- Page navigation
+        =========================================== -->
+        <div class="col-md-3" role="complementary">
+            <div class="bs-docs-sidebar hidden-print">
+                <!--ul class="nav">
+                    <li>
+                        <a href="https://travis-ci.org/abissgr/calipso-hub">
+                            <img src="https://travis-ci.org/abissgr/calipso-hub.svg?branch=master" />
+                        </a>
+                    </li>
+                </ul-->
+                <ul class="nav bs-docs-sidenav">
+                </ul>
+                <a class="back-to-top" href="#top">
+                    <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer
+=========================================== -->
+<footer class="bs-docs-footer" role="contentinfo">
+    <div class="container">
+        <div class="bs-docs-social">
+            <ul class="bs-docs-social-buttons">
+
+                <li>
+                    <iframe class="github-btn"
+                            src="http://ghbtns.com/github-btn.html?user=manosbatsis&amp;repo=restdude&amp;type=watch&amp;count=true"
+                            width="90" height="20" title="Star on GitHub"></iframe>
+                </li>
+                <li>
+                    <iframe class="github-btn"
+                            src="http://ghbtns.com/github-btn.html?user=manosbatsis&amp;repo=restdude&amp;type=fork&amp;count=true"
+                            width="90" height="20" title="Fork on GitHub"></iframe>
+                </li>
+
+
+            </ul>
+        </div>
+
+        <p>
+            Licensed under <a href="https://opensource.org/licenses/LGPL-3.0" target="_blank">LGPLv3</a>,
+            documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+        </p>
+        <p>
+            Documentation template by <a href="http://getbootstrap.com">Bootstrap team</a>,
+            generated with <a href="https://github.com/mistic100/jekyll-bootstrap-doc">Jekyll Bootstrap Doc</a>
+        </p>
+
+        <ul class="bs-docs-footer-links muted">
+            <li>Currently v2.1.2-SNAPSHOT</li>
+
+            <li>·</li>
+            <li><a href="https://github.com/manosbatsis/restdude">GitHub</a></li>
+
+            <li>·</li>
+            <li><a href="https://github.com/manosbatsis/restdude/issues?state=open">Issues</a></li>
+
+        </ul>
+    </div>
+</footer>
+
+
+<!-- Async scripts
+=========================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.2/trianglify.min.js"></script>
+<script>trianglify('#080331', '#673051');</script>
+
+
+</body>
+</html>

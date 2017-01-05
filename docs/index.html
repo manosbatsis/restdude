@@ -4,85 +4,192 @@ title: Home
 description: Simple documentation template for Github pages
 isHome: true
 ---
+
+<section class="bs-docs-section">
+    <h1 id="about" class="page-header">About</h1>
+    <p>Full stack, high level framework for horizontal, model-driven application hackers.</p>
+    <p>Usecases in RestDude are typically modeled while broken down to four major tiers: </p>
+
+    <ul>
+        <li>Entity, transfer, or other models</li>
+        <li>Controllers providing the relevant RESTful HTTP mappings</li>
+        <li>Services providing business logic and integration methods</li>
+        <li>Repositories for data operations like persistance, indexing, messaging etc.</li>
+    </ul>
+
+    <p>Model-based RESTful services for <a
+            href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">SCRUD</a>, uploads, metadata,
+        JSONSchema etc. are generated automatically.
+        Models are just POJOs and can be JPA entities, ElasticSearch documents etc. Any <a
+                href="http://projects.spring.io/spring-data/">Spring Data</a> module can be easily
+        plugged-in to support other NoSQL datastores. </p>
+
+    <p>Models also include annotations and other metadata used to declaratively compose usecase implementation details
+        like HTTP mappings, authorization rules, tier components,
+        validation rules, model-to-model-mappings, applications events handlers etc. </p>
+</section>
+
+
+<section class="bs-docs-section">
+    <h1 id="ten_second_example" class="page-header">Ten Second Example</h1>
+    <p>Consider the following sample model</p>
+    {% highlight java %}
+    @Entity
+    @Table(name = "host")
+    @ModelResource(path = "hosts", c
+    ontrollerSuperClass = AbstractModelController.class,
+    apiName = "Hosts",
+    apiDescription = "Operations about hosts")
+    public class Host extends AbstractSystemUuidPersistable {
+
+    @NotNull
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    @NotNull
+    @Column(name = "description", length = 500, nullable = false)
+    private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
+    private Country country;
+
+    // other properties, getters/setters etc.
+    }
+    {% endhighlight %}
+
+    <p>The following table lists some core services Restdude will dynamically implementfor the above model:</p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>GET</td>
+            <td>/api/rest/hosts/{id}</td>
+            <td>Fetch the host matching the id</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api/rest/hosts?country.code=GR&amp;name=%25startsWith&nbsp;</td>
+            <td>Search based on model properties (paged)</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/api/rest/hosts</td>
+            <td>Create a new host</td>
+        </tr>
+        <tr>
+            <td>PUT</td>
+            <td>/api/rest/hosts/{id}</td>
+            <td>Update the host matching the id</td>
+        </tr>
+        <tr>
+            <td>PATCH</td>
+            <td>/api/rest/hosts/{id}</td>
+            <td>Partially update the host matching the id</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+            <td>/api/rest/hosts/{id}</td>
+            <td>Delete the host matching the id</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api/rest/hosts/jsonschema</td>
+            <td>Get the JSONSchema for hosts</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
 <section class="bs-docs-section">
     <h1 id="overview" class="page-header">Overview</h1>
-    <p>Experiments on a full stack, high level enterprise framework for MVP application hackers and
-        scalable developer teams.</p>
-    <p>Calipso feeds primarily on your entity models to provide simple and flexible scaffolding for
-        rapid application development. It also keeps your code base at a minimum and encourages
-        component-based development to improve quality and maintainability.</p>
-</section>
-<section class="bs-docs-section">
-    <h1 id="build-and-run" class="page-header">Quick Build and Run</h1>
-    <p>Follow the steps bellow to build.</p>
-    <p>a) Clone the repository:</p>
-    {% highlight bash %} git clone https://github.com/abissgr/calipso-hub.git {% endhighlight %}
-    <p>b) Copy HOWTO.txt to dev.properties:</p>
-    {% highlight bash %} cp HOWTO.txt dev.properties {% endhighlight %}
-    <p>
-        c) Build and install (
-        <code>-U</code>
-        forces the download of updated snapshot dependencies):
-    </p>
-    {% highlight bash %} mvn -U clean install {% endhighlight %}
-    <p>d) run embedded Jetty container:</p>
-    {% highlight bash %}
-    cd calipso-hub-webapp
-    mvn jetty:run
-    {% endhighlight %}
-    <p>
-        e) Browse the app client: <a
-            href="http://localhost:8080/calipso/client">http://localhost:8080/calipso/client</a>
-        or the API reference: <a href="http://localhost:8080/calipso/apidoc">http://localhost:8080/calipso/apidoc</a>.
-        See also the <a href="#api-reference">Swagger API Reference</a> section bellow.
-    </p>
-    <p>
-        If you are using chrome, ensure you have enabled <a
-            href="http://www.alphadevx.com/a/454-Google-Chrome-and-localhost-cookies">cookies for localhost</a>.
-    </p>
-    <h2 id="optimize_profile">Optimize Profile</h2>
-    <p>
-        If have [node](https://nodejs.org) installed, you can use the
-        <code>optimize</code>
-        profile and
-        <code>jetty:run-war</code>
-        to optimize client-side code:
-    </p>
-    {% highlight bash %}
-    cd calipso-hub-webapp
-    mvn -P optimize clean jetty:run-war
-    {% endhighlight %}
-    <h2 id="ci_profile">Integration Testing Profile</h2>
-    <p>
-        To run integration tests simply activate the
-        <code>ci</code>
-        profile:
-    </p>
-    {% highlight bash %}
-    mvn -P ci clean install
-    {% endhighlight %}
-    <p>
-        See also <a href="#tests">Tests</a>.
-    </p>
-</section>
-<section class="bs-docs-section">
-    <h1 id="documentation" class="page-header">Documentation</h1>
+    <h2>Working with Models</h2>
+    <h3>Entity Models</h3>
+    <h3>Graph Models</h3>
+    <h3>Generated Components</h3>
+    <p>Support for SCRUD and other utilities is generated automatically as RestController, Service and Repository
+        classes on application startup. D
+        evelopers can easily extend base components to override defaults or add custom functionality for any tier.
+        RestDude will refrain from generating overlapping components.</p>
 
-    <div class="list-group">
-        <a href="checkout_and_build.html" class="list-group-item">
-            <h4 class="list-group-item-heading">Installation</h4>
-            <p class="list-group-item-text">Checkout and build for Eclipse IDE users</p>
-        </a>
-        <a href="client_stack.html" class="list-group-item">
-            <h4 class="list-group-item-heading">Client Stack</h4>
-            <p class="list-group-item-text">Use model metadata to create SCRUD and other use-case driven views.</p>
-        </a>
-        <a href="server_stack.html" class="list-group-item">
-            <h4 class="list-group-item-heading">Server Stack</h4>
-            <p class="list-group-item-text">Create 3-tier RESTful services without manually coding controllers, services
-                and repositories, unless you really want to.</p>
-        </a>
-    </div>
+    <p>A modern SPA wbapp that automatically adopts to the above and can be manageably customized and extended further
+        is also provided.</p>
+    <h3>Validation.</h3>
+    Bean validation is supported.
+
+
+    <h2>Custom Components</h2>
+    <p> Backend is based on Spring 4.x. Support classes include controllers, converters, (de)serializers, services,
+        repositories, base models and much more.
+    </p>
+
+    <h3>Controllers</h3>
+    <h3>Services</h3>
+    <h3>Repositories</h3>
+    <p> JPA repositories work with practically any relational database and support entity graphs. Popular NoSQL data
+        stores can be easily setup thanks to spring-data modules.
+    </p>
+    <h2>I18n</h2>
+
+    <p>Standard Java message property resources are used in the backend by default. Those are placed in the classpath
+        root and include properties for build-in functionality like
+        registration, confirmation and password-reset emails. JSON labels are used on the client-side by default and
+        similarly include standard Web UI messages for build-in models etc. Client i18n is based on
+        <a href="http://requirejs.org/docs/api.html#i18n">requirejs</a>.</p>
+
+    <h2>Authentication and Authorization</h2>
+
+
+    <p>Very flexible, based on Spring Security. Integrates with practically anything.</p>
+    <h2>Social Networks Integration</h2>
+
+    <p>Social network support includes transparent registration and sign-in via any major social network. Spring social
+        provides an API for implementing other integrations.</p>
+    <h2>Auditing</h2>
+
+    <p>Basic entity-based auditing is supported via using <a
+            href="http://docs.spring.io/spring-data/data-jpa/docs/1.7.0.DATAJPA-580-SNAPSHOT/reference/html/auditing.html">Spring
+        Data/Hibernate Envers</a> annotations
+        <or></or>
+        interfaces in your models.
+        Complex auditing is supported via <a href="" http://javers.org/documentation/">Javers
+    </p>
+    .</p>
+
+    <h2>Error Management</h2>
+
+    <p>All exceptions occurring as a result of REST processing will generate a SystemError instance, persist it and
+        serialize as the JSON HTTP response.
+        Stacktrace hashes, excluding line numbers, are used to group and efficiently manage and store records. Client
+        applications can utilize the
+        same infrastructure to persist ClientErrors.</p>
+
+    <p>Errors can be managed via the REST API or through the web UI.</p>
+    <h2>Indexing</h2>
+    <p> Indexing uses ElasticSearch by default.
+    </p>
+    <h2>Email</h2>
+    <h2>Web Sockets</h2>
+    <p>Controller message mappings provide access to request-response access and topic subscriptions via the “app” and
+        “topic” destination prefixes
+        respectively. Any service can easily message topics and collection or individual user queues. Websocket sessions
+        and subscriptions are handled via
+        application events
+    </p>
+    <h2>Browser Client</h2>
+    <p>Frontend is based on <a href="http://marionettejs.com/">backbone.marionette</a> and similarly provides base
+        models, model-driven UI components views and layouts (forms, menus etc.), converters, formatters, routes and
+        more.</p>
+    <h3> Dynamic Components
+    </h3>
+    <h3>Customization</h3>
+    <h3>I18n</h3>
 </section>
 <section class="bs-docs-section">
     <h1 id="api-reference" class="page-header">Swagger API Reference</h1>
@@ -90,14 +197,14 @@ isHome: true
         The webapp provides automatically-generated API documentation based on
         <a href="http://swagger.io/">Swagger</a> and created by <a href="http://springfox.github.io/springfox/">Springfox</a>.
         To access
-        the documentation run the app and point your browser to <a href="http://localhost:8080/calipso/apidoc">http://localhost:8080/calipso/apidoc</a>.
+        the documentation run the app and point your browser to <a href="http://localhost:8080/restdude/apidoc">http://localhost:8080/restdude/apidoc</a>.
     </p>
     <img src="{{ site.baseurl }}/assets/images/swagger-ui.png" class="img-responsive" alt="Responsive image">
 </section>
 <section class="bs-docs-section">
     <h1 id="license" class="page-header">License</h1>
     <p>
-        <img src="{{ site.baseurl }}/assets/images/agplv3-155x51.png" style="float: right"/>Calipso Hub DVD Rental is
+        <img src="{{ site.baseurl }}/assets/images/agplv3-155x51.png" style="float: right"/>Restdude Hub DVD Rental is
         distributed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU
         Affero General Public License</a>
     </p>

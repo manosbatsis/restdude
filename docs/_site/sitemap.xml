@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>/checkout_and_build.html</loc>
+</url>
+<url>
+<loc>/client_stack.html</loc>
+</url>
+<url>
+<loc>/hidden.html</loc>
+</url>
+<url>
+<loc>/howto_build.html</loc>
+</url>
+<url>
+<loc>/</loc>
+</url>
+<url>
+<loc>/server_stack.html</loc>
+</url>
+</urlset>

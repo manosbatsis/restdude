@@ -1,279 +1,279 @@
 ---
 layout: default
 title: Server Stack
-description: Documentation on the Calipso Hub server stack
+description: Documentation on the Restdude Hub server stack
 isHome: false
 ---
 
 <section class="bs-docs-section">
-    <h1 id="overview" class="page-header">Overview</h1>
-    <p>
-        The <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a> back-end is build
-        on top of the <a href="https://projects.spring.io/spring-framework/">Spring Framework</a> and
-        provides dynamic, model driven <a
-            href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> services for your entities,
-        including
-        complete coverage of <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">SCRUD</a> use
-        cases.
-    </p>
+	<h1 id="overview" class="page-header">Overview</h1>
+	<p>
+		The <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a> back-end is build
+		on top of the <a href="https://projects.spring.io/spring-framework/">Spring Framework</a> and
+		provides dynamic, model driven <a
+			href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> services for your entities,
+		including
+		complete coverage of <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">SCRUD</a> use
+		cases.
+	</p>
 </section>
 <section class="bs-docs-section">
-    <h1 id="model-driven-tiers" class="page-header">Model-Driven Tiers</h1>
-    <p>
-        To have a SCRUD stack automatically generated for your entity model, simply annotate it with
-        <code>@ModelResource</code>:
-    </p>
-    {% highlight java %}
-    @Entity
-    @ModelResource(path = "books", apiName = "Books", apiDescription = "Operations about books")
-    @Table(name = "book")
-    public class Book extends AbstractAuditable
-    <User> {
-        //...
-        }
-        {% endhighlight %}
-        <p>During startup, the application will automatically generate and register Conteoller, Service (both interface
-            and impl) and Repository beans for your entity model.</p>
+	<h1 id="model-driven-tiers" class="page-header">Model-Driven Tiers</h1>
+	<p>
+		To have a SCRUD stack automatically generated for your entity model, simply annotate it with
+		<code>@ModelResource</code>:
+	</p>
+	{% highlight java %}
+	@Entity
+	@ModelResource(path = "books", apiName = "Books", apiDescription = "Operations about books")
+	@Table(name = "book")
+	public class Book extends AbstractAuditable
+	<User> {
+		//...
+		}
+		{% endhighlight %}
+		<p>During startup, the application will automatically generate and register Conteoller, Service (both interface
+			and impl) and Repository beans for your entity model.</p>
 
-        <h2 id="restful-service-urls">RESTful Service URLs</h>
-            <p>The generated beans will follow REST conventions to expose SCRUD service endpoints for your entity models
-                in a regular way. Consider the RESTful URLs for the book an entity model above:</p>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>HTTP Method</th>
-                    <th>HTTP URL</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>GET</td>
-                    <td>api/rest/books/id</td>
-                    <td><a href="#fetch">Fetch</a> a book matching the id</td>
-                </tr>
-                <tr>
-                    <td>GET</td>
-                    <td>api/rest/books?foo=bar&amp;foo.subFoo=baz</td>
-                    <td><a href="#search">Search</a> books</td>
-                </tr>
-                <tr>
-                    <td>POST</td>
-                    <td>api/rest/books</td>
-                    <td><a href="#create">Create</a> a new book</td>
-                </tr>
-                <tr>
-                    <td>PUT</td>
-                    <td>api/rest/books/id</td>
-                    <td><a href="#update">Update</a> the book matching the id</td>
-                </tr>
-                <tr>
-                    <td>DELETE</td>
-                    <td>api/rest/books/id</td>
-                    <td><a href="#delete">Delete</a> the book matching the id</td>
-                </tr>
-                </tbody>
-            </table>
+		<h2 id="restful-service-urls">RESTful Service URLs</h>
+			<p>The generated beans will follow REST conventions to expose SCRUD service endpoints for your entity models
+				in a regular way. Consider the RESTful URLs for the book an entity model above:</p>
+			<table class="table table-striped">
+				<thead>
+				<tr>
+					<th>HTTP Method</th>
+					<th>HTTP URL</th>
+					<th>Action</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>GET</td>
+					<td>api/rest/books/id</td>
+					<td><a href="#fetch">Fetch</a> a book matching the id</td>
+				</tr>
+				<tr>
+					<td>GET</td>
+					<td>api/rest/books?foo=bar&amp;foo.subFoo=baz</td>
+					<td><a href="#search">Search</a> books</td>
+				</tr>
+				<tr>
+					<td>POST</td>
+					<td>api/rest/books</td>
+					<td><a href="#create">Create</a> a new book</td>
+				</tr>
+				<tr>
+					<td>PUT</td>
+					<td>api/rest/books/id</td>
+					<td><a href="#update">Update</a> the book matching the id</td>
+				</tr>
+				<tr>
+					<td>DELETE</td>
+					<td>api/rest/books/id</td>
+					<td><a href="#delete">Delete</a> the book matching the id</td>
+				</tr>
+				</tbody>
+			</table>
 
-            <h2 id="restful-service-urls-fetch">Fetch</h>
-                <pre>
-<code>GET http://localhost:8080/calipso/books/id </code>
+			<h2 id="restful-service-urls-fetch">Fetch</h>
+				<pre>
+<code>GET http://localhost:8080/restdude/books/id </code>
 	</pre>
-                <p>Find the book having "id" as the id value and return it in the response. Throw an 404 HTTP error if
-                    no match is found.</p>
+				<p>Find the book having "id" as the id value and return it in the response. Throw an 404 HTTP error if
+					no match is found.</p>
 
-                <h2 id="restful-service-urls-search">Search</h>
-                    <pre>
-<code>GET http://localhost:8080/calipso/books?foo=bar&foo.subFoo=baz </code>
+				<h2 id="restful-service-urls-search">Search</h>
+					<pre>
+<code>GET http://localhost:8080/restdude/books?foo=bar&foo.subFoo=baz </code>
 	</pre>
-                    <p>Get a paginated collection of all books matching the given criteria. No actual java
-                        implementation is required for your entity models, their properties are dynamically mapped to
-                        the HTTP parameters by the default. additionally, the following predefined parameters are
-                        supported:</p>
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Required</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>page</td>
-                            <td>false</td>
-                            <td>0</td>
-                            <td>Page number starting from 0 (default)</td>
-                        </tr>
-                        <tr>
-                            <td>size</td>
-                            <td>false</td>
-                            <td>10</td>
-                            <td>Page size, default to 10</td>
-                        </tr>
-                        <tr>
-                            <td>properties</td>
-                            <td>false</td>
-                            <td>"id"</td>
-                            <td>Ordered list of comma-separeted property names used for sorting results. Default is
-                                "id"
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>direction</td>
-                            <td>false</td>
-                            <td>"ASC"</td>
-                            <td>Optional sort direction, either "ASC" or "DESC". Default is "ASC".</td>
-                        </tr>
-                        </tbody>
-                    </table>
+					<p>Get a paginated collection of all books matching the given criteria. No actual java
+						implementation is required for your entity models, their properties are dynamically mapped to
+						the HTTP parameters by the default. additionally, the following predefined parameters are
+						supported:</p>
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th>Name</th>
+							<th>Required</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>page</td>
+							<td>false</td>
+							<td>0</td>
+							<td>Page number starting from 0 (default)</td>
+						</tr>
+						<tr>
+							<td>size</td>
+							<td>false</td>
+							<td>10</td>
+							<td>Page size, default to 10</td>
+						</tr>
+						<tr>
+							<td>properties</td>
+							<td>false</td>
+							<td>"id"</td>
+							<td>Ordered list of comma-separeted property names used for sorting results. Default is
+								"id"
+							</td>
+						</tr>
+						<tr>
+							<td>direction</td>
+							<td>false</td>
+							<td>"ASC"</td>
+							<td>Optional sort direction, either "ASC" or "DESC". Default is "ASC".</td>
+						</tr>
+						</tbody>
+					</table>
 
-                    <h2 id="restful-service-urls-create">Create</h>
-                        <pre>
-		<code>POST http://localhost:8080/calipso/books </code>
+					<h2 id="restful-service-urls-create">Create</h>
+						<pre>
+		<code>POST http://localhost:8080/restdude/books </code>
 	</pre>
-                        <p>Create a new book using the request body and return it in the response.</p>
+						<p>Create a new book using the request body and return it in the response.</p>
 
-                        <h2 id="restful-service-urls-update">Update</h>
-                            <pre>
-		<code>PUT http://localhost:8080/calipso/books/id </code>
+						<h2 id="restful-service-urls-update">Update</h>
+							<pre>
+		<code>PUT http://localhost:8080/restdude/books/id </code>
 	</pre>
-                            <p>
-                                Update the book matchign "id" using the request body and return the result in the
-                                response.
-                                <h2 id="restful-service-urls-update">Partial Update</h>
-                                    <pre>
-		<code>PATCH http://localhost:8080/calipso/books/id </code>
+							<p>
+								Update the book matchign "id" using the request body and return the result in the
+								response.
+								<h2 id="restful-service-urls-update">Partial Update</h>
+									<pre>
+		<code>PATCH http://localhost:8080/restdude/books/id </code>
 	</pre>
-                            <p>
-                                Update the book matchign "id" using non-null attributes of the request body and return
-                                the result in the response.
+							<p>
+								Update the book matchign "id" using non-null attributes of the request body and return
+								the result in the response.
 
-                                <h2 id="restful-service-urls-delete">Delete</h>
-                                    <pre>
-		<code>DELETE http://localhost:8080/calipso/books/id </code>
+								<h2 id="restful-service-urls-delete">Delete</h>
+									<pre>
+		<code>DELETE http://localhost:8080/restdude/books/id </code>
 	</pre>
-                            <p>Delete the book matching "id"</p>
-</section>
-
-<section class="bs-docs-section">
-    <h1 id="custom-tiers" class="page-header">Custom Tiers</h1>
-    <p>To get an idea of the generated beans or to manually create your own, just follow the examples given bellow. No
-        SCRUD related code is needed other than extending the build-in interfaces or
-        classes as appropriate.</p>
-
-    <h2 id="custom-tiers-repository">Repository</h2>
-    <p>You can implement your repository just by extending the <code>ModelRepository
-        <T
-        , ID></code>
-        interface, with <code>T</code> and <code>ID</code> being the entity model and id class respectively.
-    </p>
-
-    {% highlight java %}
-    import gr.abiss.calipso.tiers.repository.ModelRepository;
-
-    public interface BookRepository extends ModelRepository
-    <Book
-    , String> {
-
-    }
-    {% endhighlight %}
-
-    <h2 id="custom-tiers-service">Service</h2>
-    <p>A service requires both interface and implementation classes. However,
-        no implementation code is actually required.</p>
-
-    <h3 id="custom-tiers-service-interface">Service Interface</h3>
-    <p>Just extend the <code>ModelService
-        <T
-        , ID></code> interface, with <code>T</code> and <code>ID</code> being
-        the entity model and id class respectively.
-    </p>
-    {% highlight java %}
-    import gr.abiss.calipso.tiers.service.ModelService;
-
-    public interface BookService extends ModelService
-    <Book
-    , String> {
-
-    }
-    {% endhighlight %}
-
-    <h3 id="custom-tiers-service-implementation">Service Implementation</h3>
-    <p>Similarly, extend the <code>AbstractModelServiceImpl
-        <T
-        , ID, R></code> class, with <code>T</code>,
-        <code>ID</code> and <code>R</code> being the entity model, id class and repository interface types
-        respectively..
-    </p>
-    {% highlight java %}
-    @Named("bookService")
-    @Transactional(readOnly = true)
-    public class BookServiceImpl extends AbstractModelServiceImpl
-    <Book
-    , String, BookRepository> implements BookService {
-
-
-    }
-    {% endhighlight %}
-
-    <h2 id="custom-tiers-controller">Controller</h2>
-    <p>To manually create your own controller, extend <code>AbstractModelController
-        <T
-        , ID, S></code> class, with <code>T</code>,
-        <code>ID</code> and <code>S</code> being the entity model, id class and service interface types respectively.
-    </p>
-
-    {% highlight java %}
-    @Controller
-    @RequestMapping(value = "/api/rest/books", produces = { "application/json", "application/xml" })
-    public class BookController extends AbstractModelController
-    <Book
-    , String, BookService> {
-
-    }
-    {% endhighlight %}
+							<p>Delete the book matching "id"</p>
 </section>
 
 <section class="bs-docs-section">
-    <h1 id="authentication-and-authorization" class="page-header">Authentication and Authorization</h1>
-    <p>
-        TODO
-    </p>
+	<h1 id="custom-tiers" class="page-header">Custom Tiers</h1>
+	<p>To get an idea of the generated beans or to manually create your own, just follow the examples given bellow. No
+		SCRUD related code is needed other than extending the build-in interfaces or
+		classes as appropriate.</p>
+
+	<h2 id="custom-tiers-repository">Repository</h2>
+	<p>You can implement your repository just by extending the <code>ModelRepository
+		<T
+		, ID></code>
+		interface, with <code>T</code> and <code>ID</code> being the entity model and id class respectively.
+	</p>
+
+	{% highlight java %}
+	import gr.abiss.restdude.tiers.repository.ModelRepository;
+
+	public interface BookRepository extends ModelRepository
+	<Book
+	, String> {
+
+	}
+	{% endhighlight %}
+
+	<h2 id="custom-tiers-service">Service</h2>
+	<p>A service requires both interface and implementation classes. However,
+		no implementation code is actually required.</p>
+
+	<h3 id="custom-tiers-service-interface">Service Interface</h3>
+	<p>Just extend the <code>ModelService
+		<T
+		, ID></code> interface, with <code>T</code> and <code>ID</code> being
+		the entity model and id class respectively.
+	</p>
+	{% highlight java %}
+	import gr.abiss.restdude.tiers.service.ModelService;
+
+	public interface BookService extends ModelService
+	<Book
+	, String> {
+
+	}
+	{% endhighlight %}
+
+	<h3 id="custom-tiers-service-implementation">Service Implementation</h3>
+	<p>Similarly, extend the <code>AbstractModelServiceImpl
+		<T
+		, ID, R></code> class, with <code>T</code>,
+		<code>ID</code> and <code>R</code> being the entity model, id class and repository interface types
+		respectively..
+	</p>
+	{% highlight java %}
+	@Named("bookService")
+	@Transactional(readOnly = true)
+	public class BookServiceImpl extends AbstractModelServiceImpl
+	<Book
+	, String, BookRepository> implements BookService {
+
+
+	}
+	{% endhighlight %}
+
+	<h2 id="custom-tiers-controller">Controller</h2>
+	<p>To manually create your own controller, extend <code>AbstractModelController
+		<T
+		, ID, S></code> class, with <code>T</code>,
+		<code>ID</code> and <code>S</code> being the entity model, id class and service interface types respectively.
+	</p>
+
+	{% highlight java %}
+	@Controller
+	@RequestMapping(value = "/api/rest/books", produces = { "application/json", "application/xml" })
+	public class BookController extends AbstractModelController
+	<Book
+	, String, BookService> {
+
+	}
+	{% endhighlight %}
 </section>
 
 <section class="bs-docs-section">
-    <h1 id="persistence" class="page-header">Persistence</h1>
-    <p>
-        Relational databases are supported by <a href="https://en.wikipedia.org/wiki/Java_Persistence_API">JPA</a> (<a
-            href="http://hibernate.org/">Hibernate</a> is used under the hood). <a
-            href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> stores like <a
-            href="https://www.mongodb.org/">MongoDB</a>, <a href="http://cassandra.apache.org/">Cassandra</a>, <a
-            href="http://www.couchbase.com">Couchbase</a> and <a href="http://neo4j.com/">Neo4j</a> are supported as
-        well, while application instances also contain their own clusterable <a
-            href="https://www.elastic.co/">ElasticSearch</a> node by default.
-    </p>
-    <h2 id="database_migrations">Database Migrations</h2>
-    <p>Relational database schema versioning and migration is supported using <a href="https://flywaydb.org/">Flyway</a>.
-    </p>
+	<h1 id="authentication-and-authorization" class="page-header">Authentication and Authorization</h1>
+	<p>
+		TODO
+	</p>
 </section>
 
 <section class="bs-docs-section">
-    <h1 id="email" class="page-header">Email</h1>
-    <p>
-        Easy email services with i18n support and Thymeleaf templates. Build-in services include email verification,
-        password reset etc.
-    </p>
+	<h1 id="persistence" class="page-header">Persistence</h1>
+	<p>
+		Relational databases are supported by <a href="https://en.wikipedia.org/wiki/Java_Persistence_API">JPA</a> (<a
+			href="http://hibernate.org/">Hibernate</a> is used under the hood). <a
+			href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> stores like <a
+			href="https://www.mongodb.org/">MongoDB</a>, <a href="http://cassandra.apache.org/">Cassandra</a>, <a
+			href="http://www.couchbase.com">Couchbase</a> and <a href="http://neo4j.com/">Neo4j</a> are supported as
+		well, while application instances also contain their own clusterable <a
+			href="https://www.elastic.co/">ElasticSearch</a> node by default.
+	</p>
+	<h2 id="database_migrations">Database Migrations</h2>
+	<p>Relational database schema versioning and migration is supported using <a href="https://flywaydb.org/">Flyway</a>.
+	</p>
 </section>
 
 <section class="bs-docs-section">
-    <h1 id="internationalization" class="page-header">Internationalization</h1>
-    <p>
-        Translations can be added in the <a
-            href="/abissgr/calipso-hub/blob/master/tree/master/calipso-hub-webapp/src/main/resources/i18n">i18n
-        folder</a>. File names use the <a
-            href="https://en.wikipedia.org/wiki/ISO_639-1">ISO_639-1 standard</a>. To add Greek for example, copy and
-        translate messages.properties to messages_el.properties.
-    </p>
+	<h1 id="email" class="page-header">Email</h1>
+	<p>
+		Easy email services with i18n support and Thymeleaf templates. Build-in services include email verification,
+		password reset etc.
+	</p>
+</section>
+
+<section class="bs-docs-section">
+	<h1 id="internationalization" class="page-header">Internationalization</h1>
+	<p>
+		Translations can be added in the <a
+			href="/abissgr/restdude-hub/blob/master/tree/master/restdude-hub-webapp/src/main/resources/i18n">i18n
+		folder</a>. File names use the <a
+			href="https://en.wikipedia.org/wiki/ISO_639-1">ISO_639-1 standard</a>. To add Greek for example, copy and
+		translate messages.properties to messages_el.properties.
+	</p>
 </section>
