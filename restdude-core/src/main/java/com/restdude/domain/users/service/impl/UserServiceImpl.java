@@ -1,5 +1,11 @@
 /**
- * calipso-hub-framework - A full stack, high level framework for lazy application hackers.
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-core, https://manosbatsis.github.io/restdude/restdude-core
+ *
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +19,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.restdude.domain.users.service.impl;
 
@@ -298,8 +304,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		Date yesterday = DateUtils.addDays(new Date(), -1);
 		
 		// send email notifications for account confirmation tokens that expired
-        org.hibernate.Query query = session.createQuery("SELECT new " + USERDTO_CLASS
-				+ "(u.id, u.firstName, u.lastName,u.credentials.username, u.email, u.emailHash, u.avatarUrl) FROM User u "
+		org.hibernate.Query query = session.createQuery(UserRepository.SELECT_USERDTO + " FROM User u "
 				+ "WHERE u.credentials.resetPasswordTokenCreated IS NOT NULL and u.credentials.resetPasswordTokenCreated  < :yesterday");
 		query.setParameter("yesterday", yesterday);
         query.setFetchSize(Integer.valueOf(1000));
@@ -308,9 +313,9 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
         ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
         while (results.next()) {
         	UserDTO dto = (UserDTO) results.get(0);
-            // TODO: send expiration email
-            this.emailService.sendAccountConfirmationExpired(new User(dto));
-        }
+			// send expiration email
+			this.emailService.sendAccountConfirmationExpired(new User(dto));
+		}
         results.close();
         session.close();
         

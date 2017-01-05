@@ -39,7 +39,7 @@
     <!--     <LOGGER name="org.springframework.messaging"> -->
     <!--         <level value="debug" /> -->
     <!--     </LOGGER> -->
-    <!--     <LOGGER name="gr.abiss.calipso.websocket"> -->
+    <!--     <LOGGER name="gr.abiss.restdude.websocket"> -->
     <!--         <level value="debug" /> -->
     <!--     </LOGGER> -->
 

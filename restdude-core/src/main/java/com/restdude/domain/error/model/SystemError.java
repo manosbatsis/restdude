@@ -1,3 +1,25 @@
+/**
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-core, https://manosbatsis.github.io/restdude/restdude-core
+ * <p>
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -31,8 +53,8 @@ import java.util.Set;
 @Table(name = "error_system")
 @ApiModel(value = "SystemError", description = "System validationErrors are created exclusively by the system " +
 		"(i.e. without manual intervention) to handle and inform the user about runtime exceptions. "
-		+ "They may be persisted automatically according to calipso.validationErrors.system.persist* configuration properties. "
-		+ "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
+        + "They may be persisted automatically according to restdude.validationErrors.system.persist* configuration properties. "
+        + "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
 @JsonPropertyOrder({"id", "message", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
 		"validationErrors", "user"})
 @JsonIgnoreProperties("id")

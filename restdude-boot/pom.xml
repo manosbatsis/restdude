@@ -41,6 +41,10 @@
                 <artifactId>git-commit-id-plugin</artifactId>
                 <version>2.2.1</version>
             </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
     <dependencyManagement>

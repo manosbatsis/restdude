@@ -6,7 +6,7 @@
  * define({
  *     "tmpl" : {
  *    },
- *    "calipso" : {
+ *    "restdude" : {
  *    }
  * });
  * 
@@ -101,7 +101,7 @@ define({
                 },
             },
         },
-        "calipso": {
+        "restdude": {
             "words": {
                 "close": "Close",
                 "step": "Step",
@@ -132,7 +132,7 @@ define({
                 "countryMissmatch": "VAT number doesn't match the country code. ",
                 "invalidVat": "The VAT number format is invalid.",
             },//vatInput
-        },//calipso
+        },//restdude
         "models": {
             "invitations": {
                 "singular": {

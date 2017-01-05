@@ -5,9 +5,7 @@
 // *
 // * User: Sergey Romanov <serg4172@mail.ru>
 // */
-//"use strict";
-
-define(['calipso', 'underscore'], function (Calipso, _) {
+//"use strict";define(['restdude', 'underscore'], function (Restdude, _) {
 
     Date.prototype.getWeek = function () {
         var onejan = new Date(this.getFullYear(), 0, 1);
@@ -1110,7 +1108,7 @@ define(['calipso', 'underscore'], function (Calipso, _) {
                 if ($(this).children('[data-cal-date]').text() == self.activecell) return;
                 showEventsList(event, downbox, slider, self);
                 console.log("triggering showSliderContent");
-//					Calipso.vent.trigger("showSliderContent", event);
+//					Restdude.vent.trigger("showSliderContent", event);
             })
         ;
 
@@ -1123,7 +1121,7 @@ define(['calipso', 'underscore'], function (Calipso, _) {
 
         downbox.click(function (event) {
             showEventsList(event, $(this), slider, self);
-//				Calipso.vent.trigger("showSliderContent", event);
+//				Restdude.vent.trigger("showSliderContent", event);
         });
     };
 
@@ -1167,7 +1165,7 @@ define(['calipso', 'underscore'], function (Calipso, _) {
                     self.activecell = 0;
                 });
                 console.log("sliding down");
-                Calipso.vent.trigger("showSliderContent", event);
+                Restdude.vent.trigger("showSliderContent", event);
             });
         });
 

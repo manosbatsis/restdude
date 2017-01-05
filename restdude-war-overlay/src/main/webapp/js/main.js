@@ -1,3 +1,26 @@
+/*
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
+ *
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ *
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 // set console api if missing
 if (!window.console) {
     console = {};
@@ -48,6 +71,7 @@ require.config({
     waitSeconds: 0,
 
     paths: {
+        'alpaca': 'lib/alpaca/alpaca',
         'cookie': 'lib/jquery.cookie',
         'jquery': 'lib/jquery',
         'pace': 'lib/pace',
@@ -93,8 +117,8 @@ require.config({
         "backgrid-paginator": 'lib/backgrid/extensions/paginator/backgrid-paginator',
         "backgrid-moment": 'lib/backgrid/extensions/moment/backgrid-moment-cell',
         "backgrid-text": 'lib/backgrid/extensions/text/backgrid-text-cell',
-        "calipso": 'lib/calipso',
-        "calipso-hbs": 'lib/calipso-hbs',
+        "restdude": 'lib/restdude',
+        "restdude-hbs": 'lib/restdude-hbs',
         // Mocha testing
         'mocha': 'lib/mocha/mocha',
         'chai': 'lib/chai/chai',
@@ -207,9 +231,9 @@ require.config({
         'async': {
             exports: 'async'
         },
-        'calipso': {
-            deps: ["i18n!nls/labels", "i18n!nls/labels-custom", 'underscore', 'handlebars', 'calipso-hbs', 'moment', 'backbone', 'backbone.paginator', 'backbone-forms', 'backbone-forms-bootstrap3', 'backbone-bootstrap-modal', 'backbone-forms-list', 'marionette', 'backgrid', 'backgrid-moment', 'backgrid-text', 'backgrid-paginator', 'bloodhound', 'typeahead', 'bootstrap-datetimepicker', 'bootstrap-switch', 'jquery-color', 'intlTelInput', 'q', 'chart'],
-            exports: 'calipso',
+        'restdude': {
+            deps: ["i18n!nls/labels", "i18n!nls/labels-custom", 'underscore', 'handlebars', 'restdude-hbs', 'moment', 'backbone', 'backbone.paginator', 'backbone-forms', 'backbone-forms-bootstrap3', 'backbone-bootstrap-modal', 'backbone-forms-list', 'marionette', 'backgrid', 'backgrid-moment', 'backgrid-text', 'backgrid-paginator', 'bloodhound', 'typeahead', 'bootstrap-datetimepicker', 'bootstrap-switch', 'jquery-color', 'intlTelInput', 'q', 'chart'],
+            exports: 'restdude',
         },
 
         'cookie': {

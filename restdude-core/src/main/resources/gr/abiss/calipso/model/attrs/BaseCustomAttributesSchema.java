@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Calipso. If not, see http://www.gnu.org/licenses/agpl.html
  */
-package gr.abiss.calipso.model.attrs;
+package gr.abiss.restdude.model.attrs;
 
-import gr.abiss.calipso.model.entities.AbstractAuditable;
+import gr.abiss.restdude.model.entities.AbstractAuditable;
 
 import java.util.Map;
 

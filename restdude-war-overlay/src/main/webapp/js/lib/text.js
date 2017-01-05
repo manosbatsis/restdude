@@ -7,7 +7,6 @@
 /*global require, XMLHttpRequest, ActiveXObject,
  define, window, process, Packages,
  java, location, Components, FileUtils */
-
 define(['module'], function (module) {
     'use strict';
 

@@ -69,7 +69,7 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
         the data source bean for obtaining database connection. -->
     <social:jdbc-connection-repository connection-signup-ref="userDetailsService"/>
     <!--bean id="usersConnectionRepository"
-        class="gr.abiss.calipso.userDetails.integration.CalipsoJdbcUsersConnectionRepository">
+        class="gr.abiss.restdude.userDetails.integration.CalipsoJdbcUsersConnectionRepository">
         <aop:scoped-proxy proxy-target-class="false" />
         <constructor-arg ref="dataSource" />
         <constructor-arg ref="connectionFactoryLocator" />
@@ -97,7 +97,7 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
             Defaults to "/".
            -->
         <property name="postSignInUrl" value="/client/"/>
-        <!--property name="applicationUrl" value="${calipso.baseurl}" /-->
+        <!--property name="applicationUrl" value="${restdude.baseurl}" /-->
         <property name="signInInterceptors">
             <list>
                 <bean class="com.restdude.auth.userdetails.util.FacebookConnectInterceptor"/>

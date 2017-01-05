@@ -1,5 +1,71 @@
 /**
- * calipso-hub-webapp - A full stack, high level framework for lazy application hackers.
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
+ *
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ *
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * restdude-war-overlay
+ * --------------------------------------------------------------------------
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * <p>
+ * https://manosbatsis.github.io/restdude/restdude-war-overlay
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * restdude-war-overlay https://manosbatsis.github.io/restdude/restdude-war-overlay
+ * --------------------------------------------------------------------------
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -12,6 +78,62 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * restdude-war-overlay https://manosbatsis.github.io/restdude/restdude-war-overlay
+ * --------------------------------------------------------------------------
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
+ See https://manosbatsis.github.io/restdude
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -59,7 +181,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                         .lastName("LastName")
                         .email("testDuplicateUsername@" + this.getClass().getSimpleName() + ".com")
                         .build())
-                .post("/calipso/api/auth/account")
+                .post(WEBCONTEXT_PATH + "/api/auth/account")
                 .then()
                 .log().all()
                 .assertThat()
@@ -80,7 +202,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .body(new UserAccountRegistration.Builder()
                         .email("operator@abiss.gr")
                         .build())
-                .post("/calipso/api/auth/account")
+                .post(WEBCONTEXT_PATH + "/api/auth/account")
                 .then()
                 .log().all()
                 .assertThat()
@@ -103,7 +225,7 @@ public class RestErrorsIT extends AbstractControllerIT {
 
         // attempt login and test for a proper result
         Response rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).body(loginSubmission).when()
-                .post("/calipso/api/auth/userDetails");
+                .post(WEBCONTEXT_PATH + "/api/auth/userDetails");
 
         // validate login
         rs.then().log().all().assertThat()
@@ -118,7 +240,7 @@ public class RestErrorsIT extends AbstractControllerIT {
     public void testNotRemembered() throws Exception {
         LOGGER.info("testNotRemembered");
         Response rs = given().spec(getRequestSpec("invalid")).log().all()
-                .get("/calipso/api/auth/userDetails");
+                .get(WEBCONTEXT_PATH + "/api/auth/userDetails");
         rs.then().log().all().assertThat()
                 // test assertions
                 .statusCode(401)
@@ -135,7 +257,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
         // select user
         SystemError error = given().spec(adminRequestSpec)
-                .get("/calipso/api/rest/users/invalid")
+                .get(WEBCONTEXT_PATH + "/api/rest/users/invalid")
                 .then().assertThat()
                 // test assertions
                 .statusCode(404)
@@ -152,7 +274,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         SystemError error = given().spec(adminRequestSpec)
                 .log().all()
                 .body(new Friendship(new User(adminLoginContext.userId), new User("3c1cd4dc-05fb-49ef-b929-f08d0f0b7c73")))
-                .post("/calipso/api/rest/" + Friendship.API_PATH)
+                .post(WEBCONTEXT_PATH + "/api/rest/" + Friendship.API_PATH)
                 .then().assertThat()
                 // test assertions
                 .statusCode(500)
@@ -168,7 +290,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         // select user
         JsonNode errorsPage = given().spec(adminRequestSpec)
                 .log().all()
-                .get("/calipso/api/rest/" + SystemError.API_PATH)
+                .get(WEBCONTEXT_PATH + "/api/rest/" + SystemError.API_PATH)
                 .then().log().all().assertThat()
                 // test assertions
                 .statusCode(200)
@@ -197,7 +319,7 @@ public class RestErrorsIT extends AbstractControllerIT {
             error = given().spec(adminRequestSpec)
                     .log().all()
                     .body(error)
-                    .post("/calipso/api/rest/" + ClientError.API_PATH)
+                    .post(WEBCONTEXT_PATH + "/api/rest/" + ClientError.API_PATH)
                     .then().log().all().assertThat()
                     // test assertions
                     .statusCode(201)

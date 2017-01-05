@@ -28,7 +28,6 @@
  */
 
 var google_maps_loaded_def = null;
-
 define(['jquery'], function ($) {
 
     if (!google_maps_loaded_def) {

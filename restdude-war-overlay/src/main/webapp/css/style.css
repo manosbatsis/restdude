@@ -20,7 +20,7 @@ body, html {
     display: table-row;
 }
 
-#calipsoMainContentRegion {
+#restdudeMainContentRegion {
     /* padding according to nav/header height;*/
     padding-top: 70px;
 }

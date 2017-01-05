@@ -57,13 +57,13 @@ button[class^="btn-cancel-search-"], button[class*=" btn-cancel-search-"] {
     background-color: rgba(255, 255, 255, 0.898);
 }
 
-#calipsoModelDrivenSearchLayout-accordion .panel-heading a:after {
+#restdudeModelDrivenSearchLayout-accordion .panel-heading a:after {
     font-family: 'Glyphicons Halflings';
     content: "\e114";
     float: right;
 }
 
-#calipsoModelDrivenSearchLayout-accordion .panel-heading a.collapsed:after {
+#restdudeModelDrivenSearchLayout-accordion .panel-heading a.collapsed:after {
     content: "\e080";
 }
 

@@ -6,7 +6,7 @@
  * define({
  *     "tmpl" : {
  *    },
- *    "calipso" : {
+ *    "restdude" : {
  *    }
  * });
  *

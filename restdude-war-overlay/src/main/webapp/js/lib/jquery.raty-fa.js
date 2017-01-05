@@ -8,8 +8,7 @@
  * @version : 0.1.1
  *
  */
-
-define(['calipso'], function (Calipso) {
+define(['restdude'], function (Restdude) {
 
     var methods = {
         init: function (settings) {

@@ -15,8 +15,8 @@
 
     <packaging>pom</packaging>
     <inceptionYear>2005</inceptionYear>
-    <description>A full stack, high level framework for lazy application hackers.</description>
-    <url>http://restdude.com</url>
+    <url>https://manosbatsis.github.io/restdude</url>
+    <description>Full stack, high level framework for horizontal, model-driven application hackers.</description>
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -921,8 +921,7 @@
                         <stopPort>8005</stopPort>
                         <stopKey>STOP</stopKey>
                         <webApp>
-                            <!-- -->
-                            <contextPath>/calipso</contextPath>
+                            <contextPath>/restdude</contextPath>
                         </webApp>
                         <systemProperties>
                             <systemProperty>
@@ -958,11 +957,6 @@
                     <version>2.6</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
-                        <webResources>
-                            <resource>
-                                <directory>etc/licence</directory>
-                            </resource>
-                        </webResources>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -979,15 +973,17 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <version>3.0.rc1</version>
                     <configuration>
-                        <header>com/mycila/maven/plugin/license/templates/LGPL-3.txt</header>
+                        <header>${project.parent.basedir}/etc/license/header.txt</header>
                         <properties>
                             <owner>Manos Batsis</owner>
                             <email>manosbatsis gmail</email>
                         </properties>
                         <includes>
-                            <include>src/main/java/**</include>
-                            <include>src/test/java/**</include>
-                            <include>src/main/webapp/js/lib/restdudelib/**</include>
+                            <include>src/main/java/**/*</include>
+                            <include>src/test/java/**/*</include>
+                            <include>src/main/webapp/js/lib/restdudelib/**/*.js</include>
+                            <include>src/main/webapp/js/lib/restdude*.js</include>
+                            <include>src/main/webapp/js/*.js</include>
                         </includes>
                     </configuration>
                     <executions>

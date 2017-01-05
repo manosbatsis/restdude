@@ -1,5 +1,11 @@
 /**
- * calipso-hub-framework - A full stack, high level framework for lazy application hackers.
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-core, https://manosbatsis.github.io/restdude/restdude-core
+ *
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +19,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.restdude.util.email.service;
 
@@ -52,8 +58,8 @@ public class EmailService {
 	@Value("${mail.server.from}")
 	private String defaultMailFrom;
 
-	@Value("${calipso.baseurl}")
-	private String baseUrl;
+    @Value("${restdude.baseurl}")
+    private String baseUrl;
 
     @Autowired 
     private JavaMailSender mailSender;

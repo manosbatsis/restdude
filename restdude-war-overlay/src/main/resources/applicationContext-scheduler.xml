@@ -7,9 +7,9 @@
 
         http://www.springframework.org/schema/task      http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 
-    <task:scheduler id="calipsoScheduler"/>
+    <task:scheduler id="restdudeScheduler"/>
 
-    <task:scheduled-tasks scheduler="calipsoScheduler">
+    <task:scheduled-tasks scheduler="restdudeScheduler">
         <task:scheduled ref="userTasks" method="expireResetPasswordTokens" cron="0 0 0 * * ?"/>
     </task:scheduled-tasks>
 </beans>

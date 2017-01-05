@@ -11,6 +11,7 @@
 @import url("typeahead.css");
 @import url("font-awesome.css");
 @import url("simple-line-icons.css");
+@import url("../js/alpaca/alpaca.css");
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -34,7 +35,7 @@ body.full-height-column {
     display: table-row;
 }
 
-div#calipsoMainContentRegion {
+div#restdudeMainContentRegion {
     padding-top: 30px;
 }
 

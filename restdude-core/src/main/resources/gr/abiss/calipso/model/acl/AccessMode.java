@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Calipso. If not, see http://www.gnu.org/licenses/agpl.html
  */
-package gr.abiss.calipso.model.acl;
+package gr.abiss.restdude.model.acl;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

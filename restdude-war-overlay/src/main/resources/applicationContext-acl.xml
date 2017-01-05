@@ -36,11 +36,11 @@
     </bean>
 
     <bean id="aclCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="/WEB-INF/calipso-ehcache.xml"/>
+        <property name="configLocation" value="/WEB-INF/restdude-ehcache.xml"/>
     </bean>
     <bean id="aclEhCacheFactoryBean" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
         <property name="cacheManager" ref="aclCacheManager"/>
-        <property name="cacheName" value="calipsoAclCache"/>
+        <property name="cacheName" value="restdudeAclCache"/>
     </bean>
     <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
         <constructor-arg ref="aclEhCacheFactoryBean"/>

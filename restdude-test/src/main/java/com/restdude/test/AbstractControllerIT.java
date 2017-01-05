@@ -1,19 +1,25 @@
 /**
- * calipso-hub-test - A full stack, high level framework for lazy application hackers.
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-test, https://manosbatsis.github.io/restdude/restdude-test
+ *
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.restdude.test;
 
@@ -75,6 +81,7 @@ public class AbstractControllerIT {
     protected static final Configuration CONFIG = ConfigurationFactory.getConfiguration();
 
     protected String WEBSOCKET_URI;
+    protected String WEBCONTEXT_PATH;
 
     protected static Configuration getConfig() {
         return CONFIG;
@@ -143,11 +150,15 @@ public class AbstractControllerIT {
         // log request/response in errors
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
+        Configuration config = ConfigurationFactory.getConfiguration();
+        this.WEBCONTEXT_PATH = config.getString(ConfigurationFactory.APP_CONTEXT_PATH);
+
         // pickup from the jetty port
         RestAssured.port = CONFIG.getInt("jetty.http.port", 8080);
         this.WEBSOCKET_URI = new StringBuffer("ws://localhost:")
                 .append(RestAssured.port)
-                .append("/calipso/ws")
+                .append(WEBCONTEXT_PATH)
+                .append("/ws")
                 .toString();
         LOGGER.info("Using websocket URL {}", this.WEBSOCKET_URI);
         // TODO:
@@ -218,7 +229,7 @@ public class AbstractControllerIT {
 
         // attempt login and test for a proper result
         Response rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).body(loginSubmission).when()
-                .post("/calipso/api/auth/userDetails");
+                .post(WEBCONTEXT_PATH + "/api/auth/userDetails");
 
         // validate login
         rs.then().log().all().assertThat().statusCode(200).content("id", assertFailed ? nullValue() : notNullValue());
@@ -249,13 +260,13 @@ public class AbstractControllerIT {
     }
 
     protected User getUserByUsernameOrEmail(String userNameOrEmail) {
-        return get("/calipso/api/rest/users/byUserNameOrEmail/{userNameOrEmail}", userNameOrEmail).as(User.class);
+        return get(WEBCONTEXT_PATH + "/api/rest/users/byUserNameOrEmail/{userNameOrEmail}", userNameOrEmail).as(User.class);
     }
 
     protected Host getRandomHost(RequestSpecification someRequestSpec) {
         // obtain a random C2 id
         String id = given().spec(someRequestSpec)
-                .get("/calipso/api/rest/hosts").then()
+                .get(WEBCONTEXT_PATH + "/api/rest/hosts").then()
                 .assertThat().body("content[0].id", notNullValue()).extract().path("content[0].id");
         // use the public C2
         Host host = new Host();

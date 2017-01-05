@@ -101,7 +101,7 @@
                 <li><a href="#checkout-using-eclipse">Checkout using Eclipse</a></li>
                 <li><a href="#checkout-using-the-command-line">Checkout using the Command Line</a></li>
                 <li><a href="#maven-build">Maven build</a></li>
-                <li><a href="#browse-calipso">Browse Calipso</a></li>
+                <li><a href="#browse-restdude">Browse Calipso</a></li>
                 <li><a href="#browse-the-database-console">Browse the Database Console</a></li>
                 <li><a href="#use-a-custom-database">Use a custom database</a></li>
             </ul>
@@ -119,7 +119,7 @@
 
             <p><img src="/restdude/assets/images/checkout_and_build/012_import_from_git.png" alt="alt tag"/></p>
 
-            <p>Enter https://github.com/abissgr/calipso-hub.git as the clone URI</p>
+            <p>Enter https://github.com/abissgr/restdude-hub.git as the clone URI</p>
 
             <p><img src="/restdude/assets/images/checkout_and_build/014_local_dest.png" alt="alt tag"/></p>
 
@@ -131,11 +131,11 @@
 
             <p><img src="/restdude/assets/images/checkout_and_build/016_project_name.png" alt="alt tag"/></p>
 
-            <p>Use “calipso-hub” as the project name</p>
+            <p>Use “restdude-hub” as the project name</p>
 
             <p><img src="/restdude/assets/images/checkout_and_build/017_import_existing_maven.png" alt="alt tag"/></p>
 
-            <p>Right click on the “calipso-hub” then click on “Import”. Choose “Existing Maven projects”. Browse to the
+            <p>Right click on the “restdude-hub” then click on “Import”. Choose “Existing Maven projects”. Browse to the
                 project folder for eclipse to discover the maven submodules, then click “Finish”.</p>
 
             <h3 id="checkout-using-the-command-line">Checkout using the Command Line</h3>
@@ -144,14 +144,14 @@
 
             <h3 id="maven-build">Maven build</h3>
 
-            <p><a href="https://travis-ci.org/abissgr/calipso-hub"><img
-                    src="https://travis-ci.org/abissgr/calipso-hub.png?branch=master" alt="Build Status"/></a></p>
+            <p><a href="https://travis-ci.org/abissgr/restdude-hub"><img
+                    src="https://travis-ci.org/abissgr/restdude-hub.png?branch=master" alt="Build Status"/></a></p>
 
             <p>To build Calipso you need a Java Development Kit(JDK7 ) and Apache Maven installed.</p>
 
             <p>1) Change to the root project directory:</p>
 
-            <div class="highlighter-rouge"><pre class="highlight"><code>$ cd calipso-hub
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ cd restdude-hub
 </code></pre>
             </div>
 
@@ -169,7 +169,7 @@
 
             <p>4) Change to webapp module directory</p>
 
-            <div class="highlighter-rouge"><pre class="highlight"><code>$ cd calipso-hub-webapp
+            <div class="highlighter-rouge"><pre class="highlight"><code>$ cd restdude-hub-webapp
 </code></pre>
             </div>
 
@@ -182,11 +182,11 @@
             <p>Note: If you get a <code>[ERROR] No plugin found for prefix 'jetty' in the current project and in the
                 plugin groups </code> you probably forgot step 4 above.</p>
 
-            <h2 id="browse-calipso">Browse Calipso</h2>
+            <h2 id="browse-restdude">Browse Calipso</h2>
 
             <p>After you complete the steps above, you can access Calipso using your web browser:</p>
 
-            <div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:8080/calipso
+            <div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:8080/restdude
 </code></pre>
             </div>
 
@@ -196,7 +196,7 @@
                 A fresh copy is created with test data each time you start Jetty using mvn:run.
                 The database console is available at:</p>
 
-            <div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:8080/calipso/console/database/
+            <div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:8080/restdude/console/database/
 </code></pre>
             </div>
 
@@ -217,8 +217,8 @@
             <div class="bs-docs-sidebar hidden-print">
                 <!--ul class="nav">
                     <li>
-                        <a href="https://travis-ci.org/abissgr/calipso-hub">
-                            <img src="https://travis-ci.org/abissgr/calipso-hub.svg?branch=master" />
+                        <a href="https://travis-ci.org/abissgr/restdude-hub">
+                            <img src="https://travis-ci.org/abissgr/restdude-hub.svg?branch=master" />
                         </a>
                     </li>
                 </ul-->

@@ -1,3 +1,25 @@
+/**
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-core, https://manosbatsis.github.io/restdude/restdude-core
+ * <p>
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.restdude.config;
 
 import com.restdude.domain.users.model.User;
@@ -52,40 +74,40 @@ public class PersistenceJPAConfig {
         return writer.getBuffer().toString();
     }
 
-    @Value("${calipso.ds.driverClass}")
+    @Value("${restdude.ds.driverClass}")
     private String dsDriverClass;
 
-    @Value("${calipso.ds.jdbcUrl}")
+    @Value("${restdude.ds.jdbcUrl}")
     private String dsJdbcUrl;
 
-    @Value("${calipso.ds.username}")
+    @Value("${restdude.ds.username}")
     private String dsUsername;
 
-    @Value("${calipso.ds.password}")
+    @Value("${restdude.ds.password}")
     private String dsPassword;
 
-    @Value("${calipso.persistenceUnit.packagesToScan}")
+    @Value("${restdude.persistenceUnit.packagesToScan}")
     private String emPackagesToScan;
 
-    @Value("${calipso.hibernate.dialect}")
+    @Value("${restdude.hibernate.dialect}")
     private String emHbmDialect;
 
-    @Value("${calipso.hibernate.show_sql}")
+    @Value("${restdude.hibernate.show_sql}")
     private String emHbmShowSql;
 
-    @Value("${calipso.hibernate.format_sql}")
+    @Value("${restdude.hibernate.format_sql}")
     private String emHbmFormatSql;
 
-    @Value("${calipso.hibernate.hbm2ddl.auto}")
+    @Value("${restdude.hibernate.hbm2ddl.auto}")
     private String emHbm2ddlAuto;
 
-    @Value("${calipso.hibernate.cache.use_second_level_cache}")
+    @Value("${restdude.hibernate.cache.use_second_level_cache}")
     private String emHbmCacheUseSecondLevelCache;
 
-    @Value("${calipso.hibernate.cache.provider_class}")
+    @Value("${restdude.hibernate.cache.provider_class}")
     private String emHbmCacheProviderClass;
 
-    @Value("${calipso.hibernate.id.new_generator_mappings}")
+    @Value("${restdude.hibernate.id.new_generator_mappings}")
     private String emHbmIdNewGeneratorMappings;
 
     @Bean

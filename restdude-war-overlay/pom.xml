@@ -19,7 +19,7 @@
         <maven.build.timestamp.format>EEE, d MMM yyyy HH:mm:ss Z</maven.build.timestamp.format>
         <dev.build.timestamp>${maven.build.timestamp}</dev.build.timestamp>
         <build.profile.filters>dev.properties</build.profile.filters>
-        <requirejs.resources>etc/licence</requirejs.resources>
+        <requirejs.resources>${project.parent.basedir}/etc/dummy</requirejs.resources>
     </properties>
 
     <build>
@@ -42,6 +42,22 @@
         <plugins>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
@@ -62,7 +78,7 @@
                     <recursive>true</recursive>
                     <directoryRoots>
                         <!--sourceFile>${basedir}/src/main/webapp/js/domain.js</sourceFile> <sourceFile>${basedir}/src/main/webapp/js/main.js</sourceFile -->
-                        <directoryRoot>${basedir}/src/main/webapp/js/lib/calipsolib</directoryRoot>
+                        <directoryRoot>${basedir}/src/main/webapp/js/lib/restdudelib</directoryRoot>
                     </directoryRoots>
                 </configuration>
             </plugin>
@@ -74,9 +90,6 @@
                     <webResources>
                         <resource>
                             <directory>${requirejs.resources}</directory>
-                        </resource>
-                        <resource>
-                            <directory>etc/licence</directory>
                         </resource>
                     </webResources>
                 </configuration>
@@ -201,6 +214,9 @@
                                 </goals>
                                 <configuration>
                                     <scanIntervalSeconds>0</scanIntervalSeconds>
+                                    <webApp>
+                                        <contextPath>/restdude</contextPath>
+                                    </webApp>
                                 </configuration>
                             </execution>
                             <!--execution>
@@ -236,7 +252,7 @@
                                 <sectnums>true</sectnums>
                                 <!-- 					            <stylesheet>my-theme.css</stylesheet> -->
                                 <project-version>${project.version}</project-version>
-                                <endpoint-url>${build.calipso.baseurl}</endpoint-url>
+                                <endpoint-url>${build.restdude.baseurl}</endpoint-url>
                                 <sourcedir>${project.build.sourceDirectory}</sourcedir>
                             </attributes>
                         </configuration>

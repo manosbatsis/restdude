@@ -1,31 +1,31 @@
 /*
  * Copyright (c) 2007 - 2016 Manos Batsis
  *
- * This file is part of Calipso, a software platform by www.Abiss.gr.
+ * This file is part of Restdude, a software platform by www.Abiss.gr.
  *
- * Calipso is free software: you can redistribute it and/or modify
+ * Restdude is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Calipso is distributed in the hope that it will be useful,
+ * Restdude is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with Calipso. If not, see http://www.gnu.org/licenses/agpl.html
+ * along with Restdude. If not, see http://www.gnu.org/licenses/agpl.html
  */
-define(['calipso'],
-    function (Calipso, EditInTabCell, ViewRowCell) {
-        var ResourceModel = Calipso.model.GenericModel.extend({
+define(['restdude'],
+    function (Restdude, EditInTabCell, ViewRowCell) {
+        var ResourceModel = Restdude.model.GenericModel.extend({
                 modelKey: "resource",
                 apiPath: "/api/rest/resource/",
 
             },
             // static members
             {
-                parent: Calipso.model.GenericModel,
+                parent: Restdude.model.GenericModel,
                 showInMenu: false,
                 label: "User"
             });
@@ -42,7 +42,7 @@ define(['calipso'],
                 "host": {
                     "default": {
                         type: 'NestedModel',
-                        model: Calipso.model.HostModel,
+                        model: Restdude.model.HostModel,
                     }
                 },
                 "name": {
@@ -69,7 +69,7 @@ define(['calipso'],
                     name: "name",
                     label: "name",
                     editable: false,
-                    cell: Calipso.components.ViewRowCell
+                    cell: Restdude.components.ViewRowCell
                 },
                 {
                     name: "pathName",
@@ -80,7 +80,7 @@ define(['calipso'],
                     name: "edit",
                     label: "",
                     editable: false,
-                    cell: Calipso.components.ViewRowCell
+                    cell: Restdude.components.ViewRowCell
                 }];
         }
         return ResourceModel;

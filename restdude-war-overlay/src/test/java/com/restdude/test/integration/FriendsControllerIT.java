@@ -1,5 +1,71 @@
 /**
- * calipso-hub-webapp - A full stack, high level framework for lazy application hackers.
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
+ *
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ *
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * restdude-war-overlay
+ * --------------------------------------------------------------------------
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * <p>
+ * https://manosbatsis.github.io/restdude/restdude-war-overlay
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * restdude-war-overlay https://manosbatsis.github.io/restdude/restdude-war-overlay
+ * --------------------------------------------------------------------------
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -12,6 +78,62 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * restdude-war-overlay https://manosbatsis.github.io/restdude/restdude-war-overlay
+ * --------------------------------------------------------------------------
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
+ * See https://manosbatsis.github.io/restdude
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
+ See https://manosbatsis.github.io/restdude
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -60,7 +182,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         // --------------------------------
 
         // login and get a request spec for stateless auth
-        // essentially this posts to "/calipso/apiauth/userDetails"
+        // essentially this posts to WEBCONTEXT_PATH  + "/apiauth/userDetails"
         // with request body: {username: "admin", password: "admin"}
         Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
@@ -95,7 +217,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         Friendship friendship = given().spec(adminRequestSpec)
                 .log().all()
                 .body(new Friendship(new User(adminLoginContext.userId), new User(operatorLoginContext.userId)))
-                .post("/calipso/api/rest/" + Friendship.API_PATH)
+                .post(WEBCONTEXT_PATH  + "/api/rest/" + Friendship.API_PATH)
                 .then()
                 .log().all()
                 .assertThat()
@@ -111,7 +233,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         JsonNode friendshipsNode = given().spec(adminRequestSpec)
                 .log().all()
                 .param("status", "SENT")
-                .get("/calipso/api/rest/friends/my")
+                .get(WEBCONTEXT_PATH + "/api/rest/friends/my")
                 .then()
                 .log().all()
                 .assertThat()
@@ -130,7 +252,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         friendshipsNode = given().spec(operatorRequestSpec)
                 .log().all()
                 .param("status", "PENDING")
-                .get("/calipso/api/rest/friends/my")
+                .get(WEBCONTEXT_PATH  + "/api/rest/friends/my")
                 .then()
                 .log().all()
                 .assertThat()
@@ -150,7 +272,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         LOGGER.info("Accept request");
         Friendship friendshipInverse = given().spec(operatorRequestSpec).log().all()
                 .body(new Friendship(FriendshipStatus.CONFIRMED))
-                .put("/calipso/api/rest/" + Friendship.API_PATH + "/" + ioperatorFriendRequestNotification.getId())
+                .put(WEBCONTEXT_PATH  + "/api/rest/" + Friendship.API_PATH + "/" + ioperatorFriendRequestNotification.getId())
                 // get model
                 .then()
                 .log().all()
@@ -168,7 +290,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         LOGGER.info("Get friends");
         // get friends
         given().spec(adminRequestSpec)
-                .get("/calipso/api/rest/friends/my");
+                .get(WEBCONTEXT_PATH  + "/api/rest/friends/my");
 
         // --------------------------------
         // Create bulk friendship requests (invitations
@@ -184,7 +306,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
         UserInvitationResultsDTO userInvitationResults = given().spec(adminRequestSpec)
                 .body(invitations)
                 .log().all()
-                .post("/calipso/api/rest/invitations")
+                .post(WEBCONTEXT_PATH  + "/api/rest/invitations")
                 .then()
                 .log().all()
                 .assertThat()

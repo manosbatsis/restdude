@@ -17,8 +17,8 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath:calipso.defaults.properties</value>
-                <value>classpath:calipso.properties</value>
+                <value>classpath:restdude.defaults.properties</value>
+                <value>classpath:restdude.properties</value>
             </list>
         </property>
         <property name="trimValues" value="true"/>
@@ -85,10 +85,10 @@
     <!-- auth config -->
     <bean id="userDetailsConfig"
           class="com.restdude.auth.userdetails.util.SimpleUserDetailsConfig">
-        <constructor-arg value="calipso-sso"/>
+        <constructor-arg value="restdude-sso"/>
     </bean>
 
-    <context:component-scan base-package="**.calipso, **.restdude">
+    <context:component-scan base-package="**.restdude, **.restdude">
     </context:component-scan>
 
     <!-- THYMELEAF: Template Resolver for email templates -->
@@ -163,7 +163,7 @@
     <mvc:resources mapping="/webjars/**" location="/webjars/"/>
 
     <!-- Include a swagger configuration-->
-    <!-- 	<bean name="applicationSwaggerConfig" class="gr.abiss.calipso.web.spring.ApplicationSwaggerConfig"/> -->
+    <!-- 	<bean name="applicationSwaggerConfig" class="gr.abiss.restdude.web.spring.ApplicationSwaggerConfig"/> -->
 
     <!-- actuator stats -->
     <!-- 	<beans> -->
