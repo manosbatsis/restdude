@@ -26,6 +26,14 @@ spring:
     # Otherwise, it will be filled in by maven when building the WAR file
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
     # active: #spring.profiles.active#
+# HTTP encoding (HttpEncodingProperties)
+  http:
+    encoding:
+      charset: UTF-8 # the encoding of HTTP requests/responses
+      enabled: true # enable http encoding support
+      force: true # force the configured encoding
+    multipart:
+      enabled: true
   jackson:
     serialization.write_dates_as_timestamps: false
 #  datasource:
@@ -40,6 +48,7 @@ spring:
   messages:
     basename: i18n/messages
   mvc:
+    throw-exception-if-no-handler-found: true
     favicon:
       enabled: false
   thymeleaf:
@@ -54,7 +63,8 @@ spring:
     test-connection: false # Test that the mail server is available on startup.
     username: ${buildfilters.mail.server.username} # Login user of the SMTP server.
     password: ${buildfilters.mail.server.password} # Login password of the SMTP server.
-
+  resources:
+    add-mappings: false
 security:
   basic:
     enabled: false
@@ -62,6 +72,12 @@ logging:
   level:
     ROOT: INFO
     com.restdude: DEBUG
+
+server:
+  error:
+    whitelabel:
+      enabled: true
+
 # ===================================================================
 # Restdude specific properties
 # ===================================================================

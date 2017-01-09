@@ -42,11 +42,7 @@ import org.springframework.util.CollectionUtils;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 //@ApiModel
@@ -57,6 +53,8 @@ public class UserDetails implements  ICalipsoUserDetails{
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserDetails.class);
+
+    public static final List<GrantedAuthority> ROLES_ANONYMOUD = Collections.unmodifiableList(Arrays.asList(new Role(Role.ROLE_ANONYMOUS)));
 
 
 
@@ -106,6 +104,14 @@ public class UserDetails implements  ICalipsoUserDetails{
 	private Map<String, String> metadata;
 
 	private Boolean isResetPasswordReguest = false;
+
+
+    public static ICalipsoUserDetails anonymous() {
+        UserDetails details = new UserDetails();
+        details.setUsername("anonymousUser");
+        details.authorities = ROLES_ANONYMOUD;
+        return details;
+    }
 
 	public static ICalipsoUserDetails fromUser(User user) {
 		UserDetails details = null;

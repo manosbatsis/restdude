@@ -1,35 +1,32 @@
 /**
+ *
  * Restdude
  * -------------------------------------------------------------------
  * Module restdude-framework, https://manosbatsis.github.io/restdude/restdude-framework
- * <p>
+ *
  * Full stack, high level framework for horizontal, model-driven application hackers.
- * <p>
+ *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.restdude.web.filters;
 
-import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.util.Constants;
 import com.restdude.util.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -41,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component("restRequestNormalizerFilter")
+//@Component("restRequestNormalizerFilter")
 public class RestRequestNormalizerFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestRequestNormalizerFilter.class);
     private static final String X_HTTP_METHOD_OVERRIDE = "X-HTTP-Method-Override";
@@ -51,13 +48,6 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
     public static final String DEFAULT_METHOD_PARAM = "_method";
 
     private String methodParam = DEFAULT_METHOD_PARAM;
-
-    protected UserDetailsConfig userDetailsConfig = new SimpleUserDetailsConfig();
-
-    @Autowired(required = false)
-    public void setUserDetailsConfig(UserDetailsConfig userDetailsConfig) {
-        this.userDetailsConfig = userDetailsConfig;
-    }
 
     /**
      * Set the parameter name to look for HTTP methods.
@@ -105,7 +95,7 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
     protected String getCookieToken(HttpServletRequest httpRequest) {
         String authToken = null;
         Cookie[] cookies = httpRequest.getCookies();
-        String ssoCookieName = userDetailsConfig.getCookiesBasicAuthTokenName();
+        String ssoCookieName = Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME;
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];

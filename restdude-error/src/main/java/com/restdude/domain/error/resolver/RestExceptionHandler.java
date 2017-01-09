@@ -1,22 +1,23 @@
 /**
+ *
  * Restdude
  * -------------------------------------------------------------------
  * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- * <p>
+ *
  * Full stack, high level framework for horizontal, model-driven application hackers.
- * <p>
+ *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,12 +30,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -86,6 +90,7 @@ import java.util.Map;
  * @see HttpMessageConverter
  * @see org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
  */
+@ControllerAdvice
 public class RestExceptionHandler extends AbstractHandlerExceptionResolver implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class);
@@ -107,6 +112,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
     }
 
     public RestExceptionHandler() {
+        this.setOrder(Ordered.HIGHEST_PRECEDENCE);
         this.errorResolver = new DefaultRestErrorResolver();
     }
 
@@ -138,6 +144,12 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
         }
     }
 
+    @ExceptionHandler({Exception.class})
+    public SystemError handleExceptionAsControllerAdvice(HttpServletRequest request, HttpServletResponse response, Exception originalException) {
+        ServletWebRequest webRequest = new ServletWebRequest(request, response);
+        SystemError error = buildSystemError(webRequest, null, originalException);
+        return error;
+    }
     /**
      * Actually resolve the given exception that got thrown during on handler execution, returning a ModelAndView that
      * represents a specific error page if appropriate.
@@ -158,48 +170,47 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
         ModelAndView mav = null;
 
+        try {
 
-        ServletWebRequest webRequest = new ServletWebRequest(request, response);
-        RestErrorResolver resolver = getErrorResolver();
-        SystemError error = resolver.resolveError(webRequest, handler, originalException);
+            ServletWebRequest webRequest = new ServletWebRequest(request, response);
+            SystemError error = buildSystemError(webRequest, handler, originalException);
 
-        if (error != null) {
-
-            LOGGER.error("doResolveException, error stacktrace:", error.getThrowable());
-            error = handlePersist(error);
-
-
-            try {
+            if (error != null) {
                 mav = getModelAndView(webRequest, handler, error);
-            } catch (Exception invocationEx) {
-                LOGGER.error("Failed handling exception", originalException);
-                RuntimeException wrapperErxception = new RuntimeException("Failed handling original exception with message [" + originalException.getMessage() + "]", invocationEx);
-                wrapperErxception.addSuppressed(originalException);
-                throw wrapperErxception;
             }
-        }
 
+        } catch (Exception invocationEx) {
+            LOGGER.error("Failed handling exception", originalException);
+            RuntimeException wrapperErxception = new RuntimeException("Failed handling original exception with message [" + originalException.getMessage() + "]", invocationEx);
+            wrapperErxception.addSuppressed(originalException);
+            throw wrapperErxception;
+        }
         return mav;
     }
 
-    private SystemError handlePersist(SystemError error) {
-        try {
-            // persist?
-            if (true) {
-                error = this.systemErrorService.create(error);
+    private SystemError buildSystemError(ServletWebRequest webRequest, Object handler, Exception originalException) {
+        RestErrorResolver resolver = getErrorResolver();
+        SystemError error = resolver.resolveError(webRequest, handler, originalException);
+        if (error != null) {
+            LOGGER.error("doResolveException, error stacktrace:", error.getThrowable());
+            try {
+                // persist?
+                if (true) {
+                    error = this.systemErrorService.create(error);
+                }
+            } catch (Exception e) {
+                LOGGER.error("Failed persisting error", e);
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed persisting error", e);
+
+            // apply response status
+            applyStatusIfPossible(webRequest, error);
+            // apply response headers
+            applyHeadersIfPossible(webRequest, error);
         }
         return error;
     }
 
     protected ModelAndView getModelAndView(ServletWebRequest webRequest, Object handler, SystemError error) throws Exception {
-
-        // apply response status
-        applyStatusIfPossible(webRequest, error);
-        // apply response headers
-        applyHeadersIfPossible(webRequest, error);
 
         // set the error as default body to handle
         // cases where no converter is configured

@@ -15,7 +15,7 @@
     <version>2.1.2-SNAPSHOT</version>
 
     <name>restdude-boot</name>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <properties>
         <project.parent.basedir>../</project.parent.basedir>
     </properties>
@@ -89,11 +89,36 @@
                                     <type>war</type>
                                     <overWrite>false</overWrite>
                                     <includes>
-                                        client/**/*,css/**/*,fonts/**/*,img/**/*,includes/**/*,js/**/*,template/**/*,favicon.ico,index.jsp
+                                        css/**/*,fonts/**/*,img/**/*,includes/**/*,js/**/*,template/**/*,favicon.ico
                                     </includes>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/generated-resources/restdude-unpacked/static
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-overlay-resources-jsp</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.restdude</groupId>
+                                    <artifactId>restdude-war-overlay</artifactId>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <includes>
+                                        **/*.jsp
+                                    </includes>
+                                    <excludes>
+                                        WEB-INF/**
+                                    </excludes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/generated-resources/restdude-unpacked/jsp
                             </outputDirectory>
                         </configuration>
                     </execution>
