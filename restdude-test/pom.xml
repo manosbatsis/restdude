@@ -51,7 +51,12 @@
 
         <dependency>
             <groupId>com.restdude</groupId>
-            <artifactId>restdude-core</artifactId>
+            <artifactId>restdude-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-websocket</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -67,18 +72,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

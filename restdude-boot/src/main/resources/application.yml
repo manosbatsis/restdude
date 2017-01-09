@@ -1,0 +1,76 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overriden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+#management:
+#  context-path: /management
+#  health:
+#    mail:
+#      enabled: false # When using the MailService, configure an SMTP server and set this to true
+#    binders:
+#      enabled: true
+spring:
+  application:
+    name: restdude
+  # profiles:
+    # The commented value for `active` can be replaced with valid spring profiles to load.
+    # Otherwise, it will be filled in by maven when building the WAR file
+    # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+    # active: #spring.profiles.active#
+  jackson:
+    serialization.write_dates_as_timestamps: false
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    generate-ddl: true
+    properties:
+      javax.persistence.validation.mode: none
+#     open-in-view: false
+#    show-sql: true
+#    database: H2
+  messages:
+    basename: i18n/messages
+  mvc:
+    favicon:
+      enabled: false
+  thymeleaf:
+    mode: XHTML
+  mail:
+    default-encoding: UTF-8 # Default MimeMessage encoding.
+    host: ${buildfilters.mail.server.host} # SMTP server host. For instance `smtp.example.com`
+#    jndi-name: # Session JNDI name. When set, takes precedence to others mail settings.
+    port: ${buildfilters.mail.server.port} # SMTP server port.
+#    properties.*= # Additional JavaMail session properties.
+    protocol: ${buildfilters.mail.server.protocol} # Protocol used by the SMTP server.
+    test-connection: false # Test that the mail server is available on startup.
+    username: ${buildfilters.mail.server.username} # Login user of the SMTP server.
+    password: ${buildfilters.mail.server.password} # Login password of the SMTP server.
+
+security:
+  basic:
+    enabled: false
+logging:
+  level:
+    ROOT: INFO
+    com.restdude: DEBUG
+# ===================================================================
+# Restdude specific properties
+# ===================================================================
+restdude:
+  baseurl: "http://localhost:8080/restdude"
+mail:
+  enabled: ${buildfilters.mail.enabled}
+  test:
+    enabled: ${buildfilters.mail.test.enable}
+    user: ${buildfilters.mail.test.user}
+  server:
+    from: ${buildfilters.mail.server.from}

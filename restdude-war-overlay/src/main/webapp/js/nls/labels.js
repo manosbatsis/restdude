@@ -35,8 +35,9 @@ define({
 
         "tmpl": {
             "header": {
+                "api": "API",
                 "browse": "Browse",
-                "tools": "Tools",
+                "administration": "Administration",
                 "profile": "Profile",
                 "password": "Password",
                 "logout": "Logout",

@@ -84,3 +84,7 @@ buildNumber.properties
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
 
+/restdude-error/restdude-error.iml
+/.idea/
+/.idea/
+/.settings/

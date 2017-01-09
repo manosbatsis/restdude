@@ -16,7 +16,7 @@
     </sec:global-method-security>
 
     <bean id="expressionHandler"
-          class="com.restdude.auth.spel.binding.MethodSecurityExpressionHandler">
+          class="com.restdude.auth.spel.binding.ModelDrivenMethodSecurityExpressionHandler">
         <property name="parameterNameDiscoverer" ref="parameterNameDiscoverer"/>
         <property name="permissionEvaluator" ref="permissionEvaluator"/>
     </bean>

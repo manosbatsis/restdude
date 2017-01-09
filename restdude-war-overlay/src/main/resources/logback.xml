@@ -43,13 +43,13 @@
     <!--         <level value="debug" /> -->
     <!--     </LOGGER> -->
 
-    <logger name="com.restdude.domain.friends">
+    <logger name="com.restdude.test.integration">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.base">
+    <logger name="com.restdude.domain.base.validation">
         <level value="debug"/>
     </logger>
-    <logger name="org.springframework.http.converter">
+    <logger name="com.restdude.domain.base.repository">
         <level value="debug"/>
     </logger>
 

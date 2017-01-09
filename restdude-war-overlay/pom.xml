@@ -60,15 +60,6 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <httpConnector>
-                        <port>${jetty.port}</port>
-                    </httpConnector>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <stopPort>8005</stopPort>
-                    <stopKey>STOP</stopKey>
-                    <waitForChild>false</waitForChild>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.phasebash</groupId>
@@ -127,7 +118,12 @@
         <!-- restdude -->
         <dependency>
             <groupId>com.restdude</groupId>
-            <artifactId>restdude-core</artifactId>
+            <artifactId>restdude-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -154,12 +150,29 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.5</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -195,14 +208,6 @@
                     <plugin>
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
-                        <configuration>
-                            <httpConnector>
-                                <port>${jetty.port}</port>
-                            </httpConnector>
-                            <scanIntervalSeconds>10</scanIntervalSeconds>
-                            <stopPort>8005</stopPort>
-                            <stopKey>STOP</stopKey>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>start-jetty</id>
@@ -219,13 +224,13 @@
                                     </webApp>
                                 </configuration>
                             </execution>
-                            <!--execution>
+                            <execution>
                                 <id>stop-jetty</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>stop</goal>
                                 </goals>
-                            </execution-->
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -252,7 +257,7 @@
                                 <sectnums>true</sectnums>
                                 <!-- 					            <stylesheet>my-theme.css</stylesheet> -->
                                 <project-version>${project.version}</project-version>
-                                <endpoint-url>${build.restdude.baseurl}</endpoint-url>
+                                <endpoint-url>${buildfilters.restdude.contextPath}</endpoint-url>
                                 <sourcedir>${project.build.sourceDirectory}</sourcedir>
                             </attributes>
                         </configuration>

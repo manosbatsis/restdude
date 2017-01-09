@@ -22,104 +22,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * restdude-war-overlay
- * --------------------------------------------------------------------------
- * Full stack, high level framework for horizontal, model-driven application hackers.
- * See https://manosbatsis.github.io/restdude
- * <p>
- * https://manosbatsis.github.io/restdude/restdude-war-overlay
- * <p>
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * <p>
- * restdude-war-overlay https://manosbatsis.github.io/restdude/restdude-war-overlay
- * --------------------------------------------------------------------------
- * Full stack, high level framework for horizontal, model-driven application hackers.
- * See https://manosbatsis.github.io/restdude
- * <p>
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * <p>
- * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
- * See https://manosbatsis.github.io/restdude
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * restdude-war-overlay https://manosbatsis.github.io/restdude/restdude-war-overlay
- * --------------------------------------------------------------------------
- * Full stack, high level framework for horizontal, model-driven application hackers.
- * See https://manosbatsis.github.io/restdude
- * <p>
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * <p>
- * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
- * See https://manosbatsis.github.io/restdude
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-/**
  * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
  See https://manosbatsis.github.io/restdude
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
@@ -171,12 +73,12 @@ public class RestErrorsIT extends AbstractControllerIT {
 
     @Test(description = "Test duplicate username subscription attempt", priority = 10)
     public void testDuplicateUsername() throws Exception {
-
+        LOGGER.debug("Test duplicate username subscription attempt");
         RequestSpecification spec = this.getRequestSpec(null);
         SystemError error = given().spec(spec)
                 .log().all()
                 .body(new UserAccountRegistration.Builder()
-                        .username("admin")
+                        .username("operator")
                         .firstName("Firstname")
                         .lastName("LastName")
                         .email("testDuplicateUsername@" + this.getClass().getSimpleName() + ".com")

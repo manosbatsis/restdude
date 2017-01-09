@@ -1,0 +1,71 @@
+/**
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-framework, https://manosbatsis.github.io/restdude/restdude-framework
+ * <p>
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.restdude.domain.rating.model;
+
+import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.rating.repository.RateableRepository;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Simple interface for rating POJOs that have no typed target. 
+ * If you are using this interface in your persistend classes you might want to check out 
+ * the provided AbstractAuditableRateable entity and RateableRepository.
+ *
+ * @see RateableRepository
+ */
+public interface Rateable<ID extends Serializable, R extends AbstractRating> extends CalipsoPersistable<ID> {
+
+    /**
+     * Get the average rating for this entity
+     * @return the average rating
+     */
+    public Float getRating();
+
+    /**
+     * Set the average rating for this entity
+     */
+    public void setRating(Float rating);
+
+    /**
+     * Get the number of ratings for this entity
+     */
+    public Integer getRatingsSize();
+
+    /**
+     * Set the number of ratings for this entity
+     */
+    public void setRatingsSize(Integer ratingsSize);
+
+    /**
+     * Get the ratings for this entity that have been created by the current user
+     */
+    public List<R> getCurrentUserRatings();
+
+    /**
+     * Get the ratings for this entity that have been created by the current user
+     */
+    public void setCurrentUserRatings(List<R> currentUserRatings);
+
+}
