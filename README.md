@@ -40,6 +40,21 @@ DELETE | /api/rest/hosts/{id} | Delete the host matching the id
 GET    | /api/rest/hosts/jsonschema | Get the JSONSchema for hosts
 
 
+## Behind the Schenes
+
+Contrary to other frameworks like spring-data-rest and jhipster, restdude generates controller, service and repository classes during application startup to provide an extensible 3-tier architecture. You can replace/extend those implicit componenets with your own at any time to provide custom or otherwise additional functionality. 
+
+## Technology Stack
+
+- Choose between Spring MVC or Spring Boot
+- Annotate your models to configure API documentation, authorization, validation and auditing
+- Customize and integrate security according to your needs with Spring Security
+- Use websockets via Spring Websockets/STOMP
+- Persist to relational databases with Spring Data JPA
+- Use the right NoSQL datastore for your project-specific needs, including ElasticSearch, Solr, MongoDB, Redis, Cassandra, Counchbase, Neo4J, Hazelcast and more
+- Automate basic or fine grained auditing using <a href="http://docs.spring.io/spring-data/data-jpa/docs/current/reference/html/auditing.html">Envers</a> and <a href="http://javers.org/">Javers</a>
+- Publish REST API documentation effortlesly thanks to <a href="http://springfox.github.io/springfox">Springfox</a> and <a href="http://swagger.io/swagger-ui">Swagger UI</a>
+
 ## Documentation
 
 See https://manosbatsis.github.io/restdude/
