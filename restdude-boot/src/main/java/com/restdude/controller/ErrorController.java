@@ -1,53 +1,115 @@
+/**
+ * Restdude
+ * -------------------------------------------------------------------
+ * Module restdude-boot, https://manosbatsis.github.io/restdude/restdude-boot
+ * <p>
+ * Full stack, high level framework for horizontal, model-driven application hackers.
+ * <p>
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.restdude.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
+import org.springframework.boot.autoconfigure.web.ErrorViewResolver;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 //@RestController
 //@RequestMapping("/error")
 public class ErrorController implements org.springframework.boot.autoconfigure.web.ErrorController {
 
-    private final ErrorAttributes errorAttributes;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
+
 
     @Autowired
-    public ErrorController(ErrorAttributes errorAttributes) {
-        Assert.notNull(errorAttributes, "ErrorAttributes must not be null");
-        this.errorAttributes = errorAttributes;
+    private ErrorAttributes errorAttributes;
+    private List<ErrorViewResolver> errorViewResolvers;
+
+
+    public ErrorController(){
     }
 
-    @Override
+    public ErrorController(ErrorAttributes errorAttributes) {
+        this(errorAttributes, (List) null);
+    }
+
+    public ErrorController(ErrorAttributes errorAttributes, List<ErrorViewResolver> errorViewResolvers) {
+        Assert.notNull(errorAttributes, "ErrorAttributes must not be null");
+        this.errorAttributes = errorAttributes;
+        this.errorViewResolvers = this.sortErrorViewResolvers(errorViewResolvers);
+    }
+
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+        Map body = this.getErrorAttributes(request, true);
+        LOGGER.debug("body: {}", body);
+        LOGGER.debug("errorPath: {}", this.getErrorPath());
+        LOGGER.debug("status: {}", this.getStatus(request));
+        HttpStatus status = this.getStatus(request);
+        return new ResponseEntity(body, status);
+    }
+
+    private List<ErrorViewResolver> sortErrorViewResolvers(List<ErrorViewResolver> resolvers) {
+        ArrayList sorted = new ArrayList();
+        if (resolvers != null) {
+            sorted.addAll(resolvers);
+            AnnotationAwareOrderComparator.sortIfNecessary(sorted);
+        }
+
+        return sorted;
+    }
+
     public String getErrorPath() {
         return "/error";
     }
 
-    @RequestMapping
-    public Map<String, Object> error(HttpServletRequest aRequest) {
-        Map<String, Object> body = getErrorAttributes(aRequest, getTraceParameter(aRequest));
-        String trace = (String) body.get("trace");
-        if (trace != null) {
-            String[] lines = trace.split("\n\t");
-            body.put("trace", lines);
-        }
-        return body;
+    protected Map<String, Object> getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+        return this.errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);
     }
 
-    private boolean getTraceParameter(HttpServletRequest request) {
+    protected boolean getTraceParameter(HttpServletRequest request) {
         String parameter = request.getParameter("trace");
-        if (parameter == null) {
-            return false;
-        }
-        return !"false".equals(parameter.toLowerCase());
+        return parameter == null ? false : !"false".equals(parameter.toLowerCase());
     }
 
-    private Map<String, Object> getErrorAttributes(HttpServletRequest aRequest, boolean includeStackTrace) {
-        RequestAttributes requestAttributes = new ServletRequestAttributes(aRequest);
-        return errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);
+    protected HttpStatus getStatus(HttpServletRequest request) {
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        if (statusCode == null) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            try {
+                return HttpStatus.valueOf(statusCode.intValue());
+            } catch (Exception var4) {
+                return HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+        }
     }
 }

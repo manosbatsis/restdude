@@ -27,21 +27,19 @@ import com.restdude.domain.base.binding.CsvMessageConverter;
 import com.restdude.domain.base.binding.CustomEnumConverterFactory;
 import com.restdude.domain.base.binding.StringToEmbeddableManyToManyIdConverterFactory;
 import com.restdude.domain.error.resolver.RestExceptionHandler;
+import com.restdude.mdd.processor.ModelDrivenBeanGeneratingRegistryPostProcessor;
 import com.restdude.web.filters.RestRequestNormalizerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import java.util.List;
 
@@ -49,15 +47,6 @@ import java.util.List;
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
-
-    @Bean
-    public ViewResolver getViewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/classes/jsp/");
-        resolver.setSuffix(".jsp");
-        resolver.setViewClass(JstlView.class);
-        return resolver;
-    }
 
     @Bean
     public HandlerExceptionResolver restExceptionHandler() {
@@ -71,11 +60,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    public ModelDrivenBeanGeneratingRegistryPostProcessor modelDrivenBeanGeneratingRegistryPostProcessor() {
+        return new ModelDrivenBeanGeneratingRegistryPostProcessor();
+    }
+
+    @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         RestRequestNormalizerFilter restRequestNormalizerFilter = new RestRequestNormalizerFilter();
         registrationBean.setFilter(restRequestNormalizerFilter);
-        registrationBean.setOrder(2);
+        registrationBean.addUrlPatterns("/api/*", "/apiauth/*", "/ws/*");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }
 
@@ -99,9 +94,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         LOGGER.debug("configureHandlerExceptionResolvers: {}", exceptionResolvers);
     }
 
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        super.configureViewResolvers(registry);
-        registry.viewResolver(this.getViewResolver());
-    }
 }

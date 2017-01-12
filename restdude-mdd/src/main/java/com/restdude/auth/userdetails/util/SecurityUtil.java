@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.codec.Base64;
@@ -66,6 +67,8 @@ public class SecurityUtil {
 					+ ":" + userDetails.getPassword()).getBytes()));
 			addCookie(request, response, userDetailsConfig.getCookiesBasicAuthTokenName(), token, false, userDetailsConfig);
 			userDetailsService.updateLastLogin(userDetails);
+			Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 		} else{
 			LOGGER.warn("Login failed, force logout to clean any stale cookies");
 			SecurityUtil.logout(request, response, userDetailsConfig);
@@ -110,7 +113,7 @@ public class SecurityUtil {
 					", http-only: " + userDetailsConfig.isCookiesHttpOnly());
 		}
 		Cookie cookie = new Cookie(cookieName, cookieValue);
-		
+		cookie.setPath("/");
 		// set the cookie domain
 		if (StringUtils.isNotBlank(server)) {
 			cookie.setDomain('.' + server);

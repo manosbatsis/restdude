@@ -23,12 +23,16 @@
  */
 package com.restdude;
 
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
 import org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -39,8 +43,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-@SpringBootApplication
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+
+@SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class})
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"**.restdude", "**.calipso"},
         repositoryFactoryBeanClass = com.restdude.domain.base.repository.ModelRepositoryFactoryBean.class,
@@ -67,7 +78,9 @@ public class Application implements EmbeddedServletContainerCustomizer {
             @Override
             public void customize(Server server) {
                 WebAppContext webAppContext = (WebAppContext) server.getHandler();
-                //webAppContext.setErrorHandler(null);
+                webAppContext.setErrorHandler(new ErrorHandler());
+                // default error handler for resources out of "context" scope
+                server.addBean(new ErrorHandler());
 /*
                 try {
                     ClassPathResource classPathResource = new ClassPathResource("META-INF/resources");
@@ -97,6 +110,39 @@ public class Application implements EmbeddedServletContainerCustomizer {
         //container.setErrorPages(new HashSet<ErrorPage>());
         if (container instanceof JettyEmbeddedServletContainerFactory) {
             customizeJetty((JettyEmbeddedServletContainerFactory) container);
+        }
+    }
+
+    /**
+     * Dummy error handler that disables any error pages or jetty related messages and returns our
+     * ERROR status JSON with plain HTTP status instead. All original error messages (from our code) are preserved
+     * as they are not handled by this code.
+     */
+    static class ErrorHandler extends ErrorPageErrorHandler {
+        @Override
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+            DefaultErrorAttributes errorAttributes = new DefaultErrorAttributes();
+            RequestAttributes requestAttributes = new ServletRequestAttributes(request, response);
+            Map<String, Object> errorInfoMap = errorAttributes.getErrorAttributes(requestAttributes, true);
+
+            LOGGER.debug("ErrorHandler#handle requestAttributes: {}", requestAttributes.getAttributeNames(0));
+            ;
+            LOGGER.debug("ErrorHandler#handle requestAttributes: {}", requestAttributes.getAttributeNames(1));
+            ;
+            LOGGER.debug("ErrorHandler#handle requestAttributes: {}", requestAttributes.getAttributeNames(2));
+            ;
+            LOGGER.debug("ErrorHandler#handle target: {}", target);
+            ;
+            LOGGER.debug("ErrorHandler#handle errorInfoMap: {}", errorInfoMap);
+            ;
+            LOGGER.debug("ErrorHandler#handle error: {}", errorAttributes.getError(requestAttributes));
+            ;
+            /*
+            response.getWriter()
+                    .append("{\"status\":\"ERROR\",\"message\":\"HTTP ")
+                    .append(String.valueOf(response.getStatus()))
+                    .append("\"}");
+                    */
         }
     }
 }

@@ -52,7 +52,7 @@ spring:
     favicon:
       enabled: false
   thymeleaf:
-    mode: XHTML
+    mode: HTML5
   mail:
     default-encoding: UTF-8 # Default MimeMessage encoding.
     host: ${buildfilters.mail.server.host} # SMTP server host. For instance `smtp.example.com`
@@ -64,19 +64,19 @@ spring:
     username: ${buildfilters.mail.server.username} # Login user of the SMTP server.
     password: ${buildfilters.mail.server.password} # Login password of the SMTP server.
   resources:
-    add-mappings: false
-security:
-  basic:
-    enabled: false
+    add-mappings: true
 logging:
   level:
-    ROOT: INFO
+    root: WARN
+    org.springframework.security: DEBUG
     com.restdude: DEBUG
 
 server:
+  contextPath: /restdude
   error:
-    whitelabel:
-      enabled: true
+    include-stacktrace: always
+#    whitelabel:
+#      enabled: false
 
 # ===================================================================
 # Restdude specific properties
