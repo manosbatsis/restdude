@@ -69,23 +69,16 @@ public abstract class AbstractErrorServiceImpl<T extends PersistableError<ID>, I
         }
         // merge the ErrorLog based on it's hash (i.e. ID)
         if (resource.getErrorLog() != null) {
-            resource.setErrorLog(this.errorLogService.findOrCreate(resource.getErrorLog()));
-        }
-
-        // save error
-        resource = super.create(resource);
-
-        // update log details
-        ErrorLog log = resource.getErrorLog();
-        if (log != null) {
+            ErrorLog log = this.errorLogService.findOrCreate(resource.getErrorLog());
+            resource.setErrorLog(log);
             if (log.getFirstOccurred() == null) {
                 log.setFirstOccurred(resource.getCreatedDate());
             }
             log.setLastOccurred(resource.getCreatedDate());
-            // update log
-            LOGGER.debug("create, updating Error");
-            resource.setErrorLog(this.errorLogService.update(log));
         }
+
+        // save error
+        resource = super.create(resource);
 
         return resource;
     }

@@ -148,7 +148,7 @@ public class SpelUtil {
             boolean isService = !targetClass.getName().endsWith("Controller");
             expression = AnnotationUtils.getValue(preAuthAnnotation.get(), isService ? "service" : "controller").toString();
         }
-        LOGGER.debug("g\netExpressionForComponent: \ntargetClass: {},\nmethod: {}, \nannotation: {}, \nexpression: {}, \ndomainClass: {}\n",
+        LOGGER.debug("getExpressionForComponent: \ntargetClass: {},\nmethod: {}, \nannotation: {}, \nexpression: {}, \ndomainClass: {}\n",
                 targetClass,
                 method,
                 annotationClass,

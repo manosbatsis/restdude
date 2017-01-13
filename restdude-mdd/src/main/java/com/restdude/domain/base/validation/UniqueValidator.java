@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -141,6 +142,9 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
 
         criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
         TypedQuery<CalipsoPersistable> typedQuery = this.entityManager.createQuery(criteriaQuery);
+
+        // tell JPA not to flush just vbecause we want to check existing records
+        typedQuery.setFlushMode(FlushModeType.COMMIT);
         return typedQuery.getResultList();
     }
 

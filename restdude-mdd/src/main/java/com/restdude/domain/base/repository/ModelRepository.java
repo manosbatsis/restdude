@@ -100,7 +100,8 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 
 	
 	/**
-	 * @param entity
+     * @see EntityManager#merge(java.lang.Object)
+     * @param entity
 	 * @return
 	 */
 	T merge(T entity);

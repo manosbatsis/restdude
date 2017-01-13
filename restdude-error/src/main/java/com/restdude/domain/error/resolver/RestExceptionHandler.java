@@ -30,8 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
-import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -39,11 +37,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.util.WebUtils;
 
@@ -91,16 +90,52 @@ import java.util.Map;
  * @see HttpMessageConverter
  * @see org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
  */
-
-public class RestExceptionHandler extends DefaultErrorAttributes implements ErrorAttributes, HandlerExceptionResolver, Ordered, InitializingBean {
+@ControllerAdvice
+public class RestExceptionHandler extends AbstractHandlerExceptionResolver implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class);
+
 
     private SystemErrorService systemErrorService;
     private RestErrorResolver errorResolver;
     private RestErrorConverter<?> errorConverter;
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
-    private int order = Ordered.HIGHEST_PRECEDENCE;
+
+    @Autowired
+    public void setRequestMappingHandlerAdapter(RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
+        this.requestMappingHandlerAdapter = requestMappingHandlerAdapter;
+    }
+
+    @Autowired
+    public void setSystemErrorService(SystemErrorService systemErrorService) {
+        this.systemErrorService = systemErrorService;
+    }
+
+    public RestExceptionHandler() {
+        this.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        this.errorResolver = new DefaultRestErrorResolver();
+    }
+
+    public void setErrorResolver(RestErrorResolver errorResolver) {
+        this.errorResolver = errorResolver;
+    }
+
+    public RestErrorResolver getErrorResolver() {
+        return this.errorResolver;
+    }
+
+    public RestErrorConverter<?> getErrorConverter() {
+        return errorConverter;
+    }
+
+    public void setErrorConverter(RestErrorConverter<?> errorConverter) {
+        this.errorConverter = errorConverter;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        LOGGER.info("Configured as HandlerExceptionResolver");
+    }
 
     //leverage Spring's existing default setup behavior:
     private static final class HttpMessageConverterHelper extends WebMvcConfigurationSupport {
@@ -109,12 +144,12 @@ public class RestExceptionHandler extends DefaultErrorAttributes implements Erro
         }
     }
 
-    //@ExceptionHandler({Exception.class})
-    //public SystemError handleExceptionAsControllerAdvice(HttpServletRequest request, HttpServletResponse response, Exception originalException) {
-    //    ServletWebRequest webRequest = new ServletWebRequest(request, response);
-    //    SystemError error = buildSystemError(webRequest, null, originalException);
-    //    return error;
-    //}
+    @ExceptionHandler({Exception.class})
+    public SystemError handleExceptionAsControllerAdvice(HttpServletRequest request, HttpServletResponse response, Exception originalException) {
+        ServletWebRequest webRequest = new ServletWebRequest(request, response);
+        SystemError error = buildSystemError(webRequest, null, originalException);
+        return error;
+    }
     /**
      * Actually resolve the given exception that got thrown during on handler execution, returning a ModelAndView that
      * represents a specific error page if appropriate.
@@ -131,10 +166,9 @@ public class RestExceptionHandler extends DefaultErrorAttributes implements Erro
      * @return a corresponding ModelAndView to forward to, or <code>null</code> for default processing
      */
     @Override
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception originalException) {
+    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception originalException) {
+
         ModelAndView mav = null;
-        Map<String, Object> errorAttributes = this.getErrorAttributes(new ServletRequestAttributes(request, response), true);
-        LOGGER.debug("doResolveException, errorAttributes: {}", errorAttributes);
 
         try {
 
@@ -241,50 +275,5 @@ public class RestExceptionHandler extends DefaultErrorAttributes implements Erro
 
         LOGGER.warn("No suitable HttpMessageConverter for class: {} and MIME: {}", bodyType.getCanonicalName(), acceptedMediaTypes);
         return null;
-    }
-
-
-    @Autowired
-    public void setRequestMappingHandlerAdapter(RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
-        this.requestMappingHandlerAdapter = requestMappingHandlerAdapter;
-    }
-
-    @Autowired
-    public void setSystemErrorService(SystemErrorService systemErrorService) {
-        this.systemErrorService = systemErrorService;
-    }
-
-    public RestExceptionHandler() {
-        this.errorResolver = new DefaultRestErrorResolver();
-    }
-
-    @Override
-    public int getOrder() {
-        return this.order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
-    public void setErrorResolver(RestErrorResolver errorResolver) {
-        this.errorResolver = errorResolver;
-    }
-
-    public RestErrorResolver getErrorResolver() {
-        return this.errorResolver;
-    }
-
-    public RestErrorConverter<?> getErrorConverter() {
-        return errorConverter;
-    }
-
-    public void setErrorConverter(RestErrorConverter<?> errorConverter) {
-        this.errorConverter = errorConverter;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        LOGGER.info("Configured as HandlerExceptionResolver");
     }
 }
