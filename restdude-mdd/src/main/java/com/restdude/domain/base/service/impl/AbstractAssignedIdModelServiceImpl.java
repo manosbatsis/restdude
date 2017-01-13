@@ -60,17 +60,18 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
         // check for existing
         T persisted = em.find(this.getDomainClass(), resource.getId());
         if (persisted != null) {
-            resource = persisted;
-            LOGGER.debug("Returning pre-persisted {} with ID: {}", this.getDomainClass().getName(), resource.getId());
+            LOGGER.debug("Returning pre-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getId());
         } else {
 
             // cannot create new transaction in shared entity manager, create another
             EntityManager innerEntityManager = this.repository.getEntityManager().getEntityManagerFactory().createEntityManager();
             innerEntityManager.getTransaction().begin();
+
             try {
                 innerEntityManager.persist(resource);
                 innerEntityManager.getTransaction().commit();
-                LOGGER.debug("Returning newly-persisted {} with ID: {}", this.getDomainClass().getName(), resource.getId());
+                persisted = resource;
+                LOGGER.debug("Returning newly-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getId());
             } catch (PersistenceException ex) {
 
                 //This may be a unique constraint violation or it could be some
@@ -82,20 +83,24 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
                 if (persisted == null) {
                     //Must have been some other issue
                     throw ex;
-                } else {
-                    //Either it was a unique constraint violation or we don't
-                    //care because someone else has succeeded
-                    resource = persisted;
-                    LOGGER.debug("Returning elsewhere-persisted {} with ID: {}", this.getDomainClass().getName(), resource.getId());
                 }
+
+                //Either it was a unique constraint violation or we don't
+                //care because someone else has succeeded
+                LOGGER.debug("Returning elsewhere-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getId());
+
             } catch (Throwable t) {
                 innerEntityManager.getTransaction().rollback();
                 throw t;
             } finally {
                 innerEntityManager.close();
             }
+
+            if (persisted == null) {
+                throw new RuntimeException("Could not find or create resource " + resource);
+            }
         }
 
-        return resource;
+        return persisted;
     }
 }
