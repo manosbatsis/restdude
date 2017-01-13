@@ -65,7 +65,7 @@ public class UserAgent extends AbstractAssignedIdPersistable<String> {
 
 
     @NotNull
-    @ApiModelProperty(value = "UA string value")
+    @ApiModelProperty(value = "UA signature string value")
     @Column(name = "ua_value", nullable = false, updatable = false, length = MAX_VALUE_LENGTH)
     private String value;
 

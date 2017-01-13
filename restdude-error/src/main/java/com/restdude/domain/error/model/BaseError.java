@@ -92,7 +92,7 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     private User createdBy;
 
     @NotNull
-    @ApiModelProperty(value = "Message for user")
+    @ApiModelProperty(value = "Message for users")
     @Column(name = "error_message", nullable = false, updatable = false, length = MAX_MESSAGE_LENGTH)
     private String message;
 

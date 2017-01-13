@@ -62,7 +62,7 @@ public class ErrorLog extends AbstractAssignedIdPersistable<String> {
     @Column(name = "first_occurred")
     private LocalDateTime firstOccurred;
 
-    @ApiModelProperty(value = "Lats occurrence date.", required = true)
+    @ApiModelProperty(value = "Last occurrence date", required = true)
     @Column(name = "last_occurred")
     private LocalDateTime lastOccurred;
 

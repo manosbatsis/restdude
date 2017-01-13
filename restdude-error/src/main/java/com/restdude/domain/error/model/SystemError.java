@@ -52,7 +52,7 @@ import java.util.Set;
         apiName = "System Errors", apiDescription = "System Error Operations (readonly)")
 @Entity
 @Table(name = "error_system")
-@ApiModel(value = "SystemError", description = "System validationErrors are created exclusively by the system " +
+@ApiModel(value = "SystemError", description = "SystemErrors are created exclusively by the system " +
         "(i.e. without manual intervention) to handle and inform the user about runtime exceptions. "
         + "They may be persisted automatically according to restdude.validationErrors.system.persist* configuration properties. "
         + "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
