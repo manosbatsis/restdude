@@ -96,6 +96,7 @@ Contrary to other frameworks like spring-data-rest and jhipster, restdude genera
 
 - Choose between Spring MVC or Spring Boot
 - Annotate your models to configure API documentation, authorization, validation and auditing
+- Sleep better with built-in <a href="https://github.com/manosbatsis/restdude/tree/master/restdude-error">error-management</a> and reporting
 - Customize and integrate security according to your needs with Spring Security
 - Use websockets via Spring Websockets/STOMP
 - Persist to relational databases with Spring Data JPA
