@@ -1,6 +1,6 @@
 {
   "name": "marionette-js-boilerplate",
-  "version": "0.1.0",
+  "version": "2.1.2-SNAPSHOT",
   "devDependencies": {
     "grunt": "1.0.1",
     "grunt-contrib-jshint": "~1.1.0",
@@ -25,12 +25,12 @@
     "grunt-usemin": "~3.1.1",
     "grunt-contrib-requirejs": "~1.0.0"
   },
-  "description": "Marionette.js / RequireJS / Bootstrap/ Handlebars sample application with Grunt.js build task",
+  "description": "Marionette-based client for restdude backends",
   "main": "Gruntfile.js",
   "dependencies": {},
   "scripts": {
     "test": "mocha"
   },
   "author": "",
-  "license": "ISC"
+  "license": "LGPL-3.0"
 }
