@@ -1,0 +1,35 @@
+/* line 32, ../../sass/style.scss */
+.twitter-search-box #tweets .twitter-item {
+    border-bottom: 1px solid gray;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* line 38, ../../sass/style.scss */
+.twitter-search-box #tweets .twitter-item .avatar {
+    margin: 0;
+    padding: 0;
+}
+
+/* line 43, ../../sass/style.scss */
+.twitter-search-box #tweets .twitter-item .tweet-descr {
+    margin: 0;
+}
+
+/* line 47, ../../sass/style.scss */
+.search .search-wrapper input {
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* line 53, ../../sass/style.scss */
+.tweets-container {
+    padding: 10px;
+}
+
+/* line 57, ../../sass/style.scss */
+img {
+    margin: 0;
+    padding: 0;
+}
