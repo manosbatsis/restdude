@@ -95,7 +95,7 @@
     <bean id="emailTemplateResolver"
           class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
         <property name="prefix" value="templates/"/>
-        <property name="templateMode" value="HTML5"/>
+        <property name="templateMode" value="HTML"/>
         <property name="characterEncoding" value="UTF-8"/>
         <property name="order" value="1"/>
     </bean>
@@ -105,7 +105,7 @@
         name="characterEncoding" value="UTF-8" /> </bean -->
     <!-- THYMELEAF: Template Engine (Spring3-specific version) -->
 
-    <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
         <property name="templateResolvers">
             <set>
                 <ref bean="emailTemplateResolver"/>
@@ -137,7 +137,7 @@
     <!-- Message externalization/internationalization -->
     <bean id="messageSource"
           class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="i18n/messages"/>
+        <property name="basename" value="messages"/>
         <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
 

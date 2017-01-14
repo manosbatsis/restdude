@@ -45,14 +45,12 @@ spring:
 #     open-in-view: false
 #    show-sql: true
 #    database: H2
-  messages:
-    basename: i18n/messages
   mvc:
     throw-exception-if-no-handler-found: true
     favicon:
       enabled: false
   thymeleaf:
-    mode: HTML5
+    mode: HTML
   mail:
     default-encoding: UTF-8 # Default MimeMessage encoding.
     host: ${buildfilters.mail.server.host} # SMTP server host. For instance `smtp.example.com`
@@ -68,8 +66,16 @@ spring:
 logging:
   level:
     root: WARN
-    org.springframework.security: DEBUG
-    com.restdude: DEBUG
+    org.springframework:
+#      context: DEBUG
+     security: DEBUG
+#      boot.autoconfigure: DEBUG
+    com.restdude.domain:
+      error: DEBUG
+#      base:
+#        repository: DEBUG
+#        validation: DEBUG
+
 
 server:
   contextPath: /restdude
@@ -82,7 +88,16 @@ server:
 # Restdude specific properties
 # ===================================================================
 restdude:
+  testEmailDomain: restdude.com
   baseurl: "http://localhost:8080/restdude"
+  appVersion: 2.1.2-SNAPSHOT
+  contact:
+    name: Manos Batsis
+    url: https://github.com/manosbatsis/restdude
+    email: manosbatsis gmail
+  license:
+    name: LGPLv3
+    url: https://www.gnu.org/licenses/lgpl-3.0.en.html
 mail:
   enabled: ${buildfilters.mail.enabled}
   test:

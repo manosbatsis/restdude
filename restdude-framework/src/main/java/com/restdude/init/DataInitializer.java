@@ -61,7 +61,7 @@ import java.util.List;
 /**
  * Creates initial roles users, countrries etc.
  */
-public class DataInitializer {
+public abstract class DataInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataInitializer.class);
 
@@ -122,14 +122,15 @@ public class DataInitializer {
         this.userRegistrationCodeBatchRepository = userRegistrationCodeBatchRepository;
     }
 
+    protected abstract String getTestEmailDomain();
 
     public void run() {
 
 
         Configuration config = ConfigurationFactory.getConfiguration();
         boolean initData = config.getBoolean(ConfigurationFactory.INIT_DATA, true);
-        String emailDomain = config.getString("restdude.testEmailDomain");
-
+        String testEmailDomain = getTestEmailDomain();
+        LOGGER.debug("run, testEmailDomain: {}", testEmailDomain);
         SecurityContextHolder.getContext().setAuthentication(
                 new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
                         Arrays.asList(new Role[]{new Role(Role.ROLE_USER, "Logged in user"), new Role(Role.ROLE_ADMIN, "System Administrator.")})));
@@ -154,7 +155,7 @@ public class DataInitializer {
             system.setFirstName("System");
             system.setLastName("User");
             system.setCredentials(new UserCredentials.Builder().password("system").build());
-            system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@" + emailDomain)).build());
+            system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@" + testEmailDomain)).build());
             system.setLastVisit(now);
             system = userService.createAsConfirmed(system);
             users.add(system);
@@ -166,7 +167,7 @@ public class DataInitializer {
             adminUser.setLastVisit(now);
             adminUser.addRole(adminRole);
             adminUser.setCredentials(new UserCredentials.Builder().password("admin").build());
-            adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("ehadmin@" + emailDomain)).build());
+            adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("ehadmin@" + testEmailDomain)).build());
 //			adminUser.setCreatedBy(system);
             adminUser = userService.createAsConfirmed(adminUser);
             users.add(adminUser);
@@ -180,7 +181,7 @@ public class DataInitializer {
             opUser.setFirstName("Operator");
             opUser.setLastName("User");
             opUser.setCredentials(new UserCredentials.Builder().password("operator").build());
-            opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@" + emailDomain)).build());
+            opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@" + testEmailDomain)).build());
             opUser.setLastVisit(now);
             opUser.addRole(operatorRole);
 //			opUser.setCreatedBy(system);
@@ -197,7 +198,7 @@ public class DataInitializer {
                     u.setFirstName(fullName.substring(0, fullName.indexOf(" ")));
                     u.setLastName(fullName.substring(fullName.indexOf(" ") + 1));
                     u.setCredentials(new UserCredentials.Builder().password(userName).build());
-                    u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userName + "@" + emailDomain)).build());
+                    u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userName + "@" + testEmailDomain)).build());
                     u.setLastVisit(now);
 //					u.setCreatedBy(system);
                     u = userService.createAsConfirmed(u);

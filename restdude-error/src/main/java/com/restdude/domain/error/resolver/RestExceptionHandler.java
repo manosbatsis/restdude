@@ -37,7 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -90,7 +89,6 @@ import java.util.Map;
  * @see HttpMessageConverter
  * @see org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
  */
-@ControllerAdvice
 public class RestExceptionHandler extends AbstractHandlerExceptionResolver implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class);

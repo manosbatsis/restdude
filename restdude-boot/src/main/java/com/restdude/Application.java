@@ -78,9 +78,9 @@ public class Application implements EmbeddedServletContainerCustomizer {
             @Override
             public void customize(Server server) {
                 WebAppContext webAppContext = (WebAppContext) server.getHandler();
-                webAppContext.setErrorHandler(new ErrorHandler());
+                //webAppContext.setErrorHandler(new ErrorHandler());
                 // default error handler for resources out of "context" scope
-                server.addBean(new ErrorHandler());
+                //server.addBean(new ErrorHandler());
 /*
                 try {
                     ClassPathResource classPathResource = new ClassPathResource("META-INF/resources");
@@ -121,6 +121,7 @@ public class Application implements EmbeddedServletContainerCustomizer {
     static class ErrorHandler extends ErrorPageErrorHandler {
         @Override
         public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+            LOGGER.error("ErrorHandler.handle target: {}", target);
             DefaultErrorAttributes errorAttributes = new DefaultErrorAttributes();
             RequestAttributes requestAttributes = new ServletRequestAttributes(request, response);
             Map<String, Object> errorInfoMap = errorAttributes.getErrorAttributes(requestAttributes, true);
@@ -137,12 +138,12 @@ public class Application implements EmbeddedServletContainerCustomizer {
             ;
             LOGGER.debug("ErrorHandler#handle error: {}", errorAttributes.getError(requestAttributes));
             ;
-            /*
+
             response.getWriter()
                     .append("{\"status\":\"ERROR\",\"message\":\"HTTP ")
                     .append(String.valueOf(response.getStatus()))
                     .append("\"}");
-                    */
+
         }
     }
 }

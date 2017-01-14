@@ -65,8 +65,7 @@ import java.util.concurrent.TimeoutException;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Base class for rest-assured based controller integration testing
@@ -151,7 +150,7 @@ public class AbstractControllerIT {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         Configuration config = ConfigurationFactory.getConfiguration();
-        this.WEBCONTEXT_PATH = config.getString(ConfigurationFactory.APP_CONTEXT_PATH);
+        this.WEBCONTEXT_PATH = config.getString(ConfigurationFactory.APP_CONTEXT_PATH, "/restdude");
 
         // pickup from the jetty port
         RestAssured.port = CONFIG.getInt("jetty.http.port", 8080);
@@ -201,6 +200,22 @@ public class AbstractControllerIT {
     }
 
 
+    protected String getConfirmationToken(User user) {
+        LOGGER.debug("getConfirmationToken for user: {}, logging in as admin...", user);
+        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+
+        JsonNode credentialsNode = given().spec(adminLoginContext.requestSpec)
+                .log().all()
+                .param("user", user.getId())
+                .get(WEBCONTEXT_PATH + "/api/rest/userCredentials")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract().as(JsonNode.class);
+        String token = credentialsNode.get("content").get(0).get("resetPasswordToken").asText();
+        LOGGER.debug("getConfirmationToken returning credentials token: {}", token);
+        return token;
+    }
 
     /**
      * Login using the given credentials and return the Single Sign-On token
@@ -228,17 +243,23 @@ public class AbstractControllerIT {
         loginSubmission.put("password", password);
 
         // attempt login and test for a proper result
-        Response rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).body(loginSubmission).when()
+        Response rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).body(loginSubmission).log().all().when()
                 .post(WEBCONTEXT_PATH + "/api/auth/userDetails");
 
         // validate login
-        rs.then().log().all().assertThat().statusCode(200).content("id", assertFailed ? nullValue() : notNullValue());
+        rs.then().log().all()
+                .assertThat()
+                .statusCode(200)
+                .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, assertFailed
+                        ? anyOf(equalTo("invalid"), nullValue())
+                        : allOf(not("invalid"), notNullValue()))
+                .content("id", assertFailed ? nullValue() : notNullValue());
 
         // Get result cookie and user id
         lctx.ssoToken = rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME);
         lctx.userId = rs.jsonPath().getString("id");
 
-        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken);
+        RequestSpecification requestSpec = getRequestSpec(assertFailed ? null : lctx.ssoToken);
         lctx.requestSpec = requestSpec;
 
         return lctx;
@@ -264,11 +285,11 @@ public class AbstractControllerIT {
     }
 
     protected Host getRandomHost(RequestSpecification someRequestSpec) {
-        // obtain a random C2 id
+        // obtain a random Host id
         String id = given().spec(someRequestSpec)
                 .get(WEBCONTEXT_PATH + "/api/rest/hosts").then()
                 .assertThat().body("content[0].id", notNullValue()).extract().path("content[0].id");
-        // use the public C2
+
         Host host = new Host();
         host.setId(id);
         return host;

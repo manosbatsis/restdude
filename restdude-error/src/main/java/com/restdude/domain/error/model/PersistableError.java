@@ -36,7 +36,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties("id")
 public interface PersistableError<ID extends Serializable> extends CalipsoPersistable<ID> {
 
-    public static final int MAX_MSTACKTRACE_LENGTH = 20000;
+    public static final int MAX_MSTACKTRACE_LENGTH = 40000;
     public static final int MAX_DESCRIPTION_LENGTH = 1000;
     public static final int MAX_MESSAGE_LENGTH = 500;
 

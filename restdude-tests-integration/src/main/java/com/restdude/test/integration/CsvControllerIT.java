@@ -1,43 +1,24 @@
 /**
- *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
- *
+ * Module restdude-tests-integration, https://manosbatsis.github.io/restdude/restdude-tests-integration
+ * <p>
  * Full stack, high level framework for horizontal, model-driven application hackers.
- *
+ * <p>
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
- See https://manosbatsis.github.io/restdude
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.restdude.test.integration;
 
@@ -107,7 +88,7 @@ public class CsvControllerIT extends AbstractControllerIT {
             //=========================
             RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, "text/csv", "text/csv");
             String csv = RestAssured.given().spec(reqSpec)
-                    .log().all().get(WEBCONTEXT_PATH  + "/api/rest/registrationCodeBatches/" + batch.getId() + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
+                    .log().all().get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches/" + batch.getId() + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
             CsvMapper mapper = new CsvMapper();
             CsvSchema schema = mapper.schemaFor(UserRegistrationCodeInfo.class).withHeader();
             MappingIterator<Map<String, String>> it = mapper.readerFor(Map.class)
@@ -130,7 +111,7 @@ public class CsvControllerIT extends AbstractControllerIT {
                                 .email("BetaCodeBatch_" + i + "_" + (j++) + "@" + this.getClass().getSimpleName() + ".com")
                                 .registrationCode(rowAsMap.get("id"))
                                 .build())
-                        .post(WEBCONTEXT_PATH  + "/api/auth/account")
+                        .post(WEBCONTEXT_PATH + "/api/auth/account")
                         .then()
                         .log().all()
                         .assertThat()
@@ -154,7 +135,7 @@ public class CsvControllerIT extends AbstractControllerIT {
         // get initial data batch id
         JsonNode batches = given().spec(lctx.requestSpec)
                 .log().all()
-                .get(WEBCONTEXT_PATH  + "/api/rest/registrationCodeBatches")
+                .get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches")
                 .then().log().all().assertThat()
                 .statusCode(200)
                 .body("content[0].id", notNullValue())
@@ -164,7 +145,7 @@ public class CsvControllerIT extends AbstractControllerIT {
         // export code batch to CSV
         RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, "text/csv", "text/csv");
         String csv = RestAssured.given().spec(reqSpec)
-                .log().all().get(WEBCONTEXT_PATH  + "/api/rest/registrationCodeBatches/" + id + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
+                .log().all().get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches/" + id + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
 
         // verify multiple lines
         Assert.assertTrue(csv.split("\\r?\\n").length > 1);

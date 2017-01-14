@@ -18,7 +18,16 @@
     <packaging>war</packaging>
     <properties>
         <project.parent.basedir>../</project.parent.basedir>
+        <it.skip>true</it.skip>
     </properties>
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <properties>
+                <it.skip>false</it.skip>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <filters>
             <filter>${project.parent.basedir}/${build.profile.filters}</filter>
@@ -34,14 +43,62 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>${it.skip}</skip>
+                    <dependenciesToScan>
+                        <dependency>com.restdude:restdude-tests-integration</dependency>
+                    </dependenciesToScan>
+                    <excludes>
+                        <exclude>**/SwaggerStaticExporterIT.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
-                <!--configuration>
-                    <jvmArguments>
+                <configuration>
+                    <!--jvmArguments>
                         -Ddebug=true
-                    </jvmArguments>
-                </configuration-->
+                    </jvmArguments-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${it.skip}</skip>
+                            <wait>60000</wait>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${it.skip}</skip>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
@@ -88,37 +145,12 @@
                                     <artifactId>restdude-war-overlay</artifactId>
                                     <type>war</type>
                                     <overWrite>false</overWrite>
-                                    <includes>
-                                        css/**/*,fonts/**/*,img/**/*,includes/**/*,js/**/*,template/**/*,favicon.ico
-                                    </includes>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.directory}/generated-resources/restdude-unpacked/static
-                            </outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-overlay-resources-jsp</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.restdude</groupId>
-                                    <artifactId>restdude-war-overlay</artifactId>
-                                    <type>war</type>
-                                    <overWrite>false</overWrite>
-                                    <includes>
-                                        **/*.jsp
-                                    </includes>
                                     <excludes>
-                                        WEB-INF/**
+                                        META-INF/**, WEB-INF/**, **/*.jsp
                                     </excludes>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${project.build.directory}/generated-resources/restdude-unpacked/jsp
+                            <outputDirectory>${project.build.directory}/generated-resources/restdude-unpacked/static
                             </outputDirectory>
                         </configuration>
                     </execution>
@@ -157,9 +189,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-tests-integration</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <!-- org.springframework.boot:spring-boot-starter-tomca -->
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -210,11 +255,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-activemq</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
         <dependency>

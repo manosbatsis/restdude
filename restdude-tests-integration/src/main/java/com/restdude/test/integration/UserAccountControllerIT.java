@@ -1,47 +1,27 @@
 /**
- *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
- *
+ * Module restdude-tests-integration, https://manosbatsis.github.io/restdude/restdude-tests-integration
+ * <p>
  * Full stack, high level framework for horizontal, model-driven application hackers.
- *
+ * <p>
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
- See https://manosbatsis.github.io/restdude
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.restdude.test.integration;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.domain.users.model.User;
@@ -110,7 +90,8 @@ public class UserAccountControllerIT extends AbstractControllerIT {
         rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("admin").password("admin").build());
     }
 
-    public Response changeUsername(Loggedincontext loginContext, UsernameChangeRequest usernameChangeRequest) {
+    protected Response changeUsername(Loggedincontext loginContext, UsernameChangeRequest usernameChangeRequest) {
+        LOGGER.debug("changeUsername, loginContext: {}, usernameChangeRequest: {}", loginContext, usernameChangeRequest);
         Response rs = given().spec(loginContext.requestSpec)
                 .body(usernameChangeRequest)
                 .log().all()
@@ -269,22 +250,5 @@ public class UserAccountControllerIT extends AbstractControllerIT {
 
     }
 
-
-    private String getConfirmationToken(User user) {
-        LOGGER.debug("getConfirmationToken for user: {}, logging in as admin...", user);
-        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
-
-        JsonNode credentialsNode = given().spec(adminLoginContext.requestSpec)
-                .log().all()
-                .param("user", user.getId())
-                .get(WEBCONTEXT_PATH + "/api/rest/userCredentials")
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().as(JsonNode.class);
-        String token = credentialsNode.get("content").get(0).get("resetPasswordToken").asText();
-        LOGGER.debug("getConfirmationToken returning credentials token: {}", token);
-        return token;
-    }
 
 }

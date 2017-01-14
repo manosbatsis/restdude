@@ -58,12 +58,6 @@
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.tyrus.bundles</groupId>
-            <artifactId>tyrus-standalone-client</artifactId>
-            <version>1.9</version>
-            <scope>compile</scope>
-        </dependency>
 
     </dependencies>
 </project>

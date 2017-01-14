@@ -9,23 +9,12 @@
     </parent>
 
     <groupId>com.restdude</groupId>
-    <artifactId>restdude-mdd</artifactId>
+    <artifactId>restdude-tests-integration</artifactId>
     <version>2.1.2-SNAPSHOT</version>
-
-    <name>restdude-mdd</name>
     <properties>
         <project.parent.basedir>../</project.parent.basedir>
     </properties>
     <build>
-        <filters>
-            <filter>${project.parent.basedir}/${build.profile.filters}</filter>
-        </filters>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,35 +40,8 @@
 
         <dependency>
             <groupId>com.restdude</groupId>
-            <artifactId>restdude-util</artifactId>
+            <artifactId>restdude-test</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.hateoas</groupId>
-            <artifactId>spring-hateoas</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
         </dependency>
 
     </dependencies>

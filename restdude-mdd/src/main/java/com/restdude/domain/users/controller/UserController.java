@@ -69,7 +69,9 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource", hidden = true)
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public
+    @ResponseBody
+    User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 
@@ -91,15 +93,22 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
-    public User patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public
+    @ResponseBody
+    User patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+        LOGGER.debug("patch, resource: {}", resource);
         ICalipsoUserDetails principal = this.service.getPrincipal();
+        LOGGER.debug("patch, principal: {}", principal);
         if (!principal.isAdmin() && !principal.isSiteAdmin()) {
             resource.setRoles(null);
         }
         resource.setCredentials(null);
         resource.setContactDetails(null);
         resource.setUsername(null);
-        return super.patch(id, resource);
+        User user = super.patch(id, resource);
+        LOGGER.debug("patch, user: {}", user);
+        LOGGER.debug("patch, user: {}", user.getClass().getCanonicalName());
+        return user;
     }
 
     /**

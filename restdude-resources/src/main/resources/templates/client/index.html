@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${appName}</title>
+    <meta lang="en"/>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link type="text/css" th:href="@{/css/main.css}" rel="stylesheet">
+    </link>
+</head>
+<!-- BODY options, add following classes to body to change options
+        1. 'compact-nav'     	  - Switch sidebar to minified version (width 50px)
+        2. 'sidebar-nav'		  - Navigation on the left
+            2.1. 'sidebar-off-canvas'	- Off-Canvas
+                2.1.1 'sidebar-off-canvas-push'	- Off-Canvas which move content
+                2.1.2 'sidebar-off-canvas-with-shadow'	- Add shadow to body elements
+        3. 'fixed-nav'			  - Fixed navigation
+        4. 'navbar-fixed'		  - Fixed navbar
+    -->
+
+<body class="navbar-fixed fixed-nav">
+<!-- Placed at the end of the document so the pages load faster -->
+<script th:attr="data-main=@{/js/main}" id="restdude-script-main" th:src="@{/js/lib/require.js}">
+</script>
+</body>
+</html>

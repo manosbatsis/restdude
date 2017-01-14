@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.validation.ConstraintViolation;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -113,14 +114,14 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param ids Resource ids
      * @return a list of retrieved resources, empty if no resource found
      */
-    Iterable<T> findByIds(Set<ID> ids);
+    List<T> findByIds(Set<ID> ids);
 
     /**
      * Find all resources.
      *
      * @return a list of all resources.
      */
-    Iterable<T> findAll();
+    List<T> findAll();
 
     /**
      * Find resources page-by-page

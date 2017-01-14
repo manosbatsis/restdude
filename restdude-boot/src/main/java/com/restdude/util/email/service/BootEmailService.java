@@ -24,17 +24,15 @@
 package com.restdude.util.email.service;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
-
-import javax.inject.Inject;
 
 @Service
 public class BootEmailService extends AbstractEmailService implements EmailService {
@@ -50,32 +48,54 @@ public class BootEmailService extends AbstractEmailService implements EmailServi
     @Value("${restdude.baseurl}")
     private String baseUrl;
 
-    @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
     private TemplateEngine templateEngine;
 
-    @Inject
-    @Qualifier("messageSource")
     private MessageSource messageSource;
 
+    @Autowired
+    public void setMailSender(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    @Autowired
+    public void setTemplateEngine(TemplateEngine templateEngine) {
+        LOGGER.debug("setTemplateEngine: {}", templateEngine);
+        this.templateEngine = templateEngine;
+    }
+
+    @Autowired
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    @Override
+    protected String getTemplateFilenameSuffix() {
+        return StringUtils.EMPTY;
+    }
+
+    @Override
     public String getDefaultMailFrom() {
         return defaultMailFrom;
     }
 
+    @Override
     public Boolean getMailEnabled() {
         return mailEnabled;
     }
 
+    @Override
     public String getBaseUrl() {
         return baseUrl;
     }
 
+    @Override
     public JavaMailSender getMailSender() {
         return mailSender;
     }
 
+    @Override
     public TemplateEngine getTemplateEngine() {
         return templateEngine;
     }

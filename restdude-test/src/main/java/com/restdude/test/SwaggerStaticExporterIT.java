@@ -30,6 +30,7 @@ import io.github.swagger2markup.Swagger2MarkupConfig;
 import io.github.swagger2markup.Swagger2MarkupConverter;
 import io.github.swagger2markup.builder.Swagger2MarkupConfigBuilder;
 import io.github.swagger2markup.markup.builder.MarkupLanguage;
+import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -37,7 +38,7 @@ import org.testng.annotations.Test;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
 
 /**
  * Generates static swagger docs
@@ -49,8 +50,11 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
     @Test(priority = 10, description = "Test the swagger endpoint and create the static files documentation")
     public void testCreateStaticDocs() throws Exception {
         try {
+
+            Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+            RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
             // get swagger document
-            String json = get(WEBCONTEXT_PATH + "/v2/api-docs").asString();
+            String json = given().spec(adminRequestSpec).get(WEBCONTEXT_PATH + "/v2/api-docs").asString();
 
             // create confluence
             this.makeDocs(json, Paths.get("target/swagger2asciidoc"), MarkupLanguage.ASCIIDOC);

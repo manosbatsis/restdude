@@ -135,6 +135,9 @@ public class DefaultRestErrorResolver implements RestErrorResolver, MessageSourc
                 exceptionClass = exceptionClass.getSuperclass();
             }
         }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("getStandardExceptionHttpStatus, code: {}, exception: {}, resolved as: {}", statusCode, ex.getClass().getCanonicalName(), exceptionClass.getCanonicalName());
+        }
         return HttpStatus.valueOf(statusCode.intValue());
     }
 

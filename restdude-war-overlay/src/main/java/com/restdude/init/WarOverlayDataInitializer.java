@@ -68,6 +68,12 @@ public class WarOverlayDataInitializer extends DataInitializer {
         this.stackTraceService = stackTraceService;
     }
 
+    @Override
+    protected String getTestEmailDomain() {
+        Configuration config = ConfigurationFactory.getConfiguration();
+        return config.getString("restdude.testEmailDomain");
+    }
+
     @PostConstruct
     @Transactional(readOnly = false)
     public void run() {

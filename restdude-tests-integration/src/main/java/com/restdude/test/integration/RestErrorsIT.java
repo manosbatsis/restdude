@@ -1,43 +1,24 @@
 /**
- *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
- *
+ * Module restdude-tests-integration, https://manosbatsis.github.io/restdude/restdude-tests-integration
+ * <p>
  * Full stack, high level framework for horizontal, model-driven application hackers.
- *
+ * <p>
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * restdude-war-overlay - Full stack, high level framework for horizontal, model-driven application hackers.
- See https://manosbatsis.github.io/restdude
- * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.restdude.test.integration;
 
@@ -53,6 +34,7 @@ import com.restdude.util.Constants;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 @Test(/*singleThreaded = true, */description = "Test REST error responses")
 @SuppressWarnings("unused")
@@ -102,7 +83,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         SystemError error = given().spec(spec)
                 .log().all()
                 .body(new UserAccountRegistration.Builder()
-                        .email("operator@abiss.gr")
+                        .email("operator@restdude.com")
                         .build())
                 .post(WEBCONTEXT_PATH + "/api/auth/account")
                 .then()
@@ -177,10 +158,12 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .log().all()
                 .body(new Friendship(new User(adminLoginContext.userId), new User("3c1cd4dc-05fb-49ef-b929-f08d0f0b7c73")))
                 .post(WEBCONTEXT_PATH + "/api/rest/" + Friendship.API_PATH)
-                .then().assertThat()
+                .then()
+                .log().all()
+                .assertThat()
                 // test assertions
-                .statusCode(500)
-                .body("httpStatusCode", is(500))
+                .statusCode(anyOf(is(HttpStatus.SC_INTERNAL_SERVER_ERROR), is(HttpStatus.SC_BAD_REQUEST)))
+                .body("httpStatusCode", anyOf(is(HttpStatus.SC_INTERNAL_SERVER_ERROR), is(HttpStatus.SC_BAD_REQUEST)))
                 .extract().as(SystemError.class);
     }
 

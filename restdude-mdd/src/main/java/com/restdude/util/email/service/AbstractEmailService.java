@@ -61,6 +61,11 @@ public abstract class AbstractEmailService {
 
     public abstract MessageSource getMessageSource();
 
+
+    protected String getTemplateFilenameSuffix() {
+        return ".html";
+    }
+
     /**
      * Send an Account Confirmation email to the given user
      * @param user
@@ -68,7 +73,7 @@ public abstract class AbstractEmailService {
      */
     public void sendAccountConfirmation(final User user) {
         final String subject = getMessageSource().getMessage("email.accountconfirmation.subject", null, user.getLocaleObject());
-        final String templateName = "email-account-confirmation.html";
+        final String templateName = "email-account-confirmation";
         sendEmailToUser(user, subject, templateName);
     }
 
@@ -79,7 +84,7 @@ public abstract class AbstractEmailService {
      */
     public void sendAccountConfirmationExpired(final User user) {
         final String subject = getMessageSource().getMessage("email.accountconfirmation.expired.subject", null, user.getLocaleObject());
-        final String templateName = "email-account-confirmation-expired.html";
+        final String templateName = "email-account-confirmation-expired";
         sendEmailToUser(user, subject, templateName);
     }
 
@@ -90,7 +95,7 @@ public abstract class AbstractEmailService {
      */
     public void sendTest(final User user) {
         final String subject = "[ignore] Email Server Test";
-        final String templateName = "email-test.html";
+        final String templateName = "email-test";
         sendEmailToUser(user, subject, templateName);
     }
 
@@ -102,7 +107,7 @@ public abstract class AbstractEmailService {
 
     public void sendPasswordResetLink(final User user) {
         final String subject = getMessageSource().getMessage("email.passwordreset.subject", null, user.getLocaleObject());
-        final String templateName = "email-password-reset.html";
+        final String templateName = "email-password-reset";
 
         sendEmailToUser(user, subject, templateName);
     }
@@ -133,8 +138,13 @@ public abstract class AbstractEmailService {
     }
 
     @Async
-    public void sendEmail(final String subject, final String templateName, String emailTo, String emailFrom, final Context ctx) {
+    public void sendEmail(final String subject, String templateName, String emailTo, String emailFrom, final Context ctx) {
         try {
+            String suffix = this.getTemplateFilenameSuffix();
+            if (StringUtils.isNoneBlank(suffix)) {
+                templateName = templateName + suffix;
+            }
+
             // Prepare message using a Spring helper
             final MimeMessage mimeMessage = getMailSender().createMimeMessage();
             final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -189,7 +199,7 @@ public abstract class AbstractEmailService {
         message.setTo(recipientEmail);
 
         // Create the HTML body using Thymeleaf
-        final String htmlContent = getTemplateEngine().process("email-withattachment.html", ctx);
+        final String htmlContent = getTemplateEngine().process("email-withattachment", ctx);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Sending email body: \n {}", htmlContent);
         }

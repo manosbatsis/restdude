@@ -82,19 +82,45 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        /*
+
+        <!-- allow anonymous register/login etc. -->
+        <sec:intercept-url pattern="/apiauth/**" access="permitAll()"/>
+        <sec:intercept-url pattern="/api/auth/**" access="permitAll()"/>
+
+        <!-- for spring social login/signup -->
+        <sec:intercept-url pattern="/login" access="permitAll"/>
+        <sec:intercept-url pattern="/signin/**" access="permitAll"/>
+        <sec:intercept-url pattern="/signup/**" access="permitAll"/>
+
+        <!-- protect REST API  modifying methods-->
+        <sec:intercept-url pattern="/api/rest/**" method="POST" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/api/rest/**" method="PUT" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/api/rest/**" method="PATCH" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/api/rest/**" method="DELETE" access="isAuthenticated()"/>
+
+        * */
         http.exceptionHandling().authenticationEntryPoint(this.restAuthenticationEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .headers().frameOptions().sameOrigin()
+                .headers().defaultsDisabled().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
+                .cors().disable()
+                .rememberMe().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/apiauth/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/signin/**").permitAll()
+                .antMatchers("/signup/**").permitAll()
+                .antMatchers("/v2/api-docs").hasAnyAuthority(Role.ROLE_USER)
                 .antMatchers(HttpMethod.POST, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
                 .antMatchers(HttpMethod.PATCH, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
                 .antMatchers(HttpMethod.PUT, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
                 .antMatchers(HttpMethod.DELETE, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
+
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic().authenticationEntryPoint(this.restAuthenticationEntryPoint)
@@ -102,7 +128,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous().disable()
                 .addFilterAt(
                         anonymousAuthenticationFilter(),
-                        org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class);
+                        org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class)
+                .logout().invalidateHttpSession(true);
     }
 
     @Override

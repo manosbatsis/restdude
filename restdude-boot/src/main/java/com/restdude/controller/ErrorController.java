@@ -32,7 +32,8 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,7 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     }
 
 
-    @GetMapping
+    @RequestMapping(method = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.PATCH, RequestMethod.POST, RequestMethod.PUT, RequestMethod.TRACE})
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         Map body = this.getErrorAttributes(request, true);
         LOGGER.debug("body: {}", body);

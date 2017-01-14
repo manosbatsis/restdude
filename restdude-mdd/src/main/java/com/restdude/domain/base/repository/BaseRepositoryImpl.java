@@ -145,12 +145,14 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 		T persisted = this.getOne(delta.getId());
 		LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);
 		// update it by copying all non-null properties from the given transient instance
-		BeanUtils.copyProperties(delta, persisted, EntityUtil.getNullPropertyNames(delta));
+		String[] nullPropertyNames = EntityUtil.getNullPropertyNames(delta);
+		LOGGER.debug("patch, nullPropertyNames: {}", nullPropertyNames);
+		BeanUtils.copyProperties(delta, persisted, nullPropertyNames);
 		LOGGER.debug("patch, patched persisted: {}", persisted);
 		// validate
 		this.validate(persisted);
 		// persist changes
-		return super.save(persisted);
+		return this.merge(persisted);
 	}
 
 	public Optional<T> findOptional(ID id){

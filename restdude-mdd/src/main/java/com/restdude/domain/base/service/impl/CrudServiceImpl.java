@@ -193,7 +193,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      */
     @Override
     @ModelDrivenPreAuth
-    public Iterable<T> findByIds(Set<ID> ids) {
+    public List<T> findByIds(Set<ID> ids) {
         Assert.notNull(ids, "Resource ids can't be null");
         return repository.findAll(ids);
     }
@@ -203,7 +203,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      */
     @Override
     @ModelDrivenPreAuth
-    public Iterable<T> findAll() {
+    public List<T> findAll() {
         return repository.findAll();
     }
 

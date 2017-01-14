@@ -4,7 +4,7 @@
        xmlns:sec="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
     <sec:global-method-security pre-post-annotations="enabled" secured-annotations="enabled">
         <sec:expression-handler ref="expressionHandler"/>
@@ -40,16 +40,18 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <constructor-arg value="foobar"/>
     </bean>
 
-    <!-- choose the default user controller-->
+    <!-- choose the default user controller
     <bean id="userController"
           class="com.restdude.domain.users.controller.UserController"/>
-    <!-- choose the default userDetails controller -->
+          -->
+    <!-- choose the default userDetails controller
     <bean id="userDetailsController"
           class="com.restdude.auth.userdetails.controller.UserDetailsController"/>
-    <!-- Calipso UserDetailsService implementation -->
+           -->
+    <!-- Calipso UserDetailsService implementation
     <bean id="userDetailsService"
           class="com.restdude.auth.userdetails.service.impl.UserDetailsServiceImpl"
-          autowire="byType"/>
+          autowire="byType"/>-->
     <!-- and an alias for the LovalUser service -->
 
     <!-- Do not create sessions -->
@@ -85,7 +87,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <sec:anonymous enabled="false"/>
         <sec:custom-filter ref="anonymousAuthenticationFilter" position="ANONYMOUS_FILTER"/>
 
-        <sec:logout invalidate-session="true" delete-cookies="true"/>
+        <sec:logout invalidate-session="true"/>
 
         <!-- allow anonymous register/login etc. -->
         <sec:intercept-url pattern="/apiauth/**" access="permitAll()"/>
@@ -97,10 +99,10 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <sec:intercept-url pattern="/signup/**" access="permitAll"/>
 
         <!-- protect REST API  modifying methods-->
-        <sec:intercept-url pattern="/api/rest/**" method="POST" access="isAuthenticated()"/>
-        <sec:intercept-url pattern="/api/rest/**" method="PUT" access="isAuthenticated()"/>
-        <sec:intercept-url pattern="/api/rest/**" method="PATCH" access="isAuthenticated()"/>
-        <sec:intercept-url pattern="/api/rest/**" method="DELETE" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/api/rest/**" method="POST" access="hasAnyAuthority('ROLE_USER')"/>
+        <sec:intercept-url pattern="/api/rest/**" method="PUT" access="hasAnyAuthority('ROLE_USER')"/>
+        <sec:intercept-url pattern="/api/rest/**" method="PATCH" access="hasAnyAuthority('ROLE_USER')"/>
+        <sec:intercept-url pattern="/api/rest/**" method="DELETE" access="hasAnyAuthority('ROLE_USER')"/>
 
         <!-- Adds social authentication filter to the Spring Security filter chain. 
         <sec:custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />-->

@@ -37,6 +37,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -55,12 +58,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    public HibernateExceptionTranslator hibernateExceptionTranslator() {
+        return new HibernateExceptionTranslator();
+    }
+
+    @Bean
     public javax.validation.Validator localValidatorFactoryBean() {
         return new LocalValidatorFactoryBean();
     }
 
     @Bean
-    public ModelDrivenBeanGeneratingRegistryPostProcessor modelDrivenBeanGeneratingRegistryPostProcessor() {
+    public static ModelDrivenBeanGeneratingRegistryPostProcessor modelDrivenBeanGeneratingRegistryPostProcessor() {
         return new ModelDrivenBeanGeneratingRegistryPostProcessor();
     }
 
@@ -69,9 +77,21 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         RestRequestNormalizerFilter restRequestNormalizerFilter = new RestRequestNormalizerFilter();
         registrationBean.setFilter(restRequestNormalizerFilter);
-        registrationBean.addUrlPatterns("/api/*", "/apiauth/*", "/ws/*");
+        registrationBean.addUrlPatterns("/api/*", "/apiauth/*", "/ws/*", "/v2/api-docs");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
+    }
+
+    @Bean
+    public Jackson2ObjectMapperBuilder jacksonBuilder() {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.featuresToEnable(com.fasterxml.jackson.databind.MapperFeature.DEFAULT_VIEW_INCLUSION)
+                .featuresToDisable(
+                        com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                        com.fasterxml.jackson.databind.DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS,
+                        com.fasterxml.jackson.databind.DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE,
+                        com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return builder;
     }
 
     @Override
@@ -85,13 +105,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         super.configureMessageConverters(converters);
         converters.add(new CsvMessageConverter());
+        converters.add(new StringHttpMessageConverter());
     }
 
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
         super.configureHandlerExceptionResolvers(exceptionResolvers);
         exceptionResolvers.add(restExceptionHandler());
-        LOGGER.debug("configureHandlerExceptionResolvers: {}", exceptionResolvers);
     }
 
 }
