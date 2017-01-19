@@ -32,6 +32,40 @@ requestUrl  | String | The HTTP request URL, relative to system base URL
 httpStatusCode | Integer | The HTTP response status code
 validationErrors   | Set<ConstraintViolationEntry> | Transient, only contained in relevant JSON HTTP responses
 
+#### HTTP Status Codes
+
+The table bellow shows the HTTP status codes used for each exceptiontype
+
+Class                                | Code  | Description
+------------------------------------ | ----- | ------------
+NoSuchRequestHandlingMethodException | 404 | Not found
+AuthenticationException | 401 | Unauthorized
+UsernameNotFoundException | 401 | Unauthorized
+AccessDeniedException | 401 | Unauthorized
+ObjectNotFoundException | 404 | Not found
+EntityNotFoundException | 404 | Not found
+EntityExistsException | 409 | Conflict
+HttpRequestMethodNotSupportedException | 405 | Method not allowed
+HttpMediaTypeNotSupportedException | 415 | Unsupported media type
+HttpMediaTypeNotAcceptableException | 406 | Not acceptable
+MissingPathVariableException | 500 | Internal server error
+DataIntegrityViolationException | 400 | Bad request
+MissingServletRequestParameterException | 400 | Bad request
+ServletRequestBindingException | 400 | Bad request
+ValidationException | 400 | Bad request
+ConversionNotSupportedException | 500 | Internal server error
+TypeMismatchException | 400 | Bad request
+HttpMessageNotReadableException | 400 | Bad request
+HttpMessageNotWritableException | 500 | Internal server error
+MethodArgumentNotValidException | 400 | Bad request
+MissingServletRequestPartException | 400 | Bad request
+BindException | 400 | Bad request
+NoHandlerFoundException | 404 | Not found
+AsyncRequestTimeoutException | 503 | Service unavailable
+RuntimeException | 500 | Internal server error
+Exception | 500 | Internal server error
+
+
 ### ClientError Properties
 
 Client errors are created upon a client application's request and refer to exceptions occurred specifically within client application code.
