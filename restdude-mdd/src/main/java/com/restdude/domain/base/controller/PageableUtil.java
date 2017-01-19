@@ -38,6 +38,15 @@ public class PageableUtil {
                                                               String direction, Map<String, String[]> paramsMap) {
         Assert.isTrue(page >= 0, "Page index must be greater than, or equal to, 0");
 
+        Sort pageableSort = buildSort(sort, direction);
+
+        ParameterMapBackedPageRequest pageable = pageableSort != null
+                ? new ParameterMapBackedPageRequest(paramsMap, page, size, pageableSort)
+                : new ParameterMapBackedPageRequest(paramsMap, page, size);
+        return pageable;
+    }
+
+    public static Sort buildSort(String sort, String direction) {
         Sort pageableSort = null;
         if (sort != null && direction != null) {
             List<Order> orders = null;
@@ -48,10 +57,6 @@ public class PageableUtil {
             orders.add(order);
             pageableSort = new Sort(orders);
         }
-
-        ParameterMapBackedPageRequest pageable = pageableSort != null
-                ? new ParameterMapBackedPageRequest(paramsMap, page, size, pageableSort)
-                : new ParameterMapBackedPageRequest(paramsMap, page, size);
-        return pageable;
+        return pageableSort;
     }
 }

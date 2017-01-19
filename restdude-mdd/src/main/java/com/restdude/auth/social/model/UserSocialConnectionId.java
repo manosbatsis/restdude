@@ -23,6 +23,9 @@
  */
 package com.restdude.auth.social.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -66,5 +69,29 @@ public class UserSocialConnectionId implements Serializable{
 	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
-	
+
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (UserSocialConnectionId.class.isAssignableFrom(obj.getClass())) {
+            final UserSocialConnectionId other = (UserSocialConnectionId) obj;
+            return new EqualsBuilder()
+                    .append(this.getUserId(), other.getUserId())
+                    .append(this.getProviderId(), other.getProviderId())
+                    .append(this.getRank(), other.getRank())
+                    .isEquals();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
+                .append(this.getUserId())
+                .append(this.getProviderId())
+                .append(this.getRank())
+                .toHashCode();
+    }
 }

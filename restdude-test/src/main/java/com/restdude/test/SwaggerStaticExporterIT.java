@@ -41,13 +41,15 @@ import java.nio.file.Paths;
 import static io.restassured.RestAssured.given;
 
 /**
- * Generates static swagger docs
+ * Generates static swagger docs in {@value SwaggerStaticExporterIT#GENERATED_ASCIIDOCS_PATH}
  */
 public class SwaggerStaticExporterIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwaggerStaticExporterIT.class);
+    private static final String GENERATED_ASCIIDOCS_PATH = "target/swagger2asciidoc";
 
-    @Test(priority = 10, description = "Test the swagger endpoint and create the static files documentation")
+
+    @Test(priority = 100, description = "Test the swagger endpoint and create the static files documentation")
     public void testCreateStaticDocs() throws Exception {
         try {
 
@@ -57,7 +59,7 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
             String json = given().spec(adminRequestSpec).get(WEBCONTEXT_PATH + "/v2/api-docs").asString();
 
             // create confluence
-            this.makeDocs(json, Paths.get("target/swagger2asciidoc"), MarkupLanguage.ASCIIDOC);
+            this.makeDocs(json, Paths.get(GENERATED_ASCIIDOCS_PATH), MarkupLanguage.ASCIIDOC);
 
         } catch (Exception e) {
             LOGGER.error("Failed generating static docs", e);
@@ -72,7 +74,7 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
      * @param outputDirectory the directory to create the docs into
      * @param markupLanguage  the markup language to use
      */
-    private void makeDocs(String json, Path outputDirectory, MarkupLanguage markupLanguage) {
+    protected void makeDocs(String json, Path outputDirectory, MarkupLanguage markupLanguage) {
         // config
         Swagger2MarkupConfig configMarkdown = new Swagger2MarkupConfigBuilder()
                 .withMarkupLanguage(markupLanguage)

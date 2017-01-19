@@ -20,6 +20,7 @@
         <dev.build.timestamp>${maven.build.timestamp}</dev.build.timestamp>
         <build.profile.filters>dev.properties</build.profile.filters>
         <requirejs.resources>${project.parent.basedir}/etc/dummy</requirejs.resources>
+        <it.skip>true</it.skip>
     </properties>
 
     <build>
@@ -85,9 +86,134 @@
                     </webResources>
                 </configuration>
             </plugin>
+            <!-- activate integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>${it.skip}</skip>
+                    <dependenciesToScan>
+                        <dependency>com.restdude:restdude-tests-integration</dependency>
+                    </dependenciesToScan>
+                </configuration>
+            </plugin>
+            <!-- start/stop the container during p re-integration-test/post-integration-test -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${it.skip}</skip>
+                            <sourceDirectory>target/swagger2asciidoc</sourceDirectory>
+                            <outputDirectory>target/swagger2html</outputDirectory>
+                            <backend>html5</backend>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <!-- <doctype>book</doctype> -->
+                            <attributes>
+                                <toc>left</toc>
+                                <sectnums>true</sectnums>
+                                <!-- <stylesheet>my-theme.css</stylesheet> -->
+                                <project-version>${project.version}</project-version>
+                                <endpoint-url>${buildfilters.restdude.contextPath}</endpoint-url>
+                                <sourcedir>${project.build.sourceDirectory}</sourcedir>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
+
+    <profiles>
+        <profile>
+            <!-- ================================= -->
+            <!-- profile for integration testing -->
+            <!-- ================================= -->
+            <id>ci</id>
+            <properties>
+                <it.skip>false</it.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>optimize</id>
+            <properties>
+                <maven.build.timestamp.format>EEE, d MMM yyyy HH:mm:ss Z</maven.build.timestamp.format>
+                <dev.build.timestamp>${maven.build.timestamp}</dev.build.timestamp>
+                <jetty.daemon>true</jetty.daemon>
+                <jetty.jvmArgs>-XX:MaxPermSize=512m</jetty.jvmArgs>
+                <requirejs.resources>${basedir}/target/requirejs-optimized</requirejs.resources>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.bringking</groupId>
+                        <artifactId>requirejs-maven-plugin</artifactId>
+                        <version>2.0.4</version>
+                        <executions>
+                            <execution>
+                                <id>execution-id-requirejs-js</id>
+                                <goals>
+                                    <goal>optimize</goal>
+                                </goals>
+                                <phase>process-resources</phase>
+                                <configuration>
+                                    <!-- path to optimizer json config file(s) -->
+                                    <configFile>
+                                        ${basedir}/src/main/webapp/js/build/build-config.js
+                                    </configFile>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>execution-id-requirejs-css</id>
+                                <goals>
+                                    <goal>optimize</goal>
+                                </goals>
+                                <phase>process-resources</phase>
+
+                                <configuration>
+                                    <configFile>
+                                        ${basedir}/src/main/webapp/js/build/build-css-config.js
+                                    </configFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- optional path to optimizer executable -->
+                            <optimizerFile>
+                                ${basedir}/src/main/webapp/js/build/r.js
+                            </optimizerFile>
+                            <optimizerParameters>
+                                <parameter>optimize=uglify</parameter>
+                            </optimizerParameters>
+                            <!-- Whether or not to process configFile with maven filters. If you
+                                use this option, some options in your configFile must resolve to absolute
+                                paths (see below) -->
+                            <filterConfig>
+                                false
+                            </filterConfig>
+                            <!-- Skip requirejs optimization if true -->
+                            <skip>
+                                false
+                            </skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!-- URL Rewrite Filter -->
@@ -175,168 +301,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <!-- ================================= -->
-            <!-- profile for integration testing -->
-            <!-- ================================= -->
-            <id>ci</id>
-            <build>
-                <plugins>
-                    <!-- activate integration tests -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.19.1</version>
-                        <configuration>
-                            <dependenciesToScan>
-                                <dependency>com.restdude:restdude-tests-integration</dependency>
-                            </dependenciesToScan>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- start/stop the container during p re-integration-test/post-integration-test -->
-                    <plugin>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>start-jetty</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <!-- stop any previous instance to free up the port -->
-                                    <goal>stop</goal>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                                    <webApp>
-                                        <contextPath>/restdude</contextPath>
-                                    </webApp>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-jetty</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctor-maven-plugin</artifactId>
-                        <version>1.5.3</version>
-                        <executions>
-                            <execution>
-                                <id>output-html</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>process-asciidoc</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <skip>true</skip>
-                            <sourceDirectory>target/swagger2asciidoc</sourceDirectory>
-                            <outputDirectory>target/swagger2html</outputDirectory>
-                            <backend>html5</backend>
-                            <sourceHighlighter>coderay</sourceHighlighter>
-                            <!-- 					        <doctype>book</doctype> -->
-                            <attributes>
-                                <toc>left</toc>
-                                <sectnums>true</sectnums>
-                                <!-- 					            <stylesheet>my-theme.css</stylesheet> -->
-                                <project-version>${project.version}</project-version>
-                                <endpoint-url>${buildfilters.restdude.contextPath}</endpoint-url>
-                                <sourcedir>${project.build.sourceDirectory}</sourcedir>
-                            </attributes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>optimize</id>
-            <properties>
-                <maven.build.timestamp.format>EEE, d MMM yyyy HH:mm:ss Z</maven.build.timestamp.format>
-                <dev.build.timestamp>${maven.build.timestamp}</dev.build.timestamp>
-                <jetty.daemon>true</jetty.daemon>
-                <jetty.jvmArgs>-XX:MaxPermSize=512m</jetty.jvmArgs>
-                <requirejs.resources>${basedir}/target/requirejs-optimized</requirejs.resources>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.bringking</groupId>
-                        <artifactId>requirejs-maven-plugin</artifactId>
-                        <version>2.0.4</version>
-                        <executions>
-                            <execution>
-                                <id>execution-id-requirejs-js</id>
-                                <goals>
-                                    <goal>optimize</goal>
-                                </goals>
-                                <phase>process-resources</phase>
-                                <configuration>
-                                    <!-- path to optimizer json config file(s) -->
-                                    <configFile>
-                                        ${basedir}/src/main/webapp/js/build/build-config.js
-                                    </configFile>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>execution-id-requirejs-css</id>
-                                <goals>
-                                    <goal>optimize</goal>
-                                </goals>
-                                <phase>process-resources</phase>
-
-                                <configuration>
-                                    <configFile>
-                                        ${basedir}/src/main/webapp/js/build/build-css-config.js
-                                    </configFile>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <!-- optional path to optimizer executable -->
-                            <optimizerFile>
-                                ${basedir}/src/main/webapp/js/build/r.js
-                            </optimizerFile>
-                            <optimizerParameters>
-                                <parameter>optimize=uglify</parameter>
-                            </optimizerParameters>
-                            <!-- Whether or not to process configFile with maven filters. If you
-                                use this option, some options in your configFile must resolve to absolute
-                                paths (see below) -->
-                            <filterConfig>
-                                false
-                            </filterConfig>
-                            <!-- Skip requirejs optimization if true -->
-                            <skip>
-                                false
-                            </skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>

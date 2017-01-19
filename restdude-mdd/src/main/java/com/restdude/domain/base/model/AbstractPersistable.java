@@ -26,6 +26,7 @@ package com.restdude.domain.base.model;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.domain.base.validation.Unique;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,25 +109,24 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Ca
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AbstractPersistable)) {
-			return false;
+        if (!AbstractPersistable.class.isAssignableFrom(obj.getClass())) {
+            return false;
 		}
 		AbstractPersistable other = (AbstractPersistable) obj;
-		EqualsBuilder builder = new EqualsBuilder();
-		builder.append(this.getId(), other.getId());
-		return builder.isEquals();
-	}
+        return new EqualsBuilder()
+                .append(this.getId(), other.getId())
+                .isEquals();
+    }
 
 	/**
 	 *  @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		int hashCode = 17;
-		hashCode += null == getId() ? 0 : getId().hashCode() * 31;
-		return hashCode;
-	}
-
+        return new HashCodeBuilder()
+                .append(this.getId())
+                .toHashCode();
+    }
 	/**
 	 * {@inheritDoc}
 	 */

@@ -23,6 +23,7 @@
  */
 package com.restdude.domain.base.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
@@ -64,7 +65,8 @@ public abstract class AbstractSystemUuidPersistable extends AbstractPersistable<
 	 * @see org.springframework.data.domain.Persistable#isNew()
 	 */
 	@Override
-	public boolean isNew() {
+    @JsonIgnore
+    public boolean isNew() {
 		return null == getId();
 	}
 

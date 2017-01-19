@@ -39,6 +39,7 @@ import static org.apache.commons.lang.CharEncoding.UTF_8;
  */
 @Entity
 @Table(name = "content_resource")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Resource extends AbstractSystemUuidPersistable {
 
 	private static final long serialVersionUID = -7942906897981646998L;

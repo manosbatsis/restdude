@@ -23,6 +23,7 @@
  */
 package com.restdude.domain.geography.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindAll;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
@@ -165,16 +166,19 @@ public class Country extends AbstractFormalRegion<Continent> {
      * @see org.springframework.data.domain.Persistable#isNew()
      */
     @Override
+    @JsonIgnore
     public boolean isNew() {
         return null == getSavedId();
     }
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof Country) {
-			final Country other = (Country) obj;
-			return new EqualsBuilder().appendSuper(super.equals(other))
-					.isEquals();
+        if (Country.class.isAssignableFrom(obj.getClass())) {
+            final Country other = (Country) obj;
+            return new EqualsBuilder()
+                    .appendSuper(super.equals(other))
+                    .append(this.getName(), other.getName())
+                    .isEquals();
 		} else {
 			return false;
 		}
@@ -184,7 +188,7 @@ public class Country extends AbstractFormalRegion<Continent> {
 	public int hashCode() {
 		return new HashCodeBuilder()
 				.appendSuper(super.hashCode())
-				.append(Country.class)
-				.toHashCode();
+                .append(this.getName())
+                .toHashCode();
 	}
 }
