@@ -11,7 +11,7 @@ var folderMount = function folderMount(connect, point) {
 };
 
 module.exports = function (grunt) {
-
+     require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
     // Grunt project configuration
 
     grunt.initConfig({
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
         server: {
             dev: {
                 options: {
-                    port: 3001,
+                    port: 9000,
                     base: "src/app",
                     keepalive: false,
                     middleware: function (connect, options) {
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
             },
             pro: {
                 options: {
-                    port: 3002,
+                    port: 9000,
                     base: '<%= dirs.dist %>/public',
                     keepalive: true
                 }
@@ -76,17 +76,17 @@ module.exports = function (grunt) {
 
         // files minimize process
 
-        usemin: {
-            options: {
-                basedir: '<%= dirs.staging %>/step2'
-            },
+       // usemin: {
+           // options: {
+            //    basedir: '<%= dirs.staging %>/step2'
+           // },
 
-            html: {
-                expand: true,
-                cwd: '<%= dirs.staging %>/step2',
-                src: ['**/*.{html,css}']
-            }
-        },
+          //  html: {
+          //      expand: true,
+          //      cwd: '<%= dirs.staging %>/step2',
+            //    src: ['**/*.{html,css}']
+          //  }
+       // },
 
         // copy task, define the build workflow
 
@@ -295,7 +295,7 @@ module.exports = function (grunt) {
     });
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-copy');
+    /*grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -311,7 +311,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-livereload');
-    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-connect');*/
     //grunt.loadNpmTasks('grunt-contrib-manifest');
 
 

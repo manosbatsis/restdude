@@ -1,0 +1,14 @@
+{{& code }}
+function main() {
+    var module = JSX.require("{{& mainFile }}");
+    if (!module) {
+        throw new ReferenceError("entry point module not found");
+    }
+    if (!module._Main) {
+        throw new ReferenceError("entry point _Main not found");
+    }
+    if (!module._Main.main) {
+        throw new ReferenceError("entry point _Main.main(:string[]):void not found"):
+    }
+    module._Main.main([]);
+}

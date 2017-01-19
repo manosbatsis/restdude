@@ -1,0 +1,49 @@
+{
+  "name": "backgrid",
+  "version": "0.3.7",
+  "author": "Jimmy Yuen Ho Wong and contributors <wyuenho@gmail.com>",
+  "description": "Backgrid.js is a set of components for building semantic and easily stylable data grid widgets with Backbone.",
+  "homepage": "http://backgridjs.com/",
+  "keywords": [
+    "backgrid",
+    "backbone"
+  ],
+  "main": "./lib/backgrid.js",
+  "scripts": {
+    "test": "karma start --single-run --browsers Chrome,Firefox",
+    "prepublish": "grunt dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/wyuenho/backgrid"
+  },
+  "devDependencies": {
+    "backbone.paginator": "^2.0.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-connect": "^0.11.2",
+    "grunt-contrib-jasmine": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jsduck": "^1.0.1",
+    "grunt-karma": "^0.12.1",
+    "grunt-recess": "^1.0.1",
+    "grunt-template-jasmine-istanbul": "^0.4.0",
+    "jquery": "2.1.0",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-jasmine": "^0.1.6",
+    "karma-safari-launcher": "^0.1.1"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "dependencies": {
+    "backbone": "~1.2.3",
+    "underscore": "^1.8.0"
+  }
+}

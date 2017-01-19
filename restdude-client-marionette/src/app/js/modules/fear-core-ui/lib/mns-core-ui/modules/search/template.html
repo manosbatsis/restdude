@@ -1,0 +1,13 @@
+<form name="productSearch" action="{{& globalHeader.globalSearchLink.action }}" method="GET" role="search">
+  <fieldset class="search-bar--fieldset">
+    <legend class="search-bar--legend">Search for products</legend>
+    <button type="submit" class="search-bar--submit btn btn__icon btn__icon--search"><span class="search-bar--submit-text">Search</span></button>
+    <div class="search-bar--search-wrap">
+      <input name="searchTerm" type="search" placeholder="Search" autocomplete="off" autocapitalize="off" autocorrect="off" class="search-bar--search"  />
+    </div>
+    {{#globalHeader.globalSearchLink.params}}
+    <input type="hidden" name="{{ key }}" />
+    {{/globalHeader.globalSearchLink.params}}
+    <input type="hidden" id="searchSuggestionCmd" value="{{globalHeader.searchSuggestionCmd}}" />
+  </fieldset>
+</form>

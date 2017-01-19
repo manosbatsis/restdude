@@ -1,0 +1,18 @@
+// Content
+.pseudo-quote {
+  quotes: '\201c' '\201d';
+}
+
+.pseudo-quote::before {
+  content: open-quote;
+}
+
+.pseudo-quote::after {
+  content: close-quote;
+}
+
+.pseudo--break::after,
+.pseudo--break::before {
+  content: '\A';
+  white-space: pre;
+}

@@ -1,0 +1,75 @@
+// scss-lint:disable SelectorDepth DuplicateProperty
+
+.nav {
+
+  > li {
+    > a {
+      display: none;
+
+      > h1 {
+        line-height: initial;
+      }
+    }
+
+    > .menu__mobile-level2__label {
+      display: block;
+      text-transform: uppercase;
+      font-size: 1.4rem;
+    }
+  }
+
+  .menu__mobile-level2--back {
+    display: block;
+    text-align: right;
+
+    label {
+      @extend %icon-close;
+      @extend %mns-icons;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-block;
+      padding: $spacing-small;
+    }
+
+    span {
+      display: none;
+    }
+  }
+}
+
+.menu__mobile-level2--show {
+  ~ .nav__content {
+    display: none;
+  }
+
+  &:checked {
+
+    ~ a {
+      display: block;
+    }
+
+    ~ .menu__mobile-level2__label {
+      display: none;
+    }
+
+    ~ .nav__content {
+      display: block;
+    }
+
+    ~ .menu__mobile-level2__overlay {
+      display: block;
+    }
+  }
+}
+
+.menu__mobile-level2__overlay {
+  position: absolute;
+  top: $nav-height;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $nav-overlay-z-index;
+  height: 100vh; // fallback
+  height: calc(100vh - #{$nav-height});
+}

@@ -1,0 +1,61 @@
+@import '../colors';
+@import '../utilities/measurements';
+@import '../layout/grid/mixins_breakpoints';
+
+%base-header {
+  color: $color__brand--dark-grey;
+  display: inline-block;
+  font-weight: normal;
+  margin: 0;
+}
+
+%alpha-text,
+%beta-text,
+%gamma-text,
+%delta-text,
+%epsilon-text,
+%zeta-text {
+  @extend %base-header;
+}
+
+%alpha-text {
+  @include rem(margin-top, -5px);
+  @include rem(font-size, 25px);
+  @include rem(margin-bottom, 10px);
+  @include media-query-small {
+    @include rem(font-size, 36px);
+    @include rem(line-height, 43px);
+    @include rem(margin-bottom, 15px);
+  }
+}
+
+%gamma-text {
+  @include rem(font-size, 15px);
+  @include rem(margin-bottom, 10px);
+  @include media-query-small {
+    @include rem(font-size, 18px);
+    @include rem(margin-bottom, 10px);
+  }
+}
+
+%beta-text {
+  @include rem(margin-top, -2px);
+  @include rem(font-size, 18px);
+  @include rem(margin-bottom, 10px);
+  @include media-query-small {
+    @include rem(margin-top, -5px);
+    @include rem(font-size, 25px);
+    @include rem(margin-bottom, 10px);
+  }
+}
+
+%pseudo {
+  content: ' ';
+  display: inline-block;
+}
+
+%tone--highlight {
+  font-family: $font__mns-london--bold;
+  font-weight: normal;
+  color: $color__brand--black;
+}

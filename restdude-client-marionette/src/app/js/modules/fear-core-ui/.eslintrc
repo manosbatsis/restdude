@@ -1,0 +1,6 @@
+/**
+ * FEAR Core default .eslintrc extending Browser related rules
+ */
+{
+    "extends": "fear-core/node-config"
+}

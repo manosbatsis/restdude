@@ -1,0 +1,37 @@
+// DO NOT DELETE - this directive is required for Sencha Cmd packages to work.
+//@require @packageOverrides
+
+{{& code }}
+
+//<debug>
+Ext.Loader.setPath({
+    'Ext': 'touch/src'
+});
+//</debug>
+
+Ext.defer(function () {
+    var module = JSX.require("{{& mainFile }}");
+    if (!module) {
+        throw new ReferenceError("entry point module not found");
+    }
+    if (!module._Main) {
+        throw new ReferenceError("entry point _Main not found");
+    }
+    if (!module._Main.main) {
+        throw new ReferenceError("entry point _Main.main(:string[]):void not found");
+    }
+    var config = {};
+    for (var key in module.config)
+    {
+        if (module.config.hasOwnProperty(key))
+        {
+            config[key] = module.config[key];
+        }
+    }
+    config.launch = module._Main.main;
+    if (module.onUpdate$)
+    {
+        config.onUpdate = module.onUpdate$;
+    }
+    Ext.application(config);
+}, 10);

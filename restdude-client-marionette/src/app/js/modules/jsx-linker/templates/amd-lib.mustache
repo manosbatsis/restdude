@@ -1,0 +1,8 @@
+define(function () {
+{{& code }}
+return {
+{{# exportItems }}
+    "{{& name }}": JSX.require("{{ filename }}").{{& name }},
+{{/ exportItems }}
+};
+});

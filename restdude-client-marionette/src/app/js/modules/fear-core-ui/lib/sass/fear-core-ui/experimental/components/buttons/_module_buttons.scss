@@ -1,0 +1,9 @@
+@import 'fear-core-ui/layout/grid/mixins_breakpoints';
+
+.btn {
+  ~ .btn {
+    @include media-query-xsmall {
+      margin-left: 2rem;
+    }
+  }
+}

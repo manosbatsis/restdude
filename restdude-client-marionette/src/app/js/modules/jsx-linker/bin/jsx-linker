@@ -1,0 +1,2606 @@
+#!/usr/bin/env node
+// generatedy by JSX compiler 0.9.89 (2014-05-20 06:01:03 +0900; 8e8c6105f36f3dfe440ea026a3c93a3444977102)
+var JSX = {};
+(function (JSX) {
+/**
+ * extends the class
+ */
+function $__jsx_extend(derivations, base) {
+	var ctor = function () {};
+	ctor.prototype = base.prototype;
+	var proto = new ctor();
+	for (var i in derivations) {
+		derivations[i].prototype = proto;
+	}
+}
+
+/**
+ * copies the implementations from source interface to target
+ */
+function $__jsx_merge_interface(target, source) {
+	for (var k in source.prototype)
+		if (source.prototype.hasOwnProperty(k))
+			target.prototype[k] = source.prototype[k];
+}
+
+/**
+ * defers the initialization of the property
+ */
+function $__jsx_lazy_init(obj, prop, func) {
+	function reset(obj, prop, value) {
+		delete obj[prop];
+		obj[prop] = value;
+		return value;
+	}
+
+	Object.defineProperty(obj, prop, {
+		get: function () {
+			return reset(obj, prop, func());
+		},
+		set: function (v) {
+			reset(obj, prop, v);
+		},
+		enumerable: true,
+		configurable: true
+	});
+}
+
+var $__jsx_imul = Math.imul;
+if (typeof $__jsx_imul === "undefined") {
+	$__jsx_imul = function (a, b) {
+		var ah  = (a >>> 16) & 0xffff;
+		var al = a & 0xffff;
+		var bh  = (b >>> 16) & 0xffff;
+		var bl = b & 0xffff;
+		return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+	};
+}
+
+/**
+ * fused int-ops with side-effects
+ */
+function $__jsx_ipadd(o, p, r) {
+	return o[p] = (o[p] + r) | 0;
+}
+function $__jsx_ipsub(o, p, r) {
+	return o[p] = (o[p] - r) | 0;
+}
+function $__jsx_ipmul(o, p, r) {
+	return o[p] = $__jsx_imul(o[p], r);
+}
+function $__jsx_ipdiv(o, p, r) {
+	return o[p] = (o[p] / r) | 0;
+}
+function $__jsx_ipmod(o, p, r) {
+	return o[p] = (o[p] % r) | 0;
+}
+function $__jsx_ippostinc(o, p) {
+	var v = o[p];
+	o[p] = (v + 1) | 0;
+	return v;
+}
+function $__jsx_ippostdec(o, p) {
+	var v = o[p];
+	o[p] = (v - 1) | 0;
+	return v;
+}
+
+/**
+ * non-inlined version of Array#each
+ */
+function $__jsx_forEach(o, f) {
+	var l = o.length;
+	for (var i = 0; i < l; ++i)
+		f(o[i]);
+}
+
+/*
+ * global functions, renamed to avoid conflict with local variable names
+ */
+var $__jsx_parseInt = parseInt;
+var $__jsx_parseFloat = parseFloat;
+function $__jsx_isNaN(n) { return n !== n; }
+var $__jsx_isFinite = isFinite;
+
+var $__jsx_encodeURIComponent = encodeURIComponent;
+var $__jsx_decodeURIComponent = decodeURIComponent;
+var $__jsx_encodeURI = encodeURI;
+var $__jsx_decodeURI = decodeURI;
+
+var $__jsx_ObjectToString = Object.prototype.toString;
+var $__jsx_ObjectHasOwnProperty = Object.prototype.hasOwnProperty;
+
+/*
+ * profiler object, initialized afterwards
+ */
+function $__jsx_profiler() {
+}
+
+/*
+ * public interface to JSX code
+ */
+JSX.require = function (path) {
+	var m = $__jsx_classMap[path];
+	return m !== undefined ? m : null;
+};
+
+JSX.profilerIsRunning = function () {
+	return $__jsx_profiler.getResults != null;
+};
+
+JSX.getProfileResults = function () {
+	return ($__jsx_profiler.getResults || function () { return {}; })();
+};
+
+JSX.postProfileResults = function (url, cb) {
+	if ($__jsx_profiler.postResults == null)
+		throw new Error("profiler has not been turned on");
+	return $__jsx_profiler.postResults(url, cb);
+};
+
+JSX.resetProfileResults = function () {
+	if ($__jsx_profiler.resetResults == null)
+		throw new Error("profiler has not been turned on");
+	return $__jsx_profiler.resetResults();
+};
+JSX.DEBUG = false;
+var GeneratorFunction$0 = 
+(function () {
+  try {
+    return Function('import {GeneratorFunction} from "std:iteration"; return GeneratorFunction')();
+  } catch (e) {
+    return function GeneratorFunction () {};
+  }
+})();
+var __jsx_generator_object$0 = 
+(function () {
+  function __jsx_generator_object() {
+  	this.__next = 0;
+  	this.__loop = null;
+	this.__seed = null;
+  	this.__value = undefined;
+  	this.__status = 0;	// SUSPENDED: 0, ACTIVE: 1, DEAD: 2
+  }
+
+  __jsx_generator_object.prototype.next = function (seed) {
+  	switch (this.__status) {
+  	case 0:
+  		this.__status = 1;
+  		this.__seed = seed;
+
+  		// go next!
+  		this.__loop(this.__next);
+
+  		var done = false;
+  		if (this.__next != -1) {
+  			this.__status = 0;
+  		} else {
+  			this.__status = 2;
+  			done = true;
+  		}
+  		return { value: this.__value, done: done };
+  	case 1:
+  		throw new Error("Generator is already running");
+  	case 2:
+  		throw new Error("Generator is already finished");
+  	default:
+  		throw new Error("Unexpected generator internal state");
+  	}
+  };
+
+  return __jsx_generator_object;
+}());
+function JSXLinker() {
+};
+
+$__jsx_extend([JSXLinker], Object);
+function JSXLinker$templates$() {
+	var result;
+	var templatePath;
+	var files;
+	var i;
+	var filename;
+	result = [  ];
+	templatePath = node.path.resolve(node.__dirname, '../templates');
+	files = node.fs.readdirSync(templatePath);
+	for (i = 0; i < files.length; i++) {
+		filename = files[i];
+		if (filename.slice(-9) === ".mustache") {
+			result.push(filename.slice(0, -9));
+		}
+	}
+	return result;
+};
+
+JSXLinker.templates$ = JSXLinker$templates$;
+
+function JSXLinker$link$LJSXLinker$SSS($this, sourcecode, templateName, output) {
+	var templatePath;
+	var templateSrc;
+	var template;
+	var parser;
+	var option;
+	var resultCode;
+	var options$0$0;
+	var tokens$0$0$0;
+	var context$0$0$0;
+	templatePath = node.path.resolve(node.__dirname, '../templates', templateName + '.mustache');
+	templateSrc = node.fs.readFileSync(templatePath, 'utf8');
+	options$0$0 = new Hogan$x2EOptions$0();
+	template = Hogan$generate$ALHogan$x2EToken$SLHogan$x2EOptions$((tokens$0$0$0 = Hogan$scan$SS(templateSrc, options$0$0.delimiters), Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens$0$0$0, [  ], options$0$0.sectionTags)), templateSrc, options$0$0);
+	parser = new JSCodeParser(sourcecode);
+	option = JSCodeParser$getOption$LJSCodeParser$(parser);
+	context$0$0$0 = [ option ];
+	resultCode = template._ren$AXHLHogan$x2ETemplate$S(context$0$0$0, ({  }), '');
+	if (output) {
+		node.fs.writeFileSync(output, resultCode, 'utf8');
+	} else {
+		process.stdout.write(resultCode);
+	}
+};
+
+JSXLinker.link$LJSXLinker$SSS = JSXLinker$link$LJSXLinker$SSS;
+
+function _Main() {
+};
+
+$__jsx_extend([_Main], Object);
+function _Main$main$AS(argv) {
+	var templates;
+	var parser;
+	var help;
+	var template;
+	var output;
+	var source;
+	var stdin;
+	var opt;
+	var linker;
+	var sourceBuffer;
+	templates = JSXLinker$templates$();
+	parser = new BasicParser('s(stdin)o:(output)t:(template)h(help)', argv);
+	help = false;
+	template = '';
+	output = '';
+	source = '';
+	stdin = false;
+	opt = BasicParser$getopt$LBasicParser$(parser);
+	while (opt) {
+		switch (opt.option) {
+		case 's':
+			stdin = true;
+			break;
+		case 't':
+			template = opt.optarg;
+			break;
+		case 'o':
+			output = opt.optarg;
+			break;
+		case 'h':
+			help = true;
+			break;
+		default:
+			source = opt.option;
+			break;
+		}
+		opt = BasicParser$getopt$LBasicParser$(parser);
+	}
+	if (help || ! source && ! stdin || ! template) {
+		console.error("\n$ jsx-linker [options] [source]\n\noptions:\n  -s, --stdin              : read source file from stdin\n  -o file, --output=file   : set output file\n  -t name, --template=name : set template file\n  -h, --help               : show this message\n\nsupported templates:");
+		console.error('  ' + templates.join(', '));
+	} else {
+		linker = ({});
+		if (stdin) {
+			sourceBuffer = [  ];
+			process.stdin.on('data', (function (chunk) {
+				sourceBuffer.push(chunk + "");
+			}));
+			process.stdin.on('end', (function () {
+				JSXLinker$link$LJSXLinker$SSS(linker, sourceBuffer.join(''), template, output);
+			}));
+		} else {
+			JSXLinker$link$LJSXLinker$SSS(linker, node.fs.readFileSync(source, 'utf8'), template, output);
+		}
+	}
+};
+
+_Main.main = _Main$main$AS;
+_Main.main$AS = _Main$main$AS;
+
+function node() {}
+$__jsx_extend([node], Object);
+function node$require$S(source) {
+	var src;
+	src = 'require(' + JSON.stringify(source) + ')';
+	return eval(src);
+};
+
+node.require$S = node$require$S;
+
+function CommandOption(option) {
+	this.option = option;
+	this.optarg = null;
+	this.error = false;
+};
+
+function CommandOption$0(option, optarg) {
+	this.option = option;
+	this.optarg = optarg;
+	this.error = false;
+};
+
+function CommandOption$1(option, optarg, error) {
+	this.option = option;
+	this.optarg = optarg;
+	this.error = error;
+};
+
+$__jsx_extend([CommandOption, CommandOption$0, CommandOption$1], Object);
+function BasicParser(optstring, argv) {
+	this._silent = false;
+	this._argv = argv;
+	this._options = ({  });
+	this._aliases = ({  });
+	this._optind = 0;
+	this._subind = 0;
+	this._extraoptions = false;
+	BasicParser$_parseOptstr$LBasicParser$S(this, optstring);
+};
+
+$__jsx_extend([BasicParser], Object);
+function BasicParser$_makeError$S(msg) {
+	return new Error('getopt: ' + msg);
+};
+
+BasicParser._makeError$S = BasicParser$_makeError$S;
+
+BasicParser.prototype._parseOptstr$S = function (optstr) {
+	var i;
+	var chr;
+	var arg;
+	var cp;
+	var alias;
+	i = 0;
+	if (optstr.length > 0 && optstr.slice(0, 1) === ':') {
+		this._silent = true;
+		i++;
+	} else {
+		this._silent = false;
+	}
+	while (i < optstr.length) {
+		chr = optstr.slice(i, i + 1);
+		arg = false;
+		if (! /^[\w\d]$/.test(chr)) {
+			throw new Error("invalid optstring: only alphanumeric characters may be used as options: " + chr);
+		}
+		if (i + 1 < optstr.length && optstr.slice(i + 1, i + 2) === ':') {
+			arg = true;
+			i++;
+		}
+		this._options[chr] = arg;
+		while (i + 1 < optstr.length && optstr.slice(i + 1, i + 2) === '(') {
+			i++;
+			cp = optstr.indexOf(')', i + 1);
+			if (cp === -1) {
+				throw new Error("invalid optstring: missing \")\" to match \"(\" at char " + (i + ""));
+			}
+			alias = optstr.substring(i + 1, cp);
+			this._aliases[alias] = chr;
+			i = cp;
+		}
+		i++;
+	}
+};
+
+
+function BasicParser$_parseOptstr$LBasicParser$S($this, optstr) {
+	var i;
+	var chr;
+	var arg;
+	var cp;
+	var alias;
+	i = 0;
+	if (optstr.length > 0 && optstr.slice(0, 1) === ':') {
+		$this._silent = true;
+		i++;
+	} else {
+		$this._silent = false;
+	}
+	while (i < optstr.length) {
+		chr = optstr.slice(i, i + 1);
+		arg = false;
+		if (! /^[\w\d]$/.test(chr)) {
+			throw new Error("invalid optstring: only alphanumeric characters may be used as options: " + chr);
+		}
+		if (i + 1 < optstr.length && optstr.slice(i + 1, i + 2) === ':') {
+			arg = true;
+			i++;
+		}
+		$this._options[chr] = arg;
+		while (i + 1 < optstr.length && optstr.slice(i + 1, i + 2) === '(') {
+			i++;
+			cp = optstr.indexOf(')', i + 1);
+			if (cp === -1) {
+				throw new Error("invalid optstring: missing \")\" to match \"(\" at char " + (i + ""));
+			}
+			alias = optstr.substring(i + 1, cp);
+			$this._aliases[alias] = chr;
+			i = cp;
+		}
+		i++;
+	}
+};
+
+BasicParser._parseOptstr$LBasicParser$S = BasicParser$_parseOptstr$LBasicParser$S;
+
+BasicParser.prototype.optind$ = function () {
+	return this._optind;
+};
+
+
+function BasicParser$optind$LBasicParser$($this) {
+	return $this._optind;
+};
+
+BasicParser.optind$LBasicParser$ = BasicParser$optind$LBasicParser$;
+
+BasicParser.prototype.getopt$ = function () {
+	var arg;
+	var $__jsx_postinc_t;
+	if (this._optind >= this._argv.length) {
+		return null;
+	}
+	arg = this._argv[this._optind];
+	if (this._extraoptions) {
+		($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+		return ({option: arg, optarg: null, error: false});
+	}
+	if (this._subind === 0) {
+		if (arg === '-' || arg === '') {
+			return null;
+		}
+		if (arg.charAt(0) !== '-') {
+			this._extraoptions = true;
+			($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+			return ({option: arg, optarg: null, error: false});
+		}
+		if (arg === '--') {
+			($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+			this._subind = 0;
+			return null;
+		}
+		if (arg.slice(1, 2) === '-') {
+			return BasicParser$_getoptLong$LBasicParser$(this);
+		}
+		($__jsx_postinc_t = this._subind, this._subind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+	}
+	return BasicParser$_getoptShort$LBasicParser$(this);
+};
+
+
+function BasicParser$getopt$LBasicParser$($this) {
+	var arg;
+	var $__jsx_postinc_t;
+	if ($this._optind >= $this._argv.length) {
+		return null;
+	}
+	arg = $this._argv[$this._optind];
+	if ($this._extraoptions) {
+		($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+		return ({option: arg, optarg: null, error: false});
+	}
+	if ($this._subind === 0) {
+		if (arg === '-' || arg === '') {
+			return null;
+		}
+		if (arg.charAt(0) !== '-') {
+			$this._extraoptions = true;
+			($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+			return ({option: arg, optarg: null, error: false});
+		}
+		if (arg === '--') {
+			($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+			$this._subind = 0;
+			return null;
+		}
+		if (arg.slice(1, 2) === '-') {
+			return BasicParser$_getoptLong$LBasicParser$($this);
+		}
+		($__jsx_postinc_t = $this._subind, $this._subind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+	}
+	return BasicParser$_getoptShort$LBasicParser$($this);
+};
+
+BasicParser.getopt$LBasicParser$ = BasicParser$getopt$LBasicParser$;
+
+BasicParser.prototype._getoptShort$ = function () {
+	var arg;
+	var chr;
+	var _subind$0;
+	var $__jsx_postinc_t;
+	arg = this._argv[this._optind];
+	chr = arg.slice(_subind$0 = this._subind, _subind$0 + 1);
+	if ((this._subind = (this._subind + 1) | 0) >= arg.length) {
+		($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+		this._subind = 0;
+	}
+	return (! (chr in this._options) ? BasicParser$_errInvalidOption$LBasicParser$S(this, chr) : ! this._options[chr] ? ({option: chr, optarg: null, error: false}) : BasicParser$_getoptArgument$LBasicParser$S(this, chr));
+};
+
+
+function BasicParser$_getoptShort$LBasicParser$($this) {
+	var arg;
+	var chr;
+	var _subind$0;
+	var $__jsx_postinc_t;
+	arg = $this._argv[$this._optind];
+	chr = arg.slice(_subind$0 = $this._subind, _subind$0 + 1);
+	if (($this._subind = ($this._subind + 1) | 0) >= arg.length) {
+		($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+		$this._subind = 0;
+	}
+	return (! (chr in $this._options) ? BasicParser$_errInvalidOption$LBasicParser$S($this, chr) : ! $this._options[chr] ? ({option: chr, optarg: null, error: false}) : BasicParser$_getoptArgument$LBasicParser$S($this, chr));
+};
+
+BasicParser._getoptShort$LBasicParser$ = BasicParser$_getoptShort$LBasicParser$;
+
+BasicParser.prototype._getoptLong$ = function () {
+	var arg;
+	var eq;
+	var alias;
+	var chr;
+	var $__jsx_postinc_t;
+	arg = this._argv[this._optind];
+	eq = arg.indexOf('=');
+	alias = arg.substring(2, (eq === -1 ? arg.length : eq));
+	if (! (alias in this._aliases)) {
+		if (! this._silent) {
+			console.error('illegal option -- ' + alias + '\n');
+		}
+		return ({option: '?', optarg: alias, error: true});
+	}
+	chr = this._aliases[alias];
+	if (! this._options[chr]) {
+		if (eq !== -1) {
+			if (! this._silent) {
+				console.error('option expects no argument -- ' + alias + '\n');
+			}
+			return ({option: '?', optarg: alias, error: true});
+		}
+		($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+		return ({option: chr, optarg: null, error: false});
+	}
+	if (eq === -1) {
+		($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+	} else {
+		this._subind = (eq + 1 | 0);
+	}
+	return BasicParser$_getoptArgument$LBasicParser$S(this, chr);
+};
+
+
+function BasicParser$_getoptLong$LBasicParser$($this) {
+	var arg;
+	var eq;
+	var alias;
+	var chr;
+	var $__jsx_postinc_t;
+	arg = $this._argv[$this._optind];
+	eq = arg.indexOf('=');
+	alias = arg.substring(2, (eq === -1 ? arg.length : eq));
+	if (! (alias in $this._aliases)) {
+		if (! $this._silent) {
+			console.error('illegal option -- ' + alias + '\n');
+		}
+		return ({option: '?', optarg: alias, error: true});
+	}
+	chr = $this._aliases[alias];
+	if (! $this._options[chr]) {
+		if (eq !== -1) {
+			if (! $this._silent) {
+				console.error('option expects no argument -- ' + alias + '\n');
+			}
+			return ({option: '?', optarg: alias, error: true});
+		}
+		($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+		return ({option: chr, optarg: null, error: false});
+	}
+	if (eq === -1) {
+		($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+	} else {
+		$this._subind = (eq + 1 | 0);
+	}
+	return BasicParser$_getoptArgument$LBasicParser$S($this, chr);
+};
+
+BasicParser._getoptLong$LBasicParser$ = BasicParser$_getoptLong$LBasicParser$;
+
+BasicParser.prototype._getoptArgument$S = function (chr) {
+	var arg;
+	var $__jsx_postinc_t;
+	if (this._optind >= this._argv.length) {
+		return BasicParser$_errMissingArg$LBasicParser$S(this, chr);
+	}
+	arg = this._argv[this._optind].substring(this._subind);
+	($__jsx_postinc_t = this._optind, this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+	this._subind = 0;
+	return ({option: chr, optarg: arg, error: false});
+};
+
+
+function BasicParser$_getoptArgument$LBasicParser$S($this, chr) {
+	var arg;
+	var $__jsx_postinc_t;
+	if ($this._optind >= $this._argv.length) {
+		return BasicParser$_errMissingArg$LBasicParser$S($this, chr);
+	}
+	arg = $this._argv[$this._optind].substring($this._subind);
+	($__jsx_postinc_t = $this._optind, $this._optind = ($__jsx_postinc_t + 1) | 0, $__jsx_postinc_t);
+	$this._subind = 0;
+	return ({option: chr, optarg: arg, error: false});
+};
+
+BasicParser._getoptArgument$LBasicParser$S = BasicParser$_getoptArgument$LBasicParser$S;
+
+BasicParser.prototype._errMissingArg$S = function (chr) {
+	if (this._silent) {
+		return ({option: ':', optarg: chr, error: false});
+	}
+	console.error('option requires an argument -- ' + chr + '\n');
+	return ({option: '?', optarg: chr, error: true});
+};
+
+
+function BasicParser$_errMissingArg$LBasicParser$S($this, chr) {
+	if ($this._silent) {
+		return ({option: ':', optarg: chr, error: false});
+	}
+	console.error('option requires an argument -- ' + chr + '\n');
+	return ({option: '?', optarg: chr, error: true});
+};
+
+BasicParser._errMissingArg$LBasicParser$S = BasicParser$_errMissingArg$LBasicParser$S;
+
+BasicParser.prototype._errInvalidOption$S = function (chr) {
+	if (! this._silent) {
+		console.error('illegal option -- ' + chr + '\n');
+	}
+	return ({option: '?', optarg: chr, error: true});
+};
+
+
+function BasicParser$_errInvalidOption$LBasicParser$S($this, chr) {
+	if (! $this._silent) {
+		console.error('illegal option -- ' + chr + '\n');
+	}
+	return ({option: '?', optarg: chr, error: true});
+};
+
+BasicParser._errInvalidOption$LBasicParser$S = BasicParser$_errInvalidOption$LBasicParser$S;
+
+BasicParser.prototype._errExtraArg$S = function (chr) {
+	if (! this._silent) {
+		console.error('option expects no argument -- ' + chr + '\n');
+	}
+	return ({option: '?', optarg: chr, error: true});
+};
+
+
+function BasicParser$_errExtraArg$LBasicParser$S($this, chr) {
+	if (! $this._silent) {
+		console.error('option expects no argument -- ' + chr + '\n');
+	}
+	return ({option: '?', optarg: chr, error: true});
+};
+
+BasicParser._errExtraArg$LBasicParser$S = BasicParser$_errExtraArg$LBasicParser$S;
+
+var HoganJavaScriptHelper$0 = 
+{
+    generateTemplateFunc : function (body) {
+        return new Function('c', 'p', 'i', body);
+    },
+    generatePartialFunc : function (body) {
+        return new Function('c', 'p', 't', 'i', body);
+    }
+}
+;
+function Hogan() {
+};
+
+$__jsx_extend([Hogan], Object);
+function Hogan$scan$SS(text, delimiters) {
+	var len;
+	var IN_TEXT;
+	var IN_TAG_TYPE;
+	var IN_TAG;
+	var state;
+	var tagType;
+	var buf;
+	var tokens;
+	var seenTag;
+	var seenTagPosition;
+	var i;
+	var lineStart;
+	var otag;
+	var ctag;
+	var addBuf;
+	var lineIsWhitespace;
+	var filterLine;
+	var changeDelimiters;
+	var delimitersWords;
+	var tagExists;
+	var token$0;
+	len = text.length;
+	IN_TEXT = 0;
+	IN_TAG_TYPE = 1;
+	IN_TAG = 2;
+	state = IN_TEXT;
+	tagType = '';
+	buf = '';
+	tokens = [  ];
+	seenTag = false;
+	seenTagPosition = 0;
+	i = 0;
+	lineStart = 0;
+	otag = '{{';
+	ctag = '}}';
+	function addBuf() {
+		if (buf.length > 0) {
+			tokens.push(({tag: '_t', text: buf, indent: "", n: "", otag: "", ctag: "", i: 0, end: 0, last: false, nodes: null}));
+			buf = '';
+		}
+	}
+	function lineIsWhitespace() {
+		var isAllWhitespace;
+		var j;
+		var tokens$len$0;
+		isAllWhitespace = true;
+		for ((j = lineStart, tokens$len$0 = tokens.length); j < tokens$len$0; j++) {
+			isAllWhitespace = Hogan.tags[tokens[j].tag] < Hogan.tags._v || tokens[j].tag === '_t' && tokens[j].text.match(Hogan.rIsWhitespace) == null;
+			if (! isAllWhitespace) {
+				return false;
+			}
+		}
+		return isAllWhitespace;
+	}
+	function filterLine(haveSeenTag, noNewLine) {
+		var j;
+		var next;
+		addBuf();
+		if (haveSeenTag && lineIsWhitespace()) {
+			for (j = lineStart; j < tokens.length; j++) {
+				if (tokens[j].text) {
+					if ((next = tokens[j + 1]) && next.tag === '>') {
+						next.indent = tokens[j].text.toString();
+					}
+					tokens.splice(j, 1);
+				}
+			}
+		} else if (! noNewLine) {
+			tokens.push(new Hogan$x2EToken$0('\n'));
+		}
+		seenTag = false;
+		seenTagPosition = 0;
+		lineStart = tokens.length;
+	}
+	function changeDelimiters(text, index) {
+		var close;
+		var closeIndex;
+		var delimiters;
+		close = '=' + ctag;
+		closeIndex = text.indexOf(close, index);
+		delimiters = text.substring(text.indexOf('=', index) + 1, closeIndex).trim().split(' ');
+		otag = delimiters[0];
+		ctag = delimiters[delimiters.length - 1];
+		return (closeIndex + close.length - 1 | 0);
+	}
+	if (delimiters) {
+		delimitersWords = delimiters.split(' ');
+		otag = delimitersWords[0];
+		ctag = delimitersWords[1];
+	}
+	for (i = 0; i < len; i++) {
+		if (state === IN_TEXT) {
+			if (Hogan$tagChange$SSI(otag, text, (i | 0))) {
+				--i;
+				addBuf();
+				state = IN_TAG_TYPE;
+			} else if (text.charAt(i) === '\n') {
+				filterLine(seenTag, false);
+			} else {
+				buf += text.charAt(i);
+			}
+		} else if (state === IN_TAG_TYPE) {
+			i += otag.length - 1;
+			tagExists = Hogan.tags[text.charAt(i + 1)];
+			tagType = (tagExists ? text.charAt(i + 1) : '_v');
+			if (tagType === '=') {
+				i = changeDelimiters(text, (i | 0));
+				state = IN_TEXT;
+			} else {
+				if (tagExists) {
+					i++;
+				}
+				state = IN_TAG;
+			}
+			seenTag = !! i;
+			seenTagPosition = (i | 0);
+		} else if (Hogan$tagChange$SSI(ctag, text, (i | 0))) {
+			tokens.push(({tag: tagType, text: "", indent: "", n: buf.trim(), otag: otag, ctag: ctag, i: (tagType === '/' ? ((seenTagPosition - otag.length) | 0) : i + ctag.length), end: 0, last: false, nodes: null}));
+			buf = '';
+			i += ctag.length - 1;
+			state = IN_TEXT;
+			if (tagType === '{') {
+				if (ctag === '}}') {
+					i++;
+				} else {
+					token$0 = tokens[tokens.length - 1];
+					if (token$0.n.slice(-1) === '}') {
+						token$0.n = token$0.n.slice(0, -1);
+					}
+				}
+			}
+		} else {
+			buf += text.charAt(i);
+		}
+	}
+	filterLine(seenTag, true);
+	return tokens;
+};
+
+Hogan.scan$SS = Hogan$scan$SS;
+
+function Hogan$cleanTripleStache$LHogan$x2EToken$(token) {
+	if (token.n.slice(-1) === '}') {
+		token.n = token.n.slice(0, -1);
+	}
+};
+
+Hogan.cleanTripleStache$LHogan$x2EToken$ = Hogan$cleanTripleStache$LHogan$x2EToken$;
+
+function Hogan$tagChange$SSI(tag, text, index) {
+	var i;
+	var l;
+	if (text.charAt(index) !== tag.charAt(0)) {
+		return false;
+	}
+	for ((i = 1, l = tag.length); i < l; i++) {
+		if (text.charAt(index + i) !== tag.charAt(i)) {
+			return false;
+		}
+	}
+	return true;
+};
+
+Hogan.tagChange$SSI = Hogan$tagChange$SSI;
+
+function Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens, stack, customTags) {
+	var instructions;
+	var opener;
+	var tail;
+	var token;
+	instructions = [  ];
+	opener = null;
+	tail = stack[stack.length - 1];
+	token = null;
+	while (tokens.length > 0) {
+		token = tokens.shift();
+		if (tail && tail.tag === '<' && ! (token.tag in Hogan.allowedInSuper)) {
+			throw new Error('Illegal content in < super tag.');
+		}
+		if (Hogan.tags[token.tag] && Hogan.tags[token.tag] <= Hogan.tags.$ || Hogan$isOpener$LHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(token, customTags)) {
+			stack.push(token);
+			token.nodes = Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens, stack, customTags);
+		} else if (token.tag === '/') {
+			if (stack.length === 0) {
+				throw new Error('Closing tag without opener: /' + token.n);
+			}
+			opener = stack.pop();
+			if (token.n !== opener.n && ! Hogan$isCloser$SSALHogan$x2EOptions$x2ECustomTag$(token.n, opener.n, customTags)) {
+				throw new Error('Nesting error: ' + opener.n + ' vs. ' + token.n);
+			}
+			opener.end = token.i;
+			return instructions;
+		} else if (token.tag === '\n') {
+			token.last = tokens.length === 0 || tokens[0].tag === '\n';
+		}
+		instructions.push(token);
+	}
+	if (stack.length > 0) {
+		throw new Error('missing closing tag: ' + stack.pop().n);
+	}
+	return instructions;
+};
+
+Hogan.buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$ = Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$;
+
+function Hogan$isOpener$LHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(token, tags) {
+	var i;
+	var l;
+	for ((i = 0, l = tags.length); i < l; i++) {
+		if (tags[i].o === token.n) {
+			token.tag = '#';
+			return true;
+		}
+	}
+	return false;
+};
+
+Hogan.isOpener$LHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$ = Hogan$isOpener$LHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$;
+
+function Hogan$isCloser$SSALHogan$x2EOptions$x2ECustomTag$(close, open, tags) {
+	var i;
+	var l;
+	for ((i = 0, l = tags.length); i < l; i++) {
+		if (tags[i].c === close && tags[i].o === open) {
+			return true;
+		}
+	}
+	return false;
+};
+
+Hogan.isCloser$SSALHogan$x2EOptions$x2ECustomTag$ = Hogan$isCloser$SSALHogan$x2EOptions$x2ECustomTag$;
+
+function Hogan$stringifySubstitutions$HS(obj) {
+	var items;
+	var key;
+	items = [  ];
+	for (key in obj) {
+		items.push('"' + key.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r') + '": function(c,p,t,i) {' + obj[key] + '}');
+	}
+	return "{ " + items.join(",") + " }";
+};
+
+Hogan.stringifySubstitutions$HS = Hogan$stringifySubstitutions$HS;
+
+function Hogan$stringifyPartials$LHogan$x2ECodeObj$(codeObj) {
+	var partials;
+	var key;
+	var s$0;
+	partials = [  ];
+	for (key in codeObj.partials) {
+		partials.push('"' + key.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r') + '":{name:"' + (s$0 = codeObj.partials[key].name, s$0.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '", ' + Hogan$stringifyPartials$LHogan$x2ECodeObj$(codeObj.partials[key]) + "}");
+	}
+	return "new Hogan.Template({" + partials.join(",") + "}, " + Hogan$stringifySubstitutions$HS(codeObj.subs) + ")";
+};
+
+Hogan.stringifyPartials$LHogan$x2ECodeObj$ = Hogan$stringifyPartials$LHogan$x2ECodeObj$;
+
+function Hogan$stringify$LHogan$x2ECodeObj$SX(codeObj, text, options) {
+	var src;
+	var code$0;
+	src = [ "  override function _ren (c:variant,p:Map.<Hogan.Template>,i:int):string {", "    " + (code$0 = codeObj.code, 'var t=this;t.pb(i=i||"");' + code$0 + 'return t.fl();'), "  }\n", "  override function getPartials() : Map<Hogan.Template> {", "    return " + Hogan$stringifyPartials$LHogan$x2ECodeObj$(codeObj) + ";\n  }\n" ];
+	return src.join('\n');
+};
+
+Hogan.stringify$LHogan$x2ECodeObj$SX = Hogan$stringify$LHogan$x2ECodeObj$SX;
+
+function Hogan$generateJSX$ALHogan$x2EToken$SLHogan$x2EOptions$(tree, text, options) {
+	var context;
+	var src;
+	Hogan.serialNo = 0;
+	context = ({partials: ({  }), code: '', subs: ({  }), prefix: "", inPartial: false, name: "", rawJSX: false});
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(tree, context);
+	src = [ 'import "hogan/template.jsx";', 'class GeneratedTemplate extends Hogan.Template {', Hogan$stringify$LHogan$x2ECodeObj$SX(context, text, options), '}' ];
+	return src.join('\n');
+};
+
+Hogan.generateJSX$ALHogan$x2EToken$SLHogan$x2EOptions$ = Hogan$generateJSX$ALHogan$x2EToken$SLHogan$x2EOptions$;
+
+function Hogan$generate$ALHogan$x2EToken$SLHogan$x2EOptions$(tree, text, options) {
+	var context;
+	var template$0;
+	var code$0;
+	var code$0$0;
+	Hogan.serialNo = 0;
+	context = ({partials: ({  }), code: '', subs: ({  }), prefix: "", inPartial: false, name: "", rawJSX: false});
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(tree, context);
+	template$0 = Hogan$makePartials$LHogan$x2ECodeObj$(context);
+	code$0 = HoganJavaScriptHelper$0.generateTemplateFunc((code$0$0 = context.code, 'var t=this;t.pb(i=i||"");' + code$0$0 + 'return t.fl();'));
+	return new Hogan$x2EGeneratedTemplate(code$0, template$0, text, options);
+};
+
+Hogan.generate$ALHogan$x2EToken$SLHogan$x2EOptions$ = Hogan$generate$ALHogan$x2EToken$SLHogan$x2EOptions$;
+
+function Hogan$makeTemplate$LHogan$x2ECodeObj$SLHogan$x2EOptions$(codeObj, text, options) {
+	var template;
+	var code;
+	var code$0;
+	template = Hogan$makePartials$LHogan$x2ECodeObj$(codeObj);
+	code = HoganJavaScriptHelper$0.generateTemplateFunc((code$0 = codeObj.code, 'var t=this;t.pb(i=i||"");' + code$0 + 'return t.fl();'));
+	return new Hogan$x2EGeneratedTemplate(code, template, text, options);
+};
+
+Hogan.makeTemplate$LHogan$x2ECodeObj$SLHogan$x2EOptions$ = Hogan$makeTemplate$LHogan$x2ECodeObj$SLHogan$x2EOptions$;
+
+function Hogan$makePartials$LHogan$x2ECodeObj$(codeObj) {
+	var template;
+	var key;
+	var code$0;
+	template = new Hogan$x2ETemplate$4(codeObj);
+	for (key in codeObj.partials) {
+		if ($__jsx_ObjectHasOwnProperty.call(codeObj.partials, key)) {
+			template.partials[key] = Hogan$makePartials$LHogan$x2ECodeObj$(codeObj.partials[key]);
+		}
+	}
+	for (key in codeObj.subs) {
+		if ($__jsx_ObjectHasOwnProperty.call(codeObj.subs, key)) {
+			template.subs[key] = HoganJavaScriptHelper$0.generatePartialFunc((code$0 = codeObj.subs[key], 'var t=this;t.pb(i=i||"");' + code$0 + 'return t.fl();'));
+		}
+	}
+	return template;
+};
+
+Hogan.makePartials$LHogan$x2ECodeObj$ = Hogan$makePartials$LHogan$x2ECodeObj$;
+
+function Hogan$wrapMain$S(code) {
+	return 'var t=this;t.pb(i=i||"");' + code + 'return t.fl();';
+};
+
+Hogan.wrapMain$S = Hogan$wrapMain$S;
+
+function Hogan$esc$S(s) {
+	return s.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r');
+};
+
+Hogan.esc$S = Hogan$esc$S;
+
+function Hogan$chooseMethod$S(s) {
+	return (~ s.indexOf('.') ? 'dn' : 'fk');
+};
+
+Hogan.chooseMethod$S = Hogan$chooseMethod$S;
+
+function Hogan$createPartial$LHogan$x2EToken$LHogan$x2ECodeObj$(node, context) {
+	var prefix;
+	var sym;
+	var partial;
+	prefix = "<" + (context.prefix ? context.prefix : "");
+	sym = prefix + node.n + (Hogan.serialNo++ + "");
+	partial = ({partials: ({  }), code: "", subs: null, prefix: "", inPartial: false, name: node.n, rawJSX: false});
+	context.partials[sym] = partial;
+	context.code += 't.pb(t.rp("' + sym.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r') + '",c,p,"' + (node.indent ? node.indent : '') + '"));';
+	return sym;
+};
+
+Hogan.createPartial$LHogan$x2EToken$LHogan$x2ECodeObj$ = Hogan$createPartial$LHogan$x2EToken$LHogan$x2ECodeObj$;
+
+function Hogan$tripleStache$LHogan$x2EToken$LHogan$x2ECodeObj$(node, context) {
+	var s$0;
+	var s$1;
+	context.code += 't.pb(t.tr(t.' + (s$0 = node.n, ~ s$0.indexOf('.') ? 'dn' : 'fk') + '("' + (s$1 = node.n, s$1.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '",c,p,0)));';
+};
+
+Hogan.tripleStache$LHogan$x2EToken$LHogan$x2ECodeObj$ = Hogan$tripleStache$LHogan$x2EToken$LHogan$x2ECodeObj$;
+
+function Hogan$write$SLHogan$x2ECodeObj$(s, context) {
+	return 't.pb(' + s + ');';
+};
+
+Hogan.write$SLHogan$x2ECodeObj$ = Hogan$write$SLHogan$x2ECodeObj$;
+
+function Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(nodelist, context) {
+	var func;
+	var i;
+	var l;
+	for ((i = 0, l = nodelist.length); i < l; i++) {
+		func = Hogan.codegen[nodelist[i].tag];
+		if (func) {
+			func(nodelist[i], context);
+		}
+	}
+	return context;
+};
+
+Hogan.walk$ALHogan$x2EToken$LHogan$x2ECodeObj$ = Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$;
+
+function Hogan$parse$ALHogan$x2EToken$LHogan$x2EOptions$(tokens, options) {
+	return Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens, [  ], options.sectionTags);
+};
+
+Hogan.parse$ALHogan$x2EToken$LHogan$x2EOptions$ = Hogan$parse$ALHogan$x2EToken$LHogan$x2EOptions$;
+
+function Hogan$parse$ALHogan$x2EToken$X(tokens, options) {
+	var optionObj;
+	optionObj = new Hogan$x2EOptions(options);
+	return Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens, [  ], optionObj.sectionTags);
+};
+
+Hogan.parse$ALHogan$x2EToken$X = Hogan$parse$ALHogan$x2EToken$X;
+
+function Hogan$parse$ALHogan$x2EToken$(tokens) {
+	return Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens, [  ], [  ]);
+};
+
+Hogan.parse$ALHogan$x2EToken$ = Hogan$parse$ALHogan$x2EToken$;
+
+function Hogan$compileToJSX$SLHogan$x2EOptions$(text, options) {
+	var tree$0;
+	var context$0;
+	var src$0;
+	var tokens$0;
+	tokens$0 = Hogan$scan$SS(text, options.delimiters);
+	tree$0 = Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens$0, [  ], options.sectionTags);
+	Hogan.serialNo = 0;
+	context$0 = ({partials: ({  }), code: '', subs: ({  }), prefix: "", inPartial: false, name: "", rawJSX: false});
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(tree$0, context$0);
+	src$0 = [ 'import "hogan/template.jsx";', 'class GeneratedTemplate extends Hogan.Template {', Hogan$stringify$LHogan$x2ECodeObj$SX(context$0, text, options), '}' ];
+	return src$0.join('\n');
+};
+
+Hogan.compileToJSX$SLHogan$x2EOptions$ = Hogan$compileToJSX$SLHogan$x2EOptions$;
+
+function Hogan$compileToJSX$S(text) {
+	return Hogan$compileToJSX$SLHogan$x2EOptions$(text, new Hogan$x2EOptions$0());
+};
+
+Hogan.compileToJSX$S = Hogan$compileToJSX$S;
+
+function Hogan$compileToJSX$SX(text, options) {
+	return Hogan$compileToJSX$SLHogan$x2EOptions$(text, new Hogan$x2EOptions(options));
+};
+
+Hogan.compileToJSX$SX = Hogan$compileToJSX$SX;
+
+function Hogan$compile$SLHogan$x2EOptions$(text, options) {
+	var tokens$0;
+	return Hogan$generate$ALHogan$x2EToken$SLHogan$x2EOptions$((tokens$0 = Hogan$scan$SS(text, options.delimiters), Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens$0, [  ], options.sectionTags)), text, options);
+};
+
+Hogan.compile$SLHogan$x2EOptions$ = Hogan$compile$SLHogan$x2EOptions$;
+
+function Hogan$compile$S(text) {
+	var options$0;
+	var tokens$0$0;
+	options$0 = new Hogan$x2EOptions$0();
+	return Hogan$generate$ALHogan$x2EToken$SLHogan$x2EOptions$((tokens$0$0 = Hogan$scan$SS(text, options$0.delimiters), Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens$0$0, [  ], options$0.sectionTags)), text, options$0);
+};
+
+Hogan.compile$S = Hogan$compile$S;
+
+function Hogan$compile$SX(text, options) {
+	var options$0;
+	var tokens$0$0;
+	options$0 = new Hogan$x2EOptions(options);
+	return Hogan$generate$ALHogan$x2EToken$SLHogan$x2EOptions$((tokens$0$0 = Hogan$scan$SS(text, options$0.delimiters), Hogan$buildTree$ALHogan$x2EToken$ALHogan$x2EToken$ALHogan$x2EOptions$x2ECustomTag$(tokens$0$0, [  ], options$0.sectionTags)), text, options$0);
+};
+
+Hogan.compile$SX = Hogan$compile$SX;
+
+function ExportItem(name, filename) {
+	var filebasename;
+	this.name = name;
+	this.filename = filename;
+	filebasename = node.path.basename(filename);
+	this.filebasename = filebasename.slice(0, filebasename.indexOf('.'));
+};
+
+$__jsx_extend([ExportItem], Object);
+function JSCodeParser(content) {
+	var tokens;
+	var i;
+	var callee;
+	var bodyTokens;
+	this.paramName = "";
+	this.objectMapName = "";
+	this.content = content;
+	this.exports = ({  });
+	this.defineJSXToken = null;
+	this.useJSXToken = null;
+	tokens = esprima$0.parse(content).body;
+	i = JSCodeParser$findJSXdefinition$LJSCodeParser$ALEsprimaToken$(this, tokens);
+	i = JSCodeParser$findJSXusage$LJSCodeParser$ALEsprimaToken$I(this, tokens, i);
+	callee = tokens[i].expression.callee;
+	this.paramName = callee.params[0].name;
+	bodyTokens = callee.body.body;
+	JSCodeParser$findObjectMapName$LJSCodeParser$ALEsprimaToken$(this, bodyTokens);
+	JSCodeParser$findClassMap$LJSCodeParser$ALEsprimaToken$(this, bodyTokens);
+};
+
+$__jsx_extend([JSCodeParser], Object);
+JSCodeParser.prototype.getOption$ = function () {
+	var result;
+	var exports;
+	var key;
+	result = ({  });
+	result.code = this.content;
+	exports = [  ];
+	result.exportItems = exports;
+	for (key in this.exports) {
+		if ($__jsx_ObjectHasOwnProperty.call(this.exports, key)) {
+			exports.push(new ExportItem(key, this.exports[key]));
+			if (key === '_Main') {
+				result.mainFile = this.exports[key];
+			}
+		}
+	}
+	return result;
+};
+
+
+function JSCodeParser$getOption$LJSCodeParser$($this) {
+	var result;
+	var exports;
+	var key;
+	result = ({  });
+	result.code = $this.content;
+	exports = [  ];
+	result.exportItems = exports;
+	for (key in $this.exports) {
+		if ($__jsx_ObjectHasOwnProperty.call($this.exports, key)) {
+			exports.push(new ExportItem(key, $this.exports[key]));
+			if (key === '_Main') {
+				result.mainFile = $this.exports[key];
+			}
+		}
+	}
+	return result;
+};
+
+JSCodeParser.getOption$LJSCodeParser$ = JSCodeParser$getOption$LJSCodeParser$;
+
+JSCodeParser.prototype.findJSXdefinition$ALEsprimaToken$ = function (tokens) {
+	var find;
+	var i;
+	var token;
+	var tokens$len$0;
+	find = false;
+	for ((i = 0, tokens$len$0 = tokens.length); i < tokens$len$0; i++) {
+		token = tokens[i];
+		if (token.type === 'VariableDeclaration' && token.declarations[0].id.name === 'JSX') {
+			this.defineJSXToken = token.declarations[0].id;
+			find = true;
+			i++;
+			break;
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+	return (i | 0);
+};
+
+
+function JSCodeParser$findJSXdefinition$LJSCodeParser$ALEsprimaToken$($this, tokens) {
+	var find;
+	var i;
+	var token;
+	var tokens$len$0;
+	find = false;
+	for ((i = 0, tokens$len$0 = tokens.length); i < tokens$len$0; i++) {
+		token = tokens[i];
+		if (token.type === 'VariableDeclaration' && token.declarations[0].id.name === 'JSX') {
+			$this.defineJSXToken = token.declarations[0].id;
+			find = true;
+			i++;
+			break;
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+	return (i | 0);
+};
+
+JSCodeParser.findJSXdefinition$LJSCodeParser$ALEsprimaToken$ = JSCodeParser$findJSXdefinition$LJSCodeParser$ALEsprimaToken$;
+
+JSCodeParser.prototype.findJSXusage$ALEsprimaToken$I = function (tokens, startIndex) {
+	var find;
+	var i;
+	var token;
+	var arguments;
+	find = false;
+	for (i = startIndex; i < tokens.length; i++) {
+		token = tokens[i];
+		if (token.type === 'ExpressionStatement' && token.expression.type === 'CallExpression') {
+			arguments = token.expression.arguments;
+			if (arguments.length === 1 && arguments[0].name === 'JSX') {
+				this.useJSXToken = arguments[0];
+				find = true;
+				break;
+			}
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+	return (i | 0);
+};
+
+
+function JSCodeParser$findJSXusage$LJSCodeParser$ALEsprimaToken$I($this, tokens, startIndex) {
+	var find;
+	var i;
+	var token;
+	var arguments;
+	find = false;
+	for (i = startIndex; i < tokens.length; i++) {
+		token = tokens[i];
+		if (token.type === 'ExpressionStatement' && token.expression.type === 'CallExpression') {
+			arguments = token.expression.arguments;
+			if (arguments.length === 1 && arguments[0].name === 'JSX') {
+				$this.useJSXToken = arguments[0];
+				find = true;
+				break;
+			}
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+	return (i | 0);
+};
+
+JSCodeParser.findJSXusage$LJSCodeParser$ALEsprimaToken$I = JSCodeParser$findJSXusage$LJSCodeParser$ALEsprimaToken$I;
+
+JSCodeParser.prototype.findObjectMapName$ALEsprimaToken$ = function (tokens) {
+	var find;
+	var i;
+	var token;
+	var left;
+	var right;
+	var childTokens;
+	var j;
+	var childTokens$len$0;
+	find = false;
+	for (i = 0; i < tokens.length; i++) {
+		token = tokens[i];
+		if (token.type === 'ExpressionStatement' && token.expression.type === 'AssignmentExpression') {
+			left = token.expression.left;
+			if (left.object.name === this.paramName && left.property.name === 'require') {
+				right = token.expression.right;
+				childTokens = right.body.body;
+				for ((j = 0, childTokens$len$0 = childTokens.length); j < childTokens$len$0; j++) {
+					if (childTokens[j].type === 'VariableDeclaration') {
+						this.objectMapName = childTokens[j].declarations[0].init.object.name;
+						find = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+};
+
+
+function JSCodeParser$findObjectMapName$LJSCodeParser$ALEsprimaToken$($this, tokens) {
+	var find;
+	var i;
+	var token;
+	var left;
+	var right;
+	var childTokens;
+	var j;
+	var childTokens$len$0;
+	find = false;
+	for (i = 0; i < tokens.length; i++) {
+		token = tokens[i];
+		if (token.type === 'ExpressionStatement' && token.expression.type === 'AssignmentExpression') {
+			left = token.expression.left;
+			if (left.object.name === $this.paramName && left.property.name === 'require') {
+				right = token.expression.right;
+				childTokens = right.body.body;
+				for ((j = 0, childTokens$len$0 = childTokens.length); j < childTokens$len$0; j++) {
+					if (childTokens[j].type === 'VariableDeclaration') {
+						$this.objectMapName = childTokens[j].declarations[0].init.object.name;
+						find = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+};
+
+JSCodeParser.findObjectMapName$LJSCodeParser$ALEsprimaToken$ = JSCodeParser$findObjectMapName$LJSCodeParser$ALEsprimaToken$;
+
+JSCodeParser.prototype.findClassMap$ALEsprimaToken$ = function (tokens) {
+	var find;
+	var i;
+	var token;
+	var properties;
+	var j;
+	var property;
+	var filename;
+	var k;
+	var className;
+	find = false;
+	for (i = tokens.length - 1; i > -1; i--) {
+		token = tokens[i];
+		if (token.type === 'VariableDeclaration' && token.declarations[0].id.name === this.objectMapName) {
+			properties = token.declarations[0].init.properties;
+			for (j = 0; j < properties.length; j++) {
+				property = properties[j];
+				filename = property.key.value;
+				if (filename.indexOf("system:") === 0) {
+					continue;
+				}
+				for (k = 0; k < property.value.properties.length; k++) {
+					className = property.value.properties[k].key.name;
+					if (! className) {
+						className = property.value.properties[k].key.value;
+					}
+					if (className.slice(-1) !== '$') {
+						this.exports[className] = filename;
+					}
+				}
+			}
+			find = true;
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+};
+
+
+function JSCodeParser$findClassMap$LJSCodeParser$ALEsprimaToken$($this, tokens) {
+	var find;
+	var i;
+	var token;
+	var properties;
+	var j;
+	var property;
+	var filename;
+	var k;
+	var className;
+	find = false;
+	for (i = tokens.length - 1; i > -1; i--) {
+		token = tokens[i];
+		if (token.type === 'VariableDeclaration' && token.declarations[0].id.name === $this.objectMapName) {
+			properties = token.declarations[0].init.properties;
+			for (j = 0; j < properties.length; j++) {
+				property = properties[j];
+				filename = property.key.value;
+				if (filename.indexOf("system:") === 0) {
+					continue;
+				}
+				for (k = 0; k < property.value.properties.length; k++) {
+					className = property.value.properties[k].key.name;
+					if (! className) {
+						className = property.value.properties[k].key.value;
+					}
+					if (className.slice(-1) !== '$') {
+						$this.exports[className] = filename;
+					}
+				}
+			}
+			find = true;
+		}
+	}
+	if (! find) {
+		throw new Error("Can't find JSX declaration. JSX and linker versions are not match");
+	}
+};
+
+JSCodeParser.findClassMap$LJSCodeParser$ALEsprimaToken$ = JSCodeParser$findClassMap$LJSCodeParser$ALEsprimaToken$;
+
+var js$0 = (function () {
+	var global = Function("return this")();
+	return {
+		global: global,
+		eval: global.eval,
+		invoke: function(invocant, methodName, args) {
+			return invocant[methodName].apply(invocant, args);
+		},
+		newFunction: Function
+	};
+}());
+function EsprimaOption(option) {
+	var key;
+	this.loc = false;
+	this.range = false;
+	this.raw = false;
+	this.tokens = false;
+	this.comment = false;
+	this.tolerant = false;
+	for (key in option) {
+		switch (key) {
+		case 'loc':
+			this.loc = option[key];
+			break;
+		case 'range':
+			this.range = option[key];
+			break;
+		case 'raw':
+			this.raw = option[key];
+			break;
+		case 'tokens':
+			this.tokens = option[key];
+			break;
+		case 'comment':
+			this.comment = option[key];
+			break;
+		case 'tolerant':
+			this.tolerant = option[key];
+			break;
+		}
+	}
+};
+
+$__jsx_extend([EsprimaOption], Object);
+var esprima$0 = require('esprima');
+function Hogan$x2EOptions(options) {
+	this.delimiters = "";
+	this.disableLambda = false;
+	this.asString = false;
+	this.modelGet = false;
+	this.sectionTags = [  ];
+	if (options) {
+		this.asString = !! options.asString;
+		this.modelGet = !! options.modelGet;
+		if (options.sectionTags) {
+			this.sectionTags = options.sectionTags;
+		}
+		if (options.delimiters) {
+			this.delimiters = options.delimiters + "";
+		}
+	}
+};
+
+function Hogan$x2EOptions$0() {
+	Hogan$x2EOptions.call(this, null);
+};
+
+$__jsx_extend([Hogan$x2EOptions, Hogan$x2EOptions$0], Object);
+function Hogan$x2ECodeObj() {
+	this.prefix = "";
+	this.inPartial = false;
+	this.name = "";
+	this.rawJSX = false;
+	this.partials = ({  });
+	this.code = '';
+	this.subs = ({  });
+};
+
+function Hogan$x2ECodeObj$0(codeObj) {
+	this.prefix = "";
+	this.inPartial = false;
+	this.rawJSX = false;
+	this.partials = codeObj.partials;
+	this.code = '';
+	this.name = codeObj.name;
+	this.subs = ({  });
+};
+
+function Hogan$x2ECodeObj$1(codeObj, node) {
+	this.inPartial = false;
+	this.name = "";
+	this.rawJSX = false;
+	this.partials = codeObj.partials;
+	this.subs = ({  });
+	this.code = '';
+	this.prefix = node.n;
+};
+
+function Hogan$x2ECodeObj$2(node) {
+	this.code = "";
+	this.subs = null;
+	this.prefix = "";
+	this.inPartial = false;
+	this.rawJSX = false;
+	this.name = node.n;
+	this.partials = ({  });
+};
+
+$__jsx_extend([Hogan$x2ECodeObj, Hogan$x2ECodeObj$0, Hogan$x2ECodeObj$1, Hogan$x2ECodeObj$2], Object);
+function Hogan$x2EToken(tag, text) {
+	this.indent = "";
+	this.n = "";
+	this.otag = "";
+	this.ctag = "";
+	this.i = 0;
+	this.end = 0;
+	this.nodes = null;
+	this.tag = tag;
+	this.text = text;
+	this.last = false;
+};
+
+function Hogan$x2EToken$0(tag) {
+	Hogan$x2EToken.call(this, tag, '');
+};
+
+function Hogan$x2EToken$1(tag, n, otag, ctag, i) {
+	this.text = "";
+	this.indent = "";
+	this.end = 0;
+	this.nodes = null;
+	this.tag = tag;
+	this.n = n;
+	this.otag = otag;
+	this.ctag = ctag;
+	this.i = i;
+	this.last = false;
+};
+
+$__jsx_extend([Hogan$x2EToken, Hogan$x2EToken$0, Hogan$x2EToken$1], Object);
+function Hogan$x2ETemplate(text, options) {
+	this.subs = null;
+	this.partials = null;
+	this.buf = null;
+	this.activeSub = null;
+	this.name = "";
+	this.stackSubs = null;
+	this.stackPartials = null;
+	this.stackTexts = null;
+	this.stackTextIndex = null;
+	this.subsText = null;
+	this.options = (options ? options : new Hogan$x2EOptions$0());
+	this.text = text;
+	this.partials = ({  });
+	this.subs = ({  });
+	this.stackPartials = ({  });
+	this.stackTexts = [  ];
+	this.stackTextIndex = [  ];
+	this.buf = [  ];
+};
+
+function Hogan$x2ETemplate$0(text) {
+	Hogan$x2ETemplate.call(this, text, null);
+};
+
+function Hogan$x2ETemplate$1() {
+	Hogan$x2ETemplate.call(this, '', null);
+};
+
+function Hogan$x2ETemplate$2(instance, subs, partials, stackSubs, stackPartials, childText) {
+	var key;
+	this.options = null;
+	this.text = "";
+	this.partials = null;
+	this.activeSub = null;
+	this.name = "";
+	this.stackPartials = null;
+	this.stackTexts = null;
+	this.stackTextIndex = null;
+	this.stackSubs = (stackSubs ? stackSubs : ({  }));
+	this.subs = instance.subs;
+	this.subsText = ({  });
+	this.buf = [  ];
+	for (key in subs) {
+		if (! stackSubs[key]) {
+			stackSubs[key] = subs[key];
+		}
+		this.subsText[key] = childText;
+	}
+	for (key in stackSubs) {
+		this.subs[key] = stackSubs[key];
+	}
+	this.stackPartials = stackPartials;
+	for (key in partials) {
+		if (! this.stackPartials[key]) {
+			this.stackPartials[key] = partials[key];
+		}
+	}
+	for (key in stackPartials) {
+		this.partials[key] = stackPartials[key];
+	}
+	this.stackTexts = [  ];
+	this.stackTextIndex = [  ];
+};
+
+function Hogan$x2ETemplate$3(partials, subs) {
+	this.options = null;
+	this.text = "";
+	this.buf = null;
+	this.activeSub = null;
+	this.name = "";
+	this.stackSubs = null;
+	this.stackPartials = null;
+	this.stackTexts = null;
+	this.stackTextIndex = null;
+	this.subsText = null;
+	this.partials = partials;
+	this.subs = subs;
+};
+
+function Hogan$x2ETemplate$4(codeObj) {
+	this.options = null;
+	this.text = "";
+	this.subs = null;
+	this.buf = null;
+	this.activeSub = null;
+	this.stackSubs = null;
+	this.stackPartials = null;
+	this.stackTexts = null;
+	this.stackTextIndex = null;
+	this.subsText = null;
+	this.name = codeObj.name;
+	this.partials = ({  });
+};
+
+$__jsx_extend([Hogan$x2ETemplate, Hogan$x2ETemplate$0, Hogan$x2ETemplate$1, Hogan$x2ETemplate$2, Hogan$x2ETemplate$3, Hogan$x2ETemplate$4], Object);
+Hogan$x2ETemplate.prototype._ren$AXHLHogan$x2ETemplate$S = function (context, partials, indent) {
+	return '';
+};
+
+
+Hogan$x2ETemplate.prototype.getPartials$ = function () {
+	return ({  });
+};
+
+
+function Hogan$x2ETemplate$getPartials$LHogan$x2ETemplate$($this) {
+	return ({  });
+};
+
+Hogan$x2ETemplate.getPartials$LHogan$x2ETemplate$ = Hogan$x2ETemplate$getPartials$LHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.getSubs$ = function () {
+	return ({  });
+};
+
+
+function Hogan$x2ETemplate$getSubs$LHogan$x2ETemplate$($this) {
+	return ({  });
+};
+
+Hogan$x2ETemplate.getSubs$LHogan$x2ETemplate$ = Hogan$x2ETemplate$getSubs$LHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.val$S = function (str) {
+	return Hogan$x2ETemplate$hoganEscape$S(str);
+};
+
+Hogan$x2ETemplate.prototype.val = Hogan$x2ETemplate.prototype.val$S;
+
+function Hogan$x2ETemplate$val$LHogan$x2ETemplate$S($this, str) {
+	return Hogan$x2ETemplate$hoganEscape$S(str);
+};
+
+Hogan$x2ETemplate.val$LHogan$x2ETemplate$S = Hogan$x2ETemplate$val$LHogan$x2ETemplate$S;
+
+Hogan$x2ETemplate.prototype.tr$S = function (str) {
+	return Hogan$x2ETemplate$coerceToString$X(str);
+};
+
+Hogan$x2ETemplate.prototype.tr = Hogan$x2ETemplate.prototype.tr$S;
+
+function Hogan$x2ETemplate$tr$LHogan$x2ETemplate$S($this, str) {
+	return Hogan$x2ETemplate$coerceToString$X(str);
+};
+
+Hogan$x2ETemplate.tr$LHogan$x2ETemplate$S = Hogan$x2ETemplate$tr$LHogan$x2ETemplate$S;
+
+Hogan$x2ETemplate.prototype.render$XHLHogan$x2ETemplate$S = function (context, partials, indent) {
+	var context$0;
+	context$0 = [ context ];
+	return this._ren$AXHLHogan$x2ETemplate$S(context$0, partials, indent);
+};
+
+
+function Hogan$x2ETemplate$render$LHogan$x2ETemplate$XHLHogan$x2ETemplate$S($this, context, partials, indent) {
+	var context$0;
+	context$0 = [ context ];
+	return $this._ren$AXHLHogan$x2ETemplate$S(context$0, partials, indent);
+};
+
+Hogan$x2ETemplate.render$LHogan$x2ETemplate$XHLHogan$x2ETemplate$S = Hogan$x2ETemplate$render$LHogan$x2ETemplate$XHLHogan$x2ETemplate$S;
+
+Hogan$x2ETemplate.prototype.render$XHLHogan$x2ETemplate$ = function (context, partials) {
+	var context$0$0;
+	context$0$0 = [ context ];
+	return this._ren$AXHLHogan$x2ETemplate$S(context$0$0, partials, '');
+};
+
+
+function Hogan$x2ETemplate$render$LHogan$x2ETemplate$XHLHogan$x2ETemplate$($this, context, partials) {
+	var context$0$0;
+	context$0$0 = [ context ];
+	return $this._ren$AXHLHogan$x2ETemplate$S(context$0$0, partials, '');
+};
+
+Hogan$x2ETemplate.render$LHogan$x2ETemplate$XHLHogan$x2ETemplate$ = Hogan$x2ETemplate$render$LHogan$x2ETemplate$XHLHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.render$X = function (context) {
+	var context$0$0;
+	context$0$0 = [ context ];
+	return this._ren$AXHLHogan$x2ETemplate$S(context$0$0, ({  }), '');
+};
+
+
+function Hogan$x2ETemplate$render$LHogan$x2ETemplate$X($this, context) {
+	var context$0$0;
+	context$0$0 = [ context ];
+	return $this._ren$AXHLHogan$x2ETemplate$S(context$0$0, ({  }), '');
+};
+
+Hogan$x2ETemplate.render$LHogan$x2ETemplate$X = Hogan$x2ETemplate$render$LHogan$x2ETemplate$X;
+
+Hogan$x2ETemplate.prototype.ri$AXHLHogan$x2ETemplate$S = function (context, partials, indent) {
+	return this._ren$AXHLHogan$x2ETemplate$S(context, partials, indent);
+};
+
+Hogan$x2ETemplate.prototype.ri = Hogan$x2ETemplate.prototype.ri$AXHLHogan$x2ETemplate$S;
+
+function Hogan$x2ETemplate$ri$LHogan$x2ETemplate$AXHLHogan$x2ETemplate$S($this, context, partials, indent) {
+	return $this._ren$AXHLHogan$x2ETemplate$S(context, partials, indent);
+};
+
+Hogan$x2ETemplate.ri$LHogan$x2ETemplate$AXHLHogan$x2ETemplate$S = Hogan$x2ETemplate$ri$LHogan$x2ETemplate$AXHLHogan$x2ETemplate$S;
+
+Hogan$x2ETemplate.prototype.ep$SHLHogan$x2ETemplate$ = function (symbol, partials) {
+	var partial;
+	var template;
+	var index;
+	var childText;
+	var subs$0;
+	var partials$0;
+	var stackSubs$0;
+	var stackPartials$0;
+	var stackTextIndex$0;
+	partial = this.partials[symbol];
+	template = partials[partial.name];
+	if (! template) {
+		return null;
+	}
+	if (partial.subs) {
+		index = this.stackTextIndex.indexOf(partials);
+		if (this.activeSub == null) {
+			if (index === -1) {
+				index = (stackTextIndex$0 = this.stackTextIndex).length;
+				stackTextIndex$0.push(partials);
+			}
+			this.stackTexts[index] = this.text;
+			childText = this.text;
+		} else {
+			childText = (index === -1 ? this.text : this.stackTexts[index]);
+		}
+		subs$0 = partial.subs;
+		partials$0 = partial.partials;
+		stackSubs$0 = this.stackSubs;
+		stackPartials$0 = this.stackPartials;
+		template = new Hogan$x2ETemplate$2(template, subs$0, partials$0, stackSubs$0, stackPartials$0, childText);
+	}
+	return template;
+};
+
+
+function Hogan$x2ETemplate$ep$LHogan$x2ETemplate$SHLHogan$x2ETemplate$($this, symbol, partials) {
+	var partial;
+	var template;
+	var index;
+	var childText;
+	var subs$0;
+	var partials$0;
+	var stackSubs$0;
+	var stackPartials$0;
+	var stackTextIndex$0;
+	partial = $this.partials[symbol];
+	template = partials[partial.name];
+	if (! template) {
+		return null;
+	}
+	if (partial.subs) {
+		index = $this.stackTextIndex.indexOf(partials);
+		if ($this.activeSub == null) {
+			if (index === -1) {
+				index = (stackTextIndex$0 = $this.stackTextIndex).length;
+				stackTextIndex$0.push(partials);
+			}
+			$this.stackTexts[index] = $this.text;
+			childText = $this.text;
+		} else {
+			childText = (index === -1 ? $this.text : $this.stackTexts[index]);
+		}
+		subs$0 = partial.subs;
+		partials$0 = partial.partials;
+		stackSubs$0 = $this.stackSubs;
+		stackPartials$0 = $this.stackPartials;
+		template = new Hogan$x2ETemplate$2(template, subs$0, partials$0, stackSubs$0, stackPartials$0, childText);
+	}
+	return template;
+};
+
+Hogan$x2ETemplate.ep$LHogan$x2ETemplate$SHLHogan$x2ETemplate$ = Hogan$x2ETemplate$ep$LHogan$x2ETemplate$SHLHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.rp$SAXHLHogan$x2ETemplate$S = function (symbol, context, partials, indent) {
+	var partial;
+	partial = Hogan$x2ETemplate$ep$LHogan$x2ETemplate$SHLHogan$x2ETemplate$(this, symbol, partials);
+	return (! partial ? '' : partial._ren$AXHLHogan$x2ETemplate$S(context, partials, indent));
+};
+
+Hogan$x2ETemplate.prototype.rp = Hogan$x2ETemplate.prototype.rp$SAXHLHogan$x2ETemplate$S;
+
+function Hogan$x2ETemplate$rp$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$S($this, symbol, context, partials, indent) {
+	var partial;
+	partial = Hogan$x2ETemplate$ep$LHogan$x2ETemplate$SHLHogan$x2ETemplate$($this, symbol, partials);
+	return (! partial ? '' : partial._ren$AXHLHogan$x2ETemplate$S(context, partials, indent));
+};
+
+Hogan$x2ETemplate.rp$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$S = Hogan$x2ETemplate$rp$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$S;
+
+Hogan$x2ETemplate.prototype.rs$AXHLHogan$x2ETemplate$F$XHLHogan$x2ETemplate$LHogan$x2ETemplate$V$ = function (context, partials, section) {
+	var tail;
+	var tailarray;
+	var i;
+	tail = context[context.length - 1];
+	if (! (tail instanceof Array)) {
+		section(context, partials, this);
+		return;
+	}
+	tailarray = tail;
+	for (i = 0; i < tailarray.length; i++) {
+		context.push(tailarray[i]);
+		section(context, partials, this);
+		context.pop();
+	}
+};
+
+Hogan$x2ETemplate.prototype.rs = Hogan$x2ETemplate.prototype.rs$AXHLHogan$x2ETemplate$F$XHLHogan$x2ETemplate$LHogan$x2ETemplate$V$;
+
+function Hogan$x2ETemplate$rs$LHogan$x2ETemplate$AXHLHogan$x2ETemplate$F$XHLHogan$x2ETemplate$LHogan$x2ETemplate$V$($this, context, partials, section) {
+	var tail;
+	var tailarray;
+	var i;
+	tail = context[context.length - 1];
+	if (! (tail instanceof Array)) {
+		section(context, partials, $this);
+		return;
+	}
+	tailarray = tail;
+	for (i = 0; i < tailarray.length; i++) {
+		context.push(tailarray[i]);
+		section(context, partials, $this);
+		context.pop();
+	}
+};
+
+Hogan$x2ETemplate.rs$LHogan$x2ETemplate$AXHLHogan$x2ETemplate$F$XHLHogan$x2ETemplate$LHogan$x2ETemplate$V$ = Hogan$x2ETemplate$rs$LHogan$x2ETemplate$AXHLHogan$x2ETemplate$F$XHLHogan$x2ETemplate$LHogan$x2ETemplate$V$;
+
+Hogan$x2ETemplate.prototype.ss$XAXHLHogan$x2ETemplate$IIIS = function (val, ctx, partials, inverted, start, end, tags) {
+	var pass;
+	var func;
+	if (val instanceof Array && val.length == 0) {
+		return false;
+	}
+	if (typeof val === 'function') {
+		func = val;
+		val = Hogan$x2ETemplate$ms$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$IIIS(this, func, ctx, partials, inverted, start, end, tags);
+	}
+	pass = !! val;
+	if (! inverted && pass && ctx) {
+		ctx.push(typeof val === 'object' ? val : ctx[ctx.length - 1]);
+	}
+	return pass;
+};
+
+Hogan$x2ETemplate.prototype.ss = Hogan$x2ETemplate.prototype.ss$XAXHLHogan$x2ETemplate$IIIS;
+
+function Hogan$x2ETemplate$ss$LHogan$x2ETemplate$XAXHLHogan$x2ETemplate$IIIS($this, val, ctx, partials, inverted, start, end, tags) {
+	var pass;
+	var func;
+	if (val instanceof Array && val.length == 0) {
+		return false;
+	}
+	if (typeof val === 'function') {
+		func = val;
+		val = Hogan$x2ETemplate$ms$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$IIIS($this, func, ctx, partials, inverted, start, end, tags);
+	}
+	pass = !! val;
+	if (! inverted && pass && ctx) {
+		ctx.push(typeof val === 'object' ? val : ctx[ctx.length - 1]);
+	}
+	return pass;
+};
+
+Hogan$x2ETemplate.ss$LHogan$x2ETemplate$XAXHLHogan$x2ETemplate$IIIS = Hogan$x2ETemplate$ss$LHogan$x2ETemplate$XAXHLHogan$x2ETemplate$IIIS;
+
+Hogan$x2ETemplate.prototype.dn$SAXHLHogan$x2ETemplate$B = function (key, ctx, partials, returnFound) {
+	var found;
+	var names;
+	var val;
+	var doModelGet;
+	var cx;
+	var i;
+	var a$0;
+	names = key.split('.');
+	val = Hogan$x2ETemplate$fk$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B(this, names[0], ctx, partials, returnFound);
+	doModelGet = this.options.modelGet;
+	cx = null;
+	if (key === '.' && (a$0 = ctx[ctx.length - 2], a$0 instanceof Array)) {
+		val = ctx[ctx.length - 1];
+	} else {
+		for (i = 1; i < names.length; i++) {
+			found = Hogan$x2ETemplate$findInScope$SXB(names[i], val, doModelGet);
+			if (found != null) {
+				cx = val;
+				val = found;
+			} else {
+				val = '';
+			}
+		}
+	}
+	if (returnFound && ! val) {
+		return false;
+	}
+	if (! returnFound && typeof val === 'function') {
+		ctx.push(cx);
+		val = Hogan$x2ETemplate$mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$(this, val, ctx, partials);
+		ctx.pop();
+	}
+	return val;
+};
+
+Hogan$x2ETemplate.prototype.dn = Hogan$x2ETemplate.prototype.dn$SAXHLHogan$x2ETemplate$B;
+
+function Hogan$x2ETemplate$dn$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B($this, key, ctx, partials, returnFound) {
+	var found;
+	var names;
+	var val;
+	var doModelGet;
+	var cx;
+	var i;
+	var a$0;
+	names = key.split('.');
+	val = Hogan$x2ETemplate$fk$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B($this, names[0], ctx, partials, returnFound);
+	doModelGet = $this.options.modelGet;
+	cx = null;
+	if (key === '.' && (a$0 = ctx[ctx.length - 2], a$0 instanceof Array)) {
+		val = ctx[ctx.length - 1];
+	} else {
+		for (i = 1; i < names.length; i++) {
+			found = Hogan$x2ETemplate$findInScope$SXB(names[i], val, doModelGet);
+			if (found != null) {
+				cx = val;
+				val = found;
+			} else {
+				val = '';
+			}
+		}
+	}
+	if (returnFound && ! val) {
+		return false;
+	}
+	if (! returnFound && typeof val === 'function') {
+		ctx.push(cx);
+		val = Hogan$x2ETemplate$mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$($this, val, ctx, partials);
+		ctx.pop();
+	}
+	return val;
+};
+
+Hogan$x2ETemplate.dn$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B = Hogan$x2ETemplate$dn$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B;
+
+Hogan$x2ETemplate.prototype.fk$SAXHLHogan$x2ETemplate$B = function (key, ctx, partials, returnFound) {
+	var val;
+	var v;
+	var found;
+	var doModelGet;
+	var i;
+	val = false;
+	v = null;
+	found = false;
+	doModelGet = this.options.modelGet;
+	for (i = ctx.length - 1; i >= 0; i--) {
+		v = ctx[i];
+		val = Hogan$x2ETemplate$findInScope$SXB(key, v, doModelGet);
+		if (val != null) {
+			found = true;
+			break;
+		}
+	}
+	if (! found) {
+		if (returnFound) {
+			return false;
+		} else {
+			return "";
+		}
+	}
+	if (! returnFound && typeof val === 'function') {
+		val = Hogan$x2ETemplate$mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$(this, val, ctx, partials);
+	}
+	return val;
+};
+
+Hogan$x2ETemplate.prototype.fk = Hogan$x2ETemplate.prototype.fk$SAXHLHogan$x2ETemplate$B;
+
+function Hogan$x2ETemplate$fk$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B($this, key, ctx, partials, returnFound) {
+	var val;
+	var v;
+	var found;
+	var doModelGet;
+	var i;
+	val = false;
+	v = null;
+	found = false;
+	doModelGet = $this.options.modelGet;
+	for (i = ctx.length - 1; i >= 0; i--) {
+		v = ctx[i];
+		val = Hogan$x2ETemplate$findInScope$SXB(key, v, doModelGet);
+		if (val != null) {
+			found = true;
+			break;
+		}
+	}
+	if (! found) {
+		if (returnFound) {
+			return false;
+		} else {
+			return "";
+		}
+	}
+	if (! returnFound && typeof val === 'function') {
+		val = Hogan$x2ETemplate$mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$($this, val, ctx, partials);
+	}
+	return val;
+};
+
+Hogan$x2ETemplate.fk$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B = Hogan$x2ETemplate$fk$LHogan$x2ETemplate$SAXHLHogan$x2ETemplate$B;
+
+Hogan$x2ETemplate.prototype.ls$F$LHogan$x2ETemplate$XSS$XHLHogan$x2ETemplate$SS = function (func, cx, partials, text, tags) {
+	var oldTags;
+	var text$0;
+	var options$0;
+	oldTags = (options$0 = this.options).delimiters;
+	options$0.delimiters = tags;
+	text$0 = Hogan$x2ETemplate$coerceToString$X(func(this, cx, text));
+	if (this.options.disableLambda) {
+		throw new Error('Lambda features disabled.');
+	}
+	this.buf.push(text$0);
+	this.options.delimiters = oldTags;
+	return false;
+};
+
+
+function Hogan$x2ETemplate$ls$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XSS$XHLHogan$x2ETemplate$SS($this, func, cx, partials, text, tags) {
+	var oldTags;
+	var text$0;
+	var options$0;
+	oldTags = (options$0 = $this.options).delimiters;
+	options$0.delimiters = tags;
+	text$0 = Hogan$x2ETemplate$coerceToString$X(func($this, cx, text));
+	if ($this.options.disableLambda) {
+		throw new Error('Lambda features disabled.');
+	}
+	$this.buf.push(text$0);
+	$this.options.delimiters = oldTags;
+	return false;
+};
+
+Hogan$x2ETemplate.ls$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XSS$XHLHogan$x2ETemplate$SS = Hogan$x2ETemplate$ls$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XSS$XHLHogan$x2ETemplate$SS;
+
+Hogan$x2ETemplate.prototype.ct$SXHLHogan$x2ETemplate$ = function (text, cx, partials) {
+	if (this.options.disableLambda) {
+		throw new Error('Lambda features disabled.');
+	}
+	return text;
+};
+
+
+function Hogan$x2ETemplate$ct$LHogan$x2ETemplate$SXHLHogan$x2ETemplate$($this, text, cx, partials) {
+	if ($this.options.disableLambda) {
+		throw new Error('Lambda features disabled.');
+	}
+	return text;
+};
+
+Hogan$x2ETemplate.ct$LHogan$x2ETemplate$SXHLHogan$x2ETemplate$ = Hogan$x2ETemplate$ct$LHogan$x2ETemplate$SXHLHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.pb$S = function (s) {
+	this.buf.push(s);
+};
+
+Hogan$x2ETemplate.prototype.pb = Hogan$x2ETemplate.prototype.pb$S;
+
+function Hogan$x2ETemplate$pb$LHogan$x2ETemplate$S($this, s) {
+	$this.buf.push(s);
+};
+
+Hogan$x2ETemplate.pb$LHogan$x2ETemplate$S = Hogan$x2ETemplate$pb$LHogan$x2ETemplate$S;
+
+Hogan$x2ETemplate.prototype.fl$ = function () {
+	var r;
+	r = this.buf.join('');
+	this.buf = [  ];
+	return r;
+};
+
+Hogan$x2ETemplate.prototype.fl = Hogan$x2ETemplate.prototype.fl$;
+
+function Hogan$x2ETemplate$fl$LHogan$x2ETemplate$($this) {
+	var r;
+	r = $this.buf.join('');
+	$this.buf = [  ];
+	return r;
+};
+
+Hogan$x2ETemplate.fl$LHogan$x2ETemplate$ = Hogan$x2ETemplate$fl$LHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.ib$ = function () {
+	this.buf = [  ];
+};
+
+
+function Hogan$x2ETemplate$ib$LHogan$x2ETemplate$($this) {
+	$this.buf = [  ];
+};
+
+Hogan$x2ETemplate.ib$LHogan$x2ETemplate$ = Hogan$x2ETemplate$ib$LHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.ms$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$IIIS = function (func, ctx, partials, inverted, start, end, tags) {
+	var textSource;
+	var cx;
+	var result;
+	var func2;
+	var activeSub$0;
+	cx = ctx[ctx.length - 1];
+	result = func(this, cx);
+	if (typeof result === 'function') {
+		if (inverted) {
+			return true;
+		} else {
+			textSource = ((activeSub$0 = this.activeSub) && this.subsText[activeSub$0] ? this.subsText[this.activeSub] : this.text);
+			func2 = result;
+			return Hogan$x2ETemplate$ls$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XSS$XHLHogan$x2ETemplate$SS(this, func2, cx, partials, textSource.substring(start, end), tags);
+		}
+	}
+	return !! result;
+};
+
+
+function Hogan$x2ETemplate$ms$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$IIIS($this, func, ctx, partials, inverted, start, end, tags) {
+	var textSource;
+	var cx;
+	var result;
+	var func2;
+	var activeSub$0;
+	cx = ctx[ctx.length - 1];
+	result = func($this, cx);
+	if (typeof result === 'function') {
+		if (inverted) {
+			return true;
+		} else {
+			textSource = ((activeSub$0 = $this.activeSub) && $this.subsText[activeSub$0] ? $this.subsText[$this.activeSub] : $this.text);
+			func2 = result;
+			return Hogan$x2ETemplate$ls$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XSS$XHLHogan$x2ETemplate$SS($this, func2, cx, partials, textSource.substring(start, end), tags);
+		}
+	}
+	return !! result;
+};
+
+Hogan$x2ETemplate.ms$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$IIIS = Hogan$x2ETemplate$ms$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$IIIS;
+
+Hogan$x2ETemplate.prototype.mv$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$ = function (func, ctx, partials) {
+	var cx;
+	var result;
+	var resultfunc;
+	var text$0;
+	var val$0;
+	cx = ctx[ctx.length - 1];
+	result = func(this, cx);
+	if (typeof result === 'function') {
+		resultfunc = result;
+		val$0 = resultfunc(this, cx);
+		text$0 = (! val$0 ? '' : val$0 + "");
+		if (this.options.disableLambda) {
+			throw new Error('Lambda features disabled.');
+		}
+		return text$0;
+	}
+	return result + "";
+};
+
+
+function Hogan$x2ETemplate$mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$($this, func, ctx, partials) {
+	var cx;
+	var result;
+	var resultfunc;
+	var text$0;
+	var val$0;
+	cx = ctx[ctx.length - 1];
+	result = func($this, cx);
+	if (typeof result === 'function') {
+		resultfunc = result;
+		val$0 = resultfunc($this, cx);
+		text$0 = (! val$0 ? '' : val$0 + "");
+		if ($this.options.disableLambda) {
+			throw new Error('Lambda features disabled.');
+		}
+		return text$0;
+	}
+	return result + "";
+};
+
+Hogan$x2ETemplate.mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$ = Hogan$x2ETemplate$mv$LHogan$x2ETemplate$F$LHogan$x2ETemplate$XX$AXHLHogan$x2ETemplate$;
+
+Hogan$x2ETemplate.prototype.sub$SXHLHogan$x2ETemplate$S = function (name, context, partials, indent) {
+	var f;
+	f = this.subs[name];
+	if (f) {
+		this.activeSub = name;
+		f(context, partials, this, indent);
+		this.activeSub = null;
+	}
+};
+
+Hogan$x2ETemplate.prototype.sub = Hogan$x2ETemplate.prototype.sub$SXHLHogan$x2ETemplate$S;
+
+function Hogan$x2ETemplate$sub$LHogan$x2ETemplate$SXHLHogan$x2ETemplate$S($this, name, context, partials, indent) {
+	var f;
+	f = $this.subs[name];
+	if (f) {
+		$this.activeSub = name;
+		f(context, partials, $this, indent);
+		$this.activeSub = null;
+	}
+};
+
+Hogan$x2ETemplate.sub$LHogan$x2ETemplate$SXHLHogan$x2ETemplate$S = Hogan$x2ETemplate$sub$LHogan$x2ETemplate$SXHLHogan$x2ETemplate$S;
+
+function Hogan$x2ETemplate$findInScope$SXB(key, scope, doModelGet) {
+	var val;
+	var getfunc;
+	val = null;
+	if (scope && typeof scope === 'object') {
+		if (scope[key] != null) {
+			val = scope[key];
+		} else if (doModelGet && scope.get && typeof scope.get === 'function') {
+			getfunc = scope.get;
+			val = getfunc(key);
+		}
+	}
+	return val;
+};
+
+Hogan$x2ETemplate.findInScope$SXB = Hogan$x2ETemplate$findInScope$SXB;
+
+function Hogan$x2ETemplate$createSpecializedPartial$LHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$S(instance, subs, partials, stackSubs, stackPartials, childText) {
+	return new Hogan$x2ETemplate$2(instance, subs, partials, stackSubs, stackPartials, childText);
+};
+
+Hogan$x2ETemplate.createSpecializedPartial$LHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$S = Hogan$x2ETemplate$createSpecializedPartial$LHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$S;
+
+function Hogan$x2ETemplate$coerceToString$X(val) {
+	return (! val ? '' : val + "");
+};
+
+Hogan$x2ETemplate.coerceToString$X = Hogan$x2ETemplate$coerceToString$X;
+
+function Hogan$x2ETemplate$hoganEscape$S(str) {
+	str = Hogan$x2ETemplate$coerceToString$X(str);
+	return (Hogan$x2ETemplate.hChars.test(str) ? str.replace(Hogan$x2ETemplate.rAmp, '&amp;').replace(Hogan$x2ETemplate.rLt, '&lt;').replace(Hogan$x2ETemplate.rGt, '&gt;').replace(Hogan$x2ETemplate.rApos, '&#39;').replace(Hogan$x2ETemplate.rQuot, '&quot;') : str);
+};
+
+Hogan$x2ETemplate.hoganEscape$S = Hogan$x2ETemplate$hoganEscape$S;
+
+function Hogan$x2ETemplate$isArray$X(a) {
+	return a instanceof Array;
+};
+
+Hogan$x2ETemplate.isArray$X = Hogan$x2ETemplate$isArray$X;
+
+function Hogan$x2EGeneratedTemplate(code, instance, text, options) {
+	Hogan$x2ETemplate$1.call(this);
+	this.code = code;
+	this.partials = instance.partials;
+};
+
+$__jsx_extend([Hogan$x2EGeneratedTemplate], Hogan$x2ETemplate);
+Hogan$x2EGeneratedTemplate.prototype._ren$AXHLHogan$x2ETemplate$S = function (context, partials, indent) {
+	return this.code(context, partials, indent);
+};
+
+
+function Hogan$x2EOptions$x2ECustomTag(o, c) {
+	this.o = o;
+	this.c = c;
+};
+
+$__jsx_extend([Hogan$x2EOptions$x2ECustomTag], Object);
+$__jsx_lazy_init(node, "__dirname", function () {
+	return eval("__dirname") + "";
+});
+$__jsx_lazy_init(node, "__filename", function () {
+	return eval("__filename") + "";
+});
+$__jsx_lazy_init(node, "fs", function () {
+	return node$require$S('fs');
+});
+$__jsx_lazy_init(node, "path", function () {
+	return node$require$S('path');
+});
+$__jsx_lazy_init(node, "child_process", function () {
+	return node$require$S('child_process');
+});
+$__jsx_lazy_init(node, "url", function () {
+	return node$require$S('url');
+});
+$__jsx_lazy_init(node, "http", function () {
+	return node$require$S('http');
+});
+$__jsx_lazy_init(node, "https", function () {
+	return node$require$S('https');
+});
+$__jsx_lazy_init(node, "net", function () {
+	return node$require$S('net');
+});
+$__jsx_lazy_init(node, "util", function () {
+	return node$require$S('util');
+});
+Hogan.rIsWhitespace = /\S/;
+Hogan.rQuot = /\"/g;
+Hogan.rNewline = /\n/g;
+Hogan.rCr = /\r/g;
+Hogan.rSlash = /\\/g;
+Hogan.tags = ({ '#': 1, '^': 2, '<': 3, '$': 4, '/': 5, '!': 6, '>': 7, '=': 8, '_v': 9, '{': 10, '&': 11, '_t': 12 });
+Hogan.allowedInSuper = ({ '_t': true, '\n': true, '$': true, '/': true });
+Hogan.serialNo = 0;
+Hogan.codegen = ({ '#': (function (node, context) {
+	var s$0;
+	var s$1;
+	context.code += 'if(t.ss(t.' + (s$0 = node.n, ~ s$0.indexOf('.') ? 'dn' : 'fk') + '("' + (s$1 = node.n, s$1.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '",c,p,1),' + 'c,p,0,' + (node.i + "") + ',' + (node.end + "") + ',"' + node.otag + " " + node.ctag + '")){' + 't.rs(c,p,' + 'function(c,p,t){';
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(node.nodes, context);
+	context.code += '});c.pop();}';
+}), '^': (function (node, context) {
+	var s$0;
+	var s$1;
+	context.code += 'if(!t.ss(t.' + (s$0 = node.n, ~ s$0.indexOf('.') ? 'dn' : 'fk') + '("' + (s$1 = node.n, s$1.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '",c,p,1),c,p,1,0,0,"")){';
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(node.nodes, context);
+	context.code += '};';
+}), '>': (function (node, context) {
+	Hogan$createPartial$LHogan$x2EToken$LHogan$x2ECodeObj$(node, context);
+}), '<': (function (node, context) {
+	var ctx;
+	var template;
+	ctx = ({partials: ({  }), code: '', subs: ({  }), prefix: "", inPartial: false, name: "", rawJSX: false});
+	ctx.inPartial = true;
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(node.nodes, ctx);
+	template = context.partials[Hogan$createPartial$LHogan$x2EToken$LHogan$x2ECodeObj$(node, context)];
+	template.subs = ctx.subs;
+	template.partials = ctx.partials;
+}), '$': (function (node, context) {
+	var ctx;
+	var s$0;
+	ctx = ({partials: context.partials, code: '', subs: ({  }), prefix: node.n, inPartial: false, name: "", rawJSX: false});
+	Hogan$walk$ALHogan$x2EToken$LHogan$x2ECodeObj$(node.nodes, ctx);
+	context.subs[node.n] = ctx.code;
+	if (! context.inPartial) {
+		context.code += 't.sub("' + (s$0 = node.n, s$0.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '",c,p,i);';
+	}
+}), '\n': (function (node, context) {
+	var s$0;
+	context.code += (s$0 = '"\\n"' + (node.last ? '' : ' + i'), 't.pb(' + s$0 + ');');
+}), '_v': (function (node, context) {
+	var s$0;
+	var s$1;
+	context.code += 't.pb(t.val(t.' + (s$0 = node.n, ~ s$0.indexOf('.') ? 'dn' : 'fk') + '("' + (s$1 = node.n, s$1.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '",c,p,0)));';
+}), '_t': (function (node, context) {
+	var s$0;
+	var s$1;
+	context.code += (s$1 = '"' + (s$0 = node.text, s$0.replace(Hogan.rSlash, '\\\\').replace(Hogan.rQuot, '\\\"').replace(Hogan.rNewline, '\\n').replace(Hogan.rCr, '\\r')) + '"', 't.pb(' + s$1 + ');');
+}), '{': (function (node, context) {
+	Hogan$tripleStache$LHogan$x2EToken$LHogan$x2ECodeObj$(node, context);
+}), '&': (function (node, context) {
+	Hogan$tripleStache$LHogan$x2EToken$LHogan$x2ECodeObj$(node, context);
+}) });
+Hogan$x2ETemplate.rAmp = /&/g;
+Hogan$x2ETemplate.rLt = /</g;
+Hogan$x2ETemplate.rGt = />/g;
+Hogan$x2ETemplate.rApos = /\'/g;
+Hogan$x2ETemplate.rQuot = /\"/g;
+Hogan$x2ETemplate.hChars = /[&<>\"\']/;
+
+var $__jsx_classMap = {
+	"src/jsx-linker.jsx": {
+		JSXLinker: JSXLinker,
+		JSXLinker$: JSXLinker,
+		_Main: _Main,
+		_Main$: _Main
+	},
+	"system:lib/js/js/nodejs.jsx": {
+		node: node
+	},
+	"node_modules/getopt.jsx/lib/getopt.jsx": {
+		CommandOption: CommandOption,
+		CommandOption$S: CommandOption,
+		CommandOption$SS: CommandOption$0,
+		CommandOption$SSB: CommandOption$1,
+		BasicParser: BasicParser,
+		BasicParser$SAS: BasicParser
+	},
+	"node_modules/hogan.jsx/lib/hogan.jsx": {
+		Hogan: Hogan,
+		Hogan$: Hogan,
+		"Hogan.Options": Hogan$x2EOptions,
+		"Hogan.Options$X": Hogan$x2EOptions,
+		"Hogan.Options$": Hogan$x2EOptions$0,
+		"Hogan.CodeObj": Hogan$x2ECodeObj,
+		"Hogan.CodeObj$": Hogan$x2ECodeObj,
+		"Hogan.CodeObj$LHogan$x2ECodeObj$": Hogan$x2ECodeObj$0,
+		"Hogan.CodeObj$LHogan$x2ECodeObj$LHogan$x2EToken$": Hogan$x2ECodeObj$1,
+		"Hogan.CodeObj$LHogan$x2EToken$": Hogan$x2ECodeObj$2,
+		"Hogan.Token": Hogan$x2EToken,
+		"Hogan.Token$SS": Hogan$x2EToken,
+		"Hogan.Token$S": Hogan$x2EToken$0,
+		"Hogan.Token$SSSSI": Hogan$x2EToken$1,
+		"Hogan.Template": Hogan$x2ETemplate,
+		"Hogan.Template$SLHogan$x2EOptions$": Hogan$x2ETemplate,
+		"Hogan.Template$S": Hogan$x2ETemplate$0,
+		"Hogan.Template$": Hogan$x2ETemplate$1,
+		"Hogan.Template$LHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$HLHogan$x2ETemplate$S": Hogan$x2ETemplate$2,
+		"Hogan.Template$HLHogan$x2ETemplate$HF$XHLHogan$x2ETemplate$LHogan$x2ETemplate$SV$": Hogan$x2ETemplate$3,
+		"Hogan.Template$LHogan$x2ECodeObj$": Hogan$x2ETemplate$4,
+		"Hogan.GeneratedTemplate": Hogan$x2EGeneratedTemplate,
+		"Hogan.GeneratedTemplate$F$AXHLHogan$x2ETemplate$SS$LHogan$x2ETemplate$SLHogan$x2EOptions$": Hogan$x2EGeneratedTemplate,
+		"Hogan.Options.CustomTag": Hogan$x2EOptions$x2ECustomTag,
+		"Hogan.Options.CustomTag$SS": Hogan$x2EOptions$x2ECustomTag
+	},
+	"lib/parse-code.jsx": {
+		ExportItem: ExportItem,
+		ExportItem$SS: ExportItem,
+		JSCodeParser: JSCodeParser,
+		JSCodeParser$S: JSCodeParser
+	},
+	"node_modules/esprima.jsx/lib/esprima.jsx": {
+		EsprimaOption: EsprimaOption,
+		EsprimaOption$HB: EsprimaOption
+	}
+};
+
+
+/**
+ * launches _Main.main(:string[]):void invoked by jsx --run|--executable
+ */
+JSX.runMain = function (sourceFile, args) {
+	var module = JSX.require(sourceFile);
+	if (! module) {
+		throw new ReferenceError("entry point module not found in " + sourceFile);
+	}
+	if (! module._Main) {
+		throw new ReferenceError("entry point _Main not found in " + sourceFile);
+	}
+	if (! module._Main.main) {
+		throw new ReferenceError("entry point _Main.main(:string[]):void not found in " + sourceFile);
+	}
+	module._Main.main(args);
+};
+
+/**
+ * launches _Test#test*():void invoked by jsx --test
+ */
+JSX.runTests = function (sourceFile, tests) {
+	var module = JSX.require(sourceFile);
+	if (! module) return;
+
+	var testClass = module._Test;
+
+	if (!testClass) return; // skip if there's no test class
+
+	if(tests.length === 0) {
+		var p = testClass.prototype;
+		for (var m in p) {
+			if (p[m] instanceof Function && m.match(/^test\w*$/)) {
+				tests.push(m);
+			}
+		}
+	}
+
+	var testCase = new testClass();
+
+	if (testCase.beforeClass != null)
+		testCase.beforeClass(tests);
+
+	for (var i = 0; i < tests.length; ++i) {
+		(function (method) {
+			if (method in testCase) {
+				testCase.run(method, function() { testCase[method](); });
+			}
+			else {
+				throw new ReferenceError("No such test method: " + method);
+			}
+		}(tests[i]));
+	}
+
+	if (testCase.afterClass != null)
+		testCase.afterClass();
+};
+JSX.runMain("src/jsx-linker.jsx", process.argv.slice(2));
+})(JSX);

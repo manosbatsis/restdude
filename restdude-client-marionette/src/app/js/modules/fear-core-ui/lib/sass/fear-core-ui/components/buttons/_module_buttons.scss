@@ -1,0 +1,150 @@
+@import '../../layout/grid/mixins_breakpoints';
+@import '../../utilities/measurements';
+
+/* --------
+  Buttons
+  -------- */
+
+.btn {
+  @include rem(line-height, 23px);
+  @include rem(max-width, 440px);
+  @include rem(padding, 9px 20px);
+  @include rem(margin, 0 0 1px 0);
+  border: 0;
+  color: $color__brand--dark-grey;
+  font-family: $font__mns-london--bold;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+  display: inline-block;
+
+  @include media-query-xsmall {
+    max-width: none;
+    width: auto;
+  }
+}
+
+/* -------- Button variations -------- */
+
+.btn--primary {
+  @include create-btn(40px, 15px, $color__brand--green, $color__brand--dark-grey, $color__brand--background-grey, $color__brand--light-grey);
+}
+
+.btn--secondary {
+  @include create-btn(40px, 15px, $color__brand--grey-40, $color__brand--dark-grey, $color__brand--background-grey, $color__brand--light-grey);
+}
+
+.btn--tertiary {
+  @include create-btn(40px, 15px, $color__brand--white, $color__brand--dark-grey, $color__brand--white, $color__brand--light-grey);
+  border: 1px solid $color__brand--dark-grey;
+}
+
+.btn--quart {
+  @include create-btn(40px, 15px, $color__brand--white, $color__brand--dark-grey, $color__brand--white, $color__brand--background-grey);
+  border: 1px solid $color__brand--light-grey;
+  font-family: $font__mns-london;
+}
+
+/* sof 10 June 15 - new button for north */
+
+.btn--disabled,
+.btn--disabled:hover,
+.btn--disabled:focus,
+.btn--disabled:active {
+  @include rem(height, 40px);
+  @include rem(font-size, 15px);
+  background: $color__brand--grey-20;
+  color: $color__brand--light-grey;
+  cursor: not-allowed;
+}
+
+/* -------- Button modifiers -------- */
+
+//*refactor* rename class
+.btn--xs-medium {
+  @include media-query-max-xsmall {
+    @include rem(max-width, 140px);
+    width: 100%;
+  }
+}
+
+.btn--lightbox--half {
+  @include media-query-max-xsmall {
+    display: inline;
+    margin: 0;
+    width: 46.5%;
+
+    &:last-child {
+      margin-left: 5.5%;
+    }
+  }
+}
+
+// To be used when two buttons are to be horizontally aligned together
+.btn--half {
+  float: left;
+  width: 48%;
+
+  &:first-child {
+    margin-right: 4%;
+  }
+}
+
+// Float right on large device
+.btn--right {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include media-query-xsmall {
+    display: inline-block;
+    float: right !important;
+  }
+}
+
+//*refactor* rename class
+.btn--r-space {
+  @include rem(margin-right, 20px);
+}
+
+.btn--xs {
+  @include rem(padding, 5px 20px);
+  @include rem(height, 30px);
+}
+
+.btn--sm {
+  @include rem(padding, 6px 18px);
+  @include rem(height, 35px);
+}
+
+.btn--no-border {
+  background: none;
+  border: 0;
+  font-family: $font__mns-london;
+
+  span {
+    text-decoration: underline;
+  }
+
+  .btn--disabled:focus,
+  .btn--disabled:active,
+  .no-touch &:hover {
+    background: none;
+
+    span {
+      text-decoration: none;
+    }
+  }
+}
+
+.btn--full-width {
+  max-width: 100%;
+}
+
+@if variable-exists(channel) and $channel == 'channel-tsop' {
+  .btn {
+    @include rem(font-size, 18px);
+    @include rem(padding-top, 7px);
+    @include rem(padding-bottom, 11px);
+  }
+}

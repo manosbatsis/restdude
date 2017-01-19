@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Demo: Bloodhound with Mustache Templates</title>
+	<link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+
+<section id="blog">Loading...</section>
+
+<script type="text/javascript" src="../../bower_components/concrete-promise/src/promise.js"></script>
+<script type="text/javascript" src="../../bower_components/mustache/mustache.js"></script>
+<script type="text/javascript" src="../../src/bloodhound.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/rendering_engines/dynamic_rendering_engine.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/view_resolvers/dynamic_view_resolver.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/view_providers/mustache_view_provider.js"></script>
+<script type="text/javascript" src="../../src/bloodhound/adapters/mustache_template.js"></script>
+
+<div style="display: none;" id="templates">
+	<script type="text/html" data-template-name="blog/posts/index">
+		<h1>{{title}}</h1>
+
+		{{> blog/posts/detail}}
+	</script>
+
+	<script type="text/html" data-template-name="blog/posts/detail" data-template-url="./post_detail.tpl"></script>
+</div>
+
+<script type="text/javascript">
+
+	var blog = {
+		title: "Mustache Templates",
+		posts: [{
+			title: "Mustache Templates Are Easy",
+			body: [
+				'<p>The Blog template is embedded in this page using a &lt;script&gt; tag.</p>',
+				'<p>The template for each blog post is aliased to a different URL using a &lt;script&gt; tag.</p>',
+				'<p>Lastly, the comments for each blog post are referenced by name, which is turned into a URL and then downloaded.</p>'
+			].join(""),
+			comments: [{
+				name: "Jane Doe",
+				comment: "Lorem ipsum",
+				date: "2014/02/16"
+			},{
+				name: "Anonymous Coward",
+				comment: "General trash talk",
+				date: "2014/02/15"
+			},{
+				name: "John Doe",
+				comment: "Witty retort.",
+				date: "2014/02/15"
+			}]
+		}]
+	};
+
+	var provider = new Bloodhound.ViewProviders.MustacheViewProvider(),
+	    resolver = new Bloodhound.ViewResolvers.DynamicViewResolver("templates", provider),
+	    renderingEngine = new Bloodhound.RenderingEngines.DynamicRenderingEngine(resolver);
+
+	resolver.templateUrlBase = "./";
+
+	var start = new Date().getTime();
+
+	console.log("Begin rendering...");
+
+	renderingEngine.render("blog/posts/index", blog, "blog")
+		.done(function(html, template, element, promiser, promise) {
+			console.log("Done rendering! - " + (new Date().getTime() - start) + "ms");
+			console.log("Html:\n" + html);
+			console.log("Template: ", template);
+			console.log("Element: ", element);
+			console.log("Promiser: ", promiser);
+			console.log("Promise: ", promise);
+		});
+
+</script>
+
+</body>
+</html>

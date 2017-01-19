@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Navigation explaination</title>
+  </head>
+  <body>
+
+    <nav role="navigation">
+
+      <!--
+        When this radio is checked then the level 1 menu is shown.
+        The corresponding label that selects this radio button is show in the page header
+        as the hamburger icon on mobile.
+      -->
+      <input type="radio" id="menu__mobile-level1--show" name="menu" aria-hidden="true" hidden/>
+      <ul class="nav">
+        <!-- LEVEL 1 NAVIGATION -->
+        <li>
+          <!--
+            Radio button ID must be unique and should follow the format
+            `menu__mobile-level2__[name of level 1 item]--show`
+
+             This radio button will show and hide the `.nav__content` for mobile
+          -->
+          <input class="menu__mobile-level2--show" type="radio" name="menu"
+                 id="menu__mobile-level2__inspireme--show"
+                 aria-hidden="true" hidden/>
+          <!-- Link is shown on the desktop -->
+          <a href="/c/style-and-living"><h1>Inspire Me</h1></a>
+          <!--
+            Label is shown on the mobile
+            This label selects the radio button that shows the level 2 and 3 menu on mobile
+            The `for` attribute must correspond to the ID of the corresponding radio button
+          -->
+          <label class="menu__mobile-level2__label" for="menu__mobile-level2__inspireme--show" role="button" aria-hidden="true" hidden>Inspire
+            Me</label>
+
+          <!-- LEVEL 2 AND LEVEL 3 NAVIGATION -->
+          <!--
+            `.nav__content` is show on desktop when a level 1 item is in hover state
+          -->
+          <ul class="nav__content">
+            <!-- Mobile menu back button -->
+            <li class="menu__mobile-level2--back" aria-hidden="true" hidden>
+              <label for="menu__mobile-level1--show" role="button"><span>Back</span></label>
+            </li>
+            <li>
+              <!-- All the level 2 and level 3 content goes here -->
+
+              <ul class="nav__content-items">
+                <!-- Each `li` represents a column in the desktop layout -->
+                <li>
+                  <!--
+                    Checkbox ID must be unique and should follow the format
+                    `menu__mobile-level3__[name of level 1 item]--[name of level 2 item]`
+
+                     This checkbox will show and hide the `.nav__content-group` for mobile
+                  -->
+                  <input class="menu__mobile-level3" type="checkbox" id="menu__mobile-level3__woman--10-beauty-box"
+                         aria-hidden="true" hidden/>
+                  <!-- LEVEL 2 -->
+                  <h2><label for="menu__mobile-level3__woman--10-beauty-box">£10 Beauty Box</label></h2>
+
+                  <!-- LEVEL 3 -->
+                  <ul class="nav__content-group">
+                    <li>
+                      <a href="/s/beauty/beauty-box?intid=WW_GNAV_1_bb">£10 Beauty Box when you spend £40 - T&amp;Cs
+                        apply
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- column in the desktop layout -->
+                <li></li>
+
+                <!-- column in the desktop layout -->
+                <li></li>
+
+                <!-- column in the desktop layout -->
+                <li></li>
+
+              </ul>
+
+            </li>
+          </ul>
+
+          <!-- overlay for tablet that allows you to touch off the menu to close it -->
+          <label class="menu__mobile-level2__overlay" for="menu__mobile-level1--show"></label>
+        </li>
+
+      </ul>
+    </nav>
+
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "underscore-strings",
+  "version": "0.1.0",
+  "main": "./src/underscore.strings.js",
+  "homepage": "https://github.com/aganov/underscore-strings",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.0",
+    "commit": "f9871be17d9c77e3e22acbcea5f7b3151b7e6b50"
+  },
+  "_source": "https://github.com/aganov/underscore-strings.git",
+  "_target": "^0.1.0",
+  "_originalSource": "https://github.com/aganov/underscore-strings.git",
+  "_direct": true
+}

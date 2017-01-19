@@ -1,0 +1,65 @@
+// scss-lint:disable EmptyLineBetweenBlocks
+
+@mixin mns-display($value) {
+  @include ie-only(9) {
+    @include display-fallback($value);
+  }
+
+  display: $value;
+}
+
+@mixin mns-flex-direction($direction) {
+  @include ie-only(9) {
+    @include flex-direction-fallback($direction);
+  }
+  flex-direction: $direction;
+}
+
+@mixin mns-flex-wrap($wrap) {
+  @include ie-only(9) {
+    //@include flex-wrap-fallback($wrap);
+  }
+  flex-wrap: $wrap;
+}
+
+@mixin mns-justify-content($position) {
+  @include ie-only(9) {
+    @include justify-content-fallback($position);
+  }
+  justify-content: $position;
+}
+
+@mixin mns-align-items($position) {
+  @include ie-only(9) {
+    //@include align-items-fallback($position);
+  }
+  align-items: $position;
+}
+
+@mixin mns-align-content($position) {
+  @include ie-only(9) {
+    //@include align-content-fallback($position);
+  }
+  align-content: $position;
+}
+
+@mixin mns-flex-grow($value) {
+  @include ie-only(9) {
+    @include flex-grow-fallback;
+  }
+  flex-grow: $value;
+}
+
+@mixin mns-flex-shrink($value) {
+  @include ie-only(9) {
+    //@include flex-shrink-fallback;
+  }
+  flex-shrink: $value;
+}
+
+@mixin mns-align-self($position) {
+  @include ie-only(9) {
+    //@include align-self-fallback($position);
+  }
+  align-self: $position;
+}
