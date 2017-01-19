@@ -295,7 +295,7 @@ module.exports = function (grunt) {
     });
 
     // These plugins provide necessary tasks.
-    /*grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -311,7 +311,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-livereload');
-    grunt.loadNpmTasks('grunt-contrib-connect');*/
+    grunt.loadNpmTasks('grunt-contrib-connect');
     //grunt.loadNpmTasks('grunt-contrib-manifest');
 
 
