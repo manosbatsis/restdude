@@ -8,12 +8,13 @@ Full stack, high level framework for horizontal, model-driven application hacker
 ## Technology Stack
 
 - Choose between Spring MVC or Spring Boot
+- Use a 3-tier architecture without the boilerplate with [restdude-mdd](restdude-mdd)
 - Annotate your models to configure API documentation, authorization, validation and auditing
-- Sleep better with built-in <a href="https://github.com/manosbatsis/restdude/tree/master/restdude-error">error-management</a> and reporting
-- Customize and integrate security according to your needs with Spring Security
-- Use websockets via Spring Websockets/STOMP
-- Persist to relational databases with Spring Data JPA
-- Use the right NoSQL datastore for your project-specific needs, including ElasticSearch, Solr, MongoDB, Redis, Cassandra, Counchbase, Neo4J, Hazelcast and more
+- Sleep better with built-in [error-management](restdude-error)
+- Customize and integrate according to your needs with Spring Security
+- Interact with your users via websockets and STOMP
+- Persist to relational databases with JPA
+- Free your persisted data structures with ElasticSearch, Solr, MongoDB, Redis, Cassandra, Counchbase, Neo4J, Hazelcast and more
 - Automate basic or fine grained auditing using <a href="http://docs.spring.io/spring-data/data-jpa/docs/current/reference/html/auditing.html">Envers</a> and <a href="http://javers.org/">Javers</a>
 - Publish REST API documentation effortlesly thanks to <a href="http://springfox.github.io/springfox">Springfox</a> and <a href="http://swagger.io/swagger-ui">Swagger UI</a>
 - Optional web UI and admin panel provided out-of the-box based on bootstrap 4, backbone.marionette, core-UI, requirejs and more.
