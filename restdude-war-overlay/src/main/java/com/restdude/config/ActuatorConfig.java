@@ -62,6 +62,7 @@ public class ActuatorConfig {
     // Define the HandlerMapping similar to RequestHandlerMapping to expose the
     // endpoint
     public EndpointHandlerMapping endpointHandlerMapping(Collection<? extends MvcEndpoint> endpoints) {
+        LOGGER.debug("endpointHandlerMapping, endpoints: ", endpoints);
         return new EndpointHandlerMapping(endpoints);
     }
 

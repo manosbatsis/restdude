@@ -50,6 +50,12 @@
     <logger name="com.restdude.domain.error">
         <level value="debug"/>
     </logger>
+    <logger name="org.springframework.boot.actuate">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.config">
+        <level value="debug"/>
+    </logger>
 
 
     <root level="warn">
