@@ -11,8 +11,10 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-#management:
-#  context-path: /management
+management:
+  context-path: /api/management
+  info.git.mode: full
+  security.roles: ADMIN
 #  health:
 #    mail:
 #      enabled: false # When using the MailService, configure an SMTP server and set this to true
@@ -105,3 +107,39 @@ mail:
     user: ${buildfilters.mail.test.user}
   server:
     from: ${buildfilters.mail.server.from}
+
+info:
+  app:
+    encoding: ${project.build.sourceEncoding}
+    java:
+      source: ${maven.compiler.source}
+      target: ${maven.compiler.target}
+  git:
+    tags: ${git.tags}
+    branch: ${git.branch}
+    dirty: ${git.dirty}
+    remote.origin.url: ${git.remote.origin.url}
+    commit:
+      id: ${git.commit.id}
+#OR (depends on commitIdGenerationMode)
+#      id.full: ${git.commit.id.full}
+      id.abbrev: ${git.commit.id.abbrev}
+      id.describe: ${git.commit.id.describe}
+      id.describe-short: ${git.commit.id.describe-short}
+      user:
+        name: ${git.commit.user.name}
+        email: ${git.commit.user.email}
+      message:
+        full: ${git.commit.message.full}
+        short: ${git.commit.message.short}
+      time: ${git.commit.time}
+    closest.tag:
+      name: ${git.closest.tag.name}
+      commit.count: ${git.closest.tag.commit.count}
+    build:
+      user:
+        name: ${git.build.user.name}
+        email: ${git.build.user.email}
+      time: ${git.build.time}
+      host: ${git.build.host}
+      version: ${git.build.version}

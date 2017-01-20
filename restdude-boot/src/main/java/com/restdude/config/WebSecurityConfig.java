@@ -115,6 +115,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signin/**").permitAll()
                 .antMatchers("/signup/**").permitAll()
+                .antMatchers("/api/management/**").hasAnyAuthority(Role.ROLE_ADMIN)
                 .antMatchers("/v2/api-docs").hasAnyAuthority(Role.ROLE_USER)
                 .antMatchers(HttpMethod.POST, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
                 .antMatchers(HttpMethod.PATCH, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
