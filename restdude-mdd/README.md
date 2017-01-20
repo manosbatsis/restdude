@@ -1,6 +1,75 @@
-## REST API Basics
+# Model Driven Development
 
-The sections bellow describe the REST API typically provided by restdude controllers.
+Some modern frameworks use two or even a single tier to reduce the coding required for exposing models as RESTful services.
+The limitation trade-offs however become increasingly apparent as the application grows. Business methods appear in controllers
+and repositories exposed to the web tier offer no room for extensibility.
+
+Restdude on the other hand favours a 3-tier architecture without all the unnecessary boilerplate code. Restdude will simply create and register m
+the issing Repository, Service and Controller beans on application startup. Need to customize or extend a component beyond SCRUD? Just add your custom
+implementation and restdude will figure it out and use that instead of creating it's own.
+
+## Default Implementations
+
+Consider the following model. The runtime class generation is triggered by annotating the class with `@ModelResource`:
+
+
+```java
+@Entity
+@Table(name = "country")
+@ModelResource(path = "countries", apiName = "Countries", apiDescription = "Operations about countries")
+public class Country extends AbstractFormalRegion<Continent> {
+
+    @Id
+    @Column(unique = true, nullable = false, length = 2)
+    private String id;
+
+    @Column(name = "native_name", unique = true, nullable = true, length = 50)
+    private String nativeName;
+}
+```
+
+### Provided Controller
+
+```java
+@RestController
+@Api(tags = "Countries", description = "Operations about countries")
+@RequestMapping(value = "/api/rest/countries",
+	produces = { "application/json", "application/xml" })
+public class CountryController extends AbstractModelController<Country, String, CountryService> {
+
+    // actual implementation is in superclass
+}
+```
+
+### Provided Service Interface
+
+```java
+public interface CountryService extends ModelService<Country, String> {
+    // just extends super
+}
+```
+
+### Provided Service Implementation
+
+```java
+@Named("countryService")
+public class CountryServiceImpl extends AbstractModelServiceImpl<Country, String, CountryRepository> implements CountryService {
+    // just extends super
+}
+```
+
+### Provided Repository
+
+```java
+public interface CountryRepository extends ModelRepository<Country, String> {
+    // just extends super
+}
+```
+
+
+## API Basics
+
+The sections bellow describes the core REST API provided by the above components.
 
 ### HTTP Methods and URLs
 
