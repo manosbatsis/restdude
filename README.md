@@ -2,6 +2,8 @@
 
 # Restdude
 
+[![Build Status](https://travis-ci.org/manosbatsis/restdude.svg?branch=master)](https://travis-ci.org/manosbatsis/restdude)
+
 Full stack, high level framework for horizontal, model-driven application hackers.
 
 

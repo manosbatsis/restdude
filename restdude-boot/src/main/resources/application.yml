@@ -70,10 +70,10 @@ logging:
     root: WARN
     org.springframework:
 #      context: DEBUG
-     security: DEBUG
+     security: WARN
 #      boot.autoconfigure: DEBUG
     com.restdude.domain:
-      error: DEBUG
+#      error: DEBUG
 #      base:
 #        repository: DEBUG
 #        validation: DEBUG
