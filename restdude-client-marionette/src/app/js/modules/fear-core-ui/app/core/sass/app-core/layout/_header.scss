@@ -1,0 +1,26 @@
+.l-header {
+  display: flex;
+  margin: 0 0 $spacing-medium 0;
+  padding-bottom: $spacing-default;
+  border-bottom: 1px solid $color__brand--dark-grey;
+  align-content: center;
+
+  @include ie-only(9) {
+    vertical-align: middle;
+  }
+}
+
+.l-header__logo {
+  @include ie-only(9) {
+    vertical-align: middle;
+  }
+
+  ~ h1 {
+    margin: 0 $spacing-default;
+
+    @include ie-only(9) {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}

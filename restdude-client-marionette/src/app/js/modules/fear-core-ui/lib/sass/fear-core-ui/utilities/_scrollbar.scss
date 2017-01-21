@@ -1,0 +1,28 @@
+@mixin scrollbars($value) {
+
+  $ms-value: null;
+
+  @if $value == none {
+    $ms-value: $value;
+  }
+
+  @if $value == auto {
+    $ms-value: -ms-autohiding-scrollbar;
+  }
+
+  @if $value == scroll {
+    $ms-value: scrollbar;
+  }
+
+  -ms-overflow-style: $ms-value;
+
+  @if $value == none {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+@mixin momentum-scrolling {
+  -webkit-overflow-scrolling: touch;
+}

@@ -1,0 +1,18 @@
+/* --------
+  Fonts
+  -------- */
+
+/* -------- Icons -------- */
+@include font-face('mns-icons', $fear-core-ui-font-dir + '/mns-icons', $file-formats: eot woff ttf svg);
+
+/* -------- Typographic -------- */
+// Didot font declarations
+@include font-face('didot-roman', $fear-core-ui-font-dir + '/didot-roman', $file-formats: eot woff ttf svg);
+@include font-face('didot-italic', $fear-core-ui-font-dir + '/didot-italic', $file-formats: eot woff ttf svg);
+@include font-face('didot-bold', $fear-core-ui-font-dir + '/didot-bold', $file-formats: eot woff ttf svg);
+@include font-face('didot-bold-italic', $fear-core-ui-font-dir + '/didot-bold-italic', $file-formats: eot woff ttf svg);
+
+// super new new awesome updated final fonts
+@include font-face('mns-london', $fear-core-ui-font-dir + '/mns-london-text/MSLondoneText-Semibold', $file-formats: woff2 woff);
+@include font-face('mns-london-bold', $fear-core-ui-font-dir + '/mns-london-text/MSLondoneText-Demibold', $file-formats: woff2 woff);
+@include font-face('mns-london-light', $fear-core-ui-font-dir + '/mns-london-text/MSLondoneText-Regular', $file-formats: woff2 woff);

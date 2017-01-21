@@ -1,0 +1,75 @@
+.checkbox-accordion {
+  @include rem(height, 60px);
+
+  // Native Android fix
+  @include rem(min-height, 60px);
+
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  z-index: 1;
+
+  // Native Android fix
+  min-width: 100%;
+
+  + .checkbox-accordion__section {
+    @include rem(height, 60px);
+    overflow: hidden;
+
+    @include media-query-xsmall {
+      @include rem(padding-left, 26px);
+    }
+
+    .checkbox-accordion__header {
+      @include rem(height, 62px);
+    }
+
+    .checkbox-accordion__heading {
+      @include rem(padding-left, 26px);
+      @include rem(top, 30px);
+      position: relative;
+      max-width: 70%;
+      transform: translateY(-50%);
+      margin: 0;
+
+      @include media-query-xsmall {
+        @include rem(left, -2.6rem);
+      }
+
+      // scss-lint:disable NestingDepth
+      &::before {
+        @extend %mns-icons;
+        @extend %icon-arrow-right;
+        @include rem(font-size, 16px);
+        @include rem(margin-top, -8px);
+        top: 50%;
+        left: 0;
+        transform: rotate(0deg);
+        transition: all .3s linear;
+        position: absolute;
+      }
+    }
+
+  }
+
+}
+
+.checkbox-accordion:checked {
+
+  + .checkbox-accordion__section {
+    height: 100%;
+    display: block;
+
+    .checkbox-accordion__heading {
+      // scss-lint:disable NestingDepth
+      &::before {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+}
+

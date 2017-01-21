@@ -1,0 +1,70 @@
+@import '../colors';
+@import '../layout/positioning/mixins';
+
+/* --------
+  Core
+  -------- */
+
+html {
+  box-sizing: border-box;
+  font-size: 10px;
+  height: 100%;
+}
+
+// Box sizing - natural box layout model to all elements, but allowing components to change
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  @include rem(font-size, $base-font-size-sm * 1px);
+  color: $color__brand--dark-grey;
+  font-family: $font__mns-london;
+  min-height: 100%;
+  position: relative;
+
+  @include media-query-small {
+    @include rem(font-size, $base-font-size-lg * 1px);
+  }
+}
+
+// Debugging option to show grid outlines
+.body-debug * {
+  outline: 1px dashed $color__brand--error;
+}
+
+.wrapper {
+  @include wrapper($screen-lg);
+}
+
+/* -------- Links -------- */
+
+a {
+  color: inherit;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+/* -------- Angular -------- */
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak,
+.ng-hide {
+  display: none !important;
+}
+
+@if variable-exists(channel) and $channel == 'channel-tsop' {
+  body {
+    user-select: none;
+    -ms-content-zooming: none;
+  }
+}

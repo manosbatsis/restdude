@@ -1,0 +1,81 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "ware@^0.3.0",
+        "scope": null,
+        "escapedName": "ware",
+        "name": "ware",
+        "rawSpec": "^0.3.0",
+        "spec": ">=0.3.0 <0.4.0",
+        "type": "range"
+      },
+      "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\download"
+    ]
+  ],
+  "_from": "ware@>=0.3.0 <0.4.0",
+  "_id": "ware@0.3.0",
+  "_inCache": true,
+  "_location": "/ware",
+  "_npmUser": {
+    "name": "segmentio",
+    "email": "team@segment.io"
+  },
+  "_npmVersion": "1.4.6",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "ware@^0.3.0",
+    "scope": null,
+    "escapedName": "ware",
+    "name": "ware",
+    "rawSpec": "^0.3.0",
+    "spec": ">=0.3.0 <0.4.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/decompress",
+    "/download"
+  ],
+  "_resolved": "https://registry.npmjs.org/ware/-/ware-0.3.0.tgz",
+  "_shasum": "2df8044973542ecb5eb54397d7cd3773bcf8e9eb",
+  "_shrinkwrap": null,
+  "_spec": "ware@^0.3.0",
+  "_where": "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\download",
+  "bugs": {
+    "url": "https://github.com/segmentio/ware/issues"
+  },
+  "dependencies": {},
+  "description": "Easily create your own middleware layer.",
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "2df8044973542ecb5eb54397d7cd3773bcf8e9eb",
+    "tarball": "https://registry.npmjs.org/ware/-/ware-0.3.0.tgz"
+  },
+  "homepage": "https://github.com/segmentio/ware",
+  "keywords": [
+    "compose",
+    "connect",
+    "express",
+    "layer",
+    "middleware"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "maintainers": [
+    {
+      "name": "segmentio",
+      "email": "friends@segment.io"
+    }
+  ],
+  "name": "ware",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/segmentio/ware.git"
+  },
+  "version": "0.3.0"
+}

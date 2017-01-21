@@ -1,0 +1,28 @@
+{
+	"name": "bloodhound",
+	"description": "The missing view resolver for JavaScript. Easily render embedded and dynamic views using any templating language you want.",
+	"version": "1.0.4",
+	"homepage": "https://github.com/gburghardt/bloodhound",
+	"authors": [
+		"Greg Burghardt <greg_burghardt@yahoo.com>"
+	],
+	"license": "MIT",
+	"repository": { "type": "git", "url": "https://github.com/gburghardt/bloodhound.git" },
+	"main": [
+		"src/bloodhound.js",
+		"src/bloodhound/adapters/mustache_template.js",
+		"src/bloodhound/view_providers/mustache_view_provider.js",
+		"src/bloodhound/view_providers/simple_template_view_provider.js",
+		"src/bloodhound/view_resolvers/dynamic_view_resolver.js",
+		"src/bloodhound/view_resolvers/embedded_view_resolver.js",
+		"src/bloodhound/rendering_engines/dynamic_rendering_engine.js",
+		"src/bloodhound/rendering_engines/embedded_rendering_engine.js"
+	],
+	"dependencies": {
+		"concrete-promise": "~1.0.0"
+	},
+	"devDependencies": {
+		"mustache": "~0.8.1",
+		"simple-template": "~2.0.0"
+	}
+}

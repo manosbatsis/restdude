@@ -1,0 +1,12 @@
+{
+    "extends": "fear-core/ecma-config",
+
+    "env": {
+        "amd": true
+    },
+
+    "globals": {
+        "window": false,
+        "document": false
+    }
+}

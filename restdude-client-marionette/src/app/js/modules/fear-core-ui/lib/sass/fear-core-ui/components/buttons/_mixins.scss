@@ -1,0 +1,33 @@
+/// Create disabled buttons
+/// @group Buttons
+@mixin create-disabled-btn($text, $bg-color) {
+  color: $text;
+  background: $bg-color;
+  border-color: shade($bg-color, 10%);
+}
+
+/// Create buttons
+/// @author kymbee
+/// @group Buttons
+@mixin create-btn($height, $font-size, $color-bg, $color-text, $color-bg-disabled, $color-text-disabled) {
+  color: $color-text;
+  @include rem(height, $height);
+  @include rem(font-size, $font-size);
+  background: $color-bg;
+  border-color: shade($color-bg, 10%);
+
+  .no-touch &:hover,
+  &:focus {
+    background: shade($color-bg, 5%);
+    border-color: shade($color-bg, 15%);
+  }
+
+  &:active {
+    background: shade($color-bg, 10%);
+    border-color: shade($color-bg, 20%);
+  }
+
+  &.is-disabled {
+    @include create-disabled-btn($color-text-disabled, $color-bg-disabled);
+  }
+}

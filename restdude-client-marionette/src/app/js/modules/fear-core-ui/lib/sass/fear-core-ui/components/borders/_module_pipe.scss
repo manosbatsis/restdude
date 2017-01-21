@@ -1,0 +1,22 @@
+// Solid line
+.pipe--left::after,
+.pipe--right::after {
+  content: '';
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 2px;
+  border-right: solid 1px $color__brand--light-grey;
+}
+
+.pipe--left::after {
+  left: 0;
+}
+
+.pipe--right::after {
+  right: 0;
+}
+
+.pipe--rel::after {
+  position: relative;
+}

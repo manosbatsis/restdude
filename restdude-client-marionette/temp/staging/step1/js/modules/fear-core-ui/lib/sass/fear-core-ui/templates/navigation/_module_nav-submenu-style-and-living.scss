@@ -1,0 +1,103 @@
+.nav-submenu__style-and-living {
+  @include rem(padding, 20px 15px 20px);
+  font-family: $font__mns-london;
+
+  &:first-of-type {
+    @include rem(padding, 10px 15px 20px);
+
+    .copy a {
+      text-decoration: none;
+      padding-left: 20px;
+    }
+
+    .copy a:hover {
+      text-decoration: underline;
+    }
+
+    .copy p {
+      position: relative;
+    }
+
+    .copy a::before {
+      @include rem('border-width', 7.5px 0 7.5px 13px);
+      @include rem('top', 2px);
+      @include rem('left', 0);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-color: transparent transparent transparent $color__brand--dark-grey;
+      position: absolute;
+      content: ' ';
+    }
+  }
+
+  a {
+    text-decoration: none;
+    text-transform: uppercase;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  img {
+    @include rem(margin-bottom, 15px);
+    width: 100%;
+    height: auto;
+  }
+
+  h2 {
+    @include rem('font-size', 14px);
+    @include rem('margin-bottom', 8px);
+    @include rem('letter-spacing', 1px);
+    color: $color__brand--dark-grey;
+    font-family: $font__mns-london--bold;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    @include rem('font-size', 16px);
+    font-family: $font__mns-london;
+    text-transform: uppercase;
+  }
+
+  .loader__spinner--image {
+    @include rem(height, 120px);
+
+    @include media-query-large {
+      @include rem(height, 170px);
+    }
+
+    &::after {
+      @include rem(width, 31px);
+      @include rem(height, 31px);
+    }
+  }
+
+  .copy {
+    p {
+      @include media-query-small {
+        @include rem('font-size', 15px);
+        @include rem('line-height', 20px);
+      }
+    }
+
+    a {
+      @include rem('font-size', 14px);
+    }
+  }
+}
+
+.style-and-living__logo {
+  @include rem('height', 40px);
+  @include rem('margin-bottom', 10px);
+  background: url('#{$fear-core-ui-images-dir}/global/style-and-living-logo.png') no-repeat;
+  background-size: 100% auto;
+  display: block;
+  width: 100%;
+}
+
+.svg .style-and-living__logo {
+  background: url('#{$fear-core-ui-images-dir}/global/style-and-living-logo.svg') no-repeat;
+  background-size: 100% auto;
+}

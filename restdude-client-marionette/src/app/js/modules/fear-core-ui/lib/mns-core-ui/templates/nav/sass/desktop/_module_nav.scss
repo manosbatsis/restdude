@@ -1,0 +1,14 @@
+.nav {
+  > li {
+    &:hover {
+      > .nav__content {
+        display: block;
+      }
+    }
+
+    // hide mobile links
+    > a {
+      display: block;
+    }
+  }
+}

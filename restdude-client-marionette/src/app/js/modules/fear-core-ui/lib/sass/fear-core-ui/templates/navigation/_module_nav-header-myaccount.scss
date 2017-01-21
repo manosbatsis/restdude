@@ -1,0 +1,44 @@
+.nav-header__text--my-account {
+  @include rem('right', 34px);
+}
+
+.nav-header__item--my-account {
+  display: none;
+
+  @include media-query-xsmall {
+    .dropdown__panel-wrapper {
+      right: 80px;
+      top: 0;
+    }
+  }
+
+  @include media-query-small {
+    @include rem('width', 150px);
+    display: inline-block;
+    max-width: inherit;
+  }
+
+  @include media-query-medium {
+    @include rem('width', 155px);
+    .dropdown__panel-wrapper {
+      right: 0;
+      top: -1px;
+    }
+  }
+}
+
+.nav-header__link--my-account {
+  @include media-query-small {
+    &::before {
+      width: 13%;
+    }
+  }
+}
+
+.nav-header__sign-out {
+  font-weight: bold;
+}
+
+.nav-header__sub-list--my-account {
+  text-align: left;
+}

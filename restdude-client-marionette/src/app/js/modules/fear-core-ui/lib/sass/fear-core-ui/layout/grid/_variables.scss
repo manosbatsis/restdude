@@ -1,0 +1,28 @@
+/// Up to mobile portrait
+/// @group Media queries
+$screen-xs: 480px !default;
+
+/// Up to mobile landscape / tablet portrait
+/// @group Media queries
+$screen-sm: 769px !default;
+
+/// Up to tablet landscape / desktop
+/// @group Media queries
+$screen-md: 992px !default;
+
+/// Large desktop
+/// @group Media queries
+$screen-lg: 1200px !default;
+
+$screen-tsop: 1722px !default;
+
+
+$breakpoints: sm md lg;
+$breakpoint-size: $screen-sm-min $screen-md-min $screen-lg-min;
+
+
+// Padding
+$padding__xs: 10px;
+$padding__sm: 15px;
+
+

@@ -1,0 +1,12 @@
+{
+    "extends": "fear-core/browser-config",
+
+    "env": {
+        "amd": true
+    },
+
+    "globals": {
+        "angular": false
+    }
+
+}

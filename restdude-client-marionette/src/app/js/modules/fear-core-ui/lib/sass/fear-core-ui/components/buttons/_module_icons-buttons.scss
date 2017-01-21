@@ -1,0 +1,163 @@
+/* --------
+  Buttons with icons
+  -------- */
+
+.btn__icon {
+  @extend %mns-icons;
+  position: relative;
+
+  &.btn--xs {
+    &::before {
+      @include rem(font-size, 10px);
+    }
+  }
+}
+
+//*refactor* create button icon mixin
+.btn__icon--gift {
+  @include rem(padding-left, 46px);
+
+  @include media-query-xsmall {
+    @include rem(padding-left, 48px);
+  }
+
+  &::before {
+    @extend %icon-gift;
+    @include rem(font-size, 18px);
+    @include rem(margin-left, -28px);
+    @include rem(top, 8px);
+    position: absolute;
+  }
+}
+
+.btn__icon--edit {
+  @include rem(padding-left, 46px);
+  @include rem(margin, 0 0 20px 0);
+
+  @include media-query-xsmall {
+    @include rem(padding-left, 48px);
+  }
+
+  &::before {
+    @extend %icon-edit;
+    @include rem(font-size, 18px);
+    @include rem(margin-left, -28px);
+    @include rem(top, 9px);
+    position: absolute;
+  }
+}
+
+.btn__icon--close {
+  @include rem(padding-left, 40px);
+
+  @include media-query-xsmall {
+    @include rem(padding-left, 45px);
+  }
+
+  &::before {
+    @extend %icon-close;
+    @include rem(font-size, 15px);
+    @include rem(margin-left, -25px);
+    @include rem(top, 12px);
+    position: absolute;
+  }
+
+  &.btn--no-border {
+    @include rem(padding-left, 23px);
+
+    @include media-query-xsmall {
+      @include rem(padding-left, 25px);
+      @include rem(margin-left, 15px);
+    }
+  }
+}
+
+.btn--no-border {
+  &::before {
+    @include rem(top, 14px);
+    @include rem(font-size, 13px);
+  }
+}
+
+.btn__icon--info {
+  @include rem(padding-left, 45px);
+  position: relative;
+
+  &::before {
+    @extend %icon-information;
+    @include rem(font-size, 15px);
+    @include rem(left, 15px);
+    @include rem(top, 11px);
+    position: absolute;
+  }
+}
+
+.btn__icon--cancel-order {
+  @include rem(padding-left, 45px);
+  position: relative;
+
+  &::before {
+    @extend %icon-cancel-order;
+    @include rem(font-size, 15px);
+    @include rem(left, 15px);
+    @include rem(top, 11px);
+    position: absolute;
+  }
+}
+
+.btn__icon--search {
+  @include rem(padding-left, 26px);
+  position: relative;
+
+  &::before {
+    @extend %icon-search;
+    @include rem(font-size, 15px);
+    @include rem(left, 15px);
+    @include rem(top, 11px);
+    position: absolute;
+  }
+}
+
+.btn__icon--calendar {
+  @include rem(padding-left, 40px);
+
+  @include media-query-xsmall {
+    @include rem(padding-left, 45px);
+  }
+
+  &::before {
+    @extend %icon-calendar;
+    @include rem(font-size, 16px);
+    @include rem(margin-left, -25px);
+    @include rem(top, 11px);
+    position: absolute;
+  }
+}
+
+.btn__icon--lock {
+  &::before {
+    @extend %icon-sign-in;
+    @include rem(font-size, 20px);
+    @include rem(left, -3px);
+    position: relative;
+    top: 0;
+  }
+}
+
+.btn__icon--arrow-left {
+  @include rem(padding-left, 33px);
+  position: relative;
+
+  &::before {
+    @extend %icon-arrow-left;
+    @include rem(font-size, 15px);
+    @include rem(margin-left, -20px);
+    @include rem(top, 12px);
+    position: absolute;
+  }
+}
+
+.btn__text {
+  position: relative;
+  top: -3px;
+}

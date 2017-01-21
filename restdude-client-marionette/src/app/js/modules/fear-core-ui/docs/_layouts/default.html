@@ -1,0 +1,23 @@
+{% include head.html %}
+
+<body class="wrap">
+  {% include header.html %}
+  
+  <div class="site-wrapper">
+    <div class="site-wrapper__inner">
+        <div class="content" ng-controller="HubCtrl as hub">
+            <div class="content__inner">
+                <div class="row">
+                    <div class="col" style="margin: 30px 0px">
+                        {{ content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  {% include footer.html %}
+
+</body>
+</html>

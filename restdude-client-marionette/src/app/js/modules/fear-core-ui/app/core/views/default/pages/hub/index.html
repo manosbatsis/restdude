@@ -1,0 +1,29 @@
+<!doctype html>
+<!--[if IE 9]><html class="no-js ie ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hub</title>
+
+    {{{> app/core/views/default/modules/head/hub}}}
+</head>
+
+<body ng-app="hubApp">
+
+<div class="site-wrapper" ng-cloak>
+    <div class="site-wrapper__inner">
+        {{{> app/core/views/default/pages/hub/header}}}
+        {{{> app/core/views/default/pages/hub/content}}}
+        {{{> app/core/views/default/pages/hub/footer}}}
+
+    </div> <!-- site-wrapper__inner -->
+</div> <!-- site-wrapper -->
+
+{{{> app/core/views/default/pages/hub/bootstrap}}}
+
+</body>
+</html>

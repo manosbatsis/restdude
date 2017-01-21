@@ -1,0 +1,25 @@
+$channel: channel-default;
+
+$fear-core-ui-font-dir: '/assets/fonts';
+$fear-core-ui-images-dir: '/assets/images/sprites';
+
+/* Base */
+@import 'fear-core-ui/base';
+@import 'fear-core-ui/extends';
+@import 'fear-core-ui/typography';
+@import 'fear-core-ui/sprites'; //dup
+
+/* Components */
+@import 'fear-core-ui/components/icons';
+
+@import 'fear-core-ui/components/buttons';
+@import 'fear-core-ui/components/borders';
+@import 'fear-core-ui/components/list';
+
+@import 'fear-core-ui/components/help-menu';
+@import 'fear-core-ui/modules/checkbox-accordion';
+@import 'fear-core-ui/templates/footer';
+
+.margin-top {
+  @include rem(margin-top, 15px);
+}

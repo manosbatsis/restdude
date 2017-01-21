@@ -1,0 +1,117 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "archive-type@^1.0.2",
+        "scope": null,
+        "escapedName": "archive-type",
+        "name": "archive-type",
+        "rawSpec": "^1.0.2",
+        "spec": ">=1.0.2 <2.0.0",
+        "type": "range"
+      },
+      "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\download"
+    ]
+  ],
+  "_from": "archive-type@>=1.0.2 <2.0.0",
+  "_id": "archive-type@1.0.4",
+  "_inCache": true,
+  "_location": "/archive-type",
+  "_nodeVersion": "0.10.32",
+  "_npmUser": {
+    "name": "kevva",
+    "email": "kevinmartensson@gmail.com"
+  },
+  "_npmVersion": "2.1.5",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "archive-type@^1.0.2",
+    "scope": null,
+    "escapedName": "archive-type",
+    "name": "archive-type",
+    "rawSpec": "^1.0.2",
+    "spec": ">=1.0.2 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/download"
+  ],
+  "_resolved": "https://registry.npmjs.org/archive-type/-/archive-type-1.0.4.tgz",
+  "_shasum": "9791ee70d17c022e2d3880405bdbc8c2bb7115e9",
+  "_shrinkwrap": null,
+  "_spec": "archive-type@^1.0.2",
+  "_where": "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette\\node_modules\\download",
+  "author": {
+    "name": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "https://github.com/kevva"
+  },
+  "bin": {
+    "archive-type": "cli.js"
+  },
+  "bugs": {
+    "url": "https://github.com/kevva/archive-type/issues"
+  },
+  "dependencies": {
+    "get-stdin": "^3.0.0",
+    "is-7zip": "^1.0.0",
+    "is-bzip2": "^1.0.0",
+    "is-gzip": "^1.0.0",
+    "is-rar": "^1.0.0",
+    "is-tar": "^1.0.0",
+    "is-zip": "^1.0.0",
+    "meow": "^2.0.0",
+    "read-chunk": "^1.0.0"
+  },
+  "description": "Detect the archive type of a Buffer/Uint8Array",
+  "devDependencies": {
+    "ava": "0.0.4"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "9791ee70d17c022e2d3880405bdbc8c2bb7115e9",
+    "tarball": "https://registry.npmjs.org/archive-type/-/archive-type-1.0.4.tgz"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "files": [
+    "cli.js",
+    "index.js"
+  ],
+  "gitHead": "c1510361847e11aba1ab59a3e3ec3f27eb666c15",
+  "homepage": "https://github.com/kevva/archive-type",
+  "keywords": [
+    "7zip",
+    "archive",
+    "buffer",
+    "bz2",
+    "bzip2",
+    "check",
+    "detect",
+    "gz",
+    "gzip",
+    "mime",
+    "rar",
+    "zip",
+    "type"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    }
+  ],
+  "name": "archive-type",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevva/archive-type.git"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "version": "1.0.4"
+}

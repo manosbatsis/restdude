@@ -1,0 +1,9 @@
+<div data-js-location="{{config.jsLocation}}" id="script-location"></div>
+
+<script>var mnsScriptLocation = document.getElementById('script-location').getAttribute('data-js-location');</script>
+
+<script src="{{config.jsLocation}}node_modules/systemjs/dist/system.js"></script>
+
+<script>window.define = function () {};</script>
+
+<script src="{{config.jsLocation}}common/scripts/system.conf.js"></script>

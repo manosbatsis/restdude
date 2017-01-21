@@ -1,0 +1,23 @@
+{
+	"base": [
+		"bower_components/concrete-promise/src/promise.js",
+		"src/bloodhound.js"
+	],
+	"embedded": [
+		"src/bloodhound/rendering_engines/embedded_rendering_engine.js",
+		"src/bloodhound/view_resolvers/embedded_view_resolver.js"
+	],
+	"dynamic": [
+		"src/bloodhound/rendering_engines/dynamic_rendering_engine.js",
+		"src/bloodhound/view_resolvers/dynamic_view_resolver.js"
+	],
+	"providers": {
+		"mustache": [
+			"src/bloodhound/adapters/mustache_template.js",
+			"src/bloodhound/view_providers/mustache_view_provider.js"
+		],
+		"simple_template": [
+			"src/bloodhound/view_providers/simple_template_view_provider.js"
+		]
+	}
+}

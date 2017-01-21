@@ -1,0 +1,23 @@
+//scss-lint:disable ColorVariable
+@mixin pointer-events--none($selector) {
+
+  #{$selector} {
+    touch-action: none;
+    pointer-events: none;
+  }
+
+  @include ie-only(9, 10) {
+    position: relative;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      content: ' ';
+      background-color: rgba(255, 255, 255, .01);
+      z-index: 1;
+    }
+  }
+}

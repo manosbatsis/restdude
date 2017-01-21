@@ -1,0 +1,125 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "fear-core-ui@^4.0.2",
+        "scope": null,
+        "escapedName": "fear-core-ui",
+        "name": "fear-core-ui",
+        "rawSpec": "^4.0.2",
+        "spec": ">=4.0.2 <5.0.0",
+        "type": "range"
+      },
+      "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette"
+    ]
+  ],
+  "_from": "fear-core-ui@>=4.0.2 <5.0.0",
+  "_id": "fear-core-ui@4.0.2",
+  "_inCache": true,
+  "_location": "/fear-core-ui",
+  "_nodeVersion": "4.3.2",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/fear-core-ui-4.0.2.tgz_1469701556845_0.05518769542686641"
+  },
+  "_npmUser": {
+    "name": "fear-core",
+    "email": "grp-fear-core@mnscorp.onmicrosoft.com"
+  },
+  "_npmVersion": "2.14.12",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "fear-core-ui@^4.0.2",
+    "scope": null,
+    "escapedName": "fear-core-ui",
+    "name": "fear-core-ui",
+    "rawSpec": "^4.0.2",
+    "spec": ">=4.0.2 <5.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/fear-core-ui/-/fear-core-ui-4.0.2.tgz",
+  "_shasum": "3a2611c79356e8c5d4c3af7104b5219b1624bd8c",
+  "_shrinkwrap": null,
+  "_spec": "fear-core-ui@^4.0.2",
+  "_where": "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette",
+  "author": {
+    "name": "Marks and Spencer",
+    "url": "http://www.marksandspencer.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/DigitalInnovation/fear-core-ui/issues"
+  },
+  "dependencies": {
+    "node-bourbon": "4.2.3"
+  },
+  "deprecated": "renamed module to mns-core-ui",
+  "description": "Marks and Spencer core UI sass, fonts, images and assets",
+  "devDependencies": {
+    "angular": "1.2.28",
+    "classlist-polyfill": "1.0.2",
+    "es6-promise": "3.1.2",
+    "eslint": "1.2.1",
+    "eslint-config-fear-core": "git+https://github.com/digitalinnovation/fear-core-eslint-config.git",
+    "express": "4.13.4",
+    "fear-core": "3.0.13",
+    "fear-core-build": "2.0.1",
+    "fear-core-dev": "1.1.13",
+    "gh-pages": "0.10.0",
+    "gulp": "3.9.0",
+    "gulp-if": "2.0.0",
+    "gulp-livereload": "3.8.1",
+    "gulp-mustache": "2.2.0",
+    "gulp-sass": "git+https://github.com/digitalinnovation/gulp-sass.git",
+    "gulp-util": "3.0.7",
+    "ip": "1.1.3",
+    "sassdoc": "2.1.15",
+    "sassdoc-extras": "2.3.0",
+    "sassdoc-theme-mns": "git+ssh://git@github.com/DigitalInnovation/sassdoc-theme-mns.git",
+    "sprity": "1.0.8",
+    "sprity-fear": "github:digitalinnovation/sprity-fear",
+    "system-text": "0.1.0",
+    "systemjs": "0.19.26",
+    "systemjs-plugin-babel": "0.0.10",
+    "xhttp": "0.0.9",
+    "yargs": "3.15.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "3a2611c79356e8c5d4c3af7104b5219b1624bd8c",
+    "tarball": "https://registry.npmjs.org/fear-core-ui/-/fear-core-ui-4.0.2.tgz"
+  },
+  "gitHead": "fd8de8e651e9437b816f27b193903f42caf0a93d",
+  "homepage": "http://digitalinnovation.github.io/fear-core-ui",
+  "keywords": [
+    "sass",
+    "fonts",
+    "ui",
+    "images"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "fear-core",
+      "email": "grp-fear-core@mnscorp.onmicrosoft.com"
+    }
+  ],
+  "name": "fear-core-ui",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DigitalInnovation/fear-core-ui.git"
+  },
+  "scripts": {
+    "docs": "./node_modules/sassdoc/bin/sassdoc lib/sass -d _gh_pages/docs",
+    "postpublish": "node postpublish",
+    "prepublish": "npm test",
+    "pretest": "eslint tasks/ lib/mns-core-ui/",
+    "test": "gulp lint-sass"
+  },
+  "version": "4.0.2"
+}

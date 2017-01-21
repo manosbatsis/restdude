@@ -1,0 +1,27 @@
+// Wrapper element for fixed width, centered element
+@mixin wrapper($maxWidth) {
+  margin: 0 auto;
+  @include rem(max-width, $maxWidth);
+}
+
+/// Center an icon (sprite) horizontally
+/// @group Sprites
+@mixin center-horizontally($sprite-name) {
+  left: 50%;
+  margin-left: calculateRem(image-width(sprite-file($icons-x1, $sprite-name)) / 2 / 1px) * -1;
+}
+
+/// Center an icon (sprite) vertically
+/// @group Sprites
+@mixin center-vertically($sprite-name) {
+  top: 50%;
+  margin-top: calculateRem(image-height(sprite-file($icons-x1, $sprite-name)) / 2 / 1px) * -1;
+}
+
+/// Vertically align element in the middle
+/// @group Utility helpers
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

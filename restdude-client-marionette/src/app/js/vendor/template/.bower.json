@@ -1,0 +1,23 @@
+{
+  "name": "template",
+  "description": "A simple javascript template engine.",
+  "version": "0.2.0",
+  "homepage": "https://github.com/jgallen23/template",
+  "license": "MIT",
+  "copyright": "Greg Allen",
+  "main": "dist/template.js",
+  "dependencies": {},
+  "devDependencies": {
+    "assert": "*"
+  },
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.2.0",
+    "commit": "12800725ce439c4637d232d911e6479ed4cb89b9"
+  },
+  "_source": "https://github.com/jgallen23/template.git",
+  "_target": "^0.2.0",
+  "_originalSource": "https://github.com/jgallen23/template.git",
+  "_direct": true
+}
