@@ -83,7 +83,7 @@ require.config({
 			deps : ['app'],
 		},
 		templates : {
-			deps : ['underscore']}
+			deps : ['underscore']
 		},
 		'underscore-string' : {
 			deps : [ 'underscore' ]
