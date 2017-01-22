@@ -58,5 +58,18 @@
     "wp-calypso": "https://github.com/Automattic/wp-calypso",
     "typeahead.js": "https://github.com/twitter/typeahead.js.git#^0.11.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "homepage": "https://github.com/manosbatsis/restdude",
+  "authors": [
+    "delta750 <nkapetanas@hotmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/lib/bower",
+    "test",
+    "tests"
+  ]
 }

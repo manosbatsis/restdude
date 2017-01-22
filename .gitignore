@@ -23,8 +23,14 @@ coverage
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
+# sass-cache
+.sass-cache
+
 # bower
 bower_components
+
+# vendor
+vendor
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
