@@ -58,14 +58,14 @@ public class UserRegistrationCode extends AbstractSystemUuidPersistable implemen
     private UserCredentials credentials;
 
     @ManyToOne
-    @JoinColumn(name = "batch_id", referencedColumnName = "id", nullable = false, updatable = false)
+    @JoinColumn(name = "batch_id", referencedColumnName = "pk", nullable = false, updatable = false)
     private UserRegistrationCodeBatch batch;
 
     public UserRegistrationCode() {
     }
 
     public UserRegistrationCode(String id) {
-        this.setId(id);
+        this.setPk(id);
     }
 
     public UserRegistrationCode(UserRegistrationCodeBatch batch) {
@@ -75,7 +75,7 @@ public class UserRegistrationCode extends AbstractSystemUuidPersistable implemen
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", this.getId())
+                .append("pk", this.getPk())
                 .append("batch", this.getBatch())
                 .toString();
     }

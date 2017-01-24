@@ -54,9 +54,11 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
 
     @Test(description = "Test simple type properties")
     public void testSimpleTypeProperty() throws Exception {
+        LOGGER.debug("testSimpleTypeProperty");
         given().spec(adminRequestSpec).param("name", "Greece")
-                .get(WEBCONTEXT_PATH + "/api/rest/countries").
-                then()
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/countries")
+                .then()
                 .log().all()
                 .assertThat()
                 .statusCode(200)
@@ -65,36 +67,42 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
 
     @Test(description = "Test related entity properties")
     public void testRelatedEntityTypeProperty() throws Exception {
+        LOGGER.debug("testRelatedEntityTypeProperty");
         given().spec(adminRequestSpec).
-                param("parent", "AS").
-                get(WEBCONTEXT_PATH + "/api/rest/countries").
-                then()
+                param("parent", "AS")
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/countries")
+                .then()
                 .log().all()
                 .assertThat()
                 .statusCode(200).
-                body("content[0].parent.id", equalTo("AS"));
+                body("content[0].parent.pk", equalTo("AS"));
     }
 
 
     @Test(description = "Test related entity IDs")
     public void testRelatedEntityId() throws Exception {
+        LOGGER.debug("testRelatedEntityId");
         given().spec(adminRequestSpec).
-                param("parent.id", "AS").
-                get(WEBCONTEXT_PATH + "/api/rest/countries").
-                then()
+                param("parent.pk", "AS")
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/countries")
+                .then()
                 .log().all()
                 .assertThat()
                 .statusCode(200).
                 assertThat().
-                body("content[0].parent.id", equalTo("AS"));
+                body("content[0].parent.pk", equalTo("AS"));
     }
 
     @Test(description = "Test path to related entities simple type property")
     public void testPathToRelatedSimpleTypeProperty() throws Exception {
+        LOGGER.debug("testPathToRelatedSimpleTypeProperty");
         given().spec(adminRequestSpec).
-                param("parent.name", "Oceania").
-                get(WEBCONTEXT_PATH + "/api/rest/countries").
-                then()
+                param("parent.name", "Oceania")
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/countries")
+                .then()
                 .log().all()
                 .assertThat()
                 .statusCode(200).

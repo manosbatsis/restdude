@@ -69,14 +69,14 @@ import java.util.Set;
  * <p>You should extend this class when you want to use a 3 layers pattern : Repository, Service and Controller
  * If you don't have a real service (also called business layer), consider using RepositoryBasedRestController</p>
  * <p/>
- * <p>Default implementation uses "id" field (usually a Long) in order to identify resources in web request.
+ * <p>Default implementation uses "pk" field (usually a Long) in order to identify resources in web request.
  * If your want to identity resources by a slug (human readable identifier), your should override findById() method with for example :
  * <p/>
  * <pre>
  * <code>
  * {@literal @}Override
- * public Sample findById({@literal @}PathVariable String id) {
- * Sample sample = this.service.findByName(id);
+ * public Sample findById({@literal @}PathVariable String pk) {
+ * Sample sample = this.service.findByName(pk);
  * if (sample == null) {
  * throw new NotFoundException();
  * }
@@ -86,7 +86,7 @@ import java.util.Set;
  * </pre>
  *
  * @param <T>  Your resource class to manage, maybe an entity or DTO class
- * @param <ID> Resource id type, usually Long or String
+ * @param <ID> Resource pk type, usually Long or String
  * @param <S>  The service class
  */
 
@@ -132,19 +132,19 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
 
     /**
      * Update an existing resource<br/>
-     * REST webservice published : PUT /{id}
+     * REST webservice published : PUT /{pk}
      *
-     * @param id       The identifier of the resource to update, usually a Long or String identifier. It is explicitely provided in order to handle cases where the identifier could be changed.
+     * @param pk       The identifier of the resource to update, usually a Long or String identifier. It is explicitely provided in order to handle cases where the identifier could be changed.
      * @param resource The resource to update
      * @return OK http status code if the request has been correctly processed, with the updated resource enclosed in the body
      */
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     @ModelDrivenPreAuth
-    public T update(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id, @RequestBody T resource) {
-        Assert.notNull(id, "id cannot be null");
-        resource.setId(id);
+    public T update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk, @RequestBody T resource) {
+        Assert.notNull(pk, "pk cannot be null");
+        resource.setPk(pk);
         applyCurrentPrincipal(resource);
 
         return this.service.update(resource);
@@ -153,13 +153,13 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     /**
      * {@inheritDoc}
      */
-    @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     @ModelDrivenPreAuth
-    public T patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id, @RequestBody T resource) {
+    public T patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk, @RequestBody T resource) {
         applyCurrentPrincipal(resource);
-        resource.setId(id);
+        resource.setPk(pk);
         return this.service.patch(resource);
     }
 
@@ -194,7 +194,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     public Page<T> findPaginated(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "properties", required = false, defaultValue = "id") String sort,
+            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
             @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
         boolean applyCurrentPrincipalIdPredicate = true;
 
@@ -210,17 +210,17 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
 
     /**
      * Find a resource by its identifier<br/>
-     * REST webservice published : GET /{id}
+     * REST webservice published : GET /{pk}
      *
-     * @param id The identifier of the resouce to find
+     * @param pk The identifier of the resouce to find
      * @return OK http status code if the request has been correctly processed, with resource found enclosed in the body
      */
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    @ApiOperation(value = "Find by id", notes = "Find a resource by it's identifier")
+    @RequestMapping(value = "{pk}", method = RequestMethod.GET)
+    @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     @ModelDrivenPreAuth
-    public T findById(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) {
-        T resource = this.service.findById(id);
+    public T findById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk) {
+        T resource = this.service.findById(pk);
         if (resource == null) {
             throw new NotFoundException();
         }
@@ -231,33 +231,33 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
      * Find multiple resources by their identifiers<br/>
      * REST webservice published : GET /?ids[]=
      * <p/>
-     * example : /?ids[]=1&ids[]=2&ids[]=3
+     * example : /?pks[]=1&pks[]=2&pks[]=3
      *
-     * @param ids List of ids to retrieve
+     * @param pks List of ids to retrieve
      * @return OK http status code with list of retrieved resources. Not found resources are ignored:
      * no Exception thrown. List is empty if no resource found with any of the given ids.
      */
-    @RequestMapping(params = "ids", method = RequestMethod.GET)
-    @ApiOperation(value = "Search by ids", notes = "Find the set of resources matching the given identifiers.")
+    @RequestMapping(params = "pks", method = RequestMethod.GET)
+    @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public Iterable<T> findByIds(@RequestParam(value = "ids[]") Set<ID> ids) {
-        Assert.notNull(ids, "ids list cannot be null");
-        return this.service.findByIds(ids);
+    public Iterable<T> findByIds(@RequestParam(value = "pks[]") Set<ID> pks) {
+        Assert.notNull(pks, "pks list cannot be null");
+        return this.service.findByIds(pks);
     }
 
     /**
      * Delete a resource by its identifier<br />
-     * REST webservice published : DELETE /{id}<br />
+     * REST webservice published : DELETE /{pk}<br />
      * Return No Content http status code if the request has been correctly processed
      *
-     * @param id The identifier of the resource to delete
+     * @param pk The identifier of the resource to delete
      */
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
-    public void delete(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) {
-        T resource = this.findById(id);
+    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk) {
+        T resource = this.findById(pk);
         this.service.delete(resource);
     }
 
@@ -306,9 +306,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
         // add implicit criteria?
         Map<String, String[]> parameters = null;
         if (applyImplicitPredicates) {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Adding implicit predicates");
-            }
+            LOGGER.debug("Adding implicit predicates");
             parameters = new HashMap<String, String[]>();
             parameters.putAll(paramsMap);
             CurrentPrincipalField predicate = (CurrentPrincipalField) this.service.getDomainClass().getAnnotation(CurrentPrincipalField.class);
@@ -317,19 +315,15 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
                 String[] excludeRoles = predicate.ignoreforRoles();
                 boolean skipPredicate = this.hasAnyRoles(predicate.ignoreforRoles());
                 if (!skipPredicate) {
-                    String id = principal != null ? principal.getId() : "ANONYMOUS";
-                    String[] val = {id};
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Adding implicit predicate, name: " + predicate.value() + ", value: " + id);
-                    }
+                    String pk = principal != null ? principal.getPk() : "ANONYMOUS";
+                    String[] val = {pk};
+                    LOGGER.debug("Adding implicit predicate, name: {}, value: {}", predicate.value(), pk);
                     parameters.put(predicate.value(), val);
                 }
 
             }
         } else {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Skipping implicit predicates");
-            }
+            LOGGER.debug("Skipping implicit predicates");
             parameters = paramsMap;
         }
 
@@ -365,11 +359,11 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
                         boolean skipApply = this.hasAnyRoles(applyRule.ignoreforRoles());
                         // if role is not ignored
                         if (!skipApply) {
-                            String id = principal != null ? principal.getId() : null;
-                            if (id != null) {
+                            String pk = principal != null ? principal.getPk() : null;
+                            if (pk != null) {
                                 User user = new User();
-                                user.setId(id);
-                                LOGGER.debug("Applying principal to field: {}, value: {}", id, field.getName());
+                                user.setPk(pk);
+                                LOGGER.debug("Applying principal to field: {}, value: {}", pk, field.getName());
                                 PropertyUtils.setProperty(resource, field.getName(), user);
                             }
                         }

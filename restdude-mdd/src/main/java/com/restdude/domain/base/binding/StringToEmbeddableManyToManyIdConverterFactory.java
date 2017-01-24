@@ -50,7 +50,7 @@ public class StringToEmbeddableManyToManyIdConverterFactory implements Converter
                 object = (T) targetType.newInstance();
                 object.init(id);
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(new StringBuffer("Failed to deserialize with id: ").append(id).append(", class: ").append(targetType.toString()).toString(), e);
+                throw new RuntimeException(new StringBuffer("Failed to deserialize with pk: ").append(id).append(", class: ").append(targetType.toString()).toString(), e);
             }
             return object;
         }

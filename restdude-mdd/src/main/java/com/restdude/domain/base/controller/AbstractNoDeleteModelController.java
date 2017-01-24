@@ -53,7 +53,7 @@ public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistab
 	@ApiOperation(hidden = true, value = "Delete a resource (unsupported)")
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@ApiParam(name = "id", required = true, value = "string") @PathVariable ID id) {
+    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID id) {
         throw new NotImplementedException("Method is unsupported.");
     }
 

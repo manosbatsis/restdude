@@ -92,7 +92,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                     constraintValidatorContext.disableDefaultConstraintViolation();
 
                     for (CalipsoPersistable match : resultSet) {
-                        if (!match.getId().equals(value.getId())) {
+                        if (!match.getPk().equals(value.getPk())) {
                             for (String propertyName : uniqueFieldNames) {
                                 Object newValue = PropertyUtils.getProperty(value, propertyName);
                                 Object existingValue = PropertyUtils.getProperty(match, propertyName);

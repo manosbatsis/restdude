@@ -27,7 +27,6 @@ import com.restdude.domain.base.binding.CsvMessageConverter;
 import com.restdude.domain.base.binding.CustomEnumConverterFactory;
 import com.restdude.domain.base.binding.StringToEmbeddableManyToManyIdConverterFactory;
 import com.restdude.domain.error.resolver.RestExceptionHandler;
-import com.restdude.mdd.processor.ModelDrivenBeanGeneratingRegistryPostProcessor;
 import com.restdude.web.filters.RestRequestNormalizerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,11 +64,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public javax.validation.Validator localValidatorFactoryBean() {
         return new LocalValidatorFactoryBean();
-    }
-
-    @Bean
-    public static ModelDrivenBeanGeneratingRegistryPostProcessor modelDrivenBeanGeneratingRegistryPostProcessor() {
-        return new ModelDrivenBeanGeneratingRegistryPostProcessor();
     }
 
     @Bean

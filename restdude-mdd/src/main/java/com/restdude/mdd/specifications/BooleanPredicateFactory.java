@@ -23,13 +23,23 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.geography.model.Country;
 import org.apache.commons.lang3.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
-public class BooleanPredicateFactory implements IPredicateFactory<Boolean> {
+public class BooleanPredicateFactory extends AbstractPredicateFactory<Boolean> {
+
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BooleanPredicateFactory.class);
 
 	public BooleanPredicateFactory() {
 	}
@@ -38,20 +48,32 @@ public class BooleanPredicateFactory implements IPredicateFactory<Boolean> {
      * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
      */
 	@Override
-	public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, 	String[] propertyValues) {
+	public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, String[] propertyValues) {
 		Predicate predicate = null;
-		if (!Boolean.class.isAssignableFrom(fieldType)) {
-			throw new IllegalArgumentException(fieldType
-					+ " is not a subclass of Boolean for field: "
-					+ propertyName);
+
+		try {
+			LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+
+			Path path = this.<Boolean>getPath(root, propertyName, fieldType);
+			if (propertyValues.length == 1) {
+				Boolean b = BooleanUtils.toBooleanObject(propertyValues[0]);
+				predicate = b != null ? cb.equal(path, propertyValues[0]) : path.isNull();
+			} else if (propertyValues.length > 1) {
+				List<Boolean> values = new LinkedList<>();
+				for (int i = 0; i < propertyValues.length; i++) {
+					Boolean b = BooleanUtils.toBooleanObject(propertyValues[i]);
+					if (!values.contains(b)) {
+						values.add(b);
+					}
+				}
+				predicate = path.in(Arrays.asList(propertyValues));
+			} else {
+				predicate = path.isNull();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
-		Boolean b = BooleanUtils.toBooleanObject(propertyValues[0]);
-		if (b == null) {
-			b = Boolean.FALSE;
-		}
-
-		predicate = cb.equal(root.<Boolean> get(propertyName), b);
 		return predicate;
 	}
 }

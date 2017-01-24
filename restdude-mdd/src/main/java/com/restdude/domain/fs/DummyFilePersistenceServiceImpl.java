@@ -49,12 +49,12 @@ public class DummyFilePersistenceServiceImpl implements FilePersistenceService {
      */
 	@Override
 	public String saveFile(InputStream in, long contentLength, String contentType, String path) {
-		LOGGER.warn("File not saved, please configure another bean for id FilePersistenceService to save: " + path  + ", size: " + contentLength + ", contentType: " + contentType);
-		return path;
-	}
+        LOGGER.warn("File not saved, please configure another bean for pk FilePersistenceService to save: " + path + ", size: " + contentLength + ", contentType: " + contentType);
+        return path;
+    }
 
     public void deleteFiles(String... path) {
-        LOGGER.warn("File not deleted, please configure another bean for id FilePersistenceService to delete: " + path);
+        LOGGER.warn("File not deleted, please configure another bean for pk FilePersistenceService to delete: " + path);
     }
 
 }

@@ -24,10 +24,6 @@
 package com.restdude.domain.base.model;
 
 import com.restdude.auth.spel.annotations.*;
-import com.restdude.domain.base.validation.Unique;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -39,13 +35,11 @@ import java.io.Serializable;
 
 /**
  * Abstract entity class with basic auditing.
- * @param <ID> The id Serializable
+ * @param <ID> The primary key type, Serializable
  */
 @XmlRootElement
 @MappedSuperclass
-@Unique
 @EntityListeners(AuditingEntityListener.class)
-
 @PreAuthorizeCount
 @PreAuthorizeCreate
 @PreAuthorizeDelete
@@ -59,7 +53,7 @@ import java.io.Serializable;
 @PreAuthorizeFindPaginated
 @PreAuthorizePatch
 @PreAuthorizeUpdate
-public abstract class AbstractPersistable<ID extends Serializable> implements CalipsoPersistable<ID> {
+public abstract class AbstractPersistable<ID extends Serializable> {
 
 	private static final long serialVersionUID = -6009587976502456848L;
 
@@ -68,69 +62,8 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Ca
     public static interface ItemView {}
     public static interface CollectionView {}
 
-
-
-
 	public AbstractPersistable() {
 		super();
 	}
-	
-	public AbstractPersistable(ID id) {
-		this.setId(id);
-	}
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("id", this.getId()).toString();
-	}
-
-	/**
-	 * Get the entity's primary key 
-	 * @see org.springframework.data.domain.Persistable#getId()
-	 */
-	@Override
-	public abstract ID getId();
-
-	/**
-	 * Set the entity's primary key
-	 * @param id the id to set
-	 */
-	public abstract void setId(ID id);
-
-	/** 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (null == obj) {
-			return false;
-		}
-
-		if (this == obj) {
-			return true;
-		}
-        if (!AbstractPersistable.class.isAssignableFrom(obj.getClass())) {
-            return false;
-		}
-		AbstractPersistable other = (AbstractPersistable) obj;
-        return new EqualsBuilder()
-                .append(this.getId(), other.getId())
-                .isEquals();
-    }
-
-	/**
-	 *  @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-        return new HashCodeBuilder()
-                .append(this.getId())
-                .toHashCode();
-    }
-	/**
-	 * {@inheritDoc}
-	 */
-	public void preSave() {
-
-	}
 }

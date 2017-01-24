@@ -23,23 +23,21 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.base.model.CalipsoPersistable;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
-public class SpecificationsBuilder<T, ID extends Serializable> {
+public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends Serializable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpecificationsBuilder.class);
     private Class<T> domainClass;
@@ -58,9 +56,9 @@ public class SpecificationsBuilder<T, ID extends Serializable> {
      * @param searchTerms the search terms to match
      * @return the result specification
      */
-    public Specification<T> getMatchAll(Class<T> domainClass, final Map<String, String[]> searchTerms) {
+    public Specification<T> getMatchAll(final Class<T> domainClass, final Map<String, String[]> searchTerms) {
 
-        LOGGER.debug("matchAll, entity: {}, searchTerms: {}", domainClass.getSimpleName(), searchTerms);
+        LOGGER.debug("getMatchAll, entity: {}, searchTerms: {}", domainClass.getSimpleName(), searchTerms);
 
         return new Specification<T>() {
             @Override
@@ -81,8 +79,26 @@ public class SpecificationsBuilder<T, ID extends Serializable> {
     protected Predicate buildRootPredicate(Class<T> clazz, final Map<String, String[]> searchTerms,
                                            Root<T> root, CriteriaBuilder cb) {
 
+        LOGGER.debug("buildRootPredicate, clazz: {}, searchTerms: {}", clazz, searchTerms);
+        Map<String, String[]> normalizedSearchTerms = new HashMap<>();
+        Iterator<String> keyIterator = searchTerms.keySet().iterator();
+
+        String propertyName;
+        String newPropertyName;
+        while (keyIterator.hasNext()) {
+            propertyName = keyIterator.next();
+            newPropertyName = propertyName;
+            if (propertyName.endsWith(".pk")) {
+                newPropertyName = propertyName.substring(0, propertyName.length() - 3);
+            }
+            normalizedSearchTerms.put(newPropertyName, searchTerms.get(propertyName));
+        }
+
+        LOGGER.debug("buildRootPredicate, normalizedSearchTerms: {}", normalizedSearchTerms);
+
         // build a list of criteria/predicates
-        LinkedList<Predicate> predicates = buildSearchPredicates(clazz, searchTerms, root, cb);
+        LinkedList<Predicate> predicates = buildSearchPredicates(clazz, normalizedSearchTerms, root, cb);
+        LOGGER.debug("buildRootPredicate, predicates: {}", predicates);
 
         // wrap list in AND/OR junction
         Predicate predicate;
@@ -100,32 +116,23 @@ public class SpecificationsBuilder<T, ID extends Serializable> {
 
     /**
      * Build the list of predicates corresponding to the given search terms
-     * @param clazz the entity type to query for
+     * @param domainClass the entity type to query for
      * @param searchTerms the search terms to match
      * @param root the criteria root
      * @param cb the criteria builder
      * @return the list of predicates corresponding to the search terms
      */
-    protected LinkedList<Predicate> buildSearchPredicates(Class<T> domainClass, final Map<String, String[]> searchTerms, Root<T> root, CriteriaBuilder cb) {
+    protected LinkedList<Predicate> buildSearchPredicates(final Class<T> domainClass, final Map<String, String[]> searchTerms, Root<T> root, CriteriaBuilder cb) {
 
+        LOGGER.debug("buildSearchPredicates, domainClass: {}, searchTerms: {}", domainClass, searchTerms);
         LinkedList<Predicate> predicates = new LinkedList<Predicate>();
 
-        if (!CollectionUtils.isEmpty(searchTerms)) {
+        if (!MapUtils.isEmpty(searchTerms)) {
             Set<String> propertyNames = searchTerms.keySet();
-            // storage for nested junctions
-            NestedJunctions junctions = new NestedJunctions();
             for (String propertyName : propertyNames) {
                 String[] values = searchTerms.get(propertyName);
-                // store if nested junction or add a predicate
-                if (!junctions.addIfNestedJunction(propertyName, values)) {
-                    addPredicate(domainClass, root, cb, predicates, values, propertyName);
-                }
+                addPredicate(domainClass, root, cb, predicates, values, propertyName);
             }
-            // add stored junctions
-            Map<String, Map<String, String[]>> andJunctions = junctions.getAndJunctions();
-            addNestedJunctionPredicates(domainClass, root, cb, predicates, andJunctions, GenericSpecifications.AND);
-            Map<String, Map<String, String[]>> orJunctions = junctions.getOrJunctions();
-            addNestedJunctionPredicates(domainClass, root, cb, predicates, orJunctions, GenericSpecifications.OR);
         }
         // return the list of predicates
         return predicates;
@@ -134,7 +141,7 @@ public class SpecificationsBuilder<T, ID extends Serializable> {
 
     /**
      * Add a predicate to the given list if valid
-     * @param clazz the entity type to query for
+     * @param domainClass the entity type to query for
      * @param root the criteria root
      * @param cb the criteria builder
      * @param predicates the list to add the predicate into
@@ -143,34 +150,25 @@ public class SpecificationsBuilder<T, ID extends Serializable> {
      */
     protected void addPredicate(Class<T> domainClass, Root<T> root, CriteriaBuilder cb,
                                 LinkedList<Predicate> predicates, String[] propertyValues, String propertyName) {
-        // dot notation only supports toOne.toOne.id
-        if (propertyName.contains(".")) {
-            predicates.add(GenericSpecifications.anyToOneToOnePredicateFactory.getPredicate(root, cb, propertyName, null, propertyValues));
-        } else {// normal single step predicate
-            Field field = GenericSpecifications.getField(domainClass, propertyName);
-            if (field != null) {
-                Class fieldType = field.getType();
-                IPredicateFactory predicateFactory = GenericSpecifications.getPredicateFactoryForClass(field);
-                if (predicateFactory != null) {
-                    predicates.add(predicateFactory.getPredicate(root, cb, propertyName, fieldType, propertyValues));
-                }
+
+        LOGGER.debug("addPredicate, domainClass: {}, propertyName: {}", domainClass, propertyName);
+        Class fieldType = GenericSpecifications.getMemberType(domainClass, propertyName);
+        IPredicateFactory predicateFactory = null;
+        if (fieldType != null) {
+
+            LOGGER.debug("addPredicate, found field type for domainClass: {}, propertyName: {}, fieldType: {}", domainClass, propertyName, fieldType);
+            predicateFactory = GenericSpecifications.getPredicateFactoryForClass(fieldType);
+            if (predicateFactory != null) {
+                LOGGER.debug("addPredicate, found predicate factory: {}", predicateFactory);
+                predicates.add(predicateFactory.getPredicate(root, cb, propertyName, fieldType, propertyValues));
+            } else {
+                LOGGER.debug("addPredicate, could not find predicate factory");
             }
+
+        } else {
+            LOGGER.debug("addPredicate, field type not found for domainClass: {}, propertyName: {}, fieldType: {}", domainClass, propertyName, fieldType);
         }
+
     }
 
-    //TODO refactor nested junctions and add operators
-    protected void addNestedJunctionPredicates(Class<T> domainClass, Root<T> root, CriteriaBuilder cb,
-                                               LinkedList<Predicate> predicates, Map<String, Map<String, String[]>> andJunctions, String mode) {
-        if (!CollectionUtils.isEmpty(andJunctions)) {
-            String[] searchMode = {mode};
-            for (Map<String, String[]> params : andJunctions.values()) {
-                params.put(GenericSpecifications.SEARCH_MODE, searchMode);
-                // TODO
-                Predicate nestedPredicate = buildRootPredicate(domainClass, params, root, cb/*, true*/);
-                if (nestedPredicate != null) {
-                    predicates.add(nestedPredicate);
-                }
-            }
-        }
-    }
 }

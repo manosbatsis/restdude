@@ -28,6 +28,11 @@ import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.repository.ModelRepositoryFactoryBean;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.annotation.ModelRelatedResource;
+import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.specifications.AnyToOnePredicateFactory;
+import com.restdude.mdd.specifications.GenericSpecifications;
+import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.mdd.util.CreateClassCommand;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.mdd.util.JavassistUtil;
@@ -54,6 +59,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,6 +73,7 @@ import java.util.*;
  * {@link com.restdude.mdd.annotation.ModelResource} or
  * {@link com.restdude.mdd.annotation.ModelRelatedResource}.
  */
+@Component
 public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelDrivenBeanGeneratingRegistryPostProcessor.class);
@@ -109,12 +116,14 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	public void createBeans(BeanDefinitionRegistry registry) throws NotFoundException, CannotCompileException {
 
 		for (Class<?> model : this.entityModelContextsMap.keySet()) {
-			// TODO: add related
-			// Ensure we have the necessary parent stuff...
-			// if (wrapper.isNested()) {
-			// writeBeans(registry, wrapper.getParentClass());
-			// }
-			createBeans(registry, model, this.entityModelContextsMap.get(model));
+			// TODO: add related, after ensuring we have the necessary parent config set...
+
+			ModelContext modelContext = this.entityModelContextsMap.get(model);
+			createPredicateFactory(modelContext);
+
+			if (model.isAnnotationPresent(ModelResource.class) || model.isAnnotationPresent(ModelRelatedResource.class)) {
+				createBeans(registry, model, modelContext);
+			}
 		}
 
 	}
@@ -122,10 +131,43 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	private void createBeans(BeanDefinitionRegistry registry, Class<?> model, ModelContext modelContext)
 			throws NotFoundException, CannotCompileException {
 		Assert.notNull(modelContext, "No model context was found for model type " + model.getName());
+
 		createRepository(registry, modelContext);
 		createService(registry, modelContext);
 		createController(registry, modelContext);
 
+	}
+
+	/**
+	 * Creates an {@link IPredicateFactory} instance that is parameterized for a specific entity model. The
+	 * predicate factory is registered using {@link GenericSpecifications#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)}
+	 *
+	 * @param modelContext
+	 * @see GenericSpecifications#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)
+	 */
+	protected void createPredicateFactory(ModelContext modelContext) {
+		// only add if not explicitly set
+		if (GenericSpecifications.getPredicateFactoryForClass(modelContext.getModelType()) == null && modelContext.getModelIdType() != null) {
+			String className = "AnyToOne" + modelContext.getGeneratedClassNamePrefix() + "PredicateFactory";
+			String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
+					.append(".specification.")
+					.append(className).toString();
+
+			// gfire up a create command
+			CreateClassCommand createPredicateCmd = new CreateClassCommand(fullClassName,
+					AnyToOnePredicateFactory.class);
+
+			// grab the generic types
+			List<Class<?>> genericTypes = modelContext.getGenericTypes();
+			LOGGER.debug("Creating class " + fullClassName +
+					", genericTypes: " + genericTypes);
+			createPredicateCmd.setGenericTypes(genericTypes);
+
+			// create and register predicate class
+			Class<IPredicateFactory> predicateClass = (Class<IPredicateFactory>) JavassistUtil.createClass(createPredicateCmd);
+			GenericSpecifications.addFactoryForClass(modelContext.getModelType(), ClassUtils.newInstance(predicateClass));
+
+		}
 	}
 
 	/**
@@ -407,7 +449,7 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	// @Override
     protected void findModels(String... basePackages) throws Exception {
         for (String basePackage : basePackages) {
-			Set<BeanDefinition> entityBeanDefs = EntityUtil.findModelResources(basePackage);
+			Set<BeanDefinition> entityBeanDefs = EntityUtil.findPersistableModels(basePackage);
 			for (BeanDefinition beanDef : entityBeanDefs) {
                 Class<?> entity = ClassUtils.getClass(beanDef.getBeanClassName());
                 LOGGER.info("Found resource model class {}", entity.getCanonicalName());

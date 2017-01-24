@@ -27,71 +27,81 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@Embeddable
 public class UserSocialConnectionId implements Serializable{
 
-    @NotNull
-    @Column(length = 255, nullable = false)
+	@NotNull
+	@Column(length = 255, nullable = false)
 	private String userId;
-    @NotNull
-    @Column(length = 255, nullable = false)
+	@NotNull
+	@Column(length = 255, nullable = false)
 	private String providerId;
-	private Integer rank;
-	
+	@NotNull
+	@Column(length = 255, nullable = false)
+	private String providerUserId;
+
 	public UserSocialConnectionId() {
-		
+
 	}
-	
-	public UserSocialConnectionId(String userId, String providerId, Integer rank) {
+
+	public UserSocialConnectionId(String userId, String providerId, String providerUserId) {
 		super();
 		this.userId = userId;
 		this.providerId = providerId;
-		this.rank = rank;
+		this.providerUserId = providerUserId;
 	}
-	
+
 	public String getUserId() {
 		return userId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
 	public String getProviderId() {
 		return providerId;
 	}
+
 	public void setProviderId(String providerId) {
 		this.providerId = providerId;
 	}
-	public Integer getRank() {
-		return rank;
-	}
-	public void setRank(Integer rank) {
-		this.rank = rank;
+
+	public String getProviderUserId() {
+		return providerUserId;
 	}
 
+	public void setProviderUserId(String providerUserId) {
+		this.providerUserId = providerUserId;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (UserSocialConnectionId.class.isAssignableFrom(obj.getClass())) {
-            final UserSocialConnectionId other = (UserSocialConnectionId) obj;
-            return new EqualsBuilder()
-                    .append(this.getUserId(), other.getUserId())
-                    .append(this.getProviderId(), other.getProviderId())
-                    .append(this.getRank(), other.getRank())
-                    .isEquals();
-        } else {
-            return false;
-        }
-    }
+	@Override
+	public boolean equals(final Object obj) {
+		if (UserSocialConnectionId.class.isAssignableFrom(obj.getClass())) {
+			final UserSocialConnectionId other = (UserSocialConnectionId) obj;
+			return new EqualsBuilder()
+					.append(this.getUserId(), other.getUserId())
+					.append(this.getProviderId(), other.getProviderId())
+					.append(this.getProviderUserId(), other.getProviderUserId())
+					.isEquals();
+		} else {
+			return false;
+		}
+	}
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(this.getUserId())
-                .append(this.getProviderId())
-                .append(this.getRank())
-                .toHashCode();
-    }
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+				.appendSuper(super.hashCode())
+				.append(this.getUserId())
+				.append(this.getProviderId())
+				.append(this.getProviderUserId())
+				.toHashCode();
+	}
+
+
 }

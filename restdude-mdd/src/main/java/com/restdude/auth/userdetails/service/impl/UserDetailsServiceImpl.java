@@ -132,7 +132,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				// ask for the corresponding persisted user
 				User user = this.userService
 						.findActiveByCredentials(usernameOrEmail, password, metadata);
-				if (user != null && user.getId() != null) {
+                if (user != null && user.getPk() != null) {
 
                     LOGGER.info("#create, user: {}", user);
                     // convert to UserDetails if not null
@@ -174,10 +174,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         ICalipsoUserDetails userDetails = this.getPrincipal();
 		User u = null;
         // Case 1: if authorized as current user and in an attempt to directly change password, require current password
-		if (userDetails != null && userDetails.getId() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
-			u = this.userService.changePassword(
-					userDetails.getUsername(),
-					passwordResetRequest.getCurrentPassword(),
+        if (userDetails != null && userDetails.getPk() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
+            u = this.userService.changePassword(
+                    userDetails.getUsername(),
+                    passwordResetRequest.getCurrentPassword(),
 					passwordResetRequest.getPassword(),
 					passwordResetRequest.getPasswordConfirmation());
 		}
@@ -253,10 +253,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 
 		if (user == null) {
-			throw new UsernameNotFoundException("Could not match user id: " + userId);
-		}
-		return userDetails;
-	}
+            throw new UsernameNotFoundException("Could not match user pk: " + userId);
+        }
+        return userDetails;
+    }
 	
 	/**
 	 * @see org.springframework.social.connect.ConnectionSignUp#execute(org.springframework.social.connect.Connection)
@@ -307,8 +307,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
 		}
 		//userService.createAccount(account);
-		String result = user != null && user.getId() != null ? user.getId().toString() : null;
-		if(LOGGER.isDebugEnabled()){
+        String result = user != null && user.getPk() != null ? user.getPk().toString() : null;
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("ConnectionSignUp#execute, returning result: {}", result);
         }
 		return result;

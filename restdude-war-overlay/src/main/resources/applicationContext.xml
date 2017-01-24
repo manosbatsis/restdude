@@ -78,9 +78,6 @@
     <!--  By defining this object as a Bean, Spring Security is exposed as SpEL expressions for creating Sp	ring Data queries.  -->
     <bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
 
-    <!-- Generate controllers, services and repositories for entities with @ModelResource -->
-    <bean id="entityPostProcessor" class="com.restdude.mdd.processor.ModelDrivenBeanGeneratingRegistryPostProcessor"/>
-
 
     <!-- auth config -->
     <bean id="userDetailsConfig"
@@ -99,7 +96,7 @@
         <property name="characterEncoding" value="UTF-8"/>
         <property name="order" value="1"/>
     </bean>
-    <!--bean id="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+    <!--bean pk="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
         <property name="prefix" value="/WEB-INF/templates/" /> <property name="suffix"
         value=".html" /> <property name="templateMode" value="HTML5" /> <property
         name="characterEncoding" value="UTF-8" /> </bean -->

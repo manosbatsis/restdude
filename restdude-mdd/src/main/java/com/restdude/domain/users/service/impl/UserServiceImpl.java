@@ -124,8 +124,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	@Override
 	@Transactional(readOnly = false)
 	public void updateLastLogin(ICalipsoUserDetails u){
-		this.repository.updateLastLogin(u.getId());
-	}
+        this.repository.updateLastLogin(u.getPk());
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -139,7 +139,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
         user = this.findActiveByCredentials(userNameOrEmail, password);
         if (user != null) {
             if (!CollectionUtils.isEmpty(metadata)) {
-                List<Metadatum> saved = this.repository.addMetadata(user.getId(), metadata);
+                List<Metadatum> saved = this.repository.addMetadata(user.getPk(), metadata);
                 for (Metadatum meta : saved) {
                     user.addMetadatum((UserMetadatum) meta);
                 }
@@ -220,10 +220,10 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 
 
 		LOGGER.debug("create, update registration code: {}", contactDetails);
-		if (code != null && code.getId() != null) {
-			code.setCredentials(resource.getCredentials());
-			this.userRegistrationCodeRepository.patch(code);
-		}
+        if (code != null && code.getPk() != null) {
+            code.setCredentials(resource.getCredentials());
+            this.userRegistrationCodeRepository.patch(code);
+        }
 
 		return resource;
 	}
@@ -231,11 +231,11 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	protected UserRegistrationCode noteRegistrationCode(UserCredentials credentials) {
 		UserRegistrationCode code = credentials.getRegistrationCode();
 		credentials.setRegistrationCode(null);
-		if (code != null && code.getId() != null) {
-			boolean available = this.userRegistrationCodeRepository.isAvailable(code.getId());
-			if (!available) {
-				throw new BadRequestException("Invalid registration code");
-			}
+        if (code != null && code.getPk() != null) {
+            boolean available = this.userRegistrationCodeRepository.isAvailable(code.getPk());
+            if (!available) {
+                throw new BadRequestException("Invalid registration code");
+            }
 		} else {
 			code = null;
 		}

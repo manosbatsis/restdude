@@ -23,11 +23,11 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
 
 
     <!-- Configures FB and Twitter support.
-    <facebook:config domain-id="${facebook.clientId}"      domain-secret="${facebook.clientSecret}"  />
-    <twitter:config  domain-id="${twitter.consumerKey}"    domain-secret="${twitter.consumerSecret}" />
-    <linkedin:config domain-id="${linkedin.consumerKey}"   domain-secret="${linkedin.consumerSecret}" />
+    <facebook:config domain-pk="${facebook.clientId}"      domain-secret="${facebook.clientSecret}"  />
+    <twitter:config  domain-pk="${twitter.consumerKey}"    domain-secret="${twitter.consumerSecret}" />
+    <linkedin:config domain-pk="${linkedin.consumerKey}"   domain-secret="${linkedin.consumerSecret}" />
      -->
-    <!--bean id="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry"-->
+    <!--bean pk="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry"-->
     <bean id="connectionFactoryLocator" class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
         <!--property name="authenticationServices"-->
         <!--aop:scoped-proxy proxy-target-class="false" /-->
@@ -62,13 +62,13 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
             </list>
         </property>
     </bean>
-    <!--twitter:config  domain-id="${twitter.consumer.key}" domain-secret="${twitter.consumer.secret}" /-->
+    <!--twitter:config  domain-pk="${twitter.consumer.key}" domain-secret="${twitter.consumer.secret}" /-->
 
     <!-- Configures the connection repository. This application uses JDBC connection
         repository which saves connection details to database. This repository uses
         the data source bean for obtaining database connection. -->
     <social:jdbc-connection-repository connection-signup-ref="userDetailsService"/>
-    <!--bean id="usersConnectionRepository"
+    <!--bean pk="usersConnectionRepository"
         class="gr.abiss.restdude.userDetails.integration.CalipsoJdbcUsersConnectionRepository">
         <aop:scoped-proxy proxy-target-class="false" />
         <constructor-arg ref="dataSource" />
@@ -79,7 +79,7 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
 
     <!-- This bean manages the connection flow between the account provider
         and the example application.
-    <bean id="connectController"
+    <bean pk="connectController"
         class="org.springframework.social.connect.web.ConnectController"
         autowire="constructor">
         </bean> -->

@@ -43,9 +43,9 @@ public interface IMessageResource<ID extends Serializable> extends Serializable 
 
     public static final String CLASS_ATTRIBUTE_NAME = "@class";
 
-    public ID getId();
+    public ID getPk();
 
-    public void setId(ID id);
+    public void setPk(ID pk);
 
     public String getName();
 

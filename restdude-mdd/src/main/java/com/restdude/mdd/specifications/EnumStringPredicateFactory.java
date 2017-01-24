@@ -23,58 +23,52 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.geography.model.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class EnumStringPredicateFactory implements IPredicateFactory<Enum> {
+public class EnumStringPredicateFactory extends AbstractPredicateFactory<Enum> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EnumStringPredicateFactory.class);
 
-	private Class type;
+	private Class<Enum> type;
 
 	private EnumStringPredicateFactory() {
 	}
 
-	public EnumStringPredicateFactory(Class clazz) {
+	public EnumStringPredicateFactory(Class<Enum> clazz) {
 		this.type = clazz;
 	}
 
 
-	/**
-     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
-     */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Enum> fieldType,
-			String[] propertyValues) {
-		if (!fieldType.isEnum()) {
-			LOGGER.warn("Non-Enum type for property '" + propertyName + "': " + fieldType.getName() + ", class: " + fieldType.getClass());
+	public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<Enum> fieldType, String[] propertyValues) {
+		Predicate predicate = null;
+		try {
+			LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+			Path path = this.<Enum>getPath(root, propertyName, fieldType);
+
+			if (propertyValues.length == 1) {
+				predicate = cb.equal(path, Enum.valueOf(this.type, propertyValues[0]));
+			} else {
+				Set choices = new HashSet(propertyValues.length);
+				for (int i = 0; i < propertyValues.length; i++) {
+					choices.add(Enum.valueOf(this.type, propertyValues[i]));
+				}
+
+				predicate = path.in(choices);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
-		Predicate predicate;
-		
-		if(propertyValues.length == 1){
-			predicate = cb.equal(root.<Enum> get(propertyName), Enum.valueOf((Class<Enum>) this.type, propertyValues[0]));
-		}
-		else{
-			ArrayList<Enum> choices = new ArrayList<Enum>(propertyValues.length);
-			for (int i = 0; i < propertyValues.length; i++) {
-				try{
-					choices.add(Enum.valueOf((Class<Enum>) this.type, propertyValues[i]));
-				}catch(Exception e){
-					LOGGER.warn(
-							"Invalid Enum entry '" + propertyValues[i] + "' for property '" + propertyName + "' and class "
-									+ fieldType.getName(), e);
-				}
-			}
-			
-			predicate = cb.isTrue(root.<Enum> get(propertyName).in(choices));
-		}
 		return predicate;
 	}
 }

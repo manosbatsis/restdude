@@ -23,7 +23,7 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.restdude.domain.users.model.Role;
+import com.restdude.domain.base.model.CalipsoPersistable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Formula;
@@ -35,50 +35,26 @@ import javax.persistence.*;
 @Entity
 @Table(name = "continent")
 @AttributeOverrides({
-    @AttributeOverride(name="id", column=@Column(unique = true, nullable = false, length = 2)),
+        @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
 })
-public class Continent extends AbstractFormalRegion<Continent> {
+public class Continent extends AbstractFormalRegion<Continent> implements CalipsoPersistable<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
-    public static String CONTROLLER_PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_USER')";
-    public static String CONTROLLER_PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
-    public static String CONTROLLER_PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
-    public static String CONTROLLER_PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
-    public static String CONTROLLER_PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_USER')";
-    public static String CONTROLLER_PRE_AUTHORIZE_DELETE = "denyAll";
-    public static String CONTROLLER_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-    public static String CONTROLLER_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    public static String CONTROLLER_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    public static String CONTROLLER_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-    public static String CONTROLLER_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String CONTROLLER_PRE_AUTHORIZE_COUNT = "denyAll";
 
-    static final String SERVICE_PRE_AUTHORIZE_SEARCH = "permitAll";
-    static final String SERVICE_PRE_AUTHORIZE_CREATE = "hasRole('" + Role.ROLE_ADMIN + "')";
-    static final String SERVICE_PRE_AUTHORIZE_UPDATE = "hasRole('" + Role.ROLE_ADMIN + "')";
-    static final String SERVICE_PRE_AUTHORIZE_PATCH = "hasRole('" + Role.ROLE_ADMIN + "')";
-    static final String SERVICE_PRE_AUTHORIZE_VIEW = "permitAll";
-    static final String SERVICE_PRE_AUTHORIZE_DELETE = "denyAll";
-    static final String SERVICE_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-    static final String SERVICE_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    static final String SERVICE_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    static final String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-    static final String SERVICE_PRE_AUTHORIZE_FIND_ALL = "denyAll";
-    static final String SERVICE_PRE_AUTHORIZE_COUNT = "permitAll";
     @Id
-    private String id;
+    private String pk;
 
-    @Formula(" (id) ")
+    @Formula(" (pk) ")
     private String savedId;
 
 
 	public Continent() {
 		super();
 	}
-	
-	public Continent(String id, String name) {
-		super(id, name, null);
-	}
+
+    public Continent(String pk, String name) {
+        super(pk, name, null);
+    }
 
 	@Override
 	public boolean equals(final Object obj) {
@@ -104,22 +80,18 @@ public class Continent extends AbstractFormalRegion<Continent> {
 
 
     /**
-     * Get the entity's primary key
-     *
-     * @see org.springframework.data.domain.Persistable#getId()
+     * {@inheritDoc}
      */
     @Override
-    public String getId() {
-        return id;
+    public String getPk() {
+        return pk;
     }
 
     /**
-     * Set the entity's primary key
-     *
-     * @param id the id to set
+     * @inheritDoc}
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     private String getSavedId() {
@@ -127,7 +99,7 @@ public class Continent extends AbstractFormalRegion<Continent> {
     }
 
     /**
-     * @see org.springframework.data.domain.Persistable#isNew()
+     * @inheritDoc}
      */
     @Override
     public boolean isNew() {

@@ -82,7 +82,7 @@ public class UserDetailsController {
         ICalipsoUserDetails userDetails = new UserDetails(resource);
         LOGGER.debug("#create, userDetails: {}", userDetails);
         userDetails = this.service.create(userDetails);
-        if (userDetails != null && userDetails.getId() != null) {
+        if (userDetails != null && userDetails.getPk() != null) {
 
             userDetails.setPassword(resource.getPassword());
             SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.service);

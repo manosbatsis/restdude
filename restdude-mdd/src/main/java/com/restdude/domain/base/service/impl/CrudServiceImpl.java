@@ -58,7 +58,7 @@ import java.util.Set;
  * You should extend it and inject your Repository bean by overriding {@link #setRepository(ModelRepository)}
  *
  * @param <T>  Your resource class to manage, usually an entity class
- * @param <ID> Resource id type, usually Long or String
+ * @param <ID> Resource pk type, usually Long or String
  * @param <R>  The repository class
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -219,7 +219,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
         if (pageable instanceof ParameterMapBackedPageRequest) {
             @SuppressWarnings("unchecked")
             Map<String, String[]> params = ((ParameterMapBackedPageRequest) pageable).getParameterMap();
-            Specification<T> spec = this.specificationsBuilder.getMatchAll(getDomainClass(), params);
+            Specification<T> spec = this.specificationsBuilder.<T>getMatchAll(getDomainClass(), params);
 
             return this.repository.findAll(spec, pageable);
         } else {
@@ -281,7 +281,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     /**
      * Get the entity's file uploads for this propert
      *
-     * @param subjectId    the entity id
+     * @param subjectId    the entity pk
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */

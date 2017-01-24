@@ -72,7 +72,7 @@ logging:
 #      context: DEBUG
      security: WARN
 #      boot.autoconfigure: DEBUG
-    com.restdude.domain:
+#    com.restdude.domain:
 #      error: DEBUG
 #      base:
 #        repository: DEBUG
@@ -122,7 +122,7 @@ info:
     commit:
       id: ${git.commit.id}
 #OR (depends on commitIdGenerationMode)
-#      id.full: ${git.commit.id.full}
+#      pk.full: ${git.commit.pk.full}
       id.abbrev: ${git.commit.id.abbrev}
       id.describe: ${git.commit.id.describe}
       id.describe-short: ${git.commit.id.describe-short}

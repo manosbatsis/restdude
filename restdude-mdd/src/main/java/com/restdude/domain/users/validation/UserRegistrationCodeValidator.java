@@ -54,8 +54,8 @@ public class UserRegistrationCodeValidator implements ConstraintValidator<UserRe
         boolean valid = true;
         if (value != null) {
             valid = false;
-            if (StringUtils.isNotBlank(value.getId())) {
-                UserRegistrationCode code = this.userRegistrationCodeRepository.findOne(value.getId());
+            if (StringUtils.isNotBlank(value.getPk())) {
+                UserRegistrationCode code = this.userRegistrationCodeRepository.findOne(value.getPk());
                 valid = code != null && code.getAvailable();
             }
         }

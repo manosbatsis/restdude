@@ -98,9 +98,9 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 	public User getPrincipalLocalUser() {
 		ICalipsoUserDetails principal = getPrincipal();
 		User user = null;
-        if (principal != null && principal.getId() != null) {
-            user = this.userRepository.getOne(principal.getId());
-        }
+		if (principal != null && principal.getPk() != null) {
+			user = this.userRepository.getOne(principal.getPk());
+		}
 
 		if(LOGGER.isDebugEnabled()){
 			LOGGER.debug("getPrincipalUser, user: " + user);

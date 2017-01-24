@@ -38,11 +38,11 @@ import java.util.Map;
 public interface ICalipsoUserDetails extends SocialUserDetails, Principal, CalipsoPersistable<String> {
 
 
-	public String getId();
+    public String getPk();
 
-	public void setId(String id);
-	
-	public String getFirstName();
+    public void setPk(String id);
+
+    public String getFirstName();
 
 	public void setFirstName(String firstName);
 
@@ -130,6 +130,7 @@ public interface ICalipsoUserDetails extends SocialUserDetails, Principal, Calip
 	void setTelephone(String telephone);
 
 	String getTelephone();
-	
+
+    public boolean isNew();
 
 }

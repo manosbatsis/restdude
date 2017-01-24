@@ -316,6 +316,7 @@
                         <debug>${maven.compiler.debug}</debug>
                         <debuglevel>${maven.compiler.debuglevel}</debuglevel>
                         <encoding>${encoding}</encoding>
+                        <failOnError>${maven.compiler.failOnError}</failOnError>
                     </configuration>
                 </plugin>
                 <plugin>

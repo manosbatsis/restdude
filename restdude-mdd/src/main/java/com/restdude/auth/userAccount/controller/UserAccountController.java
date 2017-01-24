@@ -124,10 +124,10 @@ public class UserAccountController {
 		// (re)login if appropriate
 		if (userDetails == null) {
 			userDetails = new UserDetails();
-		} else if (userDetails.getId() != null) {
-			//userDetails = this.userDetailsService.create(userDetails);
-			//userDetails.setPassword(resource.getPassword());
-			LOGGER.debug("update, loggin-in userDetails: {}", userDetails);
+        } else if (userDetails.getPk() != null) {
+            //userDetails = this.userDetailsService.create(userDetails);
+            //userDetails.setPassword(resource.getPassword());
+            LOGGER.debug("update, loggin-in userDetails: {}", userDetails);
 			SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
 		}
 		return userDetails;

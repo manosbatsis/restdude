@@ -24,8 +24,8 @@
 package com.restdude.mdd.uischema.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.uischema.serializer.UiSchemaSerializer;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A simple wrapper for domain entity class information, used for serializing those to JSON form
@@ -45,9 +45,9 @@ public class UiSchema {
 	public UiSchema() {
 	}
 
-	public Class<? extends Persistable> getDomainClass() {
-		return domainClass;
-	}
+    public Class<? extends CalipsoPersistable> getDomainClass() {
+        return domainClass;
+    }
 
 	public void setDomainClass(Class domainClass) {
 		this.domainClass = domainClass;

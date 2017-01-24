@@ -28,7 +28,7 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@JsonPropertyOrder({"id", "available", "username", "batchId", "batchName"})
+@JsonPropertyOrder({"pk", "available", "username", "batchId", "batchName"})
 public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable implements CalipsoPersistable<String> {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +47,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable impl
     }
 
     public UserRegistrationCodeInfo(UserRegistrationCode code) {
-        this(code.getId(), code.getAvailable(), code.getCredentials(), code.getBatch());
+        this(code.getPk(), code.getAvailable(), code.getCredentials(), code.getBatch());
 
     }
 
@@ -66,7 +66,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable impl
             this.username = credentials.getUser().getUsername();
         }
         if (batch != null) {
-            this.batchId = batch.getId();
+            this.batchId = batch.getPk();
             this.batchName = batch.getName();
         }
     }
@@ -74,7 +74,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable impl
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", this.id)
+                .append("pk", this.id)
                 .append("available", this.available)
                 .append("username", this.username)
                 .append("batchId", this.batchId)
@@ -82,11 +82,11 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable impl
                 .toString();
     }
 
-    public String getId() {
+    public String getPk() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setPk(String id) {
         this.id = id;
     }
 

@@ -41,11 +41,11 @@ public class CalendarDate implements Persistable<Date> {
 	@Temporal(TemporalType.DATE)
 	private Date id;
 
-	@Formula(" (id) ")
-	private Date date;
-	
-	@Column(name = "is_weekday", nullable = true)
-	private Boolean isWeekday;
+    @Formula(" (pk) ")
+    private Date date;
+
+    @Column(name = "is_weekday", nullable = true)
+    private Boolean isWeekday;
 	
 	@Column(name = "y", nullable = true)
 	private Short year;

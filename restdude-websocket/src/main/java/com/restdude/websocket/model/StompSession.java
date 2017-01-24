@@ -49,7 +49,7 @@ public class StompSession extends AbstractAssignedIdPersistable<String> {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "pk", nullable = false, updatable = false)
     private User user;
 
     public StompSession() {
@@ -58,13 +58,13 @@ public class StompSession extends AbstractAssignedIdPersistable<String> {
 
     public StompSession(String id) {
         this();
-        this.setId(id);
+        this.setPk(id);
     }
 
 
     @Override
     public String toString() {
-        return "StompSession [id=" + this.getId() + ", user=" + user + "]";
+        return "StompSession [pk=" + this.getPk() + ", user=" + user + "]";
     }
 
     public User getUser() {
@@ -95,7 +95,7 @@ public class StompSession extends AbstractAssignedIdPersistable<String> {
     }
 
     private StompSession(Builder builder) {
-        this.setId(builder.id);
+        this.setPk(builder.id);
         this.user = builder.user;
     }
 }

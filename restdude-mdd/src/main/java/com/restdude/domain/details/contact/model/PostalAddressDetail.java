@@ -48,7 +48,7 @@ public class PostalAddressDetail extends AbstractContactDetail {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "posralcode_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "posralcode_id", referencedColumnName = "pk", nullable = false)
     private PostalCode postCode;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

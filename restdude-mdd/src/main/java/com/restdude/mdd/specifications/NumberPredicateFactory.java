@@ -23,13 +23,23 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.geography.model.Country;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.NumberUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.HashSet;
+import java.util.Set;
 
-public class NumberPredicateFactory<F extends Number> implements IPredicateFactory<F> {
+public class NumberPredicateFactory<F extends Number> extends AbstractPredicateFactory<F> {
+
+
+    static final Logger LOGGER = LoggerFactory.getLogger(NumberPredicateFactory.class);
 
 	private final Class<F> type;
 
@@ -42,33 +52,33 @@ public class NumberPredicateFactory<F extends Number> implements IPredicateFacto
 		this.type = type;
 	}
 
-	/**
-     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
-     */
 	@Override
-	public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<F> fieldType,
-			String[] propertyValues) {
-		Predicate predicate = null;
-		if (!Number.class.isAssignableFrom(fieldType)) {
-			throw new IllegalArgumentException(fieldType + " is not a subclass of Number for field: " + propertyName);
-		}
+    public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<F> fieldType,
+                                  String[] propertyValues) {
+        Predicate predicate = null;
 
-		if (propertyValues.length == 1) {
-			predicate = cb.equal(root.<F> get(propertyName), propertyValues[0]);
-		} else if (propertyValues.length == 2) {
-			F from = NumberUtils.parseNumber(propertyValues[0], this.type);
-			F to = NumberUtils.parseNumber(propertyValues[1], this.type);
-			Predicate predicate1 = cb.ge(root.<F> get(propertyName), from);
-			Predicate predicate2 = cb.le(root.<F> get(propertyName), to);
-			predicate = cb.and(predicate1, predicate2);
-			// criteriaQuery.where(criteriaBuilder.and(predicate1,
-			// predicate2));
-			// predicate = cb.between(root.<T> get(propertyName), (Integer)
-			// from, (Integer) to);
-		}
-		return predicate;
-		// root...addStringSecification(personRoot, query,
-		// cb, propertyName, searchTerms.get(propertyName));
+        LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+        Path path = this.<F>getPath(root, propertyName, fieldType);
+
+        if (propertyValues.length == 0) {
+            predicate = path.isNull();
+        } else if (propertyValues.length == 1) {
+            String value = propertyValues[0];
+            predicate = StringUtils.isNotBlank(value) ? cb.equal(path, NumberUtils.<F>parseNumber(value, this.type)) : path.isNull();
+        } else if (propertyValues.length == 2) {
+            F from = NumberUtils.<F>parseNumber(propertyValues[0], this.type);
+            F to = NumberUtils.<F>parseNumber(propertyValues[1], this.type);
+            Predicate predicate1 = cb.ge(path, from);
+            Predicate predicate2 = cb.le(path, to);
+            predicate = cb.and(predicate1, predicate2);
+        } else if (propertyValues.length > 2) {
+            Set<F> values = new HashSet<>();
+            for (int i = 0; i < propertyValues.length; i++) {
+                values.add(NumberUtils.<F>parseNumber(propertyValues[i], this.type));
+            }
+            predicate = path.in(values);
+        }
+        return predicate;
 
 	}
 }

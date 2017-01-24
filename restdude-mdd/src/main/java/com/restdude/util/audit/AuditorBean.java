@@ -55,7 +55,7 @@ public class AuditorBean implements AuditorAware<User> {
         if (currentAuditor == null) {
             ICalipsoUserDetails userDetails = SecurityUtil.getPrincipal();
             if (userDetails != null) {
-                currentAuditor = new User(userDetails.getId());
+                currentAuditor = new User(userDetails.getPk());
             }
         } else {
             LOGGER.debug("getCurrentAuditor returns cached result");

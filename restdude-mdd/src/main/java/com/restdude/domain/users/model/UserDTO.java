@@ -41,7 +41,7 @@ public class UserDTO implements IMessageResource<String> {
     public static UserDTO fromUser(User user) {
         UserDTO dto = null;
         if (user != null) {
-            return new UserDTO(user.getId(),
+            return new UserDTO(user.getPk(),
                     user.getFirstName(),
                     user.getLastName(),
                     user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
@@ -55,7 +55,7 @@ public class UserDTO implements IMessageResource<String> {
         return dto;
     }
 
-    private String id;
+    private String pk;
     private String name;
     private String firstName;
     private String lastName;
@@ -71,9 +71,9 @@ public class UserDTO implements IMessageResource<String> {
     public UserDTO() {
     }
 
-    public UserDTO(String id, String firstName, String lastName, String username, String email, String emailHash, String avatarUrl, String bannerUrl, Integer stompSessionCount) {
+    public UserDTO(String pk, String firstName, String lastName, String username, String email, String emailHash, String avatarUrl, String bannerUrl, Integer stompSessionCount) {
         super();
-        this.id = id;
+        this.pk = pk;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = StringUtils.lowerCase(username);
@@ -86,7 +86,7 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     public UserDTO(User user) {
-        this(user.getId(),
+        this(user.getPk(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
@@ -98,7 +98,7 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     private UserDTO(Builder builder) {
-        this.id = builder.id;
+        this.pk = builder.pk;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.username = StringUtils.lowerCase(builder.username);
@@ -110,7 +110,7 @@ public class UserDTO implements IMessageResource<String> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).appendSuper(super.toString()).append("id", this.getUsername())
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("pk", this.getUsername())
                 .append("firstName", this.getUsername())
                 .append("lastName", this.getUsername())
                 .append("username", this.getUsername())
@@ -122,7 +122,7 @@ public class UserDTO implements IMessageResource<String> {
 
     public User toUser() {
         return new User.Builder()
-                .id(this.id)
+                .id(this.pk)
                 .firstName(this.firstName)
                 .lastName(this.lastName)
                 .credentials(new UserCredentials())
@@ -136,19 +136,19 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     /**
-     * @see com.restdude.websocket.message.IMessageResource#getId()
+     * @see com.restdude.websocket.message.IMessageResource#getPk()
      */
     @Override
-    public String getId() {
-        return id;
+    public String getPk() {
+        return pk;
     }
 
     /**
-     * @see com.restdude.websocket.message.IMessageResource#setId(java.io.Serializable)
+     * @see com.restdude.websocket.message.IMessageResource#setPk(java.io.Serializable)
      */
     @Override
-    public void setId(String id) {
-        this.id = id;
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     /**
@@ -235,7 +235,7 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     public static class Builder {
-        private String id;
+        private String pk;
         private String firstName;
         private String lastName;
         private String username;
@@ -244,8 +244,8 @@ public class UserDTO implements IMessageResource<String> {
         private String avatarUrl;
         private Integer stompSessionCount;
 
-        public Builder id(String id) {
-            this.id = id;
+        public Builder pk(String pk) {
+            this.pk = pk;
             return this;
         }
 

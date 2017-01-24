@@ -37,7 +37,7 @@ import java.util.Date;
 @JaversSpringDataAuditable
 public interface UserRepository extends ModelRepository<User, String> {
 
-    public static final String SELECT_USERDTO = "select new com.restdude.domain.users.model.UserDTO(u.id, "
+    public static final String SELECT_USERDTO = "select new com.restdude.domain.users.model.UserDTO(u.pk, "
             + "		u.firstName, "
 			+ "		u.lastName, "
 			+ "		u.username, "
@@ -48,11 +48,11 @@ public interface UserRepository extends ModelRepository<User, String> {
 			+ "		u.stompSessionCount"
 			+ ") ";
 
-	@Query("select u from User u where u.id = UPPER(?1) and u.credentials.active = true")
-	public User findActiveById(String id);
+    @Query("select u from User u where u.pk = UPPER(?1) and u.credentials.active = true")
+    public User findActiveById(String id);
 
-	@Query("select u.username from User u where u.id = ?1 ")
-	public String findUsernameById(String id);
+    @Query("select u.username from User u where u.pk = ?1 ")
+    public String findUsernameById(String id);
 
 	@Query("select u from User u left join u.contactDetails.emails as email where u.credentials.active = true and UPPER(email.email) = UPPER(?1) and email.verified = true ")
 	public User findActiveByEmail(String email);
@@ -69,22 +69,22 @@ public interface UserRepository extends ModelRepository<User, String> {
     @Query("select u from User u left join u.contactDetails.emails as email " +
             "where u.credentials.active = true " +
             "    and (" +
-            "       (u.id = ?1)" +
+            "       (u.pk = ?1)" +
             "       or (UPPER(u.username) = UPPER(?1)) " +
             "       or (UPPER(email.email) = UPPER(?1) and email.verified = true)" +
             "    )")
     public User findActiveByIdOrUsernameOrEmail(String idOrUsernameOrEmail);
 
 	@Query(SELECT_USERDTO
-			+ "from User u where u.id = ?1")
-	public UserDTO findCompactUserById(String id);
-	
-	
-	@Modifying
-	@Query("UPDATE UserCredentials AS c SET c.lastLogin = CURRENT_TIMESTAMP() WHERE c.user.id = ?1")
-	public void updateLastLogin(String userId);
-	
-	@Modifying
+            + "from User u where u.pk = ?1")
+    public UserDTO findCompactUserById(String id);
+
+
+    @Modifying
+    @Query("UPDATE UserCredentials AS c SET c.lastLogin = CURRENT_TIMESTAMP() WHERE c.user.pk = ?1")
+    public void updateLastLogin(String userId);
+
+    @Modifying
 
 	@Query("UPDATE User AS u SET u.credentials.resetPasswordTokenCreated = NULL, u.credentials.resetPasswordToken = NULL "
 			+ "WHERE u.credentials.resetPasswordTokenCreated IS NOT NULL and u.credentials.resetPasswordTokenCreated  < ?1")

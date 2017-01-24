@@ -23,40 +23,57 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.geography.model.Country;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.NumberUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-public class DatePredicateFactory implements IPredicateFactory<Date> {
+public class DatePredicateFactory extends AbstractPredicateFactory<Date> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatePredicateFactory.class);
 
 	public DatePredicateFactory() {
 	}
 
-	/**
-     * @see gr.abiss.restdude.uischema.jpa.search.specifications.IPredicateFactory#addPredicate(javax.persistence.criteria.Root,
-     *      javax.persistence.criteria.CriteriaBuilder, java.lang.String,
-     *      java.lang.Class, java.lang.String[])
-	 */
 	@Override
-	public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Date> fieldType,
-			String[] propertyValues) {
-		Predicate predicate = null;
-		if (!Date.class.isAssignableFrom(fieldType)) {
-			throw new IllegalArgumentException(fieldType
-					+ " is not a subclass of java.util.Date for field: " + propertyName);
-		}
+    public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<Date> fieldType,
+                                  String[] propertyValues) {
+        Predicate predicate = null;
 
-		if (propertyValues.length == 1) {
-			Date date = new Date(NumberUtils.parseNumber(propertyValues[0], Long.class));
-			predicate = cb.equal(root.<Date> get(propertyName), date);
-		} else if (propertyValues.length == 2) {
-			Date from = new Date(NumberUtils.parseNumber(propertyValues[0], Long.class));
-			Date to = new Date(NumberUtils.parseNumber(propertyValues[1], Long.class));
-			predicate = cb.between(root.<Date> get(propertyName), from, to);
-		}
-		return predicate;
-	}
+        try {
+            LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+
+            Path path = this.<Date>getPath(root, propertyName, fieldType);
+            if (propertyValues.length == 0) {
+                predicate = path.isNull();
+            }
+            if (propertyValues.length == 1) {
+                Date date = new Date(NumberUtils.parseNumber(propertyValues[0], Long.class));
+                predicate = date != null ? cb.equal(path, date) : path.isNull();
+            } else if (propertyValues.length == 2) {
+                Date from = new Date(NumberUtils.parseNumber(propertyValues[0], Long.class));
+                Date to = new Date(NumberUtils.parseNumber(propertyValues[1], Long.class));
+                predicate = cb.between(path, from, to);
+            } else {
+                Set<Date> values = new HashSet<>();
+                for (int i = 0; i < propertyValues.length; i++) {
+                    Date d = new Date(NumberUtils.parseNumber(propertyValues[i], Long.class));
+                    values.add(d);
+                }
+                predicate = path.in(values);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return predicate;
+    }
 }

@@ -377,7 +377,7 @@ public abstract class DataInitializer {
             countryService
                     .create(new Country("HT", "Haiti", "Haïti", "509", NA, "Port-au-Prince", "HTG,USD", "fr,ht"));
             countryService.create(new Country("HU", "Hungary", "Magyarország", "36", EU, "Budapest", "HUF", "hu"));
-            countryService.create(new Country("ID", "Indonesia", "Indonesia", "62", AS, "Jakarta", "IDR", "id"));
+            countryService.create(new Country("ID", "Indonesia", "Indonesia", "62", AS, "Jakarta", "IDR", "pk"));
             countryService.create(new Country("IE", "Ireland", "Éire", "353", EU, "Dublin", "EUR", "ga,en"));
             countryService.create(new Country("IL", "Israel", "יִשְׂרָאֵל", "972", AS, "Jerusalem", "ILS", "he,ar"));
             countryService

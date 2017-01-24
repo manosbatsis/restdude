@@ -60,10 +60,10 @@ public class ValidatorUtil {
 					Column column = field.getAnnotation(Column.class);
 
 					// if unique or not-null field
-					if (!field.getName().equals("id")) {
-						if (column.unique()) {
-							names.add(field.getName());
-						}
+                    if (!field.getName().equals("pk")) {
+                        if (column.unique()) {
+                            names.add(field.getName());
+                        }
 					}
 				}
 			}

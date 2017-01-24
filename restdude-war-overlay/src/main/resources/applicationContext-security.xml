@@ -41,15 +41,15 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
     </bean>
 
     <!-- choose the default user controller
-    <bean id="userController"
+    <bean pk="userController"
           class="com.restdude.domain.users.controller.UserController"/>
           -->
     <!-- choose the default userDetails controller
-    <bean id="userDetailsController"
+    <bean pk="userDetailsController"
           class="com.restdude.auth.userdetails.controller.UserDetailsController"/>
            -->
     <!-- Calipso UserDetailsService implementation
-    <bean id="userDetailsService"
+    <bean pk="userDetailsService"
           class="com.restdude.auth.userdetails.service.impl.UserDetailsServiceImpl"
           autowire="byType"/>-->
     <!-- and an alias for the LovalUser service -->
@@ -127,7 +127,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
     <!--
     Configures the social authentication filter which integrates Spring Social
     with Spring Security.
-    <bean id="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter">
+    <bean pk="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter">
         <constructor-arg index="0" ref="authenticationManager"/>
         <constructor-arg index="1" ref="userIdSource"/>
         <constructor-arg index="2" ref="usersConnectionRepository"/>

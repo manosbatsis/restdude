@@ -14,7 +14,7 @@
         <constructor-arg ref="aclService"/>
     </bean>
     <!-- Declare a custom PermissionEvaluator interface 
-    <bean class="my.CustomPermissionEvaluator" id="customPermissionEvaluator"/>
+    <bean class="my.CustomPermissionEvaluator" pk="customPermissionEvaluator"/>
     -->
     <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
         <constructor-arg ref="dataSource"/>
@@ -59,7 +59,7 @@
 
 
     <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/hierarchicalroles/RoleHierarchyImpl.html 
-    <bean id="roleHierarchy"  class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+    <bean pk="roleHierarchy"  class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
         <property name="hierarchy">
             <value>
                 ROLE_ADMIN > ROLE_MODERATOR

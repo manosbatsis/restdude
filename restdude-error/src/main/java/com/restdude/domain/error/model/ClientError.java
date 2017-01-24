@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 @Table(name = "error_client")
 @ApiModel(value = "ClientError", description = "Client errors are created upon client request and refer to exceptions occurred " +
         "specifically within client application code. ")
-@JsonIgnoreProperties("id")
+@JsonIgnoreProperties("pk")
 public class ClientError extends BaseError implements PersistableError<String> {
 
     public static final String API_PATH = "clientErrors";

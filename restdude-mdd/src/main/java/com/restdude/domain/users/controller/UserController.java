@@ -71,7 +71,7 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     public
     @ResponseBody
-    User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    User update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 
@@ -95,7 +95,7 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     public
     @ResponseBody
-    User patch(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    User patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         LOGGER.debug("patch, resource: {}", resource);
         ICalipsoUserDetails principal = this.service.getPrincipal();
         LOGGER.debug("patch, principal: {}", principal);

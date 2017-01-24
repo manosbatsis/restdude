@@ -84,7 +84,7 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
     @JsonIgnore
     @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_modified_by", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "last_modified_by", referencedColumnName = "pk", updatable = false)
     private User lastModifiedBy;
 
     @CreatedBy
@@ -93,7 +93,7 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
     @CurrentPrincipal
     @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdby_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "createdby_id", referencedColumnName = "pk", updatable = false)
     private User createdBy;
 
     @NotNull
@@ -114,7 +114,7 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
     private Integer batchSize;
 
     @ApiModelProperty(value = "The number of available codes in the batch", readOnly = true)
-    @Formula(" (select count(*) from registration_code where registration_code.batch_id = id and registration_code.credentials_id IS NULL) ")
+    @Formula(" (select count(*) from registration_code where registration_code.batch_id = pk and registration_code.credentials_id IS NULL) ")
     private Integer available;
 
     @ApiModelProperty(value = "Expiration date.")
@@ -128,7 +128,7 @@ public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable imp
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", this.getId())
+                .append("pk", this.getPk())
                 .append("name", this.getName())
                 .append("description", this.getDescription())
                 .append("size", this.getBatchSize())

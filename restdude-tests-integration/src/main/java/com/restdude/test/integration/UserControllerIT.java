@@ -68,7 +68,7 @@ public class UserControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(200)
                 // test assertions
-                .body("id", equalTo(adminLoginContext.userId))
+                .body("pk", equalTo(adminLoginContext.userId))
                 // get model
                 .extract().as(User.class);
     }
@@ -99,7 +99,7 @@ public class UserControllerIT extends AbstractControllerIT {
                 .get(WEBCONTEXT_PATH + "/api/rest/users/" + adminLoginContext.userId)
                 .then().assertThat()
                 // test assertions
-                .body("id", notNullValue())
+                .body("pk", notNullValue())
                 // get model
                 .extract().as(User.class);
         LOGGER.info("User before uploading files: {}", user);
@@ -116,7 +116,7 @@ public class UserControllerIT extends AbstractControllerIT {
                         .fileName(file1)
                         .controlName("avatarUrl")
                         .mimeType("image/jpeg").build())
-                .when().post(WEBCONTEXT_PATH + "/api/rest/users/" + user.getId() + "/files")
+                .when().post(WEBCONTEXT_PATH + "/api/rest/users/" + user.getPk() + "/files")
                 .then()
                 .statusCode(200)
                 .extract().as(User.class);

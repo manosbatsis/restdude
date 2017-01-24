@@ -171,7 +171,7 @@ public class AuditJaversConfig {
         @Override
         public String provide() {
             Optional<ICalipsoUserDetails> ud = SecurityUtil.getPrincipalOptional();
-            return ud.isPresent() ? ud.get().getId() : "unauthenticated";
+            return ud.isPresent() ? ud.get().getPk() : "unauthenticated";
         }
     }
 

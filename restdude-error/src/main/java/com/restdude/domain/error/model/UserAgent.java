@@ -74,15 +74,15 @@ public class UserAgent extends AbstractAssignedIdPersistable<String> {
         super();
     }
 
-    public UserAgent(String id, String value) {
-        super(id);
+    public UserAgent(String pk, String value) {
+        super(pk);
         this.value = value;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", this.getId())
+                .append("pk", this.getPk())
                 .append("value", this.getValue())
                 .toString();
     }
@@ -91,8 +91,8 @@ public class UserAgent extends AbstractAssignedIdPersistable<String> {
     @Override
     public void preSave() {
         if (StringUtils.isNotEmpty(this.value)) {
-            if (this.getId() == null) {
-                this.setId(HashUtils.buildHash(this.value));
+            if (this.getPk() == null) {
+                this.setPk(HashUtils.buildHash(this.value));
             }
             if (this.value.length() > UserAgent.MAX_VALUE_LENGTH) {
                 this.value = StringUtils.abbreviate(this.value, UserAgent.MAX_VALUE_LENGTH);

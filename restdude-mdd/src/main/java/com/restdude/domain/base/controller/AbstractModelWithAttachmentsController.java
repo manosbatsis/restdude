@@ -48,7 +48,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
@@ -73,60 +72,59 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 		LOGGER.info("uploadGet called");
 		List<BinaryFile> uploads = null;
 		// attach file
-		Field fileField = GenericSpecifications.getField(this.service.getDomainClass(), propertyName);
-		Class clazz = fileField.getType();
-		if (BinaryFile.class.isAssignableFrom(clazz)) {
-			uploads = this.service.getUploadsForProperty(subjectId, propertyName);
-		}
+        Class clazz = GenericSpecifications.getMemberType(this.service.getDomainClass(), propertyName);
+        if (BinaryFile.class.isAssignableFrom(clazz)) {
+            uploads = this.service.getUploadsForProperty(subjectId, propertyName);
+        }
 		return uploads;
 	}
 
-	@RequestMapping(value = "{subjectId}/uploads/{propertyName}/thumbs/{id}", method = RequestMethod.GET)
-	@ApiOperation(value = "Get file thumb/preview image of a file upload	")
-	public void thumbnail(HttpServletResponse response, @PathVariable String subjectId,
-			@PathVariable String propertyName, @PathVariable String id) {
-		Configuration config = ConfigurationFactory.getConfiguration();
-		String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
-		BinaryFile file = binaryFileService.findById(id);
-		File fileFile = new File(fileUploadDirectory + file.getParentPath() + "/" + file.getThumbnailFilename());
-		response.setContentType(file.getContentType());
-		response.setContentLength(file.getThumbnailSize().intValue());
+    @RequestMapping(value = "{subjectId}/uploads/{propertyName}/thumbs/{pk}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get file thumb/preview image of a file upload	")
+    public void thumbnail(HttpServletResponse response, @PathVariable String subjectId,
+                          @PathVariable String propertyName, @PathVariable String pk) {
+        Configuration config = ConfigurationFactory.getConfiguration();
+        String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
+        BinaryFile file = binaryFileService.findById(pk);
+        File fileFile = new File(fileUploadDirectory + file.getParentPath() + "/" + file.getThumbnailFilename());
+        response.setContentType(file.getContentType());
+        response.setContentLength(file.getThumbnailSize().intValue());
 		try {
 			InputStream is = new FileInputStream(fileFile);
 			IOUtils.copy(is, response.getOutputStream());
 		} catch (IOException e) {
-			LOGGER.error("Could not show thumbnail " + id, e);
-		}
-	}
+            LOGGER.error("Could not show thumbnail " + pk, e);
+        }
+    }
 
 	@ApiOperation(value = "Get an uploaded file")
-	@RequestMapping(value = "{subjectId}/uploads/{propertyName}/files/{id}", method = RequestMethod.GET)
-	public void getFile(HttpServletResponse response, @PathVariable String subjectId, @PathVariable String propertyName,
-			@PathVariable String id) {
-		Configuration config = ConfigurationFactory.getConfiguration();
-		String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
-		BinaryFile file = binaryFileService.findById(id);
-		File fileFile = new File(fileUploadDirectory + file.getParentPath() + "/" + file.getNewFilename());
-		response.setContentType(file.getContentType());
-		response.setContentLength(file.getSize().intValue());
+    @RequestMapping(value = "{subjectId}/uploads/{propertyName}/files/{pk}", method = RequestMethod.GET)
+    public void getFile(HttpServletResponse response, @PathVariable String subjectId, @PathVariable String propertyName,
+                        @PathVariable String pk) {
+        Configuration config = ConfigurationFactory.getConfiguration();
+        String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
+        BinaryFile file = binaryFileService.findById(pk);
+        File fileFile = new File(fileUploadDirectory + file.getParentPath() + "/" + file.getNewFilename());
+        response.setContentType(file.getContentType());
+        response.setContentLength(file.getSize().intValue());
 		try {
 			InputStream is = new FileInputStream(fileFile);
 			IOUtils.copy(is, response.getOutputStream());
 		} catch (IOException e) {
-			LOGGER.error("Could not show picture " + id, e);
-		}
-	}
+            LOGGER.error("Could not show picture " + pk, e);
+        }
+    }
 
 	@ApiOperation(value = "Delete an uploaded file")
-	@RequestMapping(value = "{subjectId}/uploads/{propertyName}/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{subjectId}/uploads/{propertyName}/{pk}", method = RequestMethod.DELETE)
     public List deleteById(@PathVariable String subjectId, @PathVariable String propertyName,
-                           @PathVariable String id) {
+                           @PathVariable String pk) {
         Configuration config = ConfigurationFactory.getConfiguration();
 		String fileUploadDirectory = config.getString(ConfigurationFactory.FILES_DIR);
-		BinaryFile file = binaryFileService.findById(id);
-		File fileFile = new File(fileUploadDirectory + "/" + file.getNewFilename());
-		fileFile.delete();
-		File thumbnailFile = new File(fileUploadDirectory + "/" + file.getThumbnailFilename());
+        BinaryFile file = binaryFileService.findById(pk);
+        File fileFile = new File(fileUploadDirectory + "/" + file.getNewFilename());
+        fileFile.delete();
+        File thumbnailFile = new File(fileUploadDirectory + "/" + file.getThumbnailFilename());
 		thumbnailFile.delete();
 		binaryFileService.delete(file);
 		List<Map<String, Object>> results = new ArrayList();
@@ -172,8 +170,8 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 				bf = binaryFileService.create(bf);
 
 				LOGGER.info("file name: {}", bf.getNewFilename());
-				bf = binaryFileService.findById(bf.getId());
-				LOGGER.info("file name: {}", bf.getNewFilename());
+                bf = binaryFileService.findById(bf.getPk());
+                LOGGER.info("file name: {}", bf.getNewFilename());
 
 				File storageDirectory = new File(fileUploadDirectory + bf.getParentPath());
 
@@ -198,19 +196,18 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 				// attach file
 				// TODO: add/update to collection
-				Field fileField = GenericSpecifications.getField(this.service.getDomainClass(), propertyName);
-				Class clazz = fileField.getType();
-				if (BinaryFile.class.isAssignableFrom(clazz)) {
-					T target = this.service.findById(subjectId);
-					BeanUtils.setProperty(target, propertyName, bf);
+                Class clazz = GenericSpecifications.getMemberType(this.service.getDomainClass(), propertyName);
+                if (BinaryFile.class.isAssignableFrom(clazz)) {
+                    T target = this.service.findById(subjectId);
+                    BeanUtils.setProperty(target, propertyName, bf);
 					this.service.update(target);
 				}
 
-				bf.setUrl(baseUrl + "/api/rest/" + bf.getParentPath() + "/files/" + bf.getId());
-				bf.setThumbnailUrl(baseUrl + "/api/rest/" + bf.getParentPath() + "/thumbs/" + bf.getId());
-				bf.setDeleteUrl(baseUrl + "/api/rest/" + bf.getParentPath() + "/" + bf.getId());
-				bf.setDeleteType("DELETE");
-				bf.addInitialPreview("<img src=\"" + bf.getThumbnailUrl() + "\" class=\"file-preview-image\" />");
+                bf.setUrl(baseUrl + "/api/rest/" + bf.getParentPath() + "/files/" + bf.getPk());
+                bf.setThumbnailUrl(baseUrl + "/api/rest/" + bf.getParentPath() + "/thumbs/" + bf.getPk());
+                bf.setDeleteUrl(baseUrl + "/api/rest/" + bf.getParentPath() + "/" + bf.getPk());
+                bf.setDeleteType("DELETE");
+                bf.addInitialPreview("<img src=\"" + bf.getThumbnailUrl() + "\" class=\"file-preview-image\" />");
 
 			}
 

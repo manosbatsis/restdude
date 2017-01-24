@@ -27,22 +27,17 @@
         </encoder>
     </appender>
 
-    <!--     <LOGGER name="org.hibernate"> -->
-    <!--         <level value="ERROR" /> -->
-    <!--     </LOGGER> -->
-    <!--     <LOGGER name="org.hibernate.SQL"> -->
-    <!--         <level value="ERROR" /> -->
-    <!--     </LOGGER> -->
-    <!--     <LOGGER name="org.hibernate.type"> -->
-    <!--         <level value="ERROR" /> -->
-    <!--     </LOGGER> -->
-    <!--     <LOGGER name="org.springframework.messaging"> -->
-    <!--         <level value="debug" /> -->
-    <!--     </LOGGER> -->
-    <!--     <LOGGER name="gr.abiss.restdude.websocket"> -->
-    <!--         <level value="debug" /> -->
-    <!--     </LOGGER> -->
+    <logger name="com.restdude.test">
+        <level value="debug"/>
+    </logger>
 
+    <logger name="com.restdude.mdd">
+        <level value="debug"/>
+    </logger>
+
+    <logger name="com.restdude.init">
+        <level value="debug"/>
+    </logger>
 
     <root level="warn">
         <appender-ref ref="STDOUT"/>

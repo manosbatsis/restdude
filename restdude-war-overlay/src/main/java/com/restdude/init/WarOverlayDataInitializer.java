@@ -132,6 +132,7 @@ public class WarOverlayDataInitializer extends DataInitializer {
             SystemError error = (SystemError) stackTrace[4];
             error.setErrorLog(st);
             error.setUser(user);
+            LOGGER.debug("Error user: {}, new: {}", user, user.isNew());
             error = this.systemErrorService.create(error);
             errors.add(error);
         }

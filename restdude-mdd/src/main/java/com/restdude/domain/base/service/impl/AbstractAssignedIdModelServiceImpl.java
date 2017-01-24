@@ -53,14 +53,14 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
     @ModelDrivenPreAuth
     public T findOrCreate(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
-        Assert.notNull(resource.getId(), "Resource ID can't be null");
+        Assert.notNull(resource.getPk(), "Resource ID can't be null");
 
         EntityManager em = this.repository.getEntityManager();
 
         // check for existing
-        T persisted = em.find(this.getDomainClass(), resource.getId());
+        T persisted = em.find(this.getDomainClass(), resource.getPk());
         if (persisted != null) {
-            LOGGER.debug("Returning pre-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getId());
+            LOGGER.debug("Returning pre-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getPk());
         } else {
 
             // cannot create new transaction in shared entity manager, create another
@@ -71,7 +71,7 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
                 innerEntityManager.persist(resource);
                 innerEntityManager.getTransaction().commit();
                 persisted = resource;
-                LOGGER.debug("Returning newly-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getId());
+                LOGGER.debug("Returning newly-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getPk());
             } catch (PersistenceException ex) {
 
                 //This may be a unique constraint violation or it could be some
@@ -79,7 +79,7 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
                 //to find the entity.  Either way, our attempt failed and we
                 //roll back the tx.
                 innerEntityManager.getTransaction().rollback();
-                persisted = em.find(this.getDomainClass(), resource.getId());
+                persisted = em.find(this.getDomainClass(), resource.getPk());
                 if (persisted == null) {
                     //Must have been some other issue
                     throw ex;
@@ -87,7 +87,7 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
 
                 //Either it was a unique constraint violation or we don't
                 //care because someone else has succeeded
-                LOGGER.debug("Returning elsewhere-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getId());
+                LOGGER.debug("Returning elsewhere-persisted {} with ID: {}", this.getDomainClass().getName(), persisted.getPk());
 
             } catch (Throwable t) {
                 innerEntityManager.getTransaction().rollback();

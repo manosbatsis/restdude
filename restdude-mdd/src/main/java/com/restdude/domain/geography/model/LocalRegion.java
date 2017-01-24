@@ -26,6 +26,9 @@ package com.restdude.domain.geography.model;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Represents regions within a country.
@@ -35,8 +38,10 @@ public class LocalRegion<P extends LocalRegion>
 	extends AbstractSystemUuidPersistable  {
 
 	private static final long serialVersionUID = 1735385884991197359L;
-	
-	private Country country;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "country_id", referencedColumnName = "pk")
+    private Country country;
 
 	public Country getCountry() {
 		return country;

@@ -56,7 +56,7 @@ public class Tag extends AbstractCategory<Tag> {
 			return false;
 		}
 		Tag that = (Tag) obj;
-		return null == this.getId() ? false : this.getId().equals(that.getId());
-	}
+        return null == this.getPk() ? false : this.getPk().equals(that.getPk());
+    }
 
 }

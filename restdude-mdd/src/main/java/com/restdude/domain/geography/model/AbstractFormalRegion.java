@@ -65,9 +65,9 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> exten
 	}
 
 
-	public AbstractFormalRegion(String id, String name, P parent) {
-        this.setId(id);
-        this.name = name;
+	public AbstractFormalRegion(String pk, String name, P parent) {
+		this.setPk(pk);
+		this.name = name;
 		this.parent = parent;
 	}
 

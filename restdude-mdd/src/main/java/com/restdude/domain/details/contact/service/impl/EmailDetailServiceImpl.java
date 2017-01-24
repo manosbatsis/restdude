@@ -43,7 +43,7 @@ public class EmailDetailServiceImpl extends AbstractContactDetailServiceImpl<Ema
     @Transactional(readOnly = false)
     public EmailDetail forceVerify(@P("resource") EmailDetail resource) {
         if (!resource.getVerified()) {
-            ConfirmationToken token = this.confirmationTokenReposirory.findByTargetId(resource.getId());
+            ConfirmationToken token = this.confirmationTokenReposirory.findByTargetId(resource.getPk());
             if (token != null) {
                 this.confirmationTokenReposirory.delete(token);
             }

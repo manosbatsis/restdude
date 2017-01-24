@@ -127,10 +127,10 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     @Column(name = "locale", nullable = false)
     private String locale = "en";
 
-    @Formula(" (select uc.active from user_credentials as uc where uc.user_id = id) ")
+    @Formula(" (select uc.active from user_credentials as uc where uc.user_id = pk) ")
     private Boolean active = false;
 
-    @Formula(" (select count(*) from stomp_session as stmpSess where stmpSess.user_id = id) ")
+    @Formula(" (select count(*) from stomp_session as stmpSess where stmpSess.user_id = pk) ")
     private Integer stompSessionCount;
 
     @JsonIgnore
@@ -148,7 +148,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     private List<Role> roles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "id.left")
+    @OneToMany(mappedBy = "pk.left")
     private List<Friendship> friendships;
 
 
@@ -161,7 +161,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     }
 
     public User(UserDTO dto) {
-        this.setId(dto.getId());
+        this.setPk(dto.getPk());
         this.setFirstName(dto.getFirstName());
         this.setLastName(dto.getLastName());
         this.username = dto.getUsername();
@@ -169,7 +169,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     }
 
     public User(String id) {
-        this.setId(id);
+        this.setPk(id);
     }
 
     public Locale getLocaleObject() {
@@ -537,7 +537,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     }
 
     private User(Builder builder) {
-        this.setId(builder.id);
+        this.setPk(builder.id);
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.username = builder.username;

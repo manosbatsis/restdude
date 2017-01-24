@@ -117,7 +117,7 @@ public class AbstractPersistenceJPAConfig {
     @Value("${restdude.hibernate.cache.provider_class}")
     private String emHbmCacheProviderClass;
 
-    @Value("${restdude.hibernate.id.new_generator_mappings}")
+    @Value("${restdude.hibernate.pk.new_generator_mappings}")
     private String emHbmIdNewGeneratorMappings;
 
     @Bean
@@ -181,7 +181,7 @@ public class AbstractPersistenceJPAConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", this.emHbm2ddlAuto);
         properties.setProperty("hibernate.cache.use_second_level_cache", this.emHbmCacheUseSecondLevelCache);
         properties.setProperty("hibernate.cache.provider_class", this.emHbmCacheProviderClass);
-        properties.setProperty("hibernate.id.new_generator_mappings", this.emHbmIdNewGeneratorMappings);
+        properties.setProperty("hibernate.pk.new_generator_mappings", this.emHbmIdNewGeneratorMappings);
         properties.setProperty("javax.persistence.validation.mode", "none");
 
         properties.setProperty("jadira.usertype.autoRegisterUserTypes", Boolean.TRUE.toString());

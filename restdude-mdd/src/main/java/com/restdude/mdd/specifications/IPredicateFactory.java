@@ -23,12 +23,14 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.geography.model.Country;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 
 
-public interface IPredicateFactory<F extends Serializable> {
-	public abstract Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<F> fieldType, String[] propertyValues);
+public interface IPredicateFactory<T extends Serializable> {
+    public abstract Predicate getPredicate(Root<Country/* extends AbstractPersistable*/> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, String[] propertyValues);
 }

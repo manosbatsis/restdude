@@ -66,7 +66,7 @@ public class UserCredentials extends AbstractPersistable<String> implements Cali
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    private String pk;
 
     @NotNull
     @Column(name = "active", nullable = false)
@@ -156,22 +156,19 @@ public class UserCredentials extends AbstractPersistable<String> implements Cali
     }
 
     /**
-     * Get the entity's primary key
-     *
-     * @see org.springframework.data.domain.Persistable#getId()
+     * {@inheritDoc}
      */
     @Override
-    public String getId() {
-        return id;
+    public String getPk() {
+        return pk;
     }
 
     /**
-     * Set the entity's primary key
-     *
-     * @param id the id to set
+     * {@inheritDoc}
      */
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     /**
@@ -179,7 +176,7 @@ public class UserCredentials extends AbstractPersistable<String> implements Cali
      */
     @Override
     public boolean isNew() {
-        return null == getId();
+        return null == getPk();
     }
 
     public void setActive(Boolean active) {

@@ -57,8 +57,7 @@ public class UserDetails implements  ICalipsoUserDetails{
     public static final List<GrantedAuthority> ROLES_ANONYMOUD = Collections.unmodifiableList(Arrays.asList(new Role(Role.ROLE_ANONYMOUS)));
 
 
-
-	private String id;
+	private String pk;
 	
 	private String username;
 
@@ -118,11 +117,11 @@ public class UserDetails implements  ICalipsoUserDetails{
 		if (user != null) {
 			details = new UserDetails();
 			BeanUtils.copyProperties(user, details);
-			if(user.getId() != null){
-				details.setId(user.getId().toString());
+			if (user.getPk() != null) {
+				details.setPk(user.getPk().toString());
 			}
 			if (user.getCredentials() != null) {
-				BeanUtils.copyProperties(user.getCredentials(), details, "id");
+				BeanUtils.copyProperties(user.getCredentials(), details, "pk");
 			}
 			// init global roles
 			if (!CollectionUtils.isEmpty(user.getRoles())) {
@@ -159,7 +158,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-			.append("id", id)
+				.append("pk", pk)
 			.append("username", username)
                 //.append("email", email)
                 .append("password", this.password)
@@ -170,19 +169,19 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getId()
-     */
+	 * @see ICalipsoUserDetails#getPk()
+	 */
 	@Override
-	public String getId() {
-		return id;
+	public String getPk() {
+		return pk;
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setId(java.lang.String)
-     */
+	 * @see ICalipsoUserDetails#setPk(java.lang.String)
+	 */
 	@Override
-	public void setId(String id) {
-		this.id = id;
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
     @Override
@@ -623,7 +622,7 @@ public class UserDetails implements  ICalipsoUserDetails{
      */
 	@Override
 	public String getUserId() {
-		return this.id;
+		return this.pk;
 	}
 
 	@Override
@@ -631,11 +630,11 @@ public class UserDetails implements  ICalipsoUserDetails{
 		return this.getUsername();
     }
 
+	@Override
+	@JsonIgnore
+	public boolean isNew() {
+		return false;
+	}
 
-    @Override
-    @JsonIgnore
-    public boolean isNew() {
-        return true;
-    }
 
 }

@@ -70,13 +70,13 @@ public abstract class EmbeddableManyToManyId<L extends CalipsoPersistable<LID>, 
 
 
     @NotNull
-    @ApiModelProperty(required = true, example = "{id: '[id]'}")
+    @ApiModelProperty(required = true, example = "{pk: '[pk]'}")
     @JoinColumn(name = "owner_id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private L left;
 
     @NotNull
-    @ApiModelProperty(required = true, example = "{id: '[id]'}")
+    @ApiModelProperty(required = true, example = "{pk: '[pk]'}")
     @JoinColumn(name = "friend_id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private R right;

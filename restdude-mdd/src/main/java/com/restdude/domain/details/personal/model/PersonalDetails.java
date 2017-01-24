@@ -62,17 +62,22 @@ public class PersonalDetails extends AbstractPersistable<String> implements Cali
      * @see org.springframework.data.domain.Persistable#getId()
      */
     @Override
-    public String getId() {
+    public String getPk() {
         return id;
     }
 
     /**
      * Set the entity's primary key
      *
-     * @param id the id to set
+     * @param id the pk to set
      */
-    public void setId(String id) {
+    public void setPk(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void preSave() {
+
     }
 
     /**
@@ -80,7 +85,7 @@ public class PersonalDetails extends AbstractPersistable<String> implements Cali
      */
     @Override
     public boolean isNew() {
-        return null == getId();
+        return null == getPk();
     }
 
     public LocalDate getBirthDay() {

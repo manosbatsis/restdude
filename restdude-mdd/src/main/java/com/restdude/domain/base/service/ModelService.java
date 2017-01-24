@@ -75,7 +75,7 @@ public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Seria
     /**
      * Get the entity's file uploads for this property
      *
-     * @param subjectId    the entity id
+     * @param subjectId    the entity pk
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */

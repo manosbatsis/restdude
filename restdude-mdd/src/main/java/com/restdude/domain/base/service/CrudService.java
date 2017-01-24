@@ -39,7 +39,7 @@ import java.util.Set;
  * @param <T>
  *            Your resource POJO to manage, maybe an entity or DTO class
  * @param <ID>
- *            Resource id type, usually Long or String
+ *            Resource pk type, usually Long or String
  */
 public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serializable> {
 
@@ -86,7 +86,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
     /**
      * Delete an existing resource.
      *
-     * @param id Resource id
+     * @param id Resource pk
      */
     void delete(ID id);
 
@@ -101,9 +101,9 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
     void deleteAllWithCascade();
 
     /**
-     * Find resource by id.
+     * Find resource by pk.
      *
-     * @param id Resource id
+     * @param id Resource pk
      * @return resource
      */
     T findById(ID id);

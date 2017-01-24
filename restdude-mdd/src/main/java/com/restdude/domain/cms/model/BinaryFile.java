@@ -45,17 +45,17 @@ public class BinaryFile extends AbstractSystemUuidPersistable{
     
     private String name;
 
-    @Formula(value = " CONCAT(id, '_thumb.png') ")
+    @Formula(value = " CONCAT(pk, '_thumb.png') ")
     private String thumbnailFilename;
 
-	@Formula(value = " CONCAT(id, '.', file_name_extention) ")
-	private String newFilename;
+    @Formula(value = " CONCAT(pk, '.', file_name_extention) ")
+    private String newFilename;
 
 	@Column(name = "file_name_extention")
 	private String fileNameExtention;
 
-	@Formula(value = " CONCAT(parent_path, '/', id, '.', file_name_extention) ")
-	private String path;
+    @Formula(value = " CONCAT(parent_path, '/', pk, '.', file_name_extention) ")
+    private String path;
 
 	@Column(name = "parent_path")
 	private String parentPath;
@@ -108,7 +108,7 @@ public class BinaryFile extends AbstractSystemUuidPersistable{
 //				+ ", getCreatedDate()=" + getCreatedDate()
 //				+ ", getLastModifiedBy()=" + getLastModifiedBy()
 //				+ ", getLastModifiedDate()=" + getLastModifiedDate()
-//				+ ", getId()=" + getId() + ", isNew()=" + isNew()
+//				+ ", getPk()=" + getPk() + ", isNew()=" + isNew()
 //				+ ", hashCode()="
 //				+ hashCode() + ", getClass()=" + getClass() + "]";
 //	}

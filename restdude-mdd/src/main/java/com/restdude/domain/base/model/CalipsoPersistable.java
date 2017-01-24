@@ -23,19 +23,31 @@
  */
 package com.restdude.domain.base.model;
 
-import org.springframework.data.domain.Persistable;
+import com.restdude.domain.base.validation.Unique;
+import org.springframework.hateoas.ResourceSupport;
 
 import java.io.Serializable;
 
 /**
  * Base interface for persistable entities
+ * @param <ID> The primary key type, Serializable
  */
-public interface CalipsoPersistable<ID extends Serializable> extends Persistable<ID>{
+@Unique
+public interface CalipsoPersistable<ID extends Serializable> extends Serializable {
 
+    /**
+     * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getPk()}
+     * only without conflict with {@link ResourceSupport#getId()}
+     */
+    ID getPk();
 
-    ID getId();
-
-    void setId(ID id);
+    /**
+     * Set the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#setPk()}
+     * only without conflict with the getter {@link ResourceSupport#getId()}
+     *
+     * @param pk the pk to set
+     */
+    void setPk(ID pk);
 
     /**
      * Equivalent of a method annotated with @{@link javax.persistence.PrePersist} and/or
@@ -43,5 +55,11 @@ public interface CalipsoPersistable<ID extends Serializable> extends Persistable
      * @{@link javax.persistence.PreUpdate}, only applied before validation
      */
     void preSave();
+
+
+    /**
+     * Equivalent of {@link }org.springframework.data.domain.Persistable#isNew()}
+     */
+    boolean isNew();
 
 }

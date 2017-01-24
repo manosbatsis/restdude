@@ -40,10 +40,10 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,6 +62,11 @@ public class EntityUtil {
         field.setAccessible(true);
         Object parent = ReflectionUtils.getField(field, child);
         return (T) parent;
+    }
+
+    public static Set<BeanDefinition> findPersistableModels(String scanPackage) {
+        ClassPathScanningCandidateComponentProvider provider = createComponentScanner(Entity.class, Embeddable.class);
+        return provider.findCandidateComponents(scanPackage);
     }
 
 	public static Set<BeanDefinition> findModelResources(String scanPackage) {
@@ -95,20 +100,6 @@ public class EntityUtil {
 		}
 		return provider;
     }
-
-    public static Class<?> getIdType(Class<?> modelType) {
-        Class<?> idType = null;
-        Method testMethod = null;
-        try {
-            testMethod = modelType.getMethod("getId");
-		} catch (Exception e) {
-			LOGGER.error("Could not determine ID type", e);
-		}
-		if(testMethod != null){
-			idType = testMethod.getReturnType();
-		}
-		return idType;
-	}
 
     
 	public static String[] getNullPropertyNames (Object source) {
@@ -148,10 +139,10 @@ public class EntityUtil {
     }
 
     public static <ID extends Serializable> ID idOrNull(CalipsoPersistable<ID> user) {
-        return user != null ? user.getId() : null;
+        return user != null ? user.getPk() : null;
     }
 
     public static String idOrNEmpty(CalipsoPersistable entity) {
-        return entity != null ? entity.getId().toString() : StringUtils.EMPTY;
+        return entity != null ? entity.getPk().toString() : StringUtils.EMPTY;
     }
 }

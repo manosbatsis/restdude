@@ -63,7 +63,7 @@ public abstract class AbstractErrorServiceImpl<T extends PersistableError<ID>, I
     public T create(T resource) {
         LOGGER.debug("create PersistableError: {}", resource);
 
-        // merge the UserAgent based on it's hash/id
+        // merge the UserAgent based on it's hash/pk
         if (resource.getUserAgent() != null) {
             resource.setUserAgent(this.userAgentService.findOrCreate(resource.getUserAgent()));
         }

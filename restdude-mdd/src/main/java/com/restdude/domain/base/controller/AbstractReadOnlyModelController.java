@@ -53,16 +53,16 @@ public abstract class AbstractReadOnlyModelController<T extends CalipsoPersistab
     }
 
 	@Override
-	@RequestMapping(value = "{id}", method = RequestMethod.PUT)
-	@ApiOperation(hidden = true, value = "Update a resource (unsupported)")
-    public T update(ID id, T resource) {
+    @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
+    @ApiOperation(hidden = true, value = "Update a resource (unsupported)")
+    public T update(ID pk, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
-	@RequestMapping(value = "{id}", method = RequestMethod.PATCH)
-	@ApiOperation(hidden = true, value = "Perform a partial update (unsupported)")
-    public T patch(ID id, T resource) {
+    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
+    @ApiOperation(hidden = true, value = "Perform a partial update (unsupported)")
+    public T patch(ID pk, T resource) {
 
         throw new NotImplementedException("Method is unsupported.");
     }

@@ -71,30 +71,30 @@ public class FriendsController {
 	@RequestMapping(value = {"my" }, method = RequestMethod.GET)
 	@ApiOperation(value = "Find all friends (paginated)", notes = "Find all friends of the current user. Returns paginated results")
 	public Page<UserDTO> findMyFriendsPaginated(
-			@ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
-			@RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
-			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-			@RequestParam(value = "properties", required = false, defaultValue = "id") String sort,
-			@RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
-		// validate status
-		status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.SENT, FriendshipStatus.PENDING, FriendshipStatus.CONFIRMED, FriendshipStatus.BLOCK});
-		return this.findFriendsPaginated(this.friendshipService.getPrincipal().getId(), status, page, size, sort, direction);
-	}	
-	
-	@RequestMapping(value = {"{friendId}" }, method = RequestMethod.GET)
-	@ApiOperation(value = "Find all friends of a friend (paginated)", notes = "Find all friends of a friend. Returns paginated results")
+            @ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
+            @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
+            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+        // validate status
+        status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.SENT, FriendshipStatus.PENDING, FriendshipStatus.CONFIRMED, FriendshipStatus.BLOCK});
+        return this.findFriendsPaginated(this.friendshipService.getPrincipal().getPk(), status, page, size, sort, direction);
+    }
+
+    @RequestMapping(value = {"{friendId}"}, method = RequestMethod.GET)
+    @ApiOperation(value = "Find all friends of a friend (paginated)", notes = "Find all friends of a friend. Returns paginated results")
 	public Page<UserDTO> findAFriendsFriendsPaginated(
-			@ApiParam(name = "friendId", required = true, value = "string") @PathVariable String friendId,
-			@ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
-				@RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
-			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-			@RequestParam(value = "properties", required = false, defaultValue = "id") String sort,
-			@RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
-		
-		// validate targget friend
-//		FriendshipId friendshipId = new FriendshipId(this.friendshipService.getPrincipal().getId(), friendId);
+            @ApiParam(name = "friendId", required = true, value = "string") @PathVariable String friendId,
+            @ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
+            @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
+            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+
+        // validate targget friend
+//		FriendshipId friendshipId = new FriendshipId(this.friendshipService.getPrincipal().getPk(), friendId);
 //		Friendship friendship = this.friendshipService.findById(friendshipId);
 //		if(friendship == null 
 //				|| !(FriendshipStatus.CONFIRMED.equals(friendship.getStatus())
@@ -110,16 +110,16 @@ public class FriendsController {
 
 	
 	protected Page<UserDTO> findFriendsPaginated(
-			String targetId,
-			String[] status,
-			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-			@RequestParam(value = "properties", required = false, defaultValue = "id") String sort,
-			@RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
-		
-		Map<String, String[]> parameters = new HashMap<String, String[]>();
-		parameters.put("id.left.id", new String[]{targetId});
-		parameters.put("status", status);
+            String targetId,
+            String[] status,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
+            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+
+        Map<String, String[]> parameters = new HashMap<String, String[]>();
+        parameters.put("pk.left.pk", new String[]{targetId});
+        parameters.put("status", status);
 
         ParameterMapBackedPageRequest pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
 
@@ -130,7 +130,7 @@ public class FriendsController {
 		// TODO: move DTO selection to query
 		List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());
 		for(Friendship friendship : friendshipPage){
-            frieds.add(UserDTO.fromUser(friendship.getId().getRight()));
+            frieds.add(UserDTO.fromUser(friendship.getPk().getRight()));
         }
 		
 		PageImpl<UserDTO> friends = new PageImpl<UserDTO>(frieds, pageable, friendshipPage.getTotalElements());

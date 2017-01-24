@@ -29,6 +29,7 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
 import com.restdude.auth.spel.binding.SpelUtil;
+import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -55,16 +56,16 @@ import javax.persistence.*;
 @PreAuthorizeFindByIds(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindAll(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class Country extends AbstractFormalRegion<Continent> {
+public class Country extends AbstractFormalRegion<Continent> implements CalipsoPersistable<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
 
     @Id
     @Column(unique = true, nullable = false, length = 2)
-    private String id;
+	private String pk;
 
-    @Formula(" (id) ")
-    private String savedId;
+	@Formula(" (pk) ")
+	private String savedId;
 
     @Column(name = "native_name", unique = true, nullable = true, length = 50)
     private String nativeName;
@@ -85,13 +86,13 @@ public class Country extends AbstractFormalRegion<Continent> {
 		super();
 	}
 
-	public Country(String id) {
-		this.setId(id);
+	public Country(String pk) {
+		this.setPk(pk);
 	}
 
-	public Country(String id, String name, String nativeName, String callingCode, Continent continent, String capital,
-			String currency, String languages) {
-		super(id, name, continent);
+	public Country(String pk, String name, String nativeName, String callingCode, Continent continent, String capital,
+				   String currency, String languages) {
+		super(pk, name, continent);
 		this.nativeName = nativeName;
 		this.callingCode = callingCode;
 		this.capital = capital;
@@ -140,23 +141,20 @@ public class Country extends AbstractFormalRegion<Continent> {
     }
 
     /**
-     * Get the entity's primary key
-     *
-     * @see org.springframework.data.domain.Persistable#getId()
-     */
-    @Override
-    public String getId() {
-        return id;
-    }
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getPk() {
+		return pk;
+	}
 
     /**
-     * Set the entity's primary key
-     *
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setPk(String pk) {
+		this.pk = pk;
+	}
 
     private String getSavedId() {
         return savedId;

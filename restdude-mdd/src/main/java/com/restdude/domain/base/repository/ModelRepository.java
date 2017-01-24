@@ -43,10 +43,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Generic repository that provides SCRUD and utility methods based on domain and id type variables.
+ * Generic repository that provides SCRUD and utility methods based on domain and pk type variables.
  * 
  * @param <T> the domain type the repository manages
- * @param <ID> the type of the id of the entity the repository manages
+ * @param <ID> the type of the pk of the entity the repository manages
  * 
  * @see org.springframework.data.domain.Sort
  * @see org.springframework.data.domain.Pageable
@@ -64,14 +64,14 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 	Class<T> getDomainClass();
 
 	/**
-	 * Retrieves a container holding the entity in case of an id match or nothing (i.e. null) otherwise.
-	 * @param id must not be {@literal null}.
-	 * @return the container
-	 * @throws IllegalArgumentException if {@code id} is {@literal null}
-	 */
-	Optional<T> findOptional(ID id);
-	
-	/**
+     * Retrieves a container holding the entity in case of an pk match or nothing (i.e. null) otherwise.
+     * @param id must not be {@literal null}.
+     * @return the container
+     * @throws IllegalArgumentException if {@code pk} is {@literal null}
+     */
+    Optional<T> findOptional(ID id);
+
+    /**
 	 * Flushes all pending changes to the database.
 	 */
 	void flush();
@@ -138,10 +138,10 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 	
 	/** 
 	 * Get the entity's file uploads for this property
-	 * @param subjectId the entity id
-	 * @param propertyName the property holding the upload(s)
-	 * @return the uploads
-	 */
+     * @param subjectId the entity pk
+     * @param propertyName the property holding the upload(s)
+     * @return the uploads
+     */
 	List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName);
 
 

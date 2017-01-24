@@ -50,11 +50,11 @@ public class MessageResource<ID extends Serializable> implements IMessageResourc
         this.name = name;
     }
 
-    public ID getId() {
+    public ID getPk() {
         return id;
     }
 
-    public void setId(ID id) {
+    public void setPk(ID id) {
         this.id = id;
     }
 

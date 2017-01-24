@@ -82,7 +82,7 @@ public class UiSchemaSerializer extends JsonSerializer<UiSchema> {
 //			    "name" : {
 //			      "fieldType" : "String"
 //			    },
-//			    "id" : {
+//			    "pk" : {
 //			      "fieldType" : "String"
 //			    }
 //			  }

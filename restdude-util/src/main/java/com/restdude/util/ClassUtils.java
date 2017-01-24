@@ -23,7 +23,21 @@
  */
 package com.restdude.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.GenericTypeResolver;
+import org.springframework.util.Assert;
+
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Iterator;
+
 public class ClassUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtils.class);
 
 	/**
      * Returns the (initialized) class represented by <code>className</code>
@@ -48,6 +62,53 @@ public class ClassUtils {
 		}
 		return clazz;
 	}
+
+    public static <T extends Object> T newInstance(Class<T> clazz) {
+        Assert.notNull(clazz, "clazz cannot be null");
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Failed instantiating new instance for class: " + clazz.getCanonicalName(), e);
+        }
+    }
+
+    public static Class<?> getBeanPropertyType(Class clazz, String fieldName, boolean silent) {
+        Class fieldType = null;
+        String[] steps = fieldName.contains(".") ? fieldName.split(".") : new String[]{fieldName};
+
+        try {
+
+            Iterator<String> stepNames = Arrays.asList(steps).listIterator();
+            Class tmpClass = clazz;
+            String tmpFieldName = null;
+            while (stepNames.hasNext() && tmpClass != null) {
+                tmpFieldName = stepNames.next();
+
+                for (PropertyDescriptor pd : Introspector.getBeanInfo(tmpClass).getPropertyDescriptors()) {
+                    if (tmpFieldName.equals(pd.getName())) {
+                        Method getter = pd.getReadMethod();
+                        if (getter != null) {
+                            tmpClass = GenericTypeResolver.resolveReturnType(getter, tmpClass);
+                        } else {
+                            tmpClass = null;
+                        }
+                    }
+                }
+            }
+            fieldType = tmpClass;
+
+        } catch (IntrospectionException e) {
+            if (silent) {
+                LOGGER.warn("failed getting type bean property: {}#{}", clazz.getCanonicalName(), fieldName);
+            } else {
+                throw new RuntimeException("failed getting bean property type", e);
+
+            }
+
+        }
+        return fieldType;
+    }
+
 
 
 }

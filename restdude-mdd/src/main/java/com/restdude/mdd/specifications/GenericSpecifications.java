@@ -24,14 +24,16 @@
 package com.restdude.mdd.specifications;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.mdd.annotation.CurrentPrincipal;
+import com.restdude.mdd.processor.ModelDrivenBeanGeneratingRegistryPostProcessor;
+import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
-import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +48,7 @@ public class GenericSpecifications<T extends CalipsoPersistable<ID>, ID extends 
 
 	static final Logger LOGGER = LoggerFactory.getLogger(GenericSpecifications.class);
 
+	private static final HashMap<String, Class> FIELD_TYPE_CACHE = new HashMap<String, Class>();
 	private static final HashMap<String, Field> FIELD_CACHE = new HashMap<String, Field>();
 	
 	protected static final HashMap<Class, List<Field>> SIMPLE_SEARCH_FIELDs_CACHE = new HashMap<Class, List<Field>>();
@@ -57,14 +60,16 @@ public class GenericSpecifications<T extends CalipsoPersistable<ID>, ID extends 
 	protected static final BooleanPredicateFactory booleanPredicateFactory = new BooleanPredicateFactory();
 	protected static final DatePredicateFactory datePredicateFactory = new DatePredicateFactory();
 
+
+	//, , , , , , ,
+	protected static final NumberPredicateFactory<Byte> bytePredicateFactory = new NumberPredicateFactory<Byte>(Byte.class);
 	protected static final NumberPredicateFactory<Short> shortPredicateFactory = new NumberPredicateFactory<Short>(Short.class);
 	protected static final NumberPredicateFactory<Integer> integerPredicateFactory = new NumberPredicateFactory<Integer>(Integer.class);
 	protected static final NumberPredicateFactory<Long> longPredicateFactory = new NumberPredicateFactory<Long>(Long.class);
+	protected static final NumberPredicateFactory<BigInteger> bigIntegerPredicateFactory = new NumberPredicateFactory<BigInteger>(BigInteger.class);
+	protected static final NumberPredicateFactory<Float> floatPredicateFactory = new NumberPredicateFactory<Float>(Float.class);
 	protected static final NumberPredicateFactory<Double> doublePredicateFactory = new NumberPredicateFactory<Double>(Double.class);
-
-	protected static final AnyToOnePredicateFactory anyToOnePredicateFactory = new AnyToOnePredicateFactory();
-	protected static final AnyToOneToOnePropertyPredicateFactory anyToOneToOnePredicateFactory = new AnyToOneToOnePropertyPredicateFactory();
-	protected static final CurrentPrincipalPredicateFactory currentPrincipalPredicateFactory = new CurrentPrincipalPredicateFactory();
+	protected static final NumberPredicateFactory<BigDecimal> bigDecimalPredicateFactory = new NumberPredicateFactory<BigDecimal>(BigDecimal.class);
 	
 	protected static final HashMap<Class,IPredicateFactory> factoryForClassMap = new HashMap<Class, IPredicateFactory>();
 
@@ -77,10 +82,14 @@ public class GenericSpecifications<T extends CalipsoPersistable<ID>, ID extends 
 		factoryForClassMap.put(Boolean.class, booleanPredicateFactory);
 		factoryForClassMap.put(Date.class, datePredicateFactory);
 
+		factoryForClassMap.put(Byte.class, bytePredicateFactory);
 		factoryForClassMap.put(Short.class, shortPredicateFactory);
 		factoryForClassMap.put(Integer.class, integerPredicateFactory);
 		factoryForClassMap.put(Long.class, longPredicateFactory);
+		factoryForClassMap.put(BigInteger.class, bigIntegerPredicateFactory);
+		factoryForClassMap.put(Float.class, floatPredicateFactory);
 		factoryForClassMap.put(Double.class, doublePredicateFactory);
+		factoryForClassMap.put(BigDecimal.class, bigDecimalPredicateFactory);
 
 		// init ignore list
 		// TODO: pick model-specific exclides from anotation
@@ -90,33 +99,82 @@ public class GenericSpecifications<T extends CalipsoPersistable<ID>, ID extends 
 			IGNORED_FIELD_NAMES.add(ignoredFieldNames[i]);
 		}
 	}
-	
-
 
 	/**
-	 * Get an appropriate predicate factory for the given field class
-	 * @param field
+	 * Register an appropriate predicate factory for the given class
+	 *
+	 * @param clazz
+	 * @param factory
+	 * @see ModelDrivenBeanGeneratingRegistryPostProcessor#createPredicateFactory(org.springframework.beans.factory.support.BeanDefinitionRegistry, com.restdude.mdd.util.ModelContext)
+	 */
+	public static void addFactoryForClass(Class clazz, IPredicateFactory factory) {
+		Assert.notNull(clazz, "clazz cannot be null");
+		Assert.notNull(factory, "factory cannot be null");
+		LOGGER.debug("addFactoryForClass, clazz: {}, factory: {}", clazz, factory);
+		factoryForClassMap.put(clazz, factory);
+	}
+
+	/**
+	 * Get an appropriate predicate factory for the given class
+	 * @param clazz
 	 * @return
 	 */
-	
-	public static IPredicateFactory<?> getPredicateFactoryForClass(Field field) {
-		Class clazz = field.getType();
-		if (clazz.isEnum()) {
-			return new EnumStringPredicateFactory(clazz);
-		} 
-		else if (field.isAnnotationPresent(CurrentPrincipal.class)) {
-			return currentPrincipalPredicateFactory;
-		} else if (CalipsoPersistable.class.isAssignableFrom(clazz) 
-				|| field.isAnnotationPresent(EmbeddedId.class) 
-				|| field.isAnnotationPresent(Embedded.class)) {
-			 
-				return anyToOnePredicateFactory;
-			
+
+	public static IPredicateFactory<?> getPredicateFactoryForClass(Class clazz) {
+		IPredicateFactory factory = factoryForClassMap.get(clazz);
+
+		// lazily add enum factory to cache as needed
+		if (factory == null && clazz.isEnum()) {
+			factory = new EnumStringPredicateFactory(clazz);
+			addFactoryForClass(clazz, factory);
 		}
-		else {
-			return factoryForClassMap.get(clazz);
-		}
+		LOGGER.debug("getPredicateFactoryForClass, clazz: {}, factory: {}", clazz, factory);
+
+		return factory;
+
 	}
+
+	/**
+	 * Get a (cached) type for the given class' member name
+	 *
+	 * @param clazz
+	 * @param memberPath the member name
+	 * @return
+	 */
+	public static Class getMemberType(Class<?> clazz, String memberPath) {
+		Class field = null;
+		if (!IGNORED_FIELD_NAMES.contains(memberPath)) {
+
+			String key = clazz.getCanonicalName() + "#" + memberPath;
+			field = FIELD_TYPE_CACHE.get(key);
+
+			// find it if not cached
+			if (field == null) {
+				if (!FIELD_TYPE_CACHE.containsKey(key)) {
+
+					// find target value type
+					field = ClassUtils.getBeanPropertyType(clazz, memberPath, true);
+
+					if (field == null) {
+						LOGGER.warn("Caching empty result for field {}", key);
+						// HashMap handles null values so we can use containsKey to cache
+						// invalid fields and skip the search altogether
+						FIELD_TYPE_CACHE.put(key, null);
+					} else {
+						FIELD_TYPE_CACHE.put(key, field);
+						LOGGER.debug("getMemberType: added field in cache, key: {}, type: {}", key, field);
+					}
+				} else {
+					LOGGER.warn("getMemberType: found empty field in cache, ignoring key: {}", key);
+				}
+			} else {
+				LOGGER.debug("getMemberType: found field in cache, key: {}, type: {}", key, field);
+			}
+		}
+
+		return field;
+	}
+
 
 	/**
 	 * Get a (cached) field for the given class' member name
@@ -159,9 +217,6 @@ public class GenericSpecifications<T extends CalipsoPersistable<ID>, ID extends 
 
 		return field;
 	}
-	
-
-
 
 	
 

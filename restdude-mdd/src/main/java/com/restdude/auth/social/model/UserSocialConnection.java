@@ -23,24 +23,26 @@
  */
 package com.restdude.auth.social.model;
 
-import javax.persistence.*;
+import com.restdude.domain.base.model.CalipsoPersistable;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
-@Entity 
-@IdClass(UserSocialConnectionId.class)
+@Entity
 @Table(name = "UserConnection")
-public class UserSocialConnection implements Serializable{
+public class UserSocialConnection implements CalipsoPersistable<UserSocialConnectionId> {
 
-	@Id 
-	private String userId;
+	@NotNull
+	@ApiModelProperty(required = true)
+	@EmbeddedId
+	private UserSocialConnectionId pk;
 
-    @Id
-    private String providerId;
+	private Integer rank;
 
-    @Id
-    private Integer rank;
-	private String providerUserId;
     @NotNull
     @Column(nullable = false)
 	private String displayName;
@@ -63,9 +65,7 @@ public class UserSocialConnection implements Serializable{
 			String providerUserId, int rank, String displayName,
 			String profileUrl, String imageUrl, String accessToken,
 			String secret, String refreshToken, Long expireTime) {
-		this.setUserId(userId);
-		this.setProviderId(providerId);
-		this.setProviderUserId(providerUserId);
+		this.setPk(new UserSocialConnectionId(userId, providerId, providerUserId));
 		this.setRank(rank);
 		this.setDisplayName(displayName);
 		this.setProfileUrl(profileUrl);
@@ -76,38 +76,32 @@ public class UserSocialConnection implements Serializable{
 		this.setExpireTime(expireTime);
 
 	}
-	
-	public String getUserId() {
-		return userId;
+
+	public UserSocialConnectionId getPk() {
+		return pk;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setPk(UserSocialConnectionId pk) {
+		this.pk = pk;
 	}
 
-	public String getProviderId() {
-		return providerId;
+	@Override
+	public void preSave() {
+
 	}
 
-	public void setProviderId(String providerId) {
-		this.providerId = providerId;
-	}
-
-	public String getProviderUserId() {
-		return providerUserId;
-	}
-
-	public void setProviderUserId(String providerUserId) {
-		this.providerUserId = providerUserId;
+	@Override
+	public boolean isNew() {
+		return true;
 	}
 
 	public Integer getRank() {
 		return rank;
 	}
-
 	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
+
 
 	public String getDisplayName() {
 		return displayName;

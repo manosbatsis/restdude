@@ -142,10 +142,10 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 	@Override
 	public T patch(@P("resource") T delta) {
 		// load existing
-		T persisted = this.getOne(delta.getId());
-		LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);
-		// update it by copying all non-null properties from the given transient instance
-		String[] nullPropertyNames = EntityUtil.getNullPropertyNames(delta);
+        T persisted = this.getOne(delta.getPk());
+        LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);
+        // update it by copying all non-null properties from the given transient instance
+        String[] nullPropertyNames = EntityUtil.getNullPropertyNames(delta);
 		LOGGER.debug("patch, nullPropertyNames: {}", nullPropertyNames);
 		BeanUtils.copyProperties(delta, persisted, nullPropertyNames);
 		LOGGER.debug("patch, patched persisted: {}", persisted);
@@ -291,19 +291,19 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 
 	/** 
 	 * Get the entity's file uploads for this property
-	 * @param subjectId the entity id
-	 * @param propertyName the property holding the upload(s)
-	 * @return the uploads
-	 */
+     * @param subjectId the entity pk
+     * @param propertyName the property holding the upload(s)
+     * @return the uploads
+     */
 	public List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName){
 		CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 
 		CriteriaQuery<BinaryFile> query = cb.createQuery(BinaryFile.class);
 		Root<T> root = query.from(this.domainClass);
-		query.where(cb.equal(root.get("id"), subjectId));
-		Selection<? extends BinaryFile> join = root.join(propertyName,JoinType.INNER);
-		query.select(join);
-		return this.entityManager.createQuery(query).getResultList();
+        query.where(cb.equal(root.get("pk"), subjectId));
+        Selection<? extends BinaryFile> join = root.join(propertyName, JoinType.INNER);
+        query.select(join);
+        return this.entityManager.createQuery(query).getResultList();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -319,7 +319,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
             for (int i = 0; i < metaArray.length; i++) {
                 Metadatum metadatum = metaArray[i];
                 subject.addMetadatum(this.addMetadatum(
-                        saved.getId(), metadatum.getPredicate(),
+                        saved.getPk(), metadatum.getPredicate(),
                         metadatum.getObject()));
             }
         }

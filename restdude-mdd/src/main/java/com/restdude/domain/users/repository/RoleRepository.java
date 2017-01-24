@@ -36,9 +36,9 @@ public interface RoleRepository extends ModelRepository<Role, String> {
 	@Query("select r from Role r where r.name = ?1")
 	public Role findByName(String name);
 
-	@Query("select r from Role r JOIN r.members m where m.id = ?1")
-	public List<Role> findByMemberId(String userId);
+    @Query("select r from Role r JOIN r.members m where m.pk = ?1")
+    public List<Role> findByMemberId(String userId);
 
-	@Query("select r from Role r where (r.id = ?1 or r.name = ?1) ")
-	public Role findByIdOrName(String idOrEmail);
+    @Query("select r from Role r where (r.pk = ?1 or r.name = ?1) ")
+    public Role findByIdOrName(String idOrEmail);
 }

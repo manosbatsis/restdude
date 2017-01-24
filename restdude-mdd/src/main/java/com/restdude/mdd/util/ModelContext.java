@@ -25,6 +25,7 @@ package com.restdude.mdd.util;
 
 import com.restdude.mdd.annotation.ModelRelatedResource;
 import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.util.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.ManyToAny;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Adapter-ish context class for classes with {@link javax.persistence.ModelResource}
+ * Adapter-ish context class for classes with {@link com.restdude.mdd.annotation.ModelResource}
  * and {@link com.restdude.mdd.annotation.ModelRelatedResource}
  * annotations.
  */
@@ -55,9 +56,9 @@ public final class ModelContext {
     private Class<?> modelType;
     
     private Class<?> modelIdType;
-    
-    private final Class<?> parentClass;
-    private final String name, path, parentProperty, generatedClassNamePrefix, beansBasePackage;
+
+    private Class<?> parentClass;
+    private String name, path, parentProperty, generatedClassNamePrefix, beansBasePackage;
 
     private Class<?> repositoryType;
     private Class<?> serviceInterfaceType;
@@ -77,33 +78,45 @@ public final class ModelContext {
 	public List<Class<?>> getGenericTypes() {
 		List<Class<?>> genericTypes = new LinkedList<Class<?>>();
 		genericTypes.add(this.getModelType());
-		genericTypes.add(this.getModelIdType());
-		return genericTypes;
-	}
-	
+        if (this.getModelIdType() != null) {
+            genericTypes.add(this.getModelIdType());
+        }
+        return genericTypes;
+    }
+
+    public ModelContext(Class<?> domainClass) {
+        Assert.notNull(domainClass, "A domain class is required");
+        String packageName = domainClass.getPackage().getName();
+        this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
+        this.modelType = (Class<?>) domainClass;
+        this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
+        this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
+    }
+
+
     public ModelContext(ModelResource modelResource, Class<?> domainClass){
-    	Assert.notNull(domainClass, "A domain class is required");
-    	String packageName = domainClass.getPackage().getName();
-    	this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
+        Assert.notNull(domainClass, "A domain class is required");
+        String packageName = domainClass.getPackage().getName();
+        this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
         this.modelType = (Class<?>) domainClass;
         this.modelResource = modelResource;
-        
+
         this.name = getPath(domainClass);
         this.apiAnnotationMembers = getApiAnnotationMembers(domainClass);
         this.path = "/" + name;
-        
+
         this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
         this.parentClass = null;
         this.parentProperty = null;
-        
-        this.modelIdType = EntityUtil.getIdType(domainClass);
-        
+
+        this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
+
     }
-	
+
     public ModelContext(ModelRelatedResource resource, Class<?> domainClass){
-    	String packageName = domainClass.getPackage().getName();
-    	this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-        
+        String packageName = domainClass.getPackage().getName();
+        this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
+
         this.name = getPath(domainClass);
         this.apiAnnotationMembers = getApiAnnotationMembers(domainClass);
 
@@ -114,11 +127,12 @@ public final class ModelContext {
         this.path = "/" + parentName + "/{peId}/" + this.name;
 
         this.modelType = (Class<?>) domainClass;
-        this.modelIdType = EntityUtil.getIdType(domainClass);
+        this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
         this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
 
         this.parentProperty = resource.parentProperty();
     }
+
 
     public static ModelContext from(Class<?> domainClass){
 
@@ -130,14 +144,19 @@ public final class ModelContext {
             wrapper = new ModelContext(ar, domainClass);
         }else if( anr != null ){
             wrapper = new ModelContext(anr, domainClass);
-        }else{
+        }
+        /*else{
             // look for an ancestor who might be a resource
             Class<?> superClass = domainClass.getSuperclass();
             if( superClass != null && !Object.class.equals( superClass )){
                 wrapper = from( domainClass.getSuperclass() );
             }
+        }*/
+
+        // finally add a wrapper for limited processing if needed
+        if (wrapper == null) {
+            wrapper = new ModelContext(domainClass);
         }
-        wrapper.setModelType(domainClass);
         return wrapper;
     }
 

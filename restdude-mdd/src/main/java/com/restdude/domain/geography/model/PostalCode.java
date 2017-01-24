@@ -65,7 +65,7 @@ public class PostalCode extends AbstractFormalRegion<Locality> {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    private String id;
+    private String pk;
 
     public PostalCode() {
         super();
@@ -92,20 +92,18 @@ public class PostalCode extends AbstractFormalRegion<Locality> {
 
 
     /**
-     * Get the entity's primary key
-     * @see org.springframework.data.domain.Persistable#getId()
+     * {@inheritDoc}
      */
     @Override
-    public String getId() {
-        return id;
+    public String getPk() {
+        return pk;
     }
 
     /**
-     * Set the entity's primary key
-     * @param id the id to set
+     * {@inheritDoc}
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     /**
@@ -113,6 +111,6 @@ public class PostalCode extends AbstractFormalRegion<Locality> {
      */
     @Override
     public boolean isNew() {
-        return null == getId();
+        return null == getPk();
     }
 }

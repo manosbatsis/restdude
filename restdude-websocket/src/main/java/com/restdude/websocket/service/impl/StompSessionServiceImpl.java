@@ -73,8 +73,8 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
         UserDetails ud = (UserDetails) auth.getPrincipal();
         // persist STOMP session
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-        StompSession stompSession = this.create(new StompSession.Builder().id(sha.getSessionId()).user(new User(ud.getId())).build());
-        LOGGER.debug("Persisted STOMP session: {}:{}", event.getUser().getName(), stompSession.getId());
+        StompSession stompSession = this.create(new StompSession.Builder().id(sha.getSessionId()).user(new User(ud.getPk())).build());
+        LOGGER.debug("Persisted STOMP session: {}:{}", event.getUser().getName(), stompSession.getPk());
     }
 
     //	@EventListener({ SessionSubscribeEvent.class })
@@ -106,8 +106,8 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
     public StompSession create(StompSession resource) {
         validateUser(resource);
 
-        // get user id
-        String userId = resource.getUser().getId();
+        // get user pk
+        String userId = resource.getUser().getPk();
         // count active stom sessions for user
         long count = this.repository.countForUser(userId).longValue();
         // create the stomp session
@@ -158,12 +158,12 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
     @Transactional(readOnly = false)
     @PreAuthorize(" hasRole('ROLE_USER') ")
     public void delete(@P("resource") StompSession sess) {
-        sess = this.repository.getOne(sess.getId());
-        long count = this.repository.countForUser(sess.getUser().getId()).longValue();
+        sess = this.repository.getOne(sess.getPk());
+        long count = this.repository.countForUser(sess.getUser().getPk()).longValue();
         super.delete(sess);
         // notify friends if user has gone offline
         if (count <= 1) {
-            sendStomSessionStatusUpdateToFriends(sess.getUser().getId(), count - 1);
+            sendStomSessionStatusUpdateToFriends(sess.getUser().getPk(), count - 1);
         }
     }
 
@@ -176,11 +176,11 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
     public void delete(String id) {
         StompSession sess = this.repository.findOne(id);
         if (sess != null) {
-            long count = this.repository.countForUser(sess.getUser().getId()).longValue();
+            long count = this.repository.countForUser(sess.getUser().getPk()).longValue();
             super.delete(sess);
             // notify friends if user has gone offline
 //			if(count <= 1){
-            sendStomSessionStatusUpdateToFriends(sess.getUser().getId(), count - 1);
+            sendStomSessionStatusUpdateToFriends(sess.getUser().getPk(), count - 1);
 //			}
 
         }
@@ -191,11 +191,11 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
         ICalipsoUserDetails ud = this.getPrincipal();
         LOGGER.info("validateUser userDetails: {}", ud);
         if (resource.getUser() == null) {
-            User user = this.userRepository.getOne(ud.getId());
+            User user = this.userRepository.getOne(ud.getPk());
             LOGGER.info("validateUser adding current user: {} ", user);
             resource.setUser(user);
         }
-//		else if(!ud.getId().equals(resource.getUser().getId())){
+//		else if(!ud.getPk().equals(resource.getUser().getPk())){
 //			throw new IllegalArgumentException("Session user does not match current principal");
 //		}
     }

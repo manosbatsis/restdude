@@ -122,13 +122,13 @@ public class FriendsControllerIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("content[0].id", notNullValue())
+                .body("content[0].pk", notNullValue())
                 // test assertions
 //				.log().all()
                 // get model
                 .extract().as(JsonNode.class);
         LOGGER.debug("Outbox: \n{}", JacksonUtils.prettyPrint(friendshipsNode));
-        Assert.assertEquals(operatorLoginContext.userId, friendshipsNode.get("content").get(0).get("id").asText());
+        Assert.assertEquals(operatorLoginContext.userId, friendshipsNode.get("content").get(0).get("pk").asText());
 
         // validate oprator/inverse result
         // -------------------------------------------
@@ -141,12 +141,12 @@ public class FriendsControllerIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("content[0].id", notNullValue())
+                .body("content[0].pk", notNullValue())
                 // test assertions
 //				.log().all()
                 // get model
                 .extract().as(JsonNode.class);
-        Assert.assertEquals(adminLoginContext.userId, friendshipsNode.get("content").get(0).get("id").asText());
+        Assert.assertEquals(adminLoginContext.userId, friendshipsNode.get("content").get(0).get("pk").asText());
 
         // test operator user queue
         FriendshipDTO ioperatorFriendRequestNotification = operatorFriendshipsQueueBlockingQueue.poll(5, SECONDS);
@@ -196,7 +196,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(201)
                 // test assertions
-                //.body("id", notNullValue())
+                //.body("pk", notNullValue())
                 // get model
                 .extract().as(UserInvitationResultsDTO.class);
 
@@ -225,8 +225,8 @@ public class FriendsControllerIT extends AbstractControllerIT {
     }
 
     protected void validateFriendship(FriendshipDTO friendship, String one, String other, FriendshipStatus status) {
-        Assert.assertEquals(one, friendship.getOwner().getId());
-        Assert.assertEquals(other, friendship.getFriend().getId());
+        Assert.assertEquals(one, friendship.getOwner().getPk());
+        Assert.assertEquals(other, friendship.getFriend().getPk());
         Assert.assertEquals(status, friendship.getStatus());
     }
 

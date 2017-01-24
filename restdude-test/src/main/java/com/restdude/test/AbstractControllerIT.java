@@ -206,7 +206,7 @@ public class AbstractControllerIT {
 
         JsonNode credentialsNode = given().spec(adminLoginContext.requestSpec)
                 .log().all()
-                .param("user", user.getId())
+                .param("user", user.getPk())
                 .get(WEBCONTEXT_PATH + "/api/rest/userCredentials")
                 .then()
                 .log().all()
@@ -253,11 +253,11 @@ public class AbstractControllerIT {
                 .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, assertFailed
                         ? anyOf(equalTo("invalid"), nullValue())
                         : allOf(not("invalid"), notNullValue()))
-                .content("id", assertFailed ? nullValue() : notNullValue());
+                .content("pk", assertFailed ? nullValue() : notNullValue());
 
-        // Get result cookie and user id
+        // Get result cookie and user pk
         lctx.ssoToken = rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME);
-        lctx.userId = rs.jsonPath().getString("id");
+        lctx.userId = rs.jsonPath().getString("pk");
 
         RequestSpecification requestSpec = getRequestSpec(assertFailed ? null : lctx.ssoToken);
         lctx.requestSpec = requestSpec;
@@ -285,13 +285,13 @@ public class AbstractControllerIT {
     }
 
     protected Host getRandomHost(RequestSpecification someRequestSpec) {
-        // obtain a random Host id
+        // obtain a random Host pk
         String id = given().spec(someRequestSpec)
                 .get(WEBCONTEXT_PATH + "/api/rest/hosts").then()
-                .assertThat().body("content[0].id", notNullValue()).extract().path("content[0].id");
+                .assertThat().body("content[0].pk", notNullValue()).extract().path("content[0].pk");
 
         Host host = new Host();
-        host.setId(id);
+        host.setPk(id);
         return host;
     }
 

@@ -56,9 +56,9 @@ import java.util.Set;
         "(i.e. without manual intervention) to handle and inform the user about runtime exceptions. "
         + "They may be persisted automatically according to restdude.validationErrors.system.persist* configuration properties. "
         + "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
-@JsonPropertyOrder({"id", "message", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
+@JsonPropertyOrder({"message", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
         "validationErrors", "user"})
-@JsonIgnoreProperties("id")
+@JsonIgnoreProperties("pk")
 public class SystemError extends BaseError {
 
     public static final String API_PATH = "systemErrors";
@@ -150,7 +150,7 @@ public class SystemError extends BaseError {
     @JsonGetter("errorLogId")
     @ApiModelProperty(name = "errorLogId", value = "The corresponding log/stacktrace ID, if any")
     public String getStackTraceId() {
-        return this.getErrorLog() != null ? this.getErrorLog().getId() : null;
+        return this.getErrorLog() != null ? this.getErrorLog().getPk() : null;
     }
 
 

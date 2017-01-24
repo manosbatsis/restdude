@@ -46,7 +46,7 @@ import static io.restassured.RestAssured.given;
 public class SwaggerStaticExporterIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwaggerStaticExporterIT.class);
-    private static final String GENERATED_ASCIIDOCS_PATH = "target/swagger2asciidoc";
+    protected static final String GENERATED_ASCIIDOCS_PATH = "target/swagger2asciidoc";
 
 
     @Test(priority = 100, description = "Test the swagger endpoint and create the static files documentation")
@@ -56,10 +56,14 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
             Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
             RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
             // get swagger document
-            String json = given().spec(adminRequestSpec).get(WEBCONTEXT_PATH + "/v2/api-docs").asString();
+            String swaggerPath = WEBCONTEXT_PATH + "/v2/api-docs";
+            String json = given().spec(adminRequestSpec).log().all().get(swaggerPath).then().statusCode(200).extract().asString();
+
 
             // create confluence
-            this.makeDocs(json, Paths.get(GENERATED_ASCIIDOCS_PATH), MarkupLanguage.ASCIIDOC);
+            Path targetFolder = Paths.get(SwaggerStaticExporterIT.GENERATED_ASCIIDOCS_PATH);
+            LOGGER.debug("Creating static docs at: {}", targetFolder);
+            this.makeDocs(json, targetFolder, MarkupLanguage.ASCIIDOC);
 
         } catch (Exception e) {
             LOGGER.error("Failed generating static docs", e);

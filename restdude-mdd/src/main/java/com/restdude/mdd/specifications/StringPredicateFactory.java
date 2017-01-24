@@ -23,16 +23,20 @@
  */
 package com.restdude.mdd.specifications;
 
+import com.restdude.domain.geography.model.Country;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-public class StringPredicateFactory implements IPredicateFactory<String> {
+public class StringPredicateFactory extends AbstractPredicateFactory<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringPredicateFactory.class);
 
@@ -44,25 +48,32 @@ public class StringPredicateFactory implements IPredicateFactory<String> {
      * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
      */
 	@Override
-	public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<String> fieldType,
-			String[] propertyValues) {
-		if (!fieldType.equals(String.class)) {
-			LOGGER.warn("Non-String type for property '" + propertyName + "': " + fieldType.getName());
-		}
+    public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<String> fieldType,
+                                  String[] propertyValues) {
+        Predicate predicate = null;
 
-		Predicate predicate = null;
-		if (propertyValues.length == 1) {
-			String val = propertyValues[0];
-			// case insensitive like?
-			if (val.contains("%")) {
-				predicate = cb.like(cb.lower(root.<String> get(propertyName)), val.toLowerCase());
-			} else {
-				predicate = cb.equal(cb.lower(root.<String> get(propertyName)), val.toLowerCase());
-			}
-		} else {// if (propertyValues.length == 2) {
-			List<String> wordList = Arrays.asList(propertyValues);
-			predicate = cb.isTrue(root.<String> get(propertyName).in(wordList));
-		}
-		return predicate;
-	}
+        LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+
+        Path path = this.<Date>getPath(root, propertyName, fieldType);
+        if (propertyValues.length == 0) {
+            predicate = path.isNull();
+        }
+        if (propertyValues.length == 1) {
+            String value = propertyValues[0];
+            predicate = StringUtils.isNotBlank(value) ? cb.equal(path, value) : path.isNull();
+        } else if (propertyValues.length == 2) {
+            predicate = cb.between(path, propertyValues[0], propertyValues[1]);
+        } else {
+            Set<String> values = new HashSet<>();
+            for (int i = 0; i < propertyValues.length; i++) {
+                String value = propertyValues[i];
+                if (StringUtils.isNotBlank(value)) {
+                    values.add(value);
+                }
+            }
+            predicate = path.in(values);
+        }
+
+        return predicate;
+    }
 }

@@ -58,7 +58,7 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
     @NotNull
     @ApiModelProperty(required = true)
     @EmbeddedId
-    private FriendshipId id;
+    private FriendshipId pk;
 
     @ApiModelProperty(required = true, allowableValues = "NEW, CONFIRMED, BLOCK, DELETE")
     @NotNull
@@ -74,7 +74,7 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
     }
 
     public Friendship(FriendshipId id) {
-        this.id = id;
+        this.pk = id;
     }
 
     public Friendship(FriendshipStatus status) {
@@ -88,15 +88,15 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
 
     public Friendship(User sender, User recipient) {
 
-        this.id = new FriendshipId();
-        this.id.setLeft(sender);
-        this.id.setRight(recipient);
+        this.pk = new FriendshipId();
+        this.pk.setLeft(sender);
+        this.pk.setRight(recipient);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", this.getId())
+                .append("pk", this.getPk())
                 .append("status", this.getStatus())
                 .append("new", this.isNew())
                 .toString();
@@ -105,7 +105,7 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
     @JsonIgnore
     public FriendshipId getInverseId() {
         FriendshipId inverse = null;
-        FriendshipId thisId = this.getId();
+        FriendshipId thisId = this.getPk();
         if (thisId != null) {
             inverse = new FriendshipId();
             inverse.setLeft(thisId.getRight());
@@ -121,17 +121,17 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
     }
 
     /**
-     * @return the id
+     * @return the pk
      */
-    public FriendshipId getId() {
-        return id;
+    public FriendshipId getPk() {
+        return pk;
     }
 
     /**
-     * @param id the id to set
+     * @param id the pk to set
      */
-    public void setId(FriendshipId id) {
-        this.id = id;
+    public void setPk(FriendshipId id) {
+        this.pk = id;
     }
 
     /**

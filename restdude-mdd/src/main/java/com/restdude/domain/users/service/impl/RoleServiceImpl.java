@@ -58,8 +58,8 @@ public class RoleServiceImpl extends AbstractModelServiceImpl<Role, String, Role
 	@Transactional(readOnly = false)
 	public void saveMember(String roleId, User user) {
 		Role role = this.repository.findByIdOrName(roleId);
-		User member = userRepository.findOne(user.getId());
-		member.addRole(role);
-		userRepository.save(member);
-	}
+        User member = userRepository.findOne(user.getPk());
+        member.addRole(role);
+        userRepository.save(member);
+    }
 }

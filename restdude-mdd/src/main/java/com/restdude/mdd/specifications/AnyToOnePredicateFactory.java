@@ -24,22 +24,19 @@
 package com.restdude.mdd.specifications;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.geography.model.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Persistable;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * A predicates for members that are Many2one/OneToOne or members
  * annotated with {@link javax.persistence.Embedded} or {@link javax.persistence.EmbeddedId}
  */
-public class AnyToOnePredicateFactory<F extends Serializable> implements IPredicateFactory<F> {
+public class AnyToOnePredicateFactory<T extends CalipsoPersistable<ID>, ID extends Serializable> extends AbstractPredicateFactory<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnyToOnePredicateFactory.class);
 
@@ -51,38 +48,28 @@ public class AnyToOnePredicateFactory<F extends Serializable> implements IPredic
 	 * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
 	 */
 	@Override
-	public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<F> fieldType, String[] propertyValues) {
+	public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, String[] propertyValues) {
 
 		Predicate predicate = null;
 		try {
-			LOGGER.info("getPredicate, propertyName: {}, nroot: {}", propertyName, root);
+			LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 			if (!CalipsoPersistable.class.isAssignableFrom(fieldType)) {
 				LOGGER.warn("Non-Entity type for property '" + propertyName + "': " + fieldType.getName());
 			}
 
-			if (propertyValues.length > 0) {
-				Path<F> parentId = root.<F> get(propertyName).<F> get("id");
-				predicate = cb.equal(parentId, propertyValues[0]);
-			} else {
+			Path<T> relatedPath = this.<T>getPath(root, propertyName, fieldType);
 
-				String[] pathSteps = propertyName.split("\\.");
-				Path<F> basePath = root.<F> get(pathSteps[0]);
-				Path targetPath;
-				String step;
-				for (int i = 1; i < pathSteps.length - 2; i++) {
-					LOGGER.info("getPredicate, prepare to add path step: {}, new basePath:: {}, root:" + 
-							root, pathSteps[i],	basePath);
-					step = pathSteps[i];
-					Field subField = fieldType.getField(step);
-					LOGGER.info("getPredicate,subField: {}", subField);
-					targetPath = basePath.<Persistable> get(step);//.as(subField.getType());
-				}
-				Path<Serializable> targetProperty = basePath.<Serializable> get(pathSteps[pathSteps.length - 1]);
-				predicate = cb.equal(targetProperty, propertyValues[0]);
+			if (propertyValues.length == 1) {
+				Serializable pId = propertyValues[0];
+				predicate = pId != null ? cb.equal(relatedPath.<ID>get("pk"), pId) : relatedPath.isNull();
+			} else if (propertyValues.length > 1) {
+				Expression<ID> exp = relatedPath.get("pk");
+				predicate = exp.in(Arrays.asList(propertyValues));
+			} else {
+				predicate = relatedPath.isNull();
 			}
-		} catch (NoSuchFieldException | SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 		return predicate;

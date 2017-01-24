@@ -62,13 +62,13 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 	@DiffIgnore
 	@JsonIgnore
 	@ManyToOne(/* cascade=CascadeType.ALL, */fetch = FetchType.EAGER)
-	@JoinColumn(name = "same_as", referencedColumnName = "id", nullable = true)
-	private T sameAs;
+    @JoinColumn(name = "same_as", referencedColumnName = "pk", nullable = true)
+    private T sameAs;
 
 	@DiffIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "parent", referencedColumnName = "id", nullable = true)
-	private T parent;
+    @JoinColumn(name = "parent", referencedColumnName = "pk", nullable = true)
+    private T parent;
 
 	@DiffIgnore
 	@JsonIgnore

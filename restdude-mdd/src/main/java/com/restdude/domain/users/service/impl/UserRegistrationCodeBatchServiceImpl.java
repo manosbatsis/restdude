@@ -83,7 +83,7 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceIm
     @Override
     public List<UserRegistrationCodeInfo> findBatchCodes(String batchId) {
 
-        LOGGER.info("findBatchCodes, id: {}", batchId);
+        LOGGER.info("findBatchCodes, pk: {}", batchId);
         List<UserRegistrationCodeInfo> rows = this.repository.findBatchCodes(batchId);
         LOGGER.info("findBatchCodes, rows: {}", rows);
 

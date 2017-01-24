@@ -30,47 +30,45 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**
- * Abstract base class for persistent entities with assigned id
- * @param <ID> The id Serializable
+ * Abstract base class for persistent entities with assigned pk
+ * @param <ID> The pk Serializable
  */
 @MappedSuperclass
-public abstract class AbstractAssignedIdPersistable<ID extends Serializable> extends AbstractPersistable<ID> {
+public abstract class AbstractAssignedIdPersistable<ID extends Serializable> extends AbstractPersistable<ID> implements CalipsoPersistable<ID> {
 
 	private static final long serialVersionUID = 4340156130534111231L;
 
 	@Id
-	private ID id;
+	private ID pk;
 
-	@Formula(" (id) ")
-	private ID savedId;
+	@Formula(" (pk) ")
+	private ID savedPk;
 
     public AbstractAssignedIdPersistable() {
 
     }
 
-    public AbstractAssignedIdPersistable(ID id) {
-        this.id = id;
+	public AbstractAssignedIdPersistable(ID pk) {
+		this.pk = pk;
 	}
 	
 	/**
-	 * Get the entity's primary key 
-	 * @see org.springframework.data.domain.Persistable#getId()
+	 *{@inheritDoc}
 	 */
 	@Override
-	public ID getId() {
-		return id;
+	public ID getPk() {
+		return pk;
 	}
 	
 	/**
-	 * Set the entity's primary key
-	 * @param id the id to set
+	 *{@inheritDoc}
 	 */
-	public void setId(ID id) {
-		this.id = id;
+	public void setPk(ID pk) {
+		this.pk = pk;
 	}
-	
-	private ID getSavedId() {
-		return savedId;
+
+	private ID getSavedPk() {
+		return savedPk;
 	}
 
 	/**
@@ -78,7 +76,7 @@ public abstract class AbstractAssignedIdPersistable<ID extends Serializable> ext
 	 */
 	@Override
 	public boolean isNew() {
-		return null == getSavedId();
+		return null == getSavedPk();
 	}
 
 

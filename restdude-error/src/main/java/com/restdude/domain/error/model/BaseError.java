@@ -58,7 +58,7 @@ import java.time.LocalDateTime;
 @Table(name = "error_abstract")
 @Inheritance(strategy = InheritanceType.JOINED)
 @CurrentPrincipalField(ignoreforRoles = {"ROLE_ADMIN", "ROLE_SITE_OPERATOR"})
-@JsonIgnoreProperties("id")
+@JsonIgnoreProperties("pk")
 
 
 @PreAuthorizeCreate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
@@ -88,7 +88,7 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     @CurrentPrincipal
     @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdby_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "createdby_id", referencedColumnName = "pk", updatable = false)
     private User createdBy;
 
     @NotNull
@@ -143,7 +143,7 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", this.getId())
+                .append("pk", this.getPk())
                 .append("message", this.getMessage())
                 .append("remoteAddress", this.getRemoteAddress())
                 .toString();
@@ -152,7 +152,7 @@ public class BaseError extends AbstractSystemUuidPersistable implements Persista
     @Override
     public void preSave() {
         super.preSave();
-        if (this.getCreatedBy() != null && this.getCreatedBy().getId() == null) {
+        if (this.getCreatedBy() != null && this.getCreatedBy().getPk() == null) {
             this.setCreatedBy(null);
         }
         if (StringUtils.isNotEmpty(this.message) && this.message.length() > BaseError.MAX_MESSAGE_LENGTH) {

@@ -40,11 +40,11 @@ public class CommitProperties {
     private final String userName;
 
     @Autowired
-    public CommitProperties(@Value("${git.commit.id.describe}") String describe,
-                            @Value("${git.commit.id.describe-short}") String describeShort,
+    public CommitProperties(@Value("${git.commit.pk.describe}") String describe,
+                            @Value("${git.commit.pk.describe-short}") String describeShort,
                             @Value("${git.commit.message.full}") String fullMessage,
-                            @Value("${git.commit.id}") String id,
-                            @Value("${git.commit.id.abbrev}") String idAbbrev,
+                            @Value("${git.commit.pk}") String id,
+                            @Value("${git.commit.pk.abbrev}") String idAbbrev,
                             @Value("${git.commit.message.short}") String shortMessage,
                             @Value("${git.commit.time}") String time,
                             @Value("${git.commit.user.email}") String userEmail,
