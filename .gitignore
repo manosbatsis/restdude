@@ -84,6 +84,7 @@ buildNumber.properties
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
 
+*.java~
 *.iml
 .idea
 .settings
