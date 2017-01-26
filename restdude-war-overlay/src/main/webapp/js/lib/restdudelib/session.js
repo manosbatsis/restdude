@@ -36,7 +36,7 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'backbone'
         },
         // Returns true if the user is authenticated.
         isAuthenticated: function () {
-            return this.userDetails && this.userDetails.get && this.userDetails.get("id") && this.userDetails.get("active");
+            return this.userDetails && this.userDetails.get && this.userDetails.get(Restdude.config.idAttribute) && this.userDetails.get("active");
         },
         ensureLoggedIn: function () {
             if (!this.isAuthenticated()) {
@@ -70,10 +70,11 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'backbone'
         },
         // Logout the user here and on the server side.
         logout: function () {
-
+            var url = this.userDetails.url();
             var _self = this;
+            console.log("Restdude.session.logout URL: " + url);
             this.userDetails.destroy({
-
+                url: url,
                 success: function (model, response, options) {
 
                     console.log("Restdude.session.logout success");
@@ -82,8 +83,16 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'backbone'
                         trigger: false
                     });
                     window.location.reload();
-                    //_self.reset();
                 },
+                error: function (model, response, options) {
+                    console.log("Restdude.session.logout error");
+
+                    Restdude.navigate("/", {
+                        trigger: false
+                    });
+                    window.location.reload();
+                },
+
 
             });
         },

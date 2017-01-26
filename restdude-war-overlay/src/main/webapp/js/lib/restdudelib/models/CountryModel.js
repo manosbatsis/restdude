@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
             {
                 initialize: function () {
                     Restdude.Model.prototype.initialize.apply(this, arguments);
-                    this.set("translatedName", Restdude.util.getLabels("countries." + this.get("id")));
+                    this.set("translatedName", Restdude.util.getLabels("countries." + this.get(Restdude.config.idAttribute)));
                 },
                 toString: function () {
                     return this.get("translatedName") || this.get("name");

@@ -33,7 +33,6 @@ define(
               BackboneFormsBootstrapModal, BackboneFormsList, BackboneMarionette, Backgrid, BackgridMoment, BackgridText, BackgridPaginator,
               /*MetisMenu, */Morris, Bloodhoud, Typeahead, BackboneDatetimepicker, BootstrapSwitch, jqueryColor, intlTelInput, q, chartjs) {
 
-
         /**
          * Restdude namespace
          * @namespace
@@ -42,7 +41,9 @@ define(
             /**
              * @namespace
              */
-            config: {},
+            config: {
+                idAttribute: "pk"
+            },
             /**
              * @namespace
              */
@@ -157,6 +158,11 @@ define(
                     }
                 };
 
+                //,
+                // add view defaults
+                if (packageName == "model") {
+                    _.extend(extendOptions, {idAttribute: Restdude.config.idAttribute});
+                }
                 // add view defaults
                 if (packageName == "view") {
                     _.extend(extendOptions, {
@@ -174,7 +180,7 @@ define(
                         },
                         templateContext: {
                             viewId: function () {
-                                return Marionette.getOption(this, "id");
+                                return Marionette.getOption(this, Restdude.config.idAttribute);
                             },
                             viewTitle: function () {
                                 return this.getTitle();
@@ -196,7 +202,13 @@ define(
                             // TODO: move to layouts
                             "click .btn-social": "socialLogin",
                             // TODO: move to layouts
-                            "click .open-modal-page": "openModalPage"
+                            "click .open-modal-page": "openModalPage",
+                            "click a.locale": "changeLocale",
+                        };
+                        //
+                        extendOptions.changeLocale = function (e) {
+                            Restdude.stopEvent(e);
+                            Restdude.changeLocale($(e.currentTarget).data("locale"));
                         };
                         extendOptions.openModalPage = function (e) {
                             Restdude.stopEvent(e);
@@ -537,7 +549,7 @@ define(
                     // if logged in user, persist locale settings
                     if (Restdude.util.isAuthenticated()) {
                         var userModel = new Restdude.model.UserModel({
-                            id: Restdude.session.userDetails.get("id")
+                            pk: Restdude.session.userDetails.get(Restdude.config.idAttribute)
                         });
                         userModel.save({locale: newLocale}, {
                             success: function (model, response) {
@@ -775,6 +787,7 @@ define(
             // set Restdude.config object
             customConfig = customConfig || {};
             var config = {
+                idAttribute: "pk",
                 appName: "Restdude",
                 footer: "Copyright 2016 Geekologue",
                 contextPath: "/",
@@ -1461,7 +1474,7 @@ define(
                 getRouteUrl: function () {
                     var s = "/useCases/" + this.pathFragment;
                     if (!this.model.isNew()) {
-                        s += ("/" + this.model.get("id"));
+                        s += ("/" + this.model.get(Restdude.config.idAttribute));
                     }
                     s += ("/" + this.key);
                     return s;

@@ -68,7 +68,7 @@ define(
             },
             myProfile: function () {
                 if (this._ensureLoggedIn()) {
-                    this.showUseCaseView("users", Restdude.session.userDetails.get("id"), "view", null);
+                    this.showUseCaseView("users", Restdude.session.userDetails.get(Restdude.config.idAttribute), "view", null);
                 }
             },
             login: function () {
@@ -78,6 +78,7 @@ define(
                 });
             },
             logout: function () {
+                console.log("controller logout");
                 Restdude.session.logout();
             },
             register: function () {
@@ -127,7 +128,7 @@ define(
                                 _self.showView(useCaseContext.createView({regionName: "/", regionPath: "/"}));
                             };
                             var fetchable = useCaseContext.getFetchable();
-                            if ((model.get("id") || fetchable.length == 0 ) && model.getTypeName() != "Restdude.model.UserDetailsModel"/*
+                            if ((model.get(Restdude.config.idAttribute) || fetchable.length == 0 ) && model.getTypeName() != "Restdude.model.UserDetailsModel"/*
                              && (!model.wrappedCollection || (!skipDefaultSearch && fetchable.length == 0))
                              */) {
                                 console.log("FETCHING");

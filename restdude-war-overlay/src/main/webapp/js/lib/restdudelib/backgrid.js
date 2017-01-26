@@ -146,7 +146,7 @@ define(
                     var text = rawValue.name || rawValue.title || rawValue;
                     this.$el.append($("<a>", {
                         tabIndex: -1,
-                        href: "/useCases/" + this.pathFragment + "/" + (rawValue.id || rawValue) + "/" + this.useCase,
+                        href: "/useCases/" + this.pathFragment + "/" + (rawValue[Restdude.config.idAttribute] || rawValue) + "/" + this.useCase,
                         title: this.title || rawValue.description || text,
                         target: this.target
                     }).text(text));
@@ -264,7 +264,7 @@ define(
             {
                 className: "modal-button-cell renderable",
                 render: function () {
-                    var url = Restdude.getBaseUrl() + "/api/rest/" + this.model.getPathFragment() + "/" + this.model.get("id") + "/csv";
+                    var url = Restdude.getBaseUrl() + "/api/rest/" + this.model.getPathFragment() + "/" + this.model.get(Restdude.config.idAttribute) + "/csv";
                     this.$el.html("<a class='btn btn-xs btn-link' href='" + url + "'title='Export as Spreadsheet'><i class='fa fa-download'></i></a>");
                     //this.delegateEvents();
                     return this;

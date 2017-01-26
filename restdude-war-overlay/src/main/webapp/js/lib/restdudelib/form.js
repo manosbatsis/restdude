@@ -65,9 +65,9 @@ define(
                         });
                         if (usersCollection.length > 0) {
                             // if not the same user
-                            var formModelId = Restdude.getObjectProperty(instance, "id");
+                            var formModelId = Restdude.getObjectProperty(instance, Restdude.config.idAttribute);
 
-                            if (!formModelId || formModelId != usersCollection.at(0).get("id")) {
+                            if (!formModelId || formModelId != usersCollection.at(0).get(Restdude.config.idAttribute)) {
                                 return {
                                     type: "email",
                                     message: "A user with that email already exists"
@@ -247,9 +247,9 @@ define(
                 _.each(this.fields, function (field) {
                     if (!field.excludeFromCommit) {
                         var value = field.getValue();
-                        if (value && value.id) {
+                        if (value && value[Restdude.config.idAttribute]) {
                             value = {
-                                id: Restdude.getObjectProperty(value, "id")
+                                pk: Restdude.getObjectProperty(value, Restdude.config.idAttribute)
                             };
                         }
                         values[field.key] = value;
@@ -291,7 +291,7 @@ define(
                     $.each(attributes, function () {
                         if (this.name == "class") {
                             self.$el.addClass(this.value);
-                        } else if (this.name != "id") {
+                        } else if (this.name != Restdude.config.idAttribute) {
                             self.$el.attr(this.name, this.value);
                         }
                     });
@@ -751,7 +751,7 @@ define(
                 if (name) {
                     console.log("Changing name to " + name)
                     _this.$el.find("#" + this.id).attr("name", name);
-                    _this.$el.find("#" + this.id).val(value && value.id ? value.id : value);
+                    _this.$el.find("#" + this.id).val(value && value[Restdude.config.idAttribute] ? value[Restdude.config.idAttribute] : value);
                 }
             },
             getValue: function () {
@@ -938,14 +938,14 @@ define(
                 if (this.schema.multiple) {
                     newValue = [];
                     for (var i = 0; i < value.length; i++) {
-                        id = value[i] && value[i].id ? value[i].id : value[i];
+                        id = value[i] && value[i][Restdude.config.idAttribute] ? value[i][Restdude.config.idAttribute] : value[i];
                         newValue.push(id);
                         this.$el.find('option[value="' + id + '"]').prop('selected', true);
                     }
                 }
                 // single selection
                 else {
-                    id = value && value.id ? value.id : value;
+                    id = value && value[Restdude.config.idAttribute] ? value[Restdude.config.idAttribute] : value;
                     newValue = id;
                     this.$el.find('option[value="' + id + '"]').prop('selected', true);
                 }
@@ -999,12 +999,12 @@ define(
                         value = [];
                         for (var i = 0; i < simpleValue.length; i++) {
                             value.push(this.schema.options.findWhere({
-                                id: simpleValue[i]
+                                pk: simpleValue[i]
                             }));
                         }
                     } else {
                         value = this.schema.options.findWhere({
-                            id: simpleValue
+                            pk: simpleValue
                         });
                     }
                 }

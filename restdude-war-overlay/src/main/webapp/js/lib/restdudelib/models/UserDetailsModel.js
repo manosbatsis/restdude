@@ -29,6 +29,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
         Restdude.model.UserDetailsModel = Restdude.Model.extend(
             /** @lends Restdude.model.UserDetailsModel.prototype */
             {
+                idAttribute: Restdude.config.idAttribute,
                 defaults: {
                     locale: "en"
                 },
@@ -36,11 +37,13 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 initialize: function () {
                     Restdude.Model.prototype.initialize.apply(this, arguments);
                     var _this = this;
-                    this.set("translatedName", Restdude.util.getLabels("countries." + this.get("id")));
+                    this.set("translatedName", Restdude.util.getLabels("countries." + this.get(Restdude.config.idAttribute)));
                     this.on('sync', function (model, response, options) {
+                        console.log("UserDetailsModel on sync")
                         _this.onLogin(model, response, options);
                     });
                     this.on('error', function (model, response, options) {
+                        console.log("UserDetailsModel on error")
                         _this.onLogin(this, response, options);
                     });
                 },
@@ -70,13 +73,13 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                         if (Restdude.app.isStarted()) {
                             console.log("onLogin, app is started")
                             this.browseMenu = null;
-                            if (this.get("id")) {
+                            if (this.get(Restdude.config.idAttribute)) {
                                 Restdude.app.updateHeaderFooter();
                                 Restdude.navigate(fw, {
                                     trigger: true
                                 });
                             } else {
-                                alert("Invalid credentials")
+                                alert("Invalid credentials, " + Restdude.config.idAttribute + ": " + this.get(Restdude.config.idAttribute))
                             }
                         } else {
                             console.log("onLogin, app is NOT started")
@@ -134,6 +137,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 toString: function () {
                     return this.get("username");
                 },
+
             },
             // static members
             {
@@ -166,7 +170,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     },
                 },
                 fields: {
-                    id: {
+                    pk: {
                         fieldType: "Hidden",
                     },
                     email: {

@@ -226,7 +226,7 @@ define(
          };*/
 
         Restdude.view.SidebarView = Restdude.view.View.extend(
-            /** @lends Restdude.view.HeaderView.prototype */
+            /** @lends Restdude.view.SidebarView.prototype */
             {
                 tagName: "nav",
                 className: "sidebar-nav",
@@ -281,12 +281,12 @@ define(
                 tagName: "div",
                 className: "container-fluid",
                 template: Restdude.getTemplate('header'),
-                events: {
+                //events: {
                     //"click a.login" : "login",
                     //"click a.register" : "register",
-                    "click a.logout": "logout",
-                    "click a.locale": "changeLocale",
-                },
+                //"click a.logout": "logout",
+                //"click a.locale": "changeLocale",
+                //},
                 regions: {
 
                     menuRegion: "#restdudeHeaderView-menuRegion",
@@ -302,10 +302,7 @@ define(
                     Restdude.view.View.prototype.initialize.apply(this, arguments);
                     this.mergeOptions(options);
                 },
-                changeLocale: function (e) {
-                    Restdude.stopEvent(e);
-                    Restdude.changeLocale($(e.currentTarget).data("locale"));
-                },
+
                 /*
                  TODO
                  onRender : function() {
@@ -462,10 +459,10 @@ define(
                     this.listenTo('remove', this.onModelRemoved, this);
                 },
                 onModelAdded: function (model, collection, options) {
-                    //_self.tabKeys[model.get("id")] = model;
+                    //_self.tabKeys[model.get(Restdude.config.idAttribute] = model;
                 },
                 onModelRemoved: function (model, collection, options) {
-                    //_self.tabKeys[model.get("id")] = null;
+                    //_self.tabKeys[model.get(Restdude.config.idAttribute] = null;
                 },
             },
             // static members
@@ -487,7 +484,7 @@ define(
                     return Backbone.Marionette.ItemView.extend({
                         tagName: 'li',
                         className: 'restdude-tab-label',
-                        id: "restdude-tab-label-" + item.get("id"),
+                        id: "restdude-tab-label-" + item.get(Restdude.config.idAttribute),
                         template: _this.itemTemplate,
                         events: {
                             "click .show-tab": "viewTab",
@@ -705,7 +702,7 @@ define(
                 onModelSync: function (options) {
                     /*
                      // if successful login
-                     if (this.model.get("id")) {
+                     if (this.model.get(Restdude.config.idAttribute) {
                      // TODO: add 'forward' HTTP/URL param in controller cases
                      var fw = Restdude.domain.fw || "/home";
                      Restdude.domain.fw = null;

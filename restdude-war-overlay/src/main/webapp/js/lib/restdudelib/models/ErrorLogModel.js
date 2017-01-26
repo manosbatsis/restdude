@@ -29,7 +29,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
             /** @lends Restdude.model.ErrorLogModel.prototype */
             {
                 toString: function () {
-                    return this.get("id");
+                    return this.get(Restdude.config.idAttribute);
                 }
             }, {
                 // static members

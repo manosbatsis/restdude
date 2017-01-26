@@ -501,7 +501,7 @@ define(
                 if (formSchema) {
                     _self.renderForm(formSchema);
                 } else {
-                    var fetchScemaUrl = Restdude.getBaseUrl() + "/" + _self.model.getPathFragment() + '/' + (_self.model.isNew() ? "new" : _self.model.get("id"));
+                    var fetchScemaUrl = Restdude.getBaseUrl() + "/" + _self.model.getPathFragment() + '/' + (_self.model.isNew() ? "new" : _self.model.get(Restdude.config.idAttribute));
 
                     _self.model.fetch({
                         url: fetchScemaUrl,
@@ -599,7 +599,7 @@ define(
                 return indexed_array;
             },
             getDraftKey: function () {
-                return this.model.getPathFragment() + '/' + this.model.get("id") + '/' + this.formSchemaKey;
+                return this.model.getPathFragment() + '/' + this.model.get(Restdude.config.idAttribute) + '/' + this.formSchemaKey;
             },
             onBeforeDestroy: function (e) {
                 this.hasDraft && this.saveDraft();
@@ -687,10 +687,10 @@ define(
                     this.listenTo('remove', this.onModelRemoved, this);
                 },
                 onModelAdded: function (model, collection, options) {
-                    //_self.tabKeys[model.get("id")] = model;
+                    //_self.tabKeys[model.get(Restdude.config.idAttribute] = model;
                 },
                 onModelRemoved: function (model, collection, options) {
-                    //_self.tabKeys[model.get("id")] = null;
+                    //_self.tabKeys[model.get(Restdude.config.idAttribute] = null;
                 },
             },
             // static members
@@ -712,7 +712,7 @@ define(
                     return Backbone.Marionette.View.extend({
                         tagName: 'li',
                         className: 'restdude-tab-label',
-                        id: "restdude-tab-label-" + item.get("id"),
+                        id: "restdude-tab-label-" + item.get(Restdude.config.idAttribute),
                         template: _this.itemTemplate,
                         events: {
                             "click .show-tab": "viewTab",

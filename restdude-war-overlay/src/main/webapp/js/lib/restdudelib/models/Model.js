@@ -46,7 +46,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     Restdude.model.Model.prototype.initialize.apply(this, arguments);
                 },
                 toString: function () {
-                    return this.get(this.constructor.nameProperty) || this.get("name") || this.get("id");
+                    return this.get(this.constructor.nameProperty) || this.get("name") || this.get(Restdude.config.idAttribute);
                 },
                 toHtmlSafeString: function () {
                     return Restdude.stripHtml(this.toString());
@@ -58,7 +58,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 url: function () {
                     var sUrl = this.collection && _.result(this.collection, 'url') ? _.result(this.collection, 'url') : Restdude.getBaseUrl() + this.getBaseFragment() + this.getPathFragment() /*_.result(this, 'urlRoot')*/ || urlError();
                     if (!this.isNew()) {
-                        sUrl = sUrl + (sUrl.charAt(sUrl.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.get("id"));
+                        sUrl = sUrl + (sUrl.charAt(sUrl.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.get(Restdude.config.idAttribute));
                     }
                     return sUrl;
                 },

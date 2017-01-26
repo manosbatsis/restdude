@@ -300,7 +300,7 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
                         type: 'password',
                         message: 'Incorrect current password'
                     };
-                    if (!userDetails.get("id")) {
+                    if (!userDetails.get(Restdude.config.idAttribute)) {
                         return err;
                     }
                 }], //valida
