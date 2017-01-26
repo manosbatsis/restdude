@@ -36,7 +36,7 @@ import java.util.List;
  *
  * @see RateableRepository
  */
-public interface Rateable<ID extends Serializable, R extends AbstractRating> extends CalipsoPersistable<ID> {
+public interface Rateable<PK extends Serializable, R extends AbstractRating> extends CalipsoPersistable<PK> {
 
     /**
      * Get the average rating for this entity

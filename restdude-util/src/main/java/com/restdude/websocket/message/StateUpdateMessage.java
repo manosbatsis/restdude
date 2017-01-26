@@ -39,11 +39,11 @@ import java.util.Map;
  * @param <S> the message subject type
  */
 @JsonPropertyOrder({"@class", "id", "name"})
-public class StateUpdateMessage<ID extends Serializable> implements Serializable {
+public class StateUpdateMessage<PK extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private ID id;
+    private PK id;
 
     @JsonProperty("@class")
     private String resourceClass;
@@ -59,11 +59,11 @@ public class StateUpdateMessage<ID extends Serializable> implements Serializable
         return "StateUpdateMessage [id=" + id + ", resourceClass=" + resourceClass + ", modifications=" + modifications + "]";
     }
 
-    public ID getId() {
+    public PK getId() {
         return this.id;
     }
 
-    public void setId(ID id) {
+    public void setId(PK id) {
         this.id = id;
     }
 

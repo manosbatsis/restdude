@@ -98,7 +98,7 @@ public class ErrorLog extends AbstractAssignedIdPersistable<String> {
     @Override
     public void preSave() {
 
-        // set ID if needed
+        // set PK if needed
         if (this.getPk() == null && StringUtils.isNotEmpty(this.stacktrace)) {
             this.setPk(HashUtils.buildHash(this.stacktrace));
         }

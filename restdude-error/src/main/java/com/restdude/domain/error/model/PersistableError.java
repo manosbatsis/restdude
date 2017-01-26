@@ -31,10 +31,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @param <ID>
+ * @param <PK>
  */
 @JsonIgnoreProperties("pk")
-public interface PersistableError<ID extends Serializable> extends CalipsoPersistable<ID> {
+public interface PersistableError<PK extends Serializable> extends CalipsoPersistable<PK> {
 
     public static final int MAX_MSTACKTRACE_LENGTH = 40000;
     public static final int MAX_DESCRIPTION_LENGTH = 1000;

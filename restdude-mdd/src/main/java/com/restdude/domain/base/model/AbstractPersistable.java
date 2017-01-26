@@ -39,7 +39,7 @@ import java.io.Serializable;
 
 /**
  * Abstract entity class with basic auditing, unique constraints validation and authorization settings.
- * @param <ID> The id Serializable
+ * @param <PK> The id Serializable
  */
 @XmlRootElement
 @MappedSuperclass
@@ -59,7 +59,7 @@ import java.io.Serializable;
 @PreAuthorizeFindPaginated
 @PreAuthorizePatch
 @PreAuthorizeUpdate
-public abstract class AbstractPersistable<ID extends Serializable> implements CalipsoPersistable<ID> {
+public abstract class AbstractPersistable<PK extends Serializable> implements CalipsoPersistable<PK> {
 
     private static final long serialVersionUID = -6009587976502456848L;
 
@@ -69,7 +69,7 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Ca
         super();
     }
 
-    public AbstractPersistable(ID pk) {
+    public AbstractPersistable(PK pk) {
         this.setPk(pk);
     }
 
@@ -82,12 +82,12 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Ca
      * {@inheritDoc}
      */
     @Override
-    public abstract ID getPk();
+    public abstract PK getPk();
 
     /**
      * {@inheritDoc}
      */
-    public abstract void setPk(ID pk);
+    public abstract void setPk(PK pk);
 
     /**
      * @see java.lang.Object#equals(java.lang.Object)

@@ -35,14 +35,14 @@ import java.io.Serializable;
  * @author manos
  *
  * @param <T> the entity type
- * @param <ID> the entity ID type
+ * @param <PK> the entity PK type
  */
 @Service
-public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistable<ID>, ID extends Serializable>
-        extends ModelService<T, ID> {
+public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistable<PK>, PK extends Serializable>
+        extends ModelService<T, PK> {
 
     /**
-     * Return the entity matching the ID of the given resource if any, or the newly persisted instance otherwise
+     * Return the entity matching the PK of the given resource if any, or the newly persisted instance otherwise
      * @param resource
      * @return
      */

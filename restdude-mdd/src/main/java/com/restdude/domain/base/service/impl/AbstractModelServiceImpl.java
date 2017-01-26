@@ -56,9 +56,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
-		extends CrudServiceImpl<T, ID, R>
-		implements ModelService<T, ID> {
+public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+        extends CrudServiceImpl<T, PK, R>
+        implements ModelService<T, PK> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceImpl.class);
 	
@@ -143,8 +143,8 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 	}
 
 	@Transactional(readOnly = false)
-	public T updateFiles(@PathVariable ID id, MultipartHttpServletRequest request, HttpServletResponse response) {
-		T entity = this.findById(id);
+    public T updateFiles(@PathVariable PK id, MultipartHttpServletRequest request, HttpServletResponse response) {
+        T entity = this.findById(id);
 		LOGGER.debug("Entity before uploading files: {}", entity);
 		try {
 			String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
@@ -184,8 +184,8 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 	@Override
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@Transactional(readOnly = false)
-	public void deleteFiles(ID id, String... filenames) {
-		String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
+    public void deleteFiles(PK id, String... filenames) {
+        String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
 				.append('/').append(id).append('/').toString();
 		List<String> keys = new LinkedList<String>();
 

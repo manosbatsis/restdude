@@ -39,8 +39,8 @@ import java.io.Serializable;
 /**
  * Base class for read-only model controllers, i.e. with no support for HTTP PUT, PATCH or DELETE.
  */
-public abstract class AbstractReadOnlyModelController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>>
-		extends AbstractNoDeleteModelController<T, ID, S> {
+public abstract class AbstractReadOnlyModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>>
+        extends AbstractNoDeleteModelController<T, PK, S> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractReadOnlyModelController.class);
 
@@ -55,14 +55,14 @@ public abstract class AbstractReadOnlyModelController<T extends CalipsoPersistab
 	@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
     @ApiOperation(hidden = true, value = "Update a resource (unsupported)")
-    public T update(ID pk, T resource) {
+    public T update(PK pk, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
     @ApiOperation(hidden = true, value = "Perform a partial update (unsupported)")
-    public T patch(ID pk, T resource) {
+    public T patch(PK pk, T resource) {
 
         throw new NotImplementedException("Method is unsupported.");
     }

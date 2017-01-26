@@ -1,22 +1,23 @@
 /**
+ *
  * Restdude
  * -------------------------------------------------------------------
  * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- * <p>
+ *
  * Full stack, high level framework for horizontal, model-driven application hackers.
- * <p>
+ *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -42,14 +43,14 @@ public class LocalDateTimePredicateFactory extends AbstractPredicateFactory<Loca
     }
 
     /**
-     * @see IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
+     * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
      */
     @Override
-    public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<LocalDateTime> fieldType, ConversionService conversionService, String[] propertyValues) {
+    public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<LocalDateTime> fieldType, ConversionService conversionService, String[] propertyValues) {
         Predicate predicate = null;
 
         try {
-            LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+            LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 
             Path path = this.<LocalDateTime>getPath(root, propertyName, fieldType);
             if (propertyValues.length == 0) {

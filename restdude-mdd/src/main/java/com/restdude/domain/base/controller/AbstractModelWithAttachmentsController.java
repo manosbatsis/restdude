@@ -52,8 +52,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
-public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>>
-		extends AbstractModelController<T, ID, S> {
+public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>>
+        extends AbstractModelController<T, PK, S> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelWithAttachmentsController.class);
 
@@ -67,7 +67,7 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get file uploads by property")
-    public List<BinaryFile> getUploadsByProperty(@PathVariable ID subjectId,
+    public List<BinaryFile> getUploadsByProperty(@PathVariable PK subjectId,
                                                  @PathVariable String propertyName) {
 		LOGGER.info("uploadGet called");
 		List<BinaryFile> uploads = null;
@@ -137,7 +137,7 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 	@ApiOperation(value = "Add a file uploads to property")
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}", method = { RequestMethod.POST,
 			RequestMethod.PUT }, consumes = {})
-    public BinaryFile addUploadsToProperty(@PathVariable ID subjectId, @PathVariable String propertyName,
+    public BinaryFile addUploadsToProperty(@PathVariable PK subjectId, @PathVariable String propertyName,
                                            MultipartHttpServletRequest request, HttpServletResponse response) {
 		LOGGER.info("uploadPost called");
 

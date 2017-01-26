@@ -45,11 +45,11 @@ import java.util.List;
  * @author manos
  *
  * @param <T> the entity type
- * @param <ID> the entity ID type
+ * @param <PK> the entity PK type
  */
 @Service
-public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Serializable>
-        extends CrudService<T, ID> {
+public interface ModelService<T extends CalipsoPersistable<PK>, PK extends Serializable>
+        extends CrudService<T, PK> {
 
     public static final String PRE_AUTHORIZATION_PREFIX = "SERVICE_";
 
@@ -66,11 +66,11 @@ public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Seria
 	 */
 	public ICalipsoUserDetails getPrincipal();
 
-    public void addMetadatum(ID subjectId, Metadatum dto);
+    public void addMetadatum(PK subjectId, Metadatum dto);
 
-    public void addMetadata(ID subjectId, Collection<Metadatum> dtos);
+    public void addMetadata(PK subjectId, Collection<Metadatum> dtos);
 
-    public void removeMetadatum(ID subjectId, String predicate);
+    public void removeMetadatum(PK subjectId, String predicate);
 
     /**
      * Get the entity's file uploads for this property
@@ -79,7 +79,7 @@ public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Seria
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-    public List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName);
+    public List<BinaryFile> getUploadsForProperty(PK subjectId, String propertyName);
 
     /**
 	 * Get the current user's details from the DB
@@ -102,7 +102,7 @@ public interface ModelService<T extends CalipsoPersistable<ID>, ID extends Seria
      * @param id
      * @param filenames
      */
-    public void deleteFiles(ID id, String... filenames);
+    public void deleteFiles(PK id, String... filenames);
 
-    public T updateFiles(@PathVariable ID id, MultipartHttpServletRequest request, HttpServletResponse response);
+    public T updateFiles(@PathVariable PK id, MultipartHttpServletRequest request, HttpServletResponse response);
 }

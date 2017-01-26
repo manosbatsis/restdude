@@ -59,16 +59,16 @@ import java.util.Set;
  * You should extend it and inject your Repository bean by overriding {@link #setRepository(ModelRepository)}
  *
  * @param <T>  Your resource class to manage, usually an entity class
- * @param <ID> Resource pk type, usually Long or String
+ * @param <PK> Resource pk type, usually Long or String
  * @param <R>  The repository class
  */
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>> implements
-        CrudService<T, ID>, InitializingBean {
+public abstract class CrudServiceImpl<T extends CalipsoPersistable<PK>, PK extends Serializable, R extends ModelRepository<T, PK>> implements
+        CrudService<T, PK>, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudServiceImpl.class);
 
-    private SpecificationsBuilder<T, ID> specificationsBuilder;
+    private SpecificationsBuilder<T, PK> specificationsBuilder;
     private ConversionService conversionService;
     protected R repository;
 
@@ -85,7 +85,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.getDomainClass(), this.conversionService);
+        this.specificationsBuilder = new SpecificationsBuilder<T, PK>(this.getDomainClass(), this.conversionService);
     }
 
     /**
@@ -157,8 +157,8 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     @Override
     @Transactional(readOnly = false)
     @ModelDrivenPreAuth
-    public void delete(ID id) {
-        Assert.notNull(id, "Resource ID can't be null");
+    public void delete(PK id) {
+        Assert.notNull(id, "Resource PK can't be null");
         repository.delete(id);
     }
 
@@ -190,8 +190,8 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      */
     @Override
     @ModelDrivenPreAuth
-    public T findById(ID id) {
-        Assert.notNull(id, "Resource ID can't be null");
+    public T findById(PK id) {
+        Assert.notNull(id, "Resource PK can't be null");
         return repository.findOne(id);
     }
 
@@ -200,7 +200,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      */
     @Override
     @ModelDrivenPreAuth
-    public List<T> findByIds(Set<ID> ids) {
+    public List<T> findByIds(Set<PK> ids) {
         Assert.notNull(ids, "Resource ids can't be null");
         return repository.findAll(ids);
     }
@@ -257,7 +257,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      * {@inheritDoc}
      */
     @Transactional(readOnly = false)
-    public void addMetadatum(ID subjectId, Metadatum dto) {
+    public void addMetadatum(PK subjectId, Metadatum dto) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("addMetadatum subjectId: " + subjectId + ", metadatum: " + dto);
         }
@@ -269,7 +269,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      * {@inheritDoc}
      */
     @Transactional(readOnly = false)
-    public void addMetadata(ID subjectId, Collection<Metadatum> dtos) {
+    public void addMetadata(PK subjectId, Collection<Metadatum> dtos) {
         if (!CollectionUtils.isEmpty(dtos)) {
             for (Metadatum dto : dtos) {
                 this.addMetadatum(subjectId, dto);
@@ -278,7 +278,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     }
 
     @Transactional(readOnly = false)
-    public void removeMetadatum(ID subjectId, String predicate) {
+    public void removeMetadatum(PK subjectId, String predicate) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("removeMetadatum subjectId: " + subjectId + ", predicate: "
                     + predicate);
@@ -294,7 +294,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-    public List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName) {
+    public List<BinaryFile> getUploadsForProperty(PK subjectId, String propertyName) {
         return this.repository.getUploadsForProperty(subjectId, propertyName);
     }
 

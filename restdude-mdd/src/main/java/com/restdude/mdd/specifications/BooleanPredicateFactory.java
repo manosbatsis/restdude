@@ -44,14 +44,14 @@ public class BooleanPredicateFactory extends AbstractPredicateFactory<Boolean> {
 	}
 
 	/**
-     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
-     */
+	 * @see com.restdude.mdd.specifications.IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
+	 */
     @Override
-    public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, ConversionService conversionService, String[] propertyValues) {
-        Predicate predicate = null;
+	public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, ConversionService conversionService, String[] propertyValues) {
+		Predicate predicate = null;
 
 		try {
-			LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+			LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 
 			Path path = this.<Boolean>getPath(root, propertyName, fieldType);
 			if (propertyValues.length == 1) {

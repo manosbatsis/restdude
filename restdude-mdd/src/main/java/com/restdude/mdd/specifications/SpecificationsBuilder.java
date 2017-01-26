@@ -39,7 +39,7 @@ import java.io.Serializable;
 import java.util.*;
 
 
-public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends Serializable> {
+public class SpecificationsBuilder<T extends CalipsoPersistable<PK>, PK extends Serializable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpecificationsBuilder.class);
     private final Class<T> domainClass;
@@ -174,7 +174,7 @@ public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends 
             predicateFactory = SpecificationUtils.getPredicateFactoryForClass(fieldType);
             if (predicateFactory != null) {
                 LOGGER.debug("addPredicate3, found predicate factory: {}", predicateFactory);
-                predicates.add(predicateFactory.getPredicate(root, cb, propertyName, fieldType, conversionService, propertyValues));
+                predicates.add(predicateFactory.buildPredicate(root, cb, propertyName, fieldType, conversionService, propertyValues));
             } else {
                 LOGGER.debug("addPredicate3, could not find predicate factory");
             }

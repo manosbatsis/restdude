@@ -39,8 +39,8 @@ import javax.validation.Validator;
 import java.io.Serializable;
 
 //@Component
-public class ModelRepositoryFactoryBean<R extends JpaRepository<T, ID>, T extends CalipsoPersistable<ID>, ID extends Serializable>
-        extends JpaRepositoryFactoryBean<R, T, ID> {
+public class ModelRepositoryFactoryBean<R extends JpaRepository<T, PK>, T extends CalipsoPersistable<PK>, PK extends Serializable>
+        extends JpaRepositoryFactoryBean<R, T, PK> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelRepositoryFactoryBean.class);
 
@@ -58,7 +58,7 @@ public class ModelRepositoryFactoryBean<R extends JpaRepository<T, ID>, T extend
 		return new RepositoryFactory(entityManager, this.validator);
 	}
 
-    private static class RepositoryFactory<T extends CalipsoPersistable<ID>, ID extends Serializable> extends JpaRepositoryFactory {
+    private static class RepositoryFactory<T extends CalipsoPersistable<PK>, PK extends Serializable> extends JpaRepositoryFactory {
 
 		private EntityManager entityManager;
 		private Validator validator;
@@ -70,8 +70,8 @@ public class ModelRepositoryFactoryBean<R extends JpaRepository<T, ID>, T extend
 		}
 
 		private Object getModelRepository(RepositoryInformation information, EntityManager entityManager) {
-			return new BaseRepositoryImpl<T, ID>((Class<T>) information.getDomainType(), entityManager, this.validator);
-		}
+            return new BaseRepositoryImpl<T, PK>((Class<T>) information.getDomainType(), entityManager, this.validator);
+        }
 
 		@Override
 		protected Object getTargetRepository(RepositoryInformation information) {

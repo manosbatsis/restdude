@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, ID extends Serializable> extends AbstractAssignedIdPersistable<ID> {
+public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK extends Serializable> extends AbstractAssignedIdPersistable<PK> {
 
 	private static final String PATH_SEPARATOR = ": ";
 
@@ -62,7 +62,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, ID ex
 	}
 
 
-    public AbstractFormalRegion(ID pk, String name, P parent) {
+    public AbstractFormalRegion(PK pk, String name, P parent) {
         this.setPk(pk);
 		this.name = name;
 		this.parent = parent;

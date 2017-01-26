@@ -57,7 +57,7 @@ import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
 
-public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ModelRepository<T, ID> {
+public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Serializable> extends SimpleJpaRepository<T, PK> implements ModelRepository<T, PK> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
     private final boolean skipValidation;
@@ -155,15 +155,15 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 		return this.merge(persisted);
 	}
 
-	public Optional<T> findOptional(ID id){
-		return Optional.ofNullable(this.findOne(id));
+    public Optional<T> findOptional(PK id) {
+        return Optional.ofNullable(this.findOne(id));
 	}
 	
 	
 	
 	@Override
-	public Metadatum addMetadatum(ID subjectId, String predicate, String object) {
-		Map<String, String> metadata = new HashMap<String, String>();
+    public Metadatum addMetadatum(PK subjectId, String predicate, String object) {
+        Map<String, String> metadata = new HashMap<String, String>();
 		metadata.put(predicate, object);
 		List<Metadatum> saved = addMetadata(subjectId, metadata);
 		if (!CollectionUtils.isEmpty(metadata)) {
@@ -174,8 +174,8 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 	}
 
 	@Override
-	public List<Metadatum> addMetadata(ID subjectId,
-			Map<String, String> metadata) {
+    public List<Metadatum> addMetadata(PK subjectId,
+                                       Map<String, String> metadata) {
 		ensureMetadataIsSupported();
 		List<Metadatum> saved;
 		if (!CollectionUtils.isEmpty(metadata)) {
@@ -199,8 +199,8 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 					metadatum = this.getEntityManager().merge(metadatum);
 				}
 
-				// subject.addMetadatum(model.getPredicate(), model.getObject());
-				// this.entityManager.merge(entity);
+                // subject.addMetadatum(model.buildPredicate(), model.getObject());
+                // this.entityManager.merge(entity);
 				LOGGER.info("addMetadatum saved metadatum: " + metadatum);
 				saved.add(metadatum);
 			}
@@ -228,8 +228,8 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void removeMetadatum(ID subjectId, String predicate) {
-		Assert.notNull(subjectId);
+    public void removeMetadatum(PK subjectId, String predicate) {
+        Assert.notNull(subjectId);
 		Assert.notNull(predicate);
 		ensureMetadataIsSupported();
 		T subjectEntity = this.findOne(subjectId);
@@ -255,16 +255,16 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
 	}
 
 	@Override
-	public Metadatum findMetadatum(ID subjectId, String predicate) {
-		T subjectEntity = this.findOne(subjectId);
+    public Metadatum findMetadatum(PK subjectId, String predicate) {
+        T subjectEntity = this.findOne(subjectId);
 		Class<?> metadatumClass = ((MetadataSubject) subjectEntity)
 				.getMetadataDomainClass();
 		return this.findMetadatum(subjectId, predicate, metadatumClass);
 
 	}
 
-	protected Metadatum findMetadatum(ID subjectId, String predicate,
-			Class<?> metadatumClass) {
+    protected Metadatum findMetadatum(PK subjectId, String predicate,
+                                      Class<?> metadatumClass) {
 		List<Metadatum> results = this
 				.getEntityManager()
 				.createQuery(
@@ -295,8 +295,8 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<ID>, ID extends Ser
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-	public List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName){
-		CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
+    public List<BinaryFile> getUploadsForProperty(PK subjectId, String propertyName) {
+        CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 
 		CriteriaQuery<BinaryFile> query = cb.createQuery(BinaryFile.class);
 		Root<T> root = query.from(this.domainClass);

@@ -86,11 +86,11 @@ import java.util.Set;
  * </pre>
  *
  * @param <T>  Your resource class to manage, maybe an entity or DTO class
- * @param <ID> Resource pk type, usually Long or String
+ * @param <PK> Resource pk type, usually Long or String
  * @param <S>  The service class
  */
 
-public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>> {
+public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelController.class);
 
@@ -142,7 +142,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     @ApiOperation(value = "Update a resource")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     @ModelDrivenPreAuth
-    public T update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk, @RequestBody T resource) {
+    public T update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
         Assert.notNull(pk, "pk cannot be null");
         resource.setPk(pk);
         applyCurrentPrincipal(resource);
@@ -157,7 +157,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     @ModelDrivenPreAuth
-    public T patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk, @RequestBody T resource) {
+    public T patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
         applyCurrentPrincipal(resource);
         resource.setPk(pk);
         return this.service.patch(resource);
@@ -219,7 +219,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(AbstractSystemUuidPersistable.ItemView.class)
     @ModelDrivenPreAuth
-    public T findById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk) {
+    public T findById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
         T resource = this.service.findById(pk);
         if (resource == null) {
             throw new NotFoundException();
@@ -240,7 +240,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     @RequestMapping(params = "pks", method = RequestMethod.GET)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public Iterable<T> findByIds(@RequestParam(value = "pks[]") Set<ID> pks) {
+    public Iterable<T> findByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
         Assert.notNull(pks, "pks list cannot be null");
         return this.service.findByIds(pks);
     }
@@ -256,7 +256,7 @@ public class AbstractModelController<T extends CalipsoPersistable<ID>, ID extend
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
-    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID pk) {
+    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
         T resource = this.findById(pk);
         this.service.delete(resource);
     }

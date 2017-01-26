@@ -29,9 +29,9 @@ import java.io.Serializable;
 
 /**
  * Base interface for persistable entities
- * @param <ID> The primary key type, Serializable
+ * @param <PK> The primary key type, Serializable
  */
-public interface CalipsoPersistable<ID extends Serializable> extends Serializable {
+public interface CalipsoPersistable<PK extends Serializable> extends Serializable {
 
     /**
      * The primary key, field name.
@@ -42,7 +42,7 @@ public interface CalipsoPersistable<ID extends Serializable> extends Serializabl
      * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getPk()}
      * only without conflict with {@link ResourceSupport#getId()}
      */
-    ID getPk();
+    PK getPk();
 
     /**
      * Set the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#setPk()}
@@ -50,7 +50,7 @@ public interface CalipsoPersistable<ID extends Serializable> extends Serializabl
      *
      * @param pk the pk to set
      */
-    void setPk(ID pk);
+    void setPk(PK pk);
 
     /**
      * Equivalent of a method annotated with @{@link javax.persistence.PrePersist} and/or

@@ -28,12 +28,12 @@ import java.io.Serializable;
 /**
  * Base class for subject and object parts of a {@link IActivityNotificationMessage}
  */
-public class MessageResource<ID extends Serializable> implements IMessageResource<ID> {
+public class MessageResource<PK extends Serializable> implements IMessageResource<PK> {
 
     /**
      * The resource ID
      */
-    protected ID id;
+    protected PK id;
 
     /**
      * The resource human-readable name
@@ -44,17 +44,17 @@ public class MessageResource<ID extends Serializable> implements IMessageResourc
         super();
     }
 
-    public MessageResource(ID id, String name) {
+    public MessageResource(PK id, String name) {
         super();
         this.id = id;
         this.name = name;
     }
 
-    public ID getPk() {
+    public PK getPk() {
         return id;
     }
 
-    public void setPk(ID id) {
+    public void setPk(PK id) {
         this.id = id;
     }
 

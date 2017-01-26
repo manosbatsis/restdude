@@ -33,7 +33,7 @@ import java.util.List;
 public interface UserRegistrationCodeBatchService extends ModelService<UserRegistrationCodeBatch, String> {
 
     /**
-     * Find the codes of the given batch (ID)
+     * Find the codes of the given batch (PK)
      *
      * @param batchId
      * @return

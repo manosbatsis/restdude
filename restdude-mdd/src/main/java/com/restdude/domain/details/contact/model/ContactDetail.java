@@ -27,7 +27,7 @@ import com.restdude.domain.base.model.CalipsoPersistable;
 
 import java.io.Serializable;
 
-public interface ContactDetail<ID extends Serializable> extends CalipsoPersistable<ID> {
+public interface ContactDetail<PK extends Serializable> extends CalipsoPersistable<PK> {
 
     String getValue();
 

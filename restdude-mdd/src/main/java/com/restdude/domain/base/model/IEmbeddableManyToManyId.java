@@ -29,10 +29,10 @@ import java.io.Serializable;
 /**
  * Created by manos on 25/12/2016.
  */
-public interface IEmbeddableManyToManyId<L extends CalipsoPersistable<LID>, LID extends Serializable, R extends CalipsoPersistable<RID>, RID extends Serializable> {
+public interface IEmbeddableManyToManyId<L extends CalipsoPersistable<LPK>, LPK extends Serializable, R extends CalipsoPersistable<RPK>, RPK extends Serializable> {
     void init(@NotNull String value);
 
-    void init(LID left, @NotNull RID right);
+    void init(LPK left, @NotNull RPK right);
 
     void init(L left, @NotNull R right);
 

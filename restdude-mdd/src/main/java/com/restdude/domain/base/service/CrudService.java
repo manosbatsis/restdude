@@ -38,10 +38,10 @@ import java.util.Set;
  *
  * @param <T>
  *            Your resource POJO to manage, maybe an entity or DTO class
- * @param <ID>
+ * @param <PK>
  *            Resource pk type, usually Long or String
  */
-public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serializable> {
+public interface CrudService<T extends CalipsoPersistable<PK>, PK extends Serializable> {
 
 
     /**
@@ -88,7 +88,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      *
      * @param id Resource pk
      */
-    void delete(ID id);
+    void delete(PK id);
 
     /**
      * Delete all existing resource. Do not use cascade remove (not a choice -> JPA specs)
@@ -106,7 +106,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param id Resource pk
      * @return resource
      */
-    T findById(ID id);
+    T findById(PK id);
 
     /**
      * Find resources by their ids.
@@ -114,7 +114,7 @@ public interface CrudService<T extends CalipsoPersistable<ID>, ID extends Serial
      * @param ids Resource ids
      * @return a list of retrieved resources, empty if no resource found
      */
-    List<T> findByIds(Set<ID> ids);
+    List<T> findByIds(Set<PK> ids);
 
     /**
      * Find all resources.

@@ -46,14 +46,14 @@ import java.util.Set;
  * Generic repository that provides SCRUD and utility methods based on domain and pk type variables.
  * 
  * @param <T> the domain type the repository manages
- * @param <ID> the type of the pk of the entity the repository manages
+ * @param <PK> the type of the pk of the entity the repository manages
  * 
  * @see org.springframework.data.domain.Sort
  * @see org.springframework.data.domain.Pageable
  * @see org.springframework.data.domain.Page
  */
 @NoRepositoryBean
-public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+public interface ModelRepository<T extends CalipsoPersistable<PK>, PK extends Serializable> extends JpaRepository<T, PK>, JpaSpecificationExecutor<T> {
 
 	EntityManager getEntityManager();
 
@@ -69,7 +69,7 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
      * @return the container
      * @throws IllegalArgumentException if {@code pk} is {@literal null}
      */
-    Optional<T> findOptional(ID id);
+    Optional<T> findOptional(PK id);
 
     /**
 	 * Flushes all pending changes to the database.
@@ -96,7 +96,7 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
 	 * @return a reference to the entity with the given identifier.
 	 * @see EntityManager#getReference(Class, Object)
 	 */
-	T getOne(ID id);
+    T getOne(PK id);
 
 	
 	/**
@@ -128,21 +128,21 @@ public interface ModelRepository<T extends CalipsoPersistable<ID>, ID extends Se
      */
     T patch(T delta);
 
-	Metadatum addMetadatum(ID subjectId, String predicate, String object);
+    Metadatum addMetadatum(PK subjectId, String predicate, String object);
 
-	List<Metadatum> addMetadata(ID subjectId, Map<String, String> metadata);
+    List<Metadatum> addMetadata(PK subjectId, Map<String, String> metadata);
 
-	void removeMetadatum(ID subjectId, String predicate);
+    void removeMetadatum(PK subjectId, String predicate);
 
-	Metadatum findMetadatum(ID subjectId, String predicate);
-	
-	/** 
+    Metadatum findMetadatum(PK subjectId, String predicate);
+
+    /**
 	 * Get the entity's file uploads for this property
      * @param subjectId the entity pk
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-	List<BinaryFile> getUploadsForProperty(ID subjectId, String propertyName);
+    List<BinaryFile> getUploadsForProperty(PK subjectId, String propertyName);
 
 
     /**

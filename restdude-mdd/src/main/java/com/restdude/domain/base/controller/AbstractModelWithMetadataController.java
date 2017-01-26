@@ -38,8 +38,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.Serializable;
 
-public abstract class AbstractModelWithMetadataController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>>
-		extends AbstractModelController<T, ID, S> {
+public abstract class AbstractModelWithMetadataController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>>
+        extends AbstractModelController<T, PK, S> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelWithMetadataController.class);
  
@@ -47,16 +47,16 @@ public abstract class AbstractModelWithMetadataController<T extends CalipsoPersi
 	@RequestMapping(value = "{subjectId}/metadata", method = RequestMethod.PUT)
     @ApiOperation(value = "Add metadatum", notes = "Add or updated a resource metadatum")
     @ModelDrivenPreAuth
-    public void addMetadatum(@PathVariable ID subjectId,
-			@RequestBody MetadatumDTO dto) {
+    public void addMetadatum(@PathVariable PK subjectId,
+                             @RequestBody MetadatumDTO dto) {
 		service.addMetadatum(subjectId, dto);
 	}
 
 	@RequestMapping(value = "{subjectId}/metadata/{predicate}", method = RequestMethod.DELETE)
     @ApiOperation(value = "Remove metadatum", notes = "Remove a resource metadatum if it exists")
     @ModelDrivenPreAuth
-    public void removeMetadatum(@PathVariable ID subjectId,
-			@PathVariable String predicate) {
+    public void removeMetadatum(@PathVariable PK subjectId,
+                                @PathVariable String predicate) {
 		service.removeMetadatum(subjectId, predicate);
 	}
 

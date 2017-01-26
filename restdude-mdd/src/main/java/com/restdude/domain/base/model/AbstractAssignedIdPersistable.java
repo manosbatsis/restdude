@@ -31,46 +31,46 @@ import java.io.Serializable;
 
 /**
  * Abstract base class for persistent entities with assigned pk
- * @param <ID> The pk Serializable
+ * @param <PK> The pk Serializable
  */
 @MappedSuperclass
-public abstract class AbstractAssignedIdPersistable<ID extends Serializable> extends AbstractPersistable<ID> {
+public abstract class AbstractAssignedIdPersistable<PK extends Serializable> extends AbstractPersistable<PK> {
 
 	private static final long serialVersionUID = 4340156130534111231L;
 
 	@Id
-	private ID pk;
+    private PK pk;
 
 	@Formula(" (pk) ")
-	private ID savedPk;
+    private PK savedPk;
 
     public AbstractAssignedIdPersistable() {
 
     }
 
-	public AbstractAssignedIdPersistable(ID pk) {
-		this.pk = pk;
+    public AbstractAssignedIdPersistable(PK pk) {
+        this.pk = pk;
 	}
 	
 	/**
 	 *{@inheritDoc}
 	 */
 	@Override
-	public ID getPk() {
-		return pk;
+    public PK getPk() {
+        return pk;
 	}
 
 	/**
 	 *{@inheritDoc}
 	 */
     @Override
-    public void setPk(ID pk) {
-		this.pk = pk;
+    public void setPk(PK pk) {
+        this.pk = pk;
 	}
 
 
-    private ID getSavedPk() {
-		return savedPk;
+    private PK getSavedPk() {
+        return savedPk;
 	}
 
 	/**

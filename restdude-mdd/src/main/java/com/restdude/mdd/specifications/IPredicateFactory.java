@@ -30,7 +30,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 
-
+/**
+ * Builds a predicate for the type T
+ *
+ * @param <T>
+ */
 public interface IPredicateFactory<T extends Serializable> {
-    public abstract Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues);
+    public abstract Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues);
 }

@@ -38,11 +38,11 @@ import java.io.Serializable;
  * @see Rateable
  */
 @NoRepositoryBean
-public interface RateableRepository<T extends Rateable<ID, ?>, ID extends Serializable> extends ModelRepository<T, ID> {
+public interface RateableRepository<T extends Rateable<PK, ?>, PK extends Serializable> extends ModelRepository<T, PK> {
 
     @Transactional(readOnly = false)
     @Modifying
     @Query("update #{#entityName} e set e.rating = ((e.rating * e.ratingsSize) + ?2) / (e.ratingsSize + 1), e.ratingsSize = (e.ratingsSize + 1) WHERE e.pk = ?1")
-    public void addRating(ID id, float rating);
+    public void addRating(PK id, float rating);
 
 }

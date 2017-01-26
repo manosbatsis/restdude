@@ -31,7 +31,7 @@ import java.io.Serializable;
  * Generic interface for subject and object parts of a {@link IActivityNotificationMessage}
  *
  *
- * @param <ID> the ID type
+ * @param <PK> the PK type
  *
  * @see MessageResource
  */
@@ -39,13 +39,13 @@ import java.io.Serializable;
         use = JsonTypeInfo.Id.MINIMAL_CLASS,
         include = JsonTypeInfo.As.PROPERTY,
         property = IMessageResource.CLASS_ATTRIBUTE_NAME)
-public interface IMessageResource<ID extends Serializable> extends Serializable {
+public interface IMessageResource<PK extends Serializable> extends Serializable {
 
     public static final String CLASS_ATTRIBUTE_NAME = "@class";
 
-    public ID getPk();
+    public PK getPk();
 
-    public void setPk(ID pk);
+    public void setPk(PK pk);
 
     public String getName();
 

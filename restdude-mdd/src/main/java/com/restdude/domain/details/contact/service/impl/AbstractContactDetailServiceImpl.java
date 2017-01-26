@@ -41,8 +41,8 @@ import java.io.Serializable;
 
 ;
 
-public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
-        extends AbstractModelServiceImpl<T, ID, R> {
+public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+        extends AbstractModelServiceImpl<T, PK, R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractContactDetailServiceImpl.class);
 

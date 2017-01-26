@@ -40,8 +40,8 @@ import java.io.Serializable;
 /**
  * Created by manos on 30/11/2016.
  */
-public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPersistable<ID>, ID extends Serializable, R extends ModelRepository<T, ID>>
-        extends AbstractModelServiceImpl<T, ID, R> implements AbstractAssignedIdModelService<T, ID> {
+public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPersistable<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+        extends AbstractModelServiceImpl<T, PK, R> implements AbstractAssignedIdModelService<T, PK> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAssignedIdModelServiceImpl.class);
 
@@ -53,7 +53,7 @@ public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPers
     @ModelDrivenPreAuth
     public T findOrCreate(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
-        Assert.notNull(resource.getPk(), "Resource ID can't be null");
+        Assert.notNull(resource.getPk(), "Resource PK can't be null");
 
         EntityManager em = this.repository.getEntityManager();
 

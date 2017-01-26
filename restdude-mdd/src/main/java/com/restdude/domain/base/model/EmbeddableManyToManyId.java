@@ -51,9 +51,9 @@ import java.io.Serializable;
  * Conveniently mapped from/to JSON via {@link EmbeddableManyToManyIdSerializer},  {@link EmbeddableManyToManyIdDeserializer} and  {@link StringToEmbeddableManyToManyIdConverterFactory}
  *
  * @param <L>   The type of the left MenyToOne relationship entity
- * @param <LID> The type of the left MenyToOne relationship entity ID
+ * @param <LPK> The type of the left MenyToOne relationship entity ID
  * @param <R>   The type of the right MenyToOne relationship entity
- * @param <RID> The type of the right MenyToOne relationship entity ID
+ * @param <RPK> The type of the right MenyToOne relationship entity ID
  * @see EmbeddableManyToManyIdDeserializer
  * @see EmbeddableManyToManyIdSerializer
  * @see StringToEmbeddableManyToManyIdConverterFactory
@@ -61,7 +61,7 @@ import java.io.Serializable;
 @MappedSuperclass
 @JsonSerialize(using = EmbeddableManyToManyIdSerializer.class)
 @JsonDeserialize(using = EmbeddableManyToManyIdDeserializer.class)
-public abstract class EmbeddableManyToManyId<L extends CalipsoPersistable<LID>, LID extends Serializable, R extends CalipsoPersistable<RID>, RID extends Serializable> implements Serializable, IEmbeddableManyToManyId<L, LID, R, RID> {
+public abstract class EmbeddableManyToManyId<L extends CalipsoPersistable<LPK>, LPK extends Serializable, R extends CalipsoPersistable<RPK>, RPK extends Serializable> implements Serializable, IEmbeddableManyToManyId<L, LPK, R, RPK> {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddableManyToManyId.class);
@@ -88,7 +88,7 @@ public abstract class EmbeddableManyToManyId<L extends CalipsoPersistable<LID>, 
         init(value);
     }
 
-    public EmbeddableManyToManyId(LID left, @NotNull RID right) {
+    public EmbeddableManyToManyId(LPK left, @NotNull RPK right) {
         init(left, right);
     }
 
@@ -133,7 +133,7 @@ public abstract class EmbeddableManyToManyId<L extends CalipsoPersistable<LID>, 
     }
 
     @Override
-    public void init(LID left, @NotNull RID right) {
+    public void init(LPK left, @NotNull RPK right) {
         if (left != null) {
             this.left = buildLeft(left);
         }

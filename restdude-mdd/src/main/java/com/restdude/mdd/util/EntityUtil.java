@@ -138,7 +138,7 @@ public class EntityUtil {
         return caseSensitive;
     }
 
-    public static <ID extends Serializable> ID idOrNull(CalipsoPersistable<ID> user) {
+    public static <PK extends Serializable> PK idOrNull(CalipsoPersistable<PK> user) {
         return user != null ? user.getPk() : null;
     }
 

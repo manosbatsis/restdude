@@ -43,8 +43,8 @@ import java.util.List;
  * Base class for model controllers not allowing HTTP DELETE
  * operations.
  */
-public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistable<ID>, ID extends Serializable, S extends ModelService<T, ID>>
-		extends AbstractModelController<T, ID, S> {
+public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>>
+        extends AbstractModelController<T, PK, S> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNoDeleteModelController.class);
 
@@ -53,7 +53,7 @@ public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistab
 	@ApiOperation(hidden = true, value = "Delete a resource (unsupported)")
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable ID id) {
+    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK id) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
@@ -72,7 +72,7 @@ public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistab
 
 	@RequestMapping(value = "{subjectId}/metadata/{predicate}", method = RequestMethod.DELETE)
 	@ApiOperation(hidden = true, value = "Remove metadatum")
-    public void removeMetadatum(@PathVariable ID subjectId, @PathVariable String predicate) {
+    public void removeMetadatum(@PathVariable PK subjectId, @PathVariable String predicate) {
         throw new NotImplementedException("Method is unsupported.");
     }
 }
