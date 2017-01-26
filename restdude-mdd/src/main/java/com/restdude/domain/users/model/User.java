@@ -32,7 +32,6 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.fs.FilePersistence;
@@ -73,7 +72,7 @@ import java.util.Locale;
 @PreAuthorizePatch(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class User extends AbstractMetadataSubject<UserMetadatum> implements CalipsoPersistable<String> {
+public class User extends AbstractMetadataSubject<UserMetadatum> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = -7942906897981646998L;

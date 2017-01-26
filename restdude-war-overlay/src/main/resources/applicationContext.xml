@@ -120,7 +120,7 @@
 
     <util:list id="messageConverters">
         <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"
-              p:objectMapper-ref="jsonObjectMapperFactory"/>
+              p:objectMapper-ref="objectMapper"/>
         <!--bean class="org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter"
               p:objectMapper-ref="xmlObjectMapperFactory"/-->
         <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>

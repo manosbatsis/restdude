@@ -49,18 +49,18 @@ public class UserAccountControllerIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountControllerIT.class);
 
-    @Test(priority = 10, description = "Test registration")
+    @Test(priority = 10, description = "Test username change")
     public void testUpdateUsername() throws Exception {
 
         // --------------------------------
         // Login
         // --------------------------------
-        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+        Loggedincontext adminLoginContext = this.getLoggedinContext("simple", "simple");
 
         // --------------------------------
         // Update username
         // --------------------------------
-        Response rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("adminnew").password("admin").build());
+        Response rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("simplenew").password("simple").build());
 
 
         // --------------------------------
@@ -81,14 +81,14 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .body("pk", equalTo(adminLoginContext.userId))
                 .body("firstName", equalTo("Newfirst"))
                 .body("lastName", equalTo("Newlast"))
-                .body("username", equalTo("adminnew"))
+                .body("username", equalTo("simplenew"))
                 // get model
                 .extract().as(User.class);
 
         // --------------------------------
         //  Update username again
         // --------------------------------
-        rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("admin").password("admin").build());
+        rs = changeUsername(adminLoginContext, new UsernameChangeRequest.Builder().username("simple").password("simple").build());
     }
 
     protected Response changeUsername(Loggedincontext loginContext, UsernameChangeRequest usernameChangeRequest) {

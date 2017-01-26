@@ -25,7 +25,7 @@ package com.restdude.domain.friends.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeDelete;
-import com.restdude.domain.base.model.AbstractPersistable;
+import com.restdude.domain.base.model.AbstractPersistableResource;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -46,7 +46,7 @@ import javax.validation.constraints.NotNull;
 @ModelResource(path = Friendship.API_PATH, apiName = "Friendships", apiDescription = "Operations about friendships")
 @ApiModel(value = "Friendship", description = Friendship.CLASS_DESCRIPTION)
 @PreAuthorizeDelete(controller = " hasRole('ROLE_USER') ", service = " hasRole('ROLE_USER') ")
-public class Friendship extends AbstractPersistable<FriendshipId> {
+public class Friendship extends AbstractPersistableResource<FriendshipId> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Friendship.class);
     private static final long serialVersionUID = 1L;

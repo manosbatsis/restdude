@@ -23,7 +23,7 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,8 +34,8 @@ import javax.persistence.ManyToOne;
  * Represents regions within a country.
  */
 @Entity
-public class LocalRegion<P extends LocalRegion> 
-	extends AbstractSystemUuidPersistable  {
+public class LocalRegion<P extends LocalRegion>
+        extends AbstractSystemUuidPersistableResource {
 
 	private static final long serialVersionUID = 1735385884991197359L;
 

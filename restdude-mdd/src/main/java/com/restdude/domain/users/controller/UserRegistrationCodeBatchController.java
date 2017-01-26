@@ -32,6 +32,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@ExposesResourceFor(UserRegistrationCodeBatch.class)
 @Api(tags = "RegistrationCodeBatches", description = "Codes management (admin, operator)")
 @RequestMapping(value = "/api/rest/registrationCodeBatches", produces = {"application/json", "application/xml"})
 public class UserRegistrationCodeBatchController extends AbstractNoDeleteModelController<UserRegistrationCodeBatch, String, UserRegistrationCodeBatchService> {

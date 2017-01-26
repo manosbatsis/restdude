@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.model.RawJson;
 import com.restdude.domain.base.service.ModelService;
@@ -47,9 +47,12 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityLinks;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -90,7 +93,7 @@ import java.util.Set;
  * @param <S>  The service class
  */
 
-public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>> {
+public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>> implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelController.class);
 
@@ -100,7 +103,12 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
     @Autowired
     protected HttpServletRequest request;
 
+    @Autowired
+    private EntityLinks entityLinks;
+
     protected S service;
+    protected Class<T> modelType;
+    protected Boolean isResourceSupport = false;
 
     @Inject
     public void setService(S service) {
@@ -110,6 +118,12 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
 
     public S getService() {
         return this.service;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.modelType = this.service.getDomainClass();
+        this.isResourceSupport = ResourceSupport.class.isAssignableFrom(this.modelType);
     }
 
 
@@ -123,11 +137,24 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new resource")
-    @JsonView(AbstractSystemUuidPersistable.ItemView.class)
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
     public T create(@RequestBody T resource) {
         applyCurrentPrincipal(resource);
+        addResourceLinks(resource);
         return this.service.create(resource);
+    }
+
+    /**
+     * Add HATEOAS links
+     *
+     * @param resource
+     */
+    protected void addResourceLinks(@RequestBody T resource) {
+        if (this.isResourceSupport && resource.getPk() != null) {
+            ResourceSupport resourceSupport = (ResourceSupport) resource;
+            resourceSupport.add(this.entityLinks.linkToSingleResource(this.modelType, resource.getPk()));
+        }
     }
 
     /**
@@ -140,14 +167,15 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
      */
     @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource")
-    @JsonView(AbstractSystemUuidPersistable.ItemView.class)
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
     public T update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
         Assert.notNull(pk, "pk cannot be null");
         resource.setPk(pk);
         applyCurrentPrincipal(resource);
-
-        return this.service.update(resource);
+        resource = this.service.update(resource);
+        addResourceLinks(resource);
+        return resource;
     }
 
     /**
@@ -155,12 +183,14 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
      */
     @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
-    @JsonView(AbstractSystemUuidPersistable.ItemView.class)
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
     public T patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
         applyCurrentPrincipal(resource);
         resource.setPk(pk);
-        return this.service.patch(resource);
+        resource = this.service.patch(resource);
+        addResourceLinks(resource);
+        return resource;
     }
 
     /**
@@ -217,13 +247,14 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
      */
     @RequestMapping(value = "{pk}", method = RequestMethod.GET)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
-    @JsonView(AbstractSystemUuidPersistable.ItemView.class)
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
     public T findById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
         T resource = this.service.findById(pk);
         if (resource == null) {
             throw new NotFoundException();
         }
+        addResourceLinks(resource);
         return resource;
     }
 
@@ -377,4 +408,5 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
 
         }
     }
+
 }

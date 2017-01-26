@@ -29,10 +29,12 @@ import com.restdude.domain.geography.service.CountryService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@ExposesResourceFor(Country.class)
 @Api(tags = "Countries", description = "Operations about countries")
 @RequestMapping(value = "/api/rest/countries", 
 	produces = { "application/json", "application/xml" })

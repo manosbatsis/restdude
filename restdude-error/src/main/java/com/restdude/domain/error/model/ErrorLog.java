@@ -24,7 +24,7 @@
 package com.restdude.domain.error.model;
 
 import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
@@ -47,7 +47,7 @@ import java.time.LocalDateTime;
 @Table(name = "error_log")
 @ApiModel(value = "ErrorLog", description = "Used to persist error stacktraces using the corresponding hash as the ID. "
         + "The generated hash ignores line numbers (in case of SystemError) and is thus tolerant of small code changes, like adding a comment line.")
-public class ErrorLog extends AbstractAssignedIdPersistable<String> {
+public class ErrorLog extends AbstractAssignedIdPersistableResource<String> {
 
     public static final String API_PATH = "errorLogs";
 

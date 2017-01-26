@@ -23,7 +23,7 @@
  */
 package com.restdude.domain.cms.model;
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "content_file")
-public class File extends AbstractSystemUuidPersistable {
+public class File extends AbstractSystemUuidPersistableResource {
 
 	private static final long serialVersionUID = -7942906897981646998L;
 

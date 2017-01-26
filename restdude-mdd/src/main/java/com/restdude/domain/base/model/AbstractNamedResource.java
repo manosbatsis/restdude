@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
  * A base class for path-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
-public abstract class AbstractNamedResource extends AbstractSystemUuidPersistable {
+public abstract class AbstractNamedResource extends AbstractSystemUuidPersistableResource {
 
 	private static final long serialVersionUID = 1L;
 

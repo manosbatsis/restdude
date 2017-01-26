@@ -23,7 +23,7 @@
  */
 package com.restdude.domain.base.service.impl;
 
-import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.AbstractAssignedIdModelService;
 import com.restdude.mdd.annotation.ModelDrivenPreAuth;
@@ -40,7 +40,7 @@ import java.io.Serializable;
 /**
  * Created by manos on 30/11/2016.
  */
-public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPersistable<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPersistableResource<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
         extends AbstractModelServiceImpl<T, PK, R> implements AbstractAssignedIdModelService<T, PK> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAssignedIdModelServiceImpl.class);

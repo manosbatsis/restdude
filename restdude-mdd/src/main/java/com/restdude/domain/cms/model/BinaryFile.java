@@ -24,7 +24,7 @@
 package com.restdude.domain.cms.model;
 
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.Formula;
 
@@ -41,7 +41,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "images")
-public class BinaryFile extends AbstractSystemUuidPersistable{
+public class BinaryFile extends AbstractSystemUuidPersistableResource {
     
     private String name;
 

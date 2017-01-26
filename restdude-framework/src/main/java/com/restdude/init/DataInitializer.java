@@ -188,6 +188,17 @@ public abstract class DataInitializer {
             opUser = userService.createAsConfirmed(opUser);
             users.add(opUser);
 
+            User simpleUser = new User();
+            simpleUser.setUsername("simple");
+            simpleUser.setFirstName("Simple");
+            simpleUser.setLastName("User");
+            simpleUser.setCredentials(new UserCredentials.Builder().password("simple").build());
+            simpleUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("simple@" + testEmailDomain)).build());
+            simpleUser.setLastVisit(now);
+//			simpleUser.setCreatedBy(system);
+            simpleUser = userService.createAsConfirmed(simpleUser);
+            users.add(simpleUser);
+
             int usersMax = 10;
             int usersCreated = 0;
             while (usersCreated < usersMax) {

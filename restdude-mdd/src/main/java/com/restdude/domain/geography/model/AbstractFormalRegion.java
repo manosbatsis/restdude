@@ -24,7 +24,7 @@
 package com.restdude.domain.geography.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK extends Serializable> extends AbstractAssignedIdPersistable<PK> {
+public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK extends Serializable> extends AbstractAssignedIdPersistableResource<PK> {
 
 	private static final String PATH_SEPARATOR = ": ";
 

@@ -25,7 +25,7 @@ package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.base.model.CalipsoPersistable;
 
 import javax.persistence.*;
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @MappedSuperclass
-public abstract class AbstractContactDetail extends AbstractSystemUuidPersistable implements CalipsoPersistable<String>, ContactDetail<String> {
+public abstract class AbstractContactDetail extends AbstractSystemUuidPersistableResource implements CalipsoPersistable<String>, ContactDetail<String> {
 
 
     @Transient

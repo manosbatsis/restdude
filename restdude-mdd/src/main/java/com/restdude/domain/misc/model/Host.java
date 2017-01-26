@@ -24,7 +24,7 @@
 package com.restdude.domain.misc.model;
 
 import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.mdd.annotation.ModelResource;
 import org.javers.core.metamodel.annotation.ShallowReference;
@@ -40,7 +40,7 @@ import java.util.Set;
 @ModelResource(path = "hosts", controllerSuperClass = AbstractModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
 @Entity
 @Table(name = "host")
-public class Host extends AbstractSystemUuidPersistable {
+public class Host extends AbstractSystemUuidPersistableResource {
 
     private static final long serialVersionUID = -7942906897981646998L;
 

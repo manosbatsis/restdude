@@ -23,7 +23,7 @@
  */
 package com.restdude.domain.confirmationtoken.model;
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import org.javers.core.metamodel.annotation.ShallowReference;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
@@ -36,7 +36,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "confirmation_token")
 @ShallowReference
-public class ConfirmationToken extends AbstractSystemUuidPersistable {
+public class ConfirmationToken extends AbstractSystemUuidPersistableResource {
 
     private static final StringKeyGenerator generator = KeyGenerators.string();
 

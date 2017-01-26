@@ -25,11 +25,12 @@ package com.restdude.domain.error.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.service.ClientErrorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -38,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
+@ExposesResourceFor(ClientError.class)
 @Api(tags = "Client Error", description = "Client Error Operations")
 @RequestMapping(value = "/api/rest/" + ClientError.API_PATH, produces = {"application/json", "application/xml"})
 public class ClientErrorController extends AbstractModelController<ClientError, String, ClientErrorService> {
@@ -49,7 +51,7 @@ public class ClientErrorController extends AbstractModelController<ClientError, 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new resource")
-    @JsonView(AbstractSystemUuidPersistable.ItemView.class)
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     public ClientError create(@RequestBody ClientError resource) {
         resource.addRequestInfo(this.request);
         return this.service.create(resource);

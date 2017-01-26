@@ -29,7 +29,7 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.mdd.annotation.CurrentPrincipal;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -62,7 +62,7 @@ import java.time.LocalDateTime;
 @PreAuthorizePatch(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 //TODO
 @PreAuthorizeFindPaginated(controller = SpelUtil.PERMIT_ALL/*HAS_ROLE_ADMIN*/, service = SpelUtil.PERMIT_ALL)
-public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistable {
+public class UserRegistrationCodeBatch extends AbstractSystemUuidPersistableResource {
 
     private static final long serialVersionUID = 1L;
 

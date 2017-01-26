@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @param <PK> The pk Serializable
  */
 @MappedSuperclass
-public abstract class AbstractAssignedIdPersistable<PK extends Serializable> extends AbstractPersistable<PK> {
+public abstract class AbstractAssignedIdPersistableResource<PK extends Serializable> extends AbstractPersistableResource<PK> {
 
 	private static final long serialVersionUID = 4340156130534111231L;
 
@@ -44,11 +44,11 @@ public abstract class AbstractAssignedIdPersistable<PK extends Serializable> ext
 	@Formula(" (pk) ")
     private PK savedPk;
 
-    public AbstractAssignedIdPersistable() {
+    public AbstractAssignedIdPersistableResource() {
 
     }
 
-    public AbstractAssignedIdPersistable(PK pk) {
+    public AbstractAssignedIdPersistableResource(PK pk) {
         this.pk = pk;
 	}
 	

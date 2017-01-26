@@ -24,7 +24,7 @@
 package com.restdude.domain.base.service;
 
 
-import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ import java.io.Serializable;
  * @param <PK> the entity PK type
  */
 @Service
-public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistable<PK>, PK extends Serializable>
+public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistableResource<PK>, PK extends Serializable>
         extends ModelService<T, PK> {
 
     /**

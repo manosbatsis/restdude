@@ -29,9 +29,8 @@
     </bean>
 
     -->
-    <bean id="jsonObjectMapperFactory" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
-          name=""
-          p:indentOutput="true" p:failOnEmptyBeans="false">
+    <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+          primary="true" p:indentOutput="true" p:failOnEmptyBeans="false">
         <property name="featuresToDisable">
             <array>
                 <util:constant

@@ -24,12 +24,11 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonPropertyOrder({"pk", "available", "username", "batchId", "batchName"})
-public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistable implements CalipsoPersistable<String> {
+public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableResource {
 
     private static final long serialVersionUID = 1L;
 
