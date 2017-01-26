@@ -59,7 +59,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                         fieldType: "RelatedModel",
                         "pathFragment": "registrationCodeBatches",
                     },
-                    id: {
+                    pk: {
                         fieldType: "String",
                     },
                     available: {

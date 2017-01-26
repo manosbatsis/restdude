@@ -84,27 +84,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                         }
                     },
                 },
-                /*
-
-                 id : {
-                 fieldType : "Hidden",
-                 },
-                 email : {
-                 fieldType : "String",
-                 },
-                 resetPasswordToken : {
-                 fieldType : "String",
-                 },
-                 currentPassword : {
-                 fieldType : "CurrentPassword",
-                 },
-                 password : {
-                 fieldType : "Password",
-                 },
-                 passwordConfirmation : {
-                 fieldType : "ConfirmPassword",
-                 }
-                 */
                 fields: {
                     username: {
                         fieldType: "String",

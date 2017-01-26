@@ -144,13 +144,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                             validators: ['required', 'email'],
                         },
                     },
-                    email: {
-                        fieldType: "String",
-                        form: {
-                            type: "Text",
-                            validators: ['required', 'email'],
-                        },
-                    },
                     registrationCode: {
                         fieldType: "String",
                         form: {

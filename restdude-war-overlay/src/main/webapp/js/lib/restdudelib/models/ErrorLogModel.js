@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     rolesExcluded: null,
                 },
                 fields: {
-                    id: {
+                    pk: {
                         fieldType: "String",
                     },
                     rootCauseMessage: {

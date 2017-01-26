@@ -206,14 +206,14 @@ define({
                     "label": "ErrorLog"
                 },
             },
-            "stackTraces": {
+            "errorLogs": {
                 "singular": {
-                    "label": "Stacktrace"
+                    "label": "Errorlog"
                 },
                 "plural": {
-                    "label": "Stacktraces"
+                    "label": "Errorlogs"
                 },
-                "id": {
+                "pk": {
                     "label": "Hash"
                 },
                 "rootCauseMessage": {
@@ -308,7 +308,7 @@ define({
                 "plural": {
                     "label": "Beta codes"
                 },
-                "id": {
+                "pk": {
                     "label": "Code"
                 },
                 "available": {
@@ -376,7 +376,7 @@ define({
                 },
             },
             "userDetails": {
-                "id": {},
+                "pk": {},
                 "isResetPasswordReguest": {},
                 "email": {
                     "label": "Email"
