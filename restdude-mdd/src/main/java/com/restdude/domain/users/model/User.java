@@ -50,6 +50,7 @@ import org.hibernate.annotations.Formula;
 import org.javers.core.metamodel.annotation.ShallowReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
@@ -66,6 +67,7 @@ import java.util.Locale;
 @ShallowReference
 @Entity
 @ApiModel(description = "Human users")
+@Relation(value = "user", collectionRelation = "users")
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @PreAuthorizeCreate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)

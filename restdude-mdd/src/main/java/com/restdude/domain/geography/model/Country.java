@@ -34,6 +34,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.core.Relation;
 
 import javax.persistence.*;
 
@@ -50,6 +51,7 @@ import javax.persistence.*;
 })
 @ModelResource(path = "countries", apiName = "Countries", apiDescription = "Operations about countries")
 @ApiModel(value = "Country", description = "A model representing a country, meaning a region that is identified as a distinct entity in political geography.")
+@Relation(value = "country", collectionRelation = "countries")
 @PreAuthorizeFindPaginated(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindByIds(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)

@@ -31,6 +31,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.hateoas.core.Relation;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,7 @@ import javax.validation.constraints.NotNull;
 @ModelResource(path = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "User Agents", apiDescription = "Collection of UA signatures")
 @ApiModel(value = "UserAgent", description = "UA signatures")
+@Relation(value = "userAgent", collectionRelation = UserAgent.API_PATH)
 @Entity
 @Table(name = "user_agent")
 public class UserAgent extends AbstractAssignedIdPersistableResource<String> {

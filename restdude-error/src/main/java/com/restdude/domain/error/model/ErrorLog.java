@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.annotations.Formula;
+import org.springframework.hateoas.core.Relation;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,16 +41,22 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * {@value #CLASS_DESCRIPTION}
+ */
 @ModelResource(path = ErrorLog.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class, apiName = "ErrorLogs",
         apiDescription = "Stacktrace or other error log details.")
 
 @Entity
 @Table(name = "error_log")
-@ApiModel(value = "ErrorLog", description = "Used to persist error stacktraces using the corresponding hash as the ID. "
-        + "The generated hash ignores line numbers (in case of SystemError) and is thus tolerant of small code changes, like adding a comment line.")
+@ApiModel(value = "ErrorLog", description = ErrorLog.CLASS_DESCRIPTION)
+
+@Relation(value = "errorLog", collectionRelation = "errorLogs")
 public class ErrorLog extends AbstractAssignedIdPersistableResource<String> {
 
     public static final String API_PATH = "errorLogs";
+    public static final String CLASS_DESCRIPTION = "Used to persist error stacktraces using the corresponding hash as the ID. "
+            + "The generated hash ignores line numbers (in case of SystemError) and is thus tolerant of small code changes, like adding a comment line.";
 
     @Formula(" (pk) ")
     private String name;

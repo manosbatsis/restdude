@@ -25,11 +25,12 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
+import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.springframework.hateoas.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -44,8 +45,9 @@ import java.util.Collection;
 @Entity
 @Table(name = "role")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Relation(value = "role", collectionRelation = "roles")
 @ApiModel(value = "Role", description = "User principal roles. Roles are principals themselves and can be assigned to users.")
-public class Role extends AbstractSystemUuidPersistable implements GrantedAuthority {
+public class Role extends AbstractSystemUuidPersistableResource implements GrantedAuthority {
 
 	private static final long serialVersionUID = 3558291745762331656L;
 
