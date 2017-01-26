@@ -11,7 +11,7 @@ var folderMount = function folderMount(connect, point) {
 };
 
 module.exports = function (grunt) {
-     require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
+
     // Grunt project configuration
 
     grunt.initConfig({
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
         server: {
             dev: {
                 options: {
-                    port: 9000,
+                    port: 3001,
                     base: "src/app",
                     keepalive: false,
                     middleware: function (connect, options) {
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
             },
             pro: {
                 options: {
-                    port: 9000,
+                    port: 3002,
                     base: '<%= dirs.dist %>/public',
                     keepalive: true
                 }
@@ -67,26 +67,26 @@ module.exports = function (grunt) {
         // prepare files to be minimized,
         //read the embebed configuration for each html in the projject
 
-        'useminPrepare': {
+       /* 'useminPrepare': {
             options: {
                 dest: '<%= dirs.staging %>/step2'
             },
             html: '<%= dirs.staging %>/step1/*.html'
-        },
+        },*/
 
         // files minimize process
 
-       // usemin: {
-           // options: {
-            //    basedir: '<%= dirs.staging %>/step2'
-           // },
+       /* usemin: {
+            options: {
+                basedir: '<%= dirs.staging %>/step2'
+            },
 
-          //  html: {
-          //      expand: true,
-          //      cwd: '<%= dirs.staging %>/step2',
-            //    src: ['**/*.{html,css}']
-          //  }
-       // },
+            html: {
+                expand: true,
+                cwd: '<%= dirs.staging %>/step2',*/
+                //src: ['**/*.{html,css}']
+           // }
+      //  },
 
         // copy task, define the build workflow
 
@@ -320,15 +320,15 @@ module.exports = function (grunt) {
         'jshint:build',
         'clean',
         'copy:dist-step-1',
-        'compass:dist',
-        'useminPrepare',
+        //'compass:dist',
+        //'useminPrepare',
         'requirejs:prod',
-        'concat',
+        //'concat',
         //'cssmin',
         //'uglify',
         'copy:dist-step-2',
         'rev',
-        'usemin',
+        //'usemin',
         'copy:dist-step-3',
         'htmlmin:dist',
         //'manifest',

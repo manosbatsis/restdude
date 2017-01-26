@@ -1,0 +1,26 @@
+@import 'app-core/base';
+@import 'app-core/once';
+
+body {
+  padding: $spacing-default;
+}
+
+dl {
+  column-count: 1;
+  column-gap: 40px;
+  column-rule: 1px solid $color__brand--light-grey;
+
+  @include tablet {
+    column-count: 2;
+  }
+
+  @include desktop {
+    column-count: 4;
+  }
+}
+
+dt {
+  font-family: $font__mns-london--bold;
+}
+
+

@@ -1,0 +1,8 @@
+@import 'app-core/base';
+@import 'app-core/once';
+@import 'fear-core-ui/components/icons';
+@import 'fear-core-ui/components/buttons';
+
+.example-header {
+  border-bottom: 1px solid $color__brand--light-grey;
+}

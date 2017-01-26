@@ -1,0 +1,12 @@
+/// Webkit on IOS 7 / 8 does not re-paint when sibling selectors are used
+/// The combination of nth-child and tranzlateZ cause the browser to paint any changes.
+@mixin -webkit-sibling-fix {
+  /// nth-child(n) references its self
+  &:nth-child(n) {
+    @content;
+
+    &::after {
+      transform: translateZ(0);
+    }
+  }
+}

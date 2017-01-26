@@ -1,0 +1,17 @@
+@mixin ie-only($version) {
+
+  $versionList: '';
+
+  @if $version == 9 {
+    .ie9 & {
+      @content;
+    }
+  }
+
+  @if $version >= 10 {
+    // IE10+ check
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+      @content;
+    }
+  }
+}

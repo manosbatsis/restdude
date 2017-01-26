@@ -1,0 +1,23 @@
+.overlay {
+  @include opacity(0);
+  background-color: $color__brand--black;
+  height: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: opacity .3s, height 0 .3s;
+  width: 100%;
+  z-index: $z-overlay;
+}
+
+.overlay--active {
+  @include opacity(.3);
+  height: 100%;
+  transition: opacity .3s, height 0;
+  visibility: visible;
+}
+
+.overlay--nav {
+  height: 100vh;
+  width: 100vw;
+}

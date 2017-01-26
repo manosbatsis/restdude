@@ -1,0 +1,108 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "grunt-react@^0.9.0",
+        "scope": null,
+        "escapedName": "grunt-react",
+        "name": "grunt-react",
+        "rawSpec": "^0.9.0",
+        "spec": ">=0.9.0 <0.10.0",
+        "type": "range"
+      },
+      "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette"
+    ]
+  ],
+  "_from": "grunt-react@>=0.9.0 <0.10.0",
+  "_id": "grunt-react@0.9.0",
+  "_inCache": true,
+  "_location": "/grunt-react",
+  "_npmUser": {
+    "name": "ericclemmons",
+    "email": "eric@smarterspam.com"
+  },
+  "_npmVersion": "1.4.6",
+  "_phantomChildren": {
+    "commoner": "0.9.8",
+    "jstransform": "6.3.2"
+  },
+  "_requested": {
+    "raw": "grunt-react@^0.9.0",
+    "scope": null,
+    "escapedName": "grunt-react",
+    "name": "grunt-react",
+    "rawSpec": "^0.9.0",
+    "spec": ">=0.9.0 <0.10.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/grunt-react/-/grunt-react-0.9.0.tgz",
+  "_shasum": "0bfc37ce0fdbf4c3b18d692be63534d4d14c38d6",
+  "_shrinkwrap": null,
+  "_spec": "grunt-react@^0.9.0",
+  "_where": "C:\\Users\\Delta\\Documents\\GitHub\\restdude\\restdude-marionette",
+  "author": {
+    "name": "Eric Clemmons",
+    "email": "eric@smarterspam.com",
+    "url": "https://github.com/ericclemmons"
+  },
+  "bugs": {
+    "url": "https://github.com/ericclemmons/grunt-react/issues"
+  },
+  "dependencies": {
+    "react-tools": "^0.11.0",
+    "through": "~2.3.4"
+  },
+  "description": "Grunt task for compiling Facebook React's JSX templates into JavaScript",
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-browserify": "~1.3.1",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-nodeunit": "~0.3.1"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "0bfc37ce0fdbf4c3b18d692be63534d4d14c38d6",
+    "tarball": "https://registry.npmjs.org/grunt-react/-/grunt-react-0.9.0.tgz"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "homepage": "https://github.com/ericclemmons/grunt-react",
+  "keywords": [
+    "gruntplugin",
+    "react",
+    "jsx"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/ericclemmons/grunt-react/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "main.js",
+  "maintainers": [
+    {
+      "name": "ericclemmons",
+      "email": "eric@smarterspam.com"
+    }
+  ],
+  "name": "grunt-react",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "grunt": "~0.4.2"
+  },
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ericclemmons/grunt-react.git"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "version": "0.9.0"
+}

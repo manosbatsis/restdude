@@ -1,0 +1,283 @@
+.lightbox {
+  bottom: 0;
+  display: none;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: $z-lightbox;
+}
+
+.lightbox--page-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: auto;
+
+  .lightbox__inner {
+    @include media-query-small {
+      height: auto;
+      position: relative;
+      overflow: hidden;
+      max-height: none;
+      margin: 30px auto;
+
+      .csstransforms3d & {
+        left: auto;
+        top: auto;
+        transform: none;
+      }
+    }
+  }
+}
+
+
+.lightbox--active {
+  display: block;
+}
+
+.lightbox__inner {
+  background-color: $color__brand--white;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: $z-lightbox-inner;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  @include media-query-small {
+    @include rem(max-width, 900px);
+    @include rem(max-height, 615px);
+    box-shadow: 0 0 25px $lightbox-shadow;
+    height: auto;
+    width: 80%;
+    overflow-x: visible;
+    overflow-y: auto;
+
+    @if $channel == 'channel-tsop' {
+      .csstransforms3d & {
+        left: 50%;
+        top: 40%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+
+    @if $channel == 'channel-default' {
+      .csstransforms3d & {
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+
+      .no-csstransforms3d & {
+        @include rem(margin, 50px auto 0);
+        position: relative;
+      }
+    }
+  }
+
+  // Webkit Scrollbar (in some device, scrollbars are not visible by default)
+  &::-webkit-scrollbar-track {
+    background-color: $color__brand--white;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: $color__brand--white;
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color__brand--light-grey;
+    border: 3px solid $color__brand--white;
+    border-radius: 8px;
+  }
+}
+
+.lightbox--medium .lightbox__inner {
+  @include media-query-small {
+    @include rem(max-width, 480px);
+    //@include rem(max-height, 400px);
+  }
+}
+
+.lightbox--fullscreen {
+  .lightbox__inner {
+    top: 5%;
+    bottom: 5%;
+    left: 5%;
+    right: 5%;
+    transform: initial;
+    max-width: none;
+    max-height: none;
+    width: auto;
+    height: auto;
+  }
+}
+
+.lightbox--store-finder {
+
+  .lightbox__inner {
+    @include media-query-max-xsmall {
+      overflow-y: auto;
+    }
+
+    @include media-query-small {
+      overflow: visible;
+    }
+
+    @include media-query-medium {
+      @include rem(max-width, 960px);
+      @include rem(min-height, 180px);
+    }
+
+  }
+
+}
+
+.lightbox__inner--calendar {
+  @include media-query-small {
+    @include rem(max-width, 240px);
+    @include rem(max-height, 380px);
+  }
+}
+
+.lightbox__close {
+  @include rem(margin, 10px);
+  background-color: $color__brand--white;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: $z-lightbox-close;
+
+  &::before {
+    @include font-icons('icon-close');
+    @include rem(font-size, 30px);
+    color: $color__brand--black;
+    display: block;
+    right: 0;
+    top: 0;
+  }
+
+  &:hover {
+    @include opacity(.6);
+  }
+}
+
+.lightbox__title {
+  @include rem(margin, 6px 0 30px);
+  @include rem(font-size, 24px);
+  font-family: $font__mns-london;
+  line-height: 100%;
+}
+
+.lightbox__content {
+  @include rem(padding, 40px 10px 24px 10px);
+  height: auto;
+  width: 100%;
+  font-family: $font__mns-london;
+
+  @include media-query-xsmall {
+    @include rem(padding, 20px 30px 24px 30px);
+    @include rem(max-width, 555px);
+    margin: 0 auto;
+  }
+
+  @include media-query-small {
+    @include rem(padding, 20px 30px 30px 30px);
+    height: 100%;
+    max-width: 100%;
+  }
+
+  .ie & {
+    @include rem(padding-right, 57px);
+  }
+}
+
+.lightbox-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+// lightbox action links
+
+.lightbox__cta-links--right {
+  @include media-query-small {
+    text-align: right;
+  }
+}
+
+.lightbox__cta-links--bar {
+  @extend %clearfix;
+  @include rem(margin, 0 -10px);
+  @include rem(padding-top, 20px);
+  border-top: 1px solid $color__brand--grey-40;
+
+  @include media-query-xsmall {
+    margin: 0;
+  }
+}
+
+.lightbox__cta-links-group {
+  @include media-query-xsmall {
+    float: right;
+  }
+}
+
+.lightbox__cta-links-item {
+  @include rem(padding, 0 10px);
+  float: left;
+  width: 50%;
+
+  @include media-query-xsmall {
+    width: auto;
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.lightbox__close--small .lightbox__close {
+  @include rem(padding, 10px);
+  margin: 0;
+
+  @include media-query-xsmall {
+    @include rem(margin, 20px);
+  }
+
+  &::before {
+    @include rem(font-size, 20px);
+  }
+}
+
+@if $channel == 'channel-tsop' {
+  .lightbox__title {
+    @include rem(margin, 6px 0 30px);
+    @include rem(font-size, 27px);
+    font-family: $font__mns-london;
+    line-height: 100%;
+  }
+
+  .lightbox--tsop-help .lightbox__inner {
+    @include media-query-small {
+      @include rem(max-width, 1069px);
+      @include rem(max-height, 860px);
+      @include rem(height, 860px);
+    }
+  }
+
+  .lightbox--tsop-cancel-order .lightbox__inner {
+    @include media-query-small {
+      @include rem(max-width, 1069px);
+      @include rem(max-height, 500px);
+      @include rem(height, 500px);
+    }
+  }
+
+  .lightbox--tsop-help iframe {
+    @include rem(height, 780px);
+    overflow-x: hidden;
+  }
+}

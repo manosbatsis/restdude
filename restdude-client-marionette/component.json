@@ -19,7 +19,7 @@
     "marionette": "~2.0.1",
     "fontawesome": "~4.1.0",
     "bootstrap-sass-official": "~3.2.0",
-    "chartjs": "https://github.com/chartjs/Chart.js.git",
+    "chartjs": "https://github.com/chartjs",
     "bootstrap": "https://github.com/twbs/bootstrap.git#^3.3.7",
     "Js-GoogleMapsLoader": "https://github.com/Carrooi/Js-GoogleMapsLoader",
     "CoreUI-Free-Bootstrap-Admin-Template": "https://github.com/mrholek/CoreUI-Free-Bootstrap-Admin-Template",
@@ -58,5 +58,18 @@
     "wp-calypso": "https://github.com/Automattic/wp-calypso",
     "typeahead.js": "https://github.com/twitter/typeahead.js.git#^0.11.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "homepage": "https://github.com/manosbatsis/restdude",
+  "authors": [
+    "delta750 <nkapetanas@hotmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/lib/bower",
+    "test",
+    "tests"
+  ]
 }
