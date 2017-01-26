@@ -33,8 +33,9 @@ module.exports = function (grunt) {
 
         // Task configuration
 
-        // clean the distribution folder.
-
+                
+       
+         // clean the distribution folder.
         clean: {
             dist: ['<%= dirs.staging %>', '<%= dirs.dist %>']
         },
@@ -67,26 +68,27 @@ module.exports = function (grunt) {
         // prepare files to be minimized,
         //read the embebed configuration for each html in the projject
 
-       /* 'useminPrepare': {
+       'useminPrepare': {
             options: {
                 dest: '<%= dirs.staging %>/step2'
             },
-            html: '<%= dirs.staging %>/step1/*.html'
-        },*/
+            html: '<%= dirs.staging %>/step1/*.html',
+             force: true//simplirosi 
+        },
 
         // files minimize process
 
-       /* usemin: {
+       usemin: {
             options: {
                 basedir: '<%= dirs.staging %>/step2'
             },
 
             html: {
                 expand: true,
-                cwd: '<%= dirs.staging %>/step2',*/
-                //src: ['**/*.{html,css}']
-           // }
-      //  },
+                cwd: '<%= dirs.staging %>/step2',
+                src: ['**/*.{html,css}']
+           }
+      },
 
         // copy task, define the build workflow
 
@@ -109,7 +111,11 @@ module.exports = function (grunt) {
                     'js/vendor/modernizr/modernizr.js',
                     'js/vendor/requirejs/require.js',
                     '!js/modules/**/*.js',
-                    'ico/**'
+                    'ico/**',
+                    'css/**',
+                    'fonts/**',
+                    'views/**',
+                    'img/**'
                 ],
                 dest: '<%= dirs.staging %>/step2/'
             },
@@ -177,33 +183,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-
-        /**
-         * Compass configuration
-         * @property compass
-         */
-        compass: {
-            options: {
-                sassDir: '<%= dirs.sass %>',
-                raw: 'images_dir = "src/app/img"\n' +
-                'http_images_path = "../img"\n' +
-                'http_javascripts_path = "../js"\n' +
-                'http_stylesheets_path = "."\n'
-            },
-            dev: {
-                options: {
-                    cssDir: '<%= dirs.root %>/css',
-                    environment: 'development'
-                }
-            },
-            dist: {
-                options: {
-                    cssDir: '<%= dirs.staging %>/step1/css',
-                    environment: 'production',
-                    force: true
-                }
-            }
-        },
+        
 
         /**
          * File Revision Confiugration
@@ -249,6 +229,8 @@ module.exports = function (grunt) {
         //  dest: '<%= dirs.staging %>/step3/manifest.appcache',
         //  port: 3002
         //},
+
+        //
 
         htmlmin: {
             dist: {
@@ -302,11 +284,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     // grunt.loadNpmTasks('grunt-contrib-uglify');
-    // grunt.loadNpmTasks('grunt-contrib-cssmin');
+     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-regarde');
     grunt.loadNpmTasks('grunt-usemin');
-    grunt.loadNpmTasks('grunt-contrib-compass');
+   // grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-rev');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
@@ -314,17 +296,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     //grunt.loadNpmTasks('grunt-contrib-manifest');
 
-
+/*useminPrepare*/
     // Default task.
     grunt.registerTask('production', [
         'jshint:build',
         'clean',
         'copy:dist-step-1',
         //'compass:dist',
-        //'useminPrepare',
         'requirejs:prod',
         //'concat',
-        //'cssmin',
+       // 'cssmin',
         //'uglify',
         'copy:dist-step-2',
         'rev',

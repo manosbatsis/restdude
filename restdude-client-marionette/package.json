@@ -48,12 +48,16 @@
     "karma-requirejs": "^1.1.0",
     "load-grunt-tasks": "^3.5.0",
     "matchdep": "~1.0.1",
-    "requirejs": "^2.1.14"
+    "requirejs": "^2.1.14",
+    "main-bower-files": "^2.13.1",
+    "run-sequence": "^1.2.2"
   },
   "description": "Marionette-based client for restdude backends",
   "main": "Gruntfile.js",
   "dependencies": {
-    "compass": "^0.1.1"
+    "compass": "^0.1.1",
+    "grunt": "^1.0.1",
+    "grunt-contrib-compass": "^1.1.1"
   },
   "scripts": {
     "test": "mocha"

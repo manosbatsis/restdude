@@ -32,6 +32,12 @@ bower_components
 # vendor
 vendor
 
+# temp
+temp
+
+# dist
+dist
+
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 

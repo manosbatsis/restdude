@@ -17,10 +17,8 @@
     "almond": "~0.2.5",
     "lodash": "~2.4.1",
     "marionette": "~2.0.1",
-    "fontawesome": "~4.1.0",
     "bootstrap-sass-official": "~3.2.0",
-    "chartjs": "https://github.com/chartjs",
-    "bootstrap": "https://github.com/twbs/bootstrap.git#^3.3.7",
+    //"chartjs": "https://github.com/chartjs",
     "Js-GoogleMapsLoader": "https://github.com/Carrooi/Js-GoogleMapsLoader",
     "CoreUI-Free-Bootstrap-Admin-Template": "https://github.com/mrholek/CoreUI-Free-Bootstrap-Admin-Template",
     "humanize": "https://github.com/taijinlee/humanize.git#^0.0.9",
@@ -35,7 +33,7 @@
     "text": "https://github.com/requirejs/text.git#^2.0.15",
     "i18n": "https://github.com/andrefarzat/js-i18n.git",
     "PubSub": "https://github.com/bdadam/PubSub.git#^1.0.0",
-    "tether": "https://github.com/HubSpot/tether.git#^1.4.0",
+    //"tether": "https://github.com/HubSpot/tether.git#^1.4.0",
     "backbone-bootstrap-modals": "https://github.com/leafygreen/backbone-bootstrap-modals.git#^0.1.4",
     "backbone-query-parameters": "https://github.com/jhudson8/backbone-query-parameters",
     "backbone-forms": "https://github.com/powmedia/backbone-forms.git#^0.14.1",
@@ -56,20 +54,17 @@
     "Sinon.JS": "https://github.com/cjohansen/Sinon.JS.git#^1.17.6",
     "bootstrap-fileinput": "https://github.com/kartik-v/bootstrap-fileinput.git#^4.3.5",
     "wp-calypso": "https://github.com/Automattic/wp-calypso",
-    "typeahead.js": "https://github.com/twitter/typeahead.js.git#^0.11.1"
+    "typeahead.js": "https://github.com/twitter/typeahead.js.git#^0.11.1",
+    "bootstrap": "4.0.0-alpha.6",
+    "tether": "latest",
+    "fontawesome": "latest",
+    "simple-line-icons": "latest",
+    "pace": "latest",
+    "chart.js": "^2.3.0"
   },
   "devDependencies": {},
   "homepage": "https://github.com/manosbatsis/restdude",
   "authors": [
     "delta750 <nkapetanas@hotmail.com>"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "app/lib/bower",
-    "test",
-    "tests"
   ]
 }
