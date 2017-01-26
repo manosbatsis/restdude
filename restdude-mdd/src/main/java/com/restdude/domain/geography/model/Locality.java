@@ -27,13 +27,10 @@ import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -43,7 +40,7 @@ import javax.persistence.Table;
 @Table(name = "geo_locality")
 @ModelResource(path = "localities", apiName = "Localities", apiDescription = "Locality operations")
 @ApiModel(value = "Locality", description = "A model representing an incorporated city or town political entity")
-public class Locality extends AbstractFormalRegion<Country> {
+public class Locality extends AbstractFormalRegion<Country, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Locality.class);
 
@@ -61,11 +58,6 @@ public class Locality extends AbstractFormalRegion<Country> {
     public static String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
     public static String SERVICE_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
     public static String SERVICE_PRE_AUTHORIZE_COUNT = "denyAll";
-
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    private String id;
 
     public Locality() {
         super();
@@ -88,24 +80,6 @@ public class Locality extends AbstractFormalRegion<Country> {
                 .appendSuper(super.hashCode())
                 .append(Locality.class)
                 .toHashCode();
-    }
-
-
-    /**
-     * Get the entity's primary key
-     * @see org.springframework.data.domain.Persistable#getId()
-     */
-    @Override
-    public String getPk() {
-        return id;
-    }
-
-    /**
-     * Set the entity's primary key
-     * @param id the pk to set
-     */
-    public void setPk(String id) {
-        this.id = id;
     }
 
     /**

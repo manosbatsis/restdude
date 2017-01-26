@@ -23,8 +23,6 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.geography.model.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +37,8 @@ public abstract class AbstractPredicateFactory<T extends Serializable> implement
 	public AbstractPredicateFactory() {
 	}
 
-	public Path<T> getPath(Root<Country> root, String propertyName, Class<?> fieldType) {
-		Path<?> path = null;
+    public Path<T> getPath(Root<?> root, String propertyName, Class<T> fieldType) {
+        Path<?> path = null;
 		if (propertyName.contains(".")) {
 			String[] pathSteps = propertyName.split("\\.");
 
@@ -48,20 +46,18 @@ public abstract class AbstractPredicateFactory<T extends Serializable> implement
 			LOGGER.debug("getPath, step: {}", step);
 			path = pathSteps.length == 1
 					? root.<T>get(step)
-					: root.<CalipsoPersistable>get(step);
-			LOGGER.debug("getPath0, added path step: {}, result path: {}", step, path);
+                    : root.get(step);
+            LOGGER.debug("getPath0, added path step: {}, result path: {}", step, path);
 
-			for (int i = 1; i < pathSteps.length - 2; i++) {
-				step = pathSteps[i];
-				path = path.<CalipsoPersistable>get(step);
-				LOGGER.debug("getPath{}, added path step: {}, result path: {}", i, step, path);
+            for (int i = 1; i < pathSteps.length - 1; i++) {
+                step = pathSteps[i];
+                path = path.get(step);
+                LOGGER.debug("getPath{}, added path step: {}, result path: {}", i, step, path);
 			}
 
-			if (pathSteps.length > 1) {
-				step = pathSteps[pathSteps.length - 2];
-				path = path.<T>get(step);
-				LOGGER.debug("getPath{}, added path step: {}, result path: {}", (pathSteps.length - 2), step, path);
-			}
+            step = pathSteps[pathSteps.length - 1];
+            path = path.<T>get(step);
+            LOGGER.debug("getPath{}, added path step: {}, result path: {}", (pathSteps.length - 1), step, path);
 
 
 		} else {

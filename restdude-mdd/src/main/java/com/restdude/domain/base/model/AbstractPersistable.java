@@ -24,6 +24,10 @@
 package com.restdude.domain.base.model;
 
 import com.restdude.auth.spel.annotations.*;
+import com.restdude.domain.base.validation.Unique;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,12 +38,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
- * Abstract entity class with basic auditing.
- * @param <ID> The primary key type, Serializable
+ * Abstract entity class with basic auditing, unique constraints validation and authorization settings.
+ * @param <ID> The id Serializable
  */
 @XmlRootElement
 @MappedSuperclass
+@Unique
 @EntityListeners(AuditingEntityListener.class)
+
 @PreAuthorizeCount
 @PreAuthorizeCreate
 @PreAuthorizeDelete
@@ -53,17 +59,71 @@ import java.io.Serializable;
 @PreAuthorizeFindPaginated
 @PreAuthorizePatch
 @PreAuthorizeUpdate
-public abstract class AbstractPersistable<ID extends Serializable> {
+public abstract class AbstractPersistable<ID extends Serializable> implements CalipsoPersistable<ID> {
 
-	private static final long serialVersionUID = -6009587976502456848L;
+    private static final long serialVersionUID = -6009587976502456848L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistable.class);
 
-    public static interface ItemView {}
-    public static interface CollectionView {}
+    public AbstractPersistable() {
+        super();
+    }
 
-	public AbstractPersistable() {
-		super();
-	}
+    public AbstractPersistable(ID pk) {
+        this.setPk(pk);
+    }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(PK_FIELD_NAME, this.getPk()).toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract ID getPk();
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract void setPk(ID pk);
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (null == obj) {
+            return false;
+        }
+
+        if (this == obj) {
+            return true;
+        }
+        if (!AbstractPersistable.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        AbstractPersistable other = (AbstractPersistable) obj;
+        return new EqualsBuilder()
+                .append(this.getPk(), other.getPk())
+                .isEquals();
+    }
+
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(this.getPk())
+                .toHashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void preSave() {
+
+    }
 }

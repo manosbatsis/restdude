@@ -23,18 +23,15 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindAll;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,26 +43,20 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "country")
+
 @AttributeOverrides({
+        @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
         @AttributeOverride(name = "name", column = @Column(unique = true, nullable = false, length = 50)),
 })
 @ModelResource(path = "countries", apiName = "Countries", apiDescription = "Operations about countries")
 @ApiModel(value = "Country", description = "A model representing a country, meaning a region that is identified as a distinct entity in political geography.")
-
 @PreAuthorizeFindPaginated(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindByIds(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindAll(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class Country extends AbstractFormalRegion<Continent> implements CalipsoPersistable<String> {
+public class Country extends AbstractFormalRegion<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
-
-    @Id
-    @Column(unique = true, nullable = false, length = 2)
-	private String pk;
-
-	@Formula(" (pk) ")
-	private String savedId;
 
     @Column(name = "native_name", unique = true, nullable = true, length = 50)
     private String nativeName;
@@ -138,35 +129,6 @@ public class Country extends AbstractFormalRegion<Continent> implements CalipsoP
 
 	public void setLanguages(String languages) {
 		this.languages = languages;
-    }
-
-    /**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getPk() {
-		return pk;
-	}
-
-    /**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setPk(String pk) {
-		this.pk = pk;
-	}
-
-    private String getSavedId() {
-        return savedId;
-    }
-
-    /**
-     * @see org.springframework.data.domain.Persistable#isNew()
-     */
-    @Override
-    @JsonIgnore
-    public boolean isNew() {
-        return null == getSavedId();
     }
 
 	@Override

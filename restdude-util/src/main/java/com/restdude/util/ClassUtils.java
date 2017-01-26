@@ -73,40 +73,50 @@ public class ClassUtils {
     }
 
     public static Class<?> getBeanPropertyType(Class clazz, String fieldName, boolean silent) {
-        Class fieldType = null;
-        String[] steps = fieldName.contains(".") ? fieldName.split(".") : new String[]{fieldName};
+        Assert.notNull(clazz, "clazz parameter cannot be null");
+        Assert.notNull(fieldName, "fieldName parameter cannot be null");
+        Class beanPropertyType = null;
+        String[] steps = fieldName.contains(".") ? fieldName.split("\\.") : new String[]{fieldName};
+        LOGGER.debug("getBeanPropertyType called for {}#{}, steps({}): {}", clazz.getCanonicalName(), fieldName, steps.length, steps);
 
         try {
 
             Iterator<String> stepNames = Arrays.asList(steps).listIterator();
             Class tmpClass = clazz;
             String tmpFieldName = null;
-            while (stepNames.hasNext() && tmpClass != null) {
+            PropertyDescriptor[] propertyDescriptors = null;
+            for (int i = 0; stepNames.hasNext() && tmpClass != null; i++) {
                 tmpFieldName = stepNames.next();
-
-                for (PropertyDescriptor pd : Introspector.getBeanInfo(tmpClass).getPropertyDescriptors()) {
+                LOGGER.debug("getBeanPropertyType for {} tmpFieldName: {}", i, tmpFieldName);
+                propertyDescriptors = Introspector.getBeanInfo(tmpClass).getPropertyDescriptors();
+                for (PropertyDescriptor pd : propertyDescriptors) {
+                    LOGGER.debug("getBeanPropertyType for {} pd.getName(): {}", i, pd.getName());
                     if (tmpFieldName.equals(pd.getName())) {
                         Method getter = pd.getReadMethod();
                         if (getter != null) {
+                            LOGGER.debug("getBeanPropertyType for {} found getter for tmpFieldName: {}", i, tmpFieldName);
                             tmpClass = GenericTypeResolver.resolveReturnType(getter, tmpClass);
                         } else {
+                            LOGGER.warn("getBeanPropertyType for {} no getter exists for tmpFieldName: {}", i, tmpFieldName);
                             tmpClass = null;
                         }
+                        break;
                     }
                 }
             }
-            fieldType = tmpClass;
+            beanPropertyType = tmpClass;
 
         } catch (IntrospectionException e) {
             if (silent) {
-                LOGGER.warn("failed getting type bean property: {}#{}", clazz.getCanonicalName(), fieldName);
+                LOGGER.error("getBeanPropertyType, failed getting type bean property: {}#{}", clazz.getCanonicalName(), fieldName, e);
             } else {
                 throw new RuntimeException("failed getting bean property type", e);
 
             }
 
         }
-        return fieldType;
+        LOGGER.debug("getBeanPropertyType found for {}#{}: {}", clazz.getCanonicalName(), fieldName, beanPropertyType);
+        return beanPropertyType;
     }
 
 

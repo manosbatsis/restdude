@@ -23,7 +23,6 @@
  */
 package com.restdude.domain.base.model;
 
-import com.restdude.domain.base.validation.Unique;
 import org.springframework.hateoas.ResourceSupport;
 
 import java.io.Serializable;
@@ -32,8 +31,12 @@ import java.io.Serializable;
  * Base interface for persistable entities
  * @param <ID> The primary key type, Serializable
  */
-@Unique
 public interface CalipsoPersistable<ID extends Serializable> extends Serializable {
+
+    /**
+     * The primary key, field name.
+     */
+    String PK_FIELD_NAME = "pk";
 
     /**
      * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getPk()}
@@ -62,4 +65,9 @@ public interface CalipsoPersistable<ID extends Serializable> extends Serializabl
      */
     boolean isNew();
 
+    interface ItemView {
+    }
+
+    interface CollectionView {
+    }
 }

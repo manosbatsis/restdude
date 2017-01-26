@@ -31,8 +31,8 @@ import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
 import com.restdude.mdd.annotation.ModelRelatedResource;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.mdd.specifications.AnyToOnePredicateFactory;
-import com.restdude.mdd.specifications.GenericSpecifications;
 import com.restdude.mdd.specifications.IPredicateFactory;
+import com.restdude.mdd.specifications.SpecificationUtils;
 import com.restdude.mdd.util.CreateClassCommand;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.mdd.util.JavassistUtil;
@@ -140,15 +140,15 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 
 	/**
 	 * Creates an {@link IPredicateFactory} instance that is parameterized for a specific entity model. The
-	 * predicate factory is registered using {@link GenericSpecifications#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)}
-	 *
+     * predicate factory is registered using {@link SpecificationUtils#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)}
+     *
 	 * @param modelContext
-	 * @see GenericSpecifications#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)
-	 */
+     * @see SpecificationUtils#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)
+     */
 	protected void createPredicateFactory(ModelContext modelContext) {
 		// only add if not explicitly set
-		if (GenericSpecifications.getPredicateFactoryForClass(modelContext.getModelType()) == null && modelContext.getModelIdType() != null) {
-			String className = "AnyToOne" + modelContext.getGeneratedClassNamePrefix() + "PredicateFactory";
+        if (SpecificationUtils.getPredicateFactoryForClass(modelContext.getModelType()) == null && modelContext.getModelIdType() != null) {
+            String className = "AnyToOne" + modelContext.getGeneratedClassNamePrefix() + "PredicateFactory";
 			String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
 					.append(".specification.")
 					.append(className).toString();
@@ -165,7 +165,7 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 
 			// create and register predicate class
 			Class<IPredicateFactory> predicateClass = (Class<IPredicateFactory>) JavassistUtil.createClass(createPredicateCmd);
-			GenericSpecifications.addFactoryForClass(modelContext.getModelType(), ClassUtils.newInstance(predicateClass));
+            SpecificationUtils.addFactoryForClass(modelContext.getModelType(), ClassUtils.newInstance(predicateClass));
 
 		}
 	}

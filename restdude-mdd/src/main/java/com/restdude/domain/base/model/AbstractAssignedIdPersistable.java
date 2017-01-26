@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @param <ID> The pk Serializable
  */
 @MappedSuperclass
-public abstract class AbstractAssignedIdPersistable<ID extends Serializable> extends AbstractPersistable<ID> implements CalipsoPersistable<ID> {
+public abstract class AbstractAssignedIdPersistable<ID extends Serializable> extends AbstractPersistable<ID> {
 
 	private static final long serialVersionUID = 4340156130534111231L;
 
@@ -59,26 +59,27 @@ public abstract class AbstractAssignedIdPersistable<ID extends Serializable> ext
 	public ID getPk() {
 		return pk;
 	}
-	
+
 	/**
 	 *{@inheritDoc}
 	 */
-	public void setPk(ID pk) {
+    @Override
+    public void setPk(ID pk) {
 		this.pk = pk;
 	}
 
-	private ID getSavedPk() {
+
+    private ID getSavedPk() {
 		return savedPk;
 	}
 
 	/**
-	 * @see org.springframework.data.domain.Persistable#isNew()
-	 */
+     * @inheritDoc}
+     */
 	@Override
 	public boolean isNew() {
 		return null == getSavedPk();
 	}
-
 
 	/**
 	 * {@inheritDoc}

@@ -24,13 +24,14 @@
 package com.restdude.mdd.specifications;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.geography.model.Country;
+import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 
 import javax.persistence.criteria.*;
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * A predicates for members that are Many2one/OneToOne or members
@@ -39,16 +40,17 @@ import java.util.Arrays;
 public class AnyToOnePredicateFactory<T extends CalipsoPersistable<ID>, ID extends Serializable> extends AbstractPredicateFactory<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnyToOnePredicateFactory.class);
+    private Class<ID> idType;
 
 	public AnyToOnePredicateFactory() {
 	}
 
 
 	/**
-	 * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
-	 */
+     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
+     */
 	@Override
-	public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, String[] propertyValues) {
+    public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues) {
 
 		Predicate predicate = null;
 		try {
@@ -56,16 +58,21 @@ public class AnyToOnePredicateFactory<T extends CalipsoPersistable<ID>, ID exten
 			if (!CalipsoPersistable.class.isAssignableFrom(fieldType)) {
 				LOGGER.warn("Non-Entity type for property '" + propertyName + "': " + fieldType.getName());
 			}
-
-			Path<T> relatedPath = this.<T>getPath(root, propertyName, fieldType);
-
+            if (this.idType == null) {
+                this.idType = (Class<ID>) ClassUtils.getBeanPropertyType(fieldType, "pk", false);
+            }
+            Path<T> relatedPath = this.<T>getPath(root, propertyName, fieldType);
 			if (propertyValues.length == 1) {
-				Serializable pId = propertyValues[0];
-				predicate = pId != null ? cb.equal(relatedPath.<ID>get("pk"), pId) : relatedPath.isNull();
+                ID pId = conversionService.convert(propertyValues[0], idType);
+                predicate = pId != null ? cb.equal(relatedPath.<ID>get("pk"), pId) : relatedPath.isNull();
 			} else if (propertyValues.length > 1) {
 				Expression<ID> exp = relatedPath.get("pk");
-				predicate = exp.in(Arrays.asList(propertyValues));
-			} else {
+                ArrayList<ID> pks = new ArrayList<>(propertyValues.length);
+                for (String val : propertyValues) {
+                    pks.add(conversionService.convert(val, idType));
+                }
+                predicate = exp.in(pks);
+            } else {
 				predicate = relatedPath.isNull();
 			}
 		} catch (Exception e) {

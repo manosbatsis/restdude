@@ -200,7 +200,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(this.name).append(this.username).toHashCode();
+        return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(this.username).toHashCode();
     }
 
     @Override
@@ -218,7 +218,6 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
         User other = (User) obj;
         EqualsBuilder builder = new EqualsBuilder();
         builder.appendSuper(super.equals(obj));
-        builder.append(getName(), other.getName());
         builder.append(getUsername(), other.getUsername());
         return builder.isEquals();
     }
@@ -226,7 +225,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> implements Cali
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString())
-                .append("username", this.getUsername()).append("new", this.isNew()).append("roles", this.getRoles())
+                .append("username", this.getUsername()).append("name", this.getName()).append("roles", this.getRoles())
                 .toString();
     }
 

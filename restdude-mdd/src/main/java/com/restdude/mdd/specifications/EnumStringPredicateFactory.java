@@ -23,9 +23,9 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.geography.model.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
@@ -48,27 +48,30 @@ public class EnumStringPredicateFactory extends AbstractPredicateFactory<Enum> {
 	}
 
 
-	@Override
-	public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<Enum> fieldType, String[] propertyValues) {
-		Predicate predicate = null;
-		try {
-			LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
-			Path path = this.<Enum>getPath(root, propertyName, fieldType);
+    /**
+     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
+     */
+    @Override
+    public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Enum> fieldType, ConversionService conversionService, String[] propertyValues) {
+        Predicate predicate = null;
+        try {
+            LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+            Path path = this.<Enum>getPath(root, propertyName, fieldType);
 
-			if (propertyValues.length == 1) {
-				predicate = cb.equal(path, Enum.valueOf(this.type, propertyValues[0]));
-			} else {
-				Set choices = new HashSet(propertyValues.length);
-				for (int i = 0; i < propertyValues.length; i++) {
-					choices.add(Enum.valueOf(this.type, propertyValues[i]));
-				}
+            if (propertyValues.length == 1) {
+                predicate = cb.equal(path, conversionService.convert(propertyValues[0], fieldType));
+            } else {
+                Set choices = new HashSet(propertyValues.length);
+                for (int i = 0; i < propertyValues.length; i++) {
+                    choices.add(conversionService.convert(propertyValues[i], fieldType));
+                }
 
-				predicate = path.in(choices);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+                predicate = path.in(choices);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-		return predicate;
-	}
+        return predicate;
+    }
 }

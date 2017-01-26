@@ -26,7 +26,6 @@ package com.restdude.domain.friends.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeDelete;
 import com.restdude.domain.base.model.AbstractPersistable;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -40,18 +39,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * A model representing a directional connection between two users. 
- *
+ * {@value #CLASS_DESCRIPTION}
  */
 @Entity
 @Table(name = "friendships")
 @ModelResource(path = Friendship.API_PATH, apiName = "Friendships", apiDescription = "Operations about friendships")
-@ApiModel(value = "Friendship", description = "A model representing a directional connection between two users. ")
+@ApiModel(value = "Friendship", description = Friendship.CLASS_DESCRIPTION)
 @PreAuthorizeDelete(controller = " hasRole('ROLE_USER') ", service = " hasRole('ROLE_USER') ")
-public class Friendship extends AbstractPersistable<FriendshipId> implements CalipsoPersistable<FriendshipId> {
+public class Friendship extends AbstractPersistable<FriendshipId> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Friendship.class);
     private static final long serialVersionUID = 1L;
+    public static final String CLASS_DESCRIPTION = "A model representing a directional connection between two users. ";
 
     public static final String API_PATH = "friendships";
 
@@ -114,6 +113,9 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
         return inverse;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonIgnore
     @Override
     public boolean isNew() {
@@ -121,14 +123,14 @@ public class Friendship extends AbstractPersistable<FriendshipId> implements Cal
     }
 
     /**
-     * @return the pk
+     * {@inheritDoc}
      */
     public FriendshipId getPk() {
         return pk;
     }
 
     /**
-     * @param id the pk to set
+     * {@inheritDoc}
      */
     public void setPk(FriendshipId id) {
         this.pk = id;

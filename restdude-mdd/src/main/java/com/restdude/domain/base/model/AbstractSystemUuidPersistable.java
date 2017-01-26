@@ -34,7 +34,7 @@ import javax.persistence.MappedSuperclass;
  * Abstract base class for persistent entities with a System UUID primary key
  */
 @MappedSuperclass
-public abstract class AbstractSystemUuidPersistable extends AbstractPersistable<String> implements CalipsoPersistable<String> {
+public abstract class AbstractSystemUuidPersistable extends AbstractPersistable<String> {
 
 	private static final long serialVersionUID = -5418849804520876406L;
 	
@@ -45,33 +45,34 @@ public abstract class AbstractSystemUuidPersistable extends AbstractPersistable<
 	
 
 	/**
-	 * Get the entity's primary key 
-	 * @see org.springframework.data.domain.Persistable#getId()
-	 */
+     * {@inheritDoc}
+     */
 	@Override
 	public String getPk() {
 		return pk;
 	}
 
 	/**
-	 * Set the entity's primary key
-	 * @param id the pk to set
-	 */
+     * {@inheritDoc}
+     */
 	public void setPk(String id) {
 		this.pk = id;
 	}
 	
 	/**
-	 * @see org.springframework.data.domain.Persistable#isNew()
-	 */
+     * {@inheritDoc}
+     */
 	@Override
     @JsonIgnore
     public boolean isNew() {
 		return null == getPk();
 	}
 
-	@Override
-	public void preSave() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void preSave() {
 
-	}
+    }
 }

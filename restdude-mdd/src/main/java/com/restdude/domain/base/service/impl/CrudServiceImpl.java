@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -68,7 +69,13 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudServiceImpl.class);
 
     private SpecificationsBuilder<T, ID> specificationsBuilder;
+    private ConversionService conversionService;
     protected R repository;
+
+    @Autowired
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
 
     @Autowired
     public void setRepository(R repository) {
@@ -78,7 +85,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.getDomainClass());
+        this.specificationsBuilder = new SpecificationsBuilder<T, ID>(this.getDomainClass(), this.conversionService);
     }
 
     /**
@@ -214,13 +221,15 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<ID>, ID exten
     @ModelDrivenPreAuth
     public Page<T> findPaginated(Pageable pageable) {
         Assert.notNull(pageable, "page request can't be null");
+        LOGGER.debug("findPaginated, pageable: {}", pageable);
 
         // if
         if (pageable instanceof ParameterMapBackedPageRequest) {
             @SuppressWarnings("unchecked")
             Map<String, String[]> params = ((ParameterMapBackedPageRequest) pageable).getParameterMap();
-            Specification<T> spec = this.specificationsBuilder.<T>getMatchAll(getDomainClass(), params);
+            Specification<T> spec = this.specificationsBuilder.<T>build(params);
 
+            LOGGER.debug("findPaginated, spec: {}", spec);
             return this.repository.findAll(spec, pageable);
         } else {
             return this.repository.findAll(pageable);

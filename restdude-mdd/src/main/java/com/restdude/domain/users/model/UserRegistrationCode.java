@@ -26,7 +26,6 @@ package com.restdude.domain.users.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
 import com.restdude.domain.base.model.AbstractSystemUuidPersistable;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -42,12 +41,9 @@ import javax.persistence.*;
         apiName = "UserRegistrationCode", apiDescription = "User registration codes (read-only)")
 @Table(name = "registration_code")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class UserRegistrationCode extends AbstractSystemUuidPersistable implements CalipsoPersistable<String> {
+public class UserRegistrationCode extends AbstractSystemUuidPersistable {
 
     private static final long serialVersionUID = 1L;
-
-    public static String SERVICE_PRE_AUTHORIZE_SEARCH = "hasAnyRole('" + Role.ROLE_ADMIN + "', '" + Role.ROLE_SITE_OPERATOR + "')";
-    public static String SERVICE_PRE_AUTHORIZE_VIEW = SERVICE_PRE_AUTHORIZE_SEARCH;
 
     @Formula(" (credentials_id IS NULL) ")
     private Boolean available;

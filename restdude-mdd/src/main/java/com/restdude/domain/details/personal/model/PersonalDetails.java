@@ -23,7 +23,6 @@
  */
 package com.restdude.domain.details.personal.model;
 
-import com.restdude.domain.base.model.AbstractPersistable;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.uischema.annotation.FormSchemaEntry;
@@ -39,7 +38,7 @@ import java.time.LocalDate;
 @ApiModel(description = "PersonalDetails")
 @Table(name = "details_personal")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class PersonalDetails extends AbstractPersistable<String> implements CalipsoPersistable<String> {
+public class PersonalDetails implements CalipsoPersistable<String> {
 
     @Id
     private String id;

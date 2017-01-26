@@ -32,7 +32,7 @@ import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistenceService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
-import com.restdude.mdd.specifications.GenericSpecifications;
+import com.restdude.mdd.specifications.SpecificationUtils;
 import com.restdude.util.email.service.EmailService;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.IActivityNotificationMessage;
@@ -155,8 +155,8 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 				propertyName = iterator.next();
 
 				// verify the property exists
-				Field fileField = GenericSpecifications.getField(this.getDomainClass(), propertyName);
-				if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
+                Field fileField = SpecificationUtils.getField(this.getDomainClass(), propertyName);
+                if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
 					throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
 				}
 
@@ -191,8 +191,8 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<ID>,
 
 		for (String propertyName : filenames) {
 			// verify the property exists
-			Field fileField = GenericSpecifications.getField(this.getDomainClass(), propertyName);
-			if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
+            Field fileField = SpecificationUtils.getField(this.getDomainClass(), propertyName);
+            if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
 				throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
 			}
 

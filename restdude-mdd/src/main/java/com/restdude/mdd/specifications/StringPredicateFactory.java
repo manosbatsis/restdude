@@ -23,10 +23,10 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.geography.model.Country;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
@@ -39,31 +39,41 @@ import java.util.Set;
 public class StringPredicateFactory extends AbstractPredicateFactory<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringPredicateFactory.class);
+    private static final String WILDCARD = "%";
 
 	public StringPredicateFactory() {
 	}
 
 
-	/**
-     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
+    /**
+     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
      */
-	@Override
-    public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<String> fieldType,
-                                  String[] propertyValues) {
+    @Override
+    public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<String> fieldType, ConversionService conversionService, String[] propertyValues) {
         Predicate predicate = null;
 
         LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 
         Path path = this.<Date>getPath(root, propertyName, fieldType);
+        // no value i.e. match NULL
         if (propertyValues.length == 0) {
             predicate = path.isNull();
         }
-        if (propertyValues.length == 1) {
+        // single value, equals, like or IS NULL
+        else if (propertyValues.length == 1) {
             String value = propertyValues[0];
-            predicate = StringUtils.isNotBlank(value) ? cb.equal(path, value) : path.isNull();
-        } else if (propertyValues.length == 2) {
+            if (value.startsWith(WILDCARD) || value.endsWith(WILDCARD)) {
+                predicate = StringUtils.isNotBlank(value) ? cb.like(path, value) : path.isNull();
+            } else {
+                predicate = StringUtils.isNotBlank(value) ? cb.equal(path, value) : path.isNull();
+            }
+        }
+        // two values, region
+        else if (propertyValues.length == 2) {
             predicate = cb.between(path, propertyValues[0], propertyValues[1]);
-        } else {
+        }
+        // more than two values, any of
+        else {
             Set<String> values = new HashSet<>();
             for (int i = 0; i < propertyValues.length; i++) {
                 String value = propertyValues[i];

@@ -31,7 +31,6 @@ import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.base.binding.SkipPropertySerializer;
 import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
 import com.restdude.domain.base.model.AbstractPersistable;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.validation.UserRegistrationCodeConstraint;
 import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -61,7 +60,7 @@ import java.time.LocalDateTime;
 @PreAuthorizePatch(controller = SpelUtil.DENY_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.DENY_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN)
-public class UserCredentials extends AbstractPersistable<String> implements CalipsoPersistable<String> {
+public class UserCredentials extends AbstractPersistable<String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -172,7 +171,7 @@ public class UserCredentials extends AbstractPersistable<String> implements Cali
     }
 
     /**
-     * @see org.springframework.data.domain.Persistable#isNew()
+     * {@inheritDoc}
      */
     @Override
     public boolean isNew() {

@@ -27,7 +27,7 @@ import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.cms.service.BinaryFileService;
-import com.restdude.mdd.specifications.GenericSpecifications;
+import com.restdude.mdd.specifications.SpecificationUtils;
 import com.restdude.util.ConfigurationFactory;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
@@ -72,7 +72,7 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 		LOGGER.info("uploadGet called");
 		List<BinaryFile> uploads = null;
 		// attach file
-        Class clazz = GenericSpecifications.getMemberType(this.service.getDomainClass(), propertyName);
+        Class clazz = SpecificationUtils.getMemberType(this.service.getDomainClass(), propertyName);
         if (BinaryFile.class.isAssignableFrom(clazz)) {
             uploads = this.service.getUploadsForProperty(subjectId, propertyName);
         }
@@ -196,7 +196,7 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 				// attach file
 				// TODO: add/update to collection
-                Class clazz = GenericSpecifications.getMemberType(this.service.getDomainClass(), propertyName);
+                Class clazz = SpecificationUtils.getMemberType(this.service.getDomainClass(), propertyName);
                 if (BinaryFile.class.isAssignableFrom(clazz)) {
                     T target = this.service.findById(subjectId);
                     BeanUtils.setProperty(target, propertyName, bf);

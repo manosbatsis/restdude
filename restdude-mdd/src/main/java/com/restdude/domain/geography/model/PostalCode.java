@@ -27,13 +27,10 @@ import com.restdude.mdd.annotation.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -43,7 +40,7 @@ import javax.persistence.Table;
 @Table(name = "geo_pocode")
 @ModelResource(path = "postalCodes", apiName = "PostalCodes", apiDescription = "Postal code operations")
 @ApiModel(value = "PostalCode", description = "A model representing apostal code")
-public class PostalCode extends AbstractFormalRegion<Locality> {
+public class PostalCode extends AbstractFormalRegion<Locality, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PostalCode.class);
 
@@ -61,11 +58,6 @@ public class PostalCode extends AbstractFormalRegion<Locality> {
     public static String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
     public static String SERVICE_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
     public static String SERVICE_PRE_AUTHORIZE_COUNT = "denyAll";
-
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    private String pk;
 
     public PostalCode() {
         super();
@@ -88,22 +80,6 @@ public class PostalCode extends AbstractFormalRegion<Locality> {
                 .appendSuper(super.hashCode())
                 .append(PostalCode.class)
                 .toHashCode();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getPk() {
-        return pk;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setPk(String pk) {
-        this.pk = pk;
     }
 
     /**

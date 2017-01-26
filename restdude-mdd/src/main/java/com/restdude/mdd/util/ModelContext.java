@@ -86,9 +86,10 @@ public final class ModelContext {
 
     public ModelContext(Class<?> domainClass) {
         Assert.notNull(domainClass, "A domain class is required");
+        LOGGER.debug("domainClass: {}", domainClass);
         String packageName = domainClass.getPackage().getName();
         this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-        this.modelType = (Class<?>) domainClass;
+        this.modelType = domainClass;
         this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
         this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
     }

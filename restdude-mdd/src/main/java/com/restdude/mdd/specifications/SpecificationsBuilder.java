@@ -27,7 +27,9 @@ import com.restdude.domain.base.model.CalipsoPersistable;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -40,11 +42,12 @@ import java.util.*;
 public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends Serializable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpecificationsBuilder.class);
-    private Class<T> domainClass;
+    private final Class<T> domainClass;
+    private final ConversionService conversionService;
 
-
-    public SpecificationsBuilder(Class<T> domainClass2) {
+    public SpecificationsBuilder(Class<T> domainClass, ConversionService conversionService) {
         this.domainClass = domainClass;
+        this.conversionService = conversionService;
     }
 
     /**
@@ -52,34 +55,46 @@ public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends 
      * parameters. This is the entry point for query specifications construction
      * by repositories.
      *
-     * @param domainClass the entity type to query for
      * @param searchTerms the search terms to match
      * @return the result specification
      */
-    public Specification<T> getMatchAll(final Class<T> domainClass, final Map<String, String[]> searchTerms) {
+    public Specification<T> build(final Map<String, String[]> searchTerms) {
 
-        LOGGER.debug("getMatchAll, entity: {}, searchTerms: {}", domainClass.getSimpleName(), searchTerms);
+        LOGGER.debug("build, entity: {}, searchTerms: {}", domainClass.getSimpleName(), searchTerms);
 
         return new Specification<T>() {
+
+            /**
+             * Cache for {@link SimpleJpaRepository#getCountQuery(org.springframework.data.jpa.domain.Specification)}
+             */
+            private Predicate rootPredicate = null;
+
+
             @Override
             public Predicate toPredicate(@SuppressWarnings("rawtypes") Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return buildRootPredicate(domainClass, searchTerms, root, cb);
+                // Cache for {@link SimpleJpaRepository#getCountQuery(org.springframework.data.jpa.domain.Specification)}
+                if (this.rootPredicate == null) {
+                    LOGGER.debug("toPredicate, adding to cache, root: {}, query: {}", root, query);
+                    this.rootPredicate = buildRootPredicate(searchTerms, root, cb);
+                } else {
+                    LOGGER.debug("toPredicate, getting from cache, root: {}, query: {}", root, query);
+                }
+                return this.rootPredicate;
             }
         };
     }
 
     /**
      * Get the root predicate, either a conjunction or disjunction
-     * @param clazz the entity type to query for
      * @param searchTerms the search terms to match
      * @param root the criteria root
      * @param cb the criteria builder
      * @return the resulting predicate
      */
-    protected Predicate buildRootPredicate(Class<T> clazz, final Map<String, String[]> searchTerms,
-                                           Root<T> root, CriteriaBuilder cb) {
+    private Predicate buildRootPredicate(final Map<String, String[]> searchTerms,
+                                         Root<T> root, CriteriaBuilder cb) {
 
-        LOGGER.debug("buildRootPredicate, clazz: {}, searchTerms: {}", clazz, searchTerms);
+        LOGGER.debug("buildRootPredicate0, clazz: {}, searchTerms: {}", domainClass, searchTerms);
         Map<String, String[]> normalizedSearchTerms = new HashMap<>();
         Iterator<String> keyIterator = searchTerms.keySet().iterator();
 
@@ -94,15 +109,15 @@ public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends 
             normalizedSearchTerms.put(newPropertyName, searchTerms.get(propertyName));
         }
 
-        LOGGER.debug("buildRootPredicate, normalizedSearchTerms: {}", normalizedSearchTerms);
+        LOGGER.debug("buildRootPredicate1, normalizedSearchTerms: {}", normalizedSearchTerms);
 
         // build a list of criteria/predicates
-        LinkedList<Predicate> predicates = buildSearchPredicates(clazz, normalizedSearchTerms, root, cb);
-        LOGGER.debug("buildRootPredicate, predicates: {}", predicates);
+        LinkedList<Predicate> predicates = buildSearchPredicates(normalizedSearchTerms, root, cb);
+        LOGGER.debug("buildRootPredicate2, predicates: {}", predicates);
 
         // wrap list in AND/OR junction
         Predicate predicate;
-        if (searchTerms.containsKey(GenericSpecifications.SEARCH_MODE) && searchTerms.get(GenericSpecifications.SEARCH_MODE)[0].equalsIgnoreCase(GenericSpecifications.OR)
+        if (searchTerms.containsKey(SpecificationUtils.SEARCH_MODE) && searchTerms.get(SpecificationUtils.SEARCH_MODE)[0].equalsIgnoreCase(SpecificationUtils.OR)
                 // A disjunction of zero predicates is false so...
                 && predicates.size() > 0) {
             predicate = cb.or(predicates.toArray(new Predicate[predicates.size()]));
@@ -116,13 +131,12 @@ public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends 
 
     /**
      * Build the list of predicates corresponding to the given search terms
-     * @param domainClass the entity type to query for
      * @param searchTerms the search terms to match
      * @param root the criteria root
      * @param cb the criteria builder
      * @return the list of predicates corresponding to the search terms
      */
-    protected LinkedList<Predicate> buildSearchPredicates(final Class<T> domainClass, final Map<String, String[]> searchTerms, Root<T> root, CriteriaBuilder cb) {
+    private LinkedList<Predicate> buildSearchPredicates(final Map<String, String[]> searchTerms, Root<T> root, CriteriaBuilder cb) {
 
         LOGGER.debug("buildSearchPredicates, domainClass: {}, searchTerms: {}", domainClass, searchTerms);
         LinkedList<Predicate> predicates = new LinkedList<Predicate>();
@@ -131,7 +145,8 @@ public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends 
             Set<String> propertyNames = searchTerms.keySet();
             for (String propertyName : propertyNames) {
                 String[] values = searchTerms.get(propertyName);
-                addPredicate(domainClass, root, cb, predicates, values, propertyName);
+                LOGGER.debug("buildSearchPredicates i, propertyName: {}, values: {}", propertyName, values);
+                addPredicate(root, cb, predicates, values, propertyName);
             }
         }
         // return the list of predicates
@@ -141,32 +156,31 @@ public class SpecificationsBuilder<T extends CalipsoPersistable<ID>, ID extends 
 
     /**
      * Add a predicate to the given list if valid
-     * @param domainClass the entity type to query for
      * @param root the criteria root
      * @param cb the criteria builder
      * @param predicates the list to add the predicate into
      * @param propertyValues the predicate values
      * @param propertyName the predicate name
      */
-    protected void addPredicate(Class<T> domainClass, Root<T> root, CriteriaBuilder cb,
-                                LinkedList<Predicate> predicates, String[] propertyValues, String propertyName) {
+    private void addPredicate(Root<T> root, CriteriaBuilder cb,
+                              LinkedList<Predicate> predicates, String[] propertyValues, String propertyName) {
 
-        LOGGER.debug("addPredicate, domainClass: {}, propertyName: {}", domainClass, propertyName);
-        Class fieldType = GenericSpecifications.getMemberType(domainClass, propertyName);
+        LOGGER.debug("addPredicate1, domainClass: {}, propertyName: {}", domainClass, propertyName);
+        Class fieldType = SpecificationUtils.getMemberType(domainClass, propertyName);
         IPredicateFactory predicateFactory = null;
         if (fieldType != null) {
 
-            LOGGER.debug("addPredicate, found field type for domainClass: {}, propertyName: {}, fieldType: {}", domainClass, propertyName, fieldType);
-            predicateFactory = GenericSpecifications.getPredicateFactoryForClass(fieldType);
+            LOGGER.debug("addPredicate2, found field type for domainClass: {}, propertyName: {}, fieldType: {}", domainClass, propertyName, fieldType);
+            predicateFactory = SpecificationUtils.getPredicateFactoryForClass(fieldType);
             if (predicateFactory != null) {
-                LOGGER.debug("addPredicate, found predicate factory: {}", predicateFactory);
-                predicates.add(predicateFactory.getPredicate(root, cb, propertyName, fieldType, propertyValues));
+                LOGGER.debug("addPredicate3, found predicate factory: {}", predicateFactory);
+                predicates.add(predicateFactory.getPredicate(root, cb, propertyName, fieldType, conversionService, propertyValues));
             } else {
-                LOGGER.debug("addPredicate, could not find predicate factory");
+                LOGGER.debug("addPredicate3, could not find predicate factory");
             }
 
         } else {
-            LOGGER.debug("addPredicate, field type not found for domainClass: {}, propertyName: {}, fieldType: {}", domainClass, propertyName, fieldType);
+            LOGGER.debug("addPredicate1, field type not found for domainClass: {}, propertyName: {}, fieldType: {}", domainClass, propertyName, fieldType);
         }
 
     }

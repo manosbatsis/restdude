@@ -122,7 +122,7 @@ public class UserControllerIT extends AbstractControllerIT {
                 .extract().as(User.class);
 
 
-        LOGGER.info("User after uploading files: {}", userAfterUploading);
+        LOGGER.info("User after uploading files: {}, equals: {}", userAfterUploading, user.equals(userAfterUploading));
 
         Assert.assertEquals(user, userAfterUploading);
     }

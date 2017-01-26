@@ -24,27 +24,24 @@
 package com.restdude.domain.geography.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.base.model.AbstractPersistable;
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.mdd.annotation.ModelResource;
-import io.swagger.annotations.ApiModel;
+import com.restdude.domain.base.model.AbstractAssignedIdPersistable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Abstract base class for formal (usually political) geographical regions
  */
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@ModelResource(path = "countries")
-@ApiModel(value = "Region", description = "A model representing a geographcal region.")
-public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> extends AbstractPersistable<String> implements CalipsoPersistable<String> {
+public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, ID extends Serializable> extends AbstractAssignedIdPersistable<ID> {
 
 	private static final String PATH_SEPARATOR = ": ";
+
 
 	@NotNull
 	@Column(name = "name", nullable = false)
@@ -65,8 +62,8 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> exten
 	}
 
 
-	public AbstractFormalRegion(String pk, String name, P parent) {
-		this.setPk(pk);
+    public AbstractFormalRegion(ID pk, String name, P parent) {
+        this.setPk(pk);
 		this.name = name;
 		this.parent = parent;
 	}
@@ -97,32 +94,38 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion> exten
 		this.setPathLevel(pathLevel.shortValue());
 		
 	}
-	
-	public String getName() {
+
+    public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+
+    public void setName(String name) {
 		this.name = name;
 	}
-	public String getPath() {
+
+    public String getPath() {
 		return path;
 	}
-	public void setPath(String path) {
+
+    public void setPath(String path) {
 		this.path = path;
 	}
-	public P getParent() {
-		return parent;
-	}
-	public void setParent(P parent) {
-		this.parent = parent;
-	}
-	public Short getPathLevel() {
+
+    public Short getPathLevel() {
 		return pathLevel;
 	}
-	public void setPathLevel(Short pathLevel) {
+
+    public void setPathLevel(Short pathLevel) {
 		this.pathLevel = pathLevel;
 	}
 
+    public P getParent() {
+        return parent;
+    }
+
+    public void setParent(P parent) {
+        this.parent = parent;
+    }
 
 	@Override
 	public int hashCode() {

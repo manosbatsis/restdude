@@ -23,10 +23,8 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Formula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,15 +35,10 @@ import javax.persistence.*;
 @AttributeOverrides({
         @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
 })
-public class Continent extends AbstractFormalRegion<Continent> implements CalipsoPersistable<String> {
+public class Continent extends AbstractFormalRegion<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
 
-    @Id
-    private String pk;
-
-    @Formula(" (pk) ")
-    private String savedId;
 
 
 	public Continent() {
@@ -77,33 +70,5 @@ public class Continent extends AbstractFormalRegion<Continent> implements Calips
 				.append(Continent.class)
 				.toHashCode();
 	}
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getPk() {
-        return pk;
-    }
-
-    /**
-     * @inheritDoc}
-     */
-    public void setPk(String pk) {
-        this.pk = pk;
-    }
-
-    private String getSavedId() {
-        return savedId;
-    }
-
-    /**
-     * @inheritDoc}
-     */
-    @Override
-    public boolean isNew() {
-        return null == getSavedId();
-    }
 
 }

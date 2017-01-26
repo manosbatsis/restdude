@@ -23,10 +23,9 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.geography.model.Country;
-import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
@@ -45,24 +44,24 @@ public class BooleanPredicateFactory extends AbstractPredicateFactory<Boolean> {
 	}
 
 	/**
-     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, String[])
+     * @see com.restdude.mdd.specifications.IPredicateFactory#getPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
      */
-	@Override
-	public Predicate getPredicate(Root<Country> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, String[] propertyValues) {
-		Predicate predicate = null;
+    @Override
+    public Predicate getPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, ConversionService conversionService, String[] propertyValues) {
+        Predicate predicate = null;
 
 		try {
 			LOGGER.debug("getPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 
 			Path path = this.<Boolean>getPath(root, propertyName, fieldType);
 			if (propertyValues.length == 1) {
-				Boolean b = BooleanUtils.toBooleanObject(propertyValues[0]);
-				predicate = b != null ? cb.equal(path, propertyValues[0]) : path.isNull();
+                Boolean b = conversionService.convert(propertyValues[0], Boolean.class);
+                predicate = b != null ? cb.equal(path, propertyValues[0]) : path.isNull();
 			} else if (propertyValues.length > 1) {
 				List<Boolean> values = new LinkedList<>();
 				for (int i = 0; i < propertyValues.length; i++) {
-					Boolean b = BooleanUtils.toBooleanObject(propertyValues[i]);
-					if (!values.contains(b)) {
+                    Boolean b = conversionService.convert(propertyValues[i], Boolean.class);
+                    if (!values.contains(b)) {
 						values.add(b);
 					}
 				}
