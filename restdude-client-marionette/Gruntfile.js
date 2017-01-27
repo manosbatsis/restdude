@@ -307,7 +307,7 @@ module.exports = function (grunt) {
        // 'cssmin',
         //'uglify',
         'copy:dist-step-2',
-        'rev',
+        //'rev',
         //'usemin',
         'copy:dist-step-3',
         //'htmlmin:dist',
