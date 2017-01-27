@@ -19,7 +19,7 @@
     "marionette": "~2.0.1",
     "bootstrap-sass-official": "~3.2.0",
     //"chartjs": "https://github.com/chartjs",
-    "Js-GoogleMapsLoader": "https://github.com/Carrooi/Js-GoogleMapsLoader",
+    "Js-GoogleMap sLoader": "https://github.com/Carrooi/Js-GoogleMapsLoader",
     "CoreUI-Free-Bootstrap-Admin-Template": "https://github.com/mrholek/CoreUI-Free-Bootstrap-Admin-Template",
     "humanize": "https://github.com/taijinlee/humanize.git#^0.0.9",
     "template": "https://github.com/jgallen23/template.git#^0.2.0",

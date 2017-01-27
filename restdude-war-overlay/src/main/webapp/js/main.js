@@ -93,12 +93,11 @@ require.config({
         // tmp fix until bootstrap devs fix their module deps
         'tether-orig': 'lib/tether-orig',
         'tether': 'lib/tether',
-        'backbone-validation-orig': 'lib/backbone-validation',
+        'backbone-validation': 'lib/backbone-validation',
         'backbone-bootstrap-modal': 'lib/backbone-bootstrap-modal',
         'backbone-forms-list': 'lib/backbone-forms-list',
         'backbone-forms': 'lib/backbone-forms',
         'backbone-forms-bootstrap3': 'lib/backbone-forms-bootstrap3',
-        'backbone-validation': 'lib/resthub/backbone-validation-ext',
         'backbone-queryparams': 'lib/backbone-queryparams',
         'backbone.paginator': 'lib/backbone.paginator',
         'backbone.radio': 'lib/backbone.radio',

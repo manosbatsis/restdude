@@ -93,7 +93,7 @@ require.config({
         },
 
         "marionette_handlebars": {
-            deps: ["backbone.marionette"]
+            deps: ["backbone.marionette", "handlebars"]
         },
         templates : {
 			deps : ['underscore']

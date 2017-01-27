@@ -182,25 +182,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        
-
-        /**
-         * File Revision Confiugration
-         * @property
-         */
-        rev: {
-            files: {
-                expand: true,
-                cwd: '<%= dirs.staging %>/step2',
-                src: ['js/custom/**/*.js',
-                    'js/*.js',
-                    '!js/vendor/*.js',
-                    'js/vendor/modernizr/modernizr.js',
-                    'css/**/*.css',
-                    'img/**/*.{png,jpg}',
-                    'css/imgages/**/*.{png,jpg}']
-            }
-        },
 
         /**
          * JSHint Configuration
@@ -230,19 +211,6 @@ module.exports = function (grunt) {
         //},
 
         //
-
-        htmlmin: {
-            dist: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true
-                },
-                expand: true,
-                cwd: '<%= dirs.staging %>/step2',
-                src: '**/*.html',
-                dest: '<%= dirs.staging %>/step3/'
-            }
-        },
 
         // regarde configuration
 
@@ -278,19 +246,14 @@ module.exports = function (grunt) {
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    // grunt.loadNpmTasks('grunt-contrib-uglify');
      grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-regarde');
     grunt.loadNpmTasks('grunt-usemin');
    // grunt.loadNpmTasks('grunt-contrib-compass');
-    grunt.loadNpmTasks('grunt-rev');
-    grunt.loadNpmTasks('grunt-contrib-imagemin');
-    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-livereload');
     grunt.loadNpmTasks('grunt-contrib-connect');
     //grunt.loadNpmTasks('grunt-contrib-manifest');
@@ -303,12 +266,7 @@ module.exports = function (grunt) {
         'copy:dist-step-1',
         //'compass:dist',
         'requirejs:prod',
-        //'concat',
-       // 'cssmin',
-        //'uglify',
         'copy:dist-step-2',
-        //'rev',
-        //'usemin',
         'copy:dist-step-3',
         //'htmlmin:dist',
         //'manifest',
