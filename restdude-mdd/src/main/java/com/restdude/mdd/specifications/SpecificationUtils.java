@@ -101,7 +101,7 @@ public class SpecificationUtils<T extends CalipsoPersistable<PK>, PK extends Ser
 
         // init ignore list
         // TODO: pick model-specific exclides from anotation
-        String[] ignoredFieldNames = {"page", "direction", "properties", "size", "totalPages", "_searchmode", "_all", "totalElements"};
+        String[] ignoredFieldNames = {"page", "direction", "properties", "size", "totalPages", "_searchmode", "_all", "totalElements", "format"};
         IGNORED_FIELD_NAMES = new ArrayList<String>(ignoredFieldNames.length);
         for (int i = 0; i < ignoredFieldNames.length; i++) {
             IGNORED_FIELD_NAMES.add(ignoredFieldNames[i]);

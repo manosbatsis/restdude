@@ -51,7 +51,7 @@ import java.util.Collection;
  */
 @Configuration
 @Import({EndpointAutoConfiguration.class, EndpointWebMvcAutoConfiguration.class,
-        ManagementServerPropertiesAutoConfiguration.class, EndpointAutoConfiguration.class,
+        ManagementServerPropertiesAutoConfiguration.class,
         HealthIndicatorAutoConfiguration.class, PublicMetricsAutoConfiguration.class})
 public class ActuatorConfig {
 
