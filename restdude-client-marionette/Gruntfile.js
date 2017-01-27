@@ -97,7 +97,7 @@ module.exports = function (grunt) {
             'dist-step-1': {
                 expand: true,
                 cwd: '<%= dirs.root %>',
-                src: ['**', '!css/style.css'],
+                src: ['**', 'css/style.css'],
                 dest: '<%= dirs.staging %>/step1/'
             },
 
@@ -106,11 +106,10 @@ module.exports = function (grunt) {
                 cwd: '<%= dirs.staging %>/step1',
                 src: [
                     '*',
-                    '**/*.js',
-                    '!js/modules',
+                    '**/*.js', 
+                    'js/vendor/**/*.js',
                     'js/vendor/modernizr/modernizr.js',
                     'js/vendor/requirejs/require.js',
-                    '!js/modules/**/*.js',
                     'ico/**',
                     'css/**',
                     'fonts/**',
@@ -127,11 +126,11 @@ module.exports = function (grunt) {
                     '**/*.html',
                     '**',
                     'js/*.js',
-                    '!js/*main.js',
-                    '!**/vendor/**',
+                    'js/*main.js',
+                    '**/vendor/**',
                     'js/vendor/modernizr/*modernizr.js',
                     '**/require.js',
-                    '!js/modules/**/*.js'
+                    'js/modules/**/*.js'
                 ],
                 dest: '<%= dirs.staging %>/step3/'
             },
@@ -311,7 +310,7 @@ module.exports = function (grunt) {
         'rev',
         //'usemin',
         'copy:dist-step-3',
-        'htmlmin:dist',
+        //'htmlmin:dist',
         //'manifest',
         'copy:dist-final'
     ]);
