@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -37,7 +34,7 @@ import java.util.Set;
 /**
  */
 @ShallowReference
-@ModelResource(path = "hosts", controllerSuperClass = AbstractModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
+@ModelResource(value = "hosts", controllerSuperClass = AbstractModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
 @Entity
 @Table(name = "host")
 public class Host extends AbstractSystemUuidPersistableResource {

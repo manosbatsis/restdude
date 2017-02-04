@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -44,7 +41,7 @@ import java.time.LocalDateTime;
 /**
  * {@value #CLASS_DESCRIPTION}
  */
-@ModelResource(path = ErrorLog.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class, apiName = "ErrorLogs",
+@ModelResource(value = ErrorLog.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class, apiName = "ErrorLogs",
         apiDescription = "Stacktrace or other error log details.")
 
 @Entity

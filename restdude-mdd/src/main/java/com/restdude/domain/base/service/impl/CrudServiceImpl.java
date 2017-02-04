@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -28,6 +25,7 @@ import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.CrudService;
 import com.restdude.domain.cms.model.BinaryFile;
+import com.restdude.domain.cms.model.UploadedFile;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.annotation.ModelDrivenPreAuth;
 import com.restdude.mdd.specifications.SpecificationsBuilder;
@@ -294,7 +292,7 @@ public abstract class CrudServiceImpl<T extends CalipsoPersistable<PK>, PK exten
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-    public List<BinaryFile> getUploadsForProperty(PK subjectId, String propertyName) {
+    public List<UploadedFile> getUploadsForProperty(PK subjectId, String propertyName) {
         return this.repository.getUploadsForProperty(subjectId, propertyName);
     }
 

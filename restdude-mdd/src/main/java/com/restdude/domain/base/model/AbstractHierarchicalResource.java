@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -36,7 +33,7 @@ import java.util.List;
 
 
 /**
- * A base class for path-like resource entities: files, folders, categories etc.
+ * A base class for value-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
 public abstract class AbstractHierarchicalResource<T extends AbstractHierarchicalResource<T>> extends AbstractNamedResource {
@@ -49,11 +46,11 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 	 * The HTTP URL of the resource, excluding the protocol, domain and port. Starts with a slash. 
 	 */
     @NotNull
-    @Column(name = "path", length = 1500, nullable = false)
+    @Column(name = "value", length = 1500, nullable = false)
 	private String path;
 	
 	/**
-	 * The number of URL segments in the resourc path
+	 * The number of URL segments in the resourc value
 	 */
     @NotNull
     @Column(name = "path_level", nullable = false)
@@ -95,7 +92,7 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 	@PreUpdate
     @PrePersist
     public void normalizePath() throws UnsupportedEncodingException{
-		// set path
+		// set value
 		if(this.getPath() == null){
 			StringBuffer path = new StringBuffer();
 			if(this.getParent() != null){
@@ -105,7 +102,7 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 			path.append(this.getName());
 			this.setPath(path.toString());
 		}
-		// set path level
+		// set value level
 		Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
 		this.setPathLevel(pathLevel.shortValue());
 		

@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -47,23 +44,23 @@ public abstract class AbstractPredicateFactory<T extends Serializable> implement
 			path = pathSteps.length == 1
 					? root.<T>get(step)
                     : root.get(step);
-            LOGGER.debug("getPath0, added path step: {}, result path: {}", step, path);
+            LOGGER.debug("getPath0, added value step: {}, result value: {}", step, path);
 
             for (int i = 1; i < pathSteps.length - 1; i++) {
                 step = pathSteps[i];
                 path = path.get(step);
-                LOGGER.debug("getPath{}, added path step: {}, result path: {}", i, step, path);
+                LOGGER.debug("getPath{}, added value step: {}, result value: {}", i, step, path);
 			}
 
             step = pathSteps[pathSteps.length - 1];
             path = path.<T>get(step);
-            LOGGER.debug("getPath{}, added path step: {}, result path: {}", (pathSteps.length - 1), step, path);
+            LOGGER.debug("getPath{}, added value step: {}, result value: {}", (pathSteps.length - 1), step, path);
 
 
 		} else {
 			LOGGER.debug("getPath, single-step propertyName: {}", propertyName);
 			path = root.<T>get(propertyName);
-			LOGGER.debug("getPath, single-step propertyName: {}, result path: {}", propertyName, path);
+			LOGGER.debug("getPath, single-step propertyName: {}, result value: {}", propertyName, path);
 		}
 		return (Path<T>) path;
 	}

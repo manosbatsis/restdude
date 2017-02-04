@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -37,7 +34,7 @@ import javax.persistence.*;
 @ShallowReference
 @Entity
 @ApiModel(description = "UserRegistrationCode")
-@ModelResource(path = "userRegistrationCodes", controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(value = "userRegistrationCodes", controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "UserRegistrationCode", apiDescription = "User registration codes (read-only)")
 @Table(name = "registration_code")
 @Inheritance(strategy = InheritanceType.JOINED)

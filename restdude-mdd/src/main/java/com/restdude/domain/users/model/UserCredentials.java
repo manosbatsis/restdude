@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -46,7 +43,7 @@ import java.time.LocalDateTime;
 @ShallowReference
 @Entity
 @Table(name = "user_credentials")
-@ModelResource(path = "userCredentials", apiName = "User Credentials", apiDescription = "Operations about user credentials", controllerSuperClass = AbstractReadOnlyModelController.class)
+@ModelResource(value = "userCredentials", apiName = "User Credentials", apiDescription = "Operations about user credentials", controllerSuperClass = AbstractReadOnlyModelController.class)
 @ApiModel(value = "UserCredentials", description = "User login information")
 
 @PreAuthorizeCount(controller = SpelUtil.DENY_ALL)

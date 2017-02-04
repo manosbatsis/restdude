@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -45,7 +42,7 @@ public class FriendshipId extends EmbeddableManyToManyId<User, String, User, Str
     private static final Logger LOGGER = LoggerFactory.getLogger(FriendshipId.class);
     public static final String CLASS_DESCRIPTION = "An {@link javax.persistence;Embeddable} JPA composite key. "
             + "The custom implementation provides support to all relevant de)serialization components "
-            + "(JSON, request mappings, path/param variables etc.) " + "for both [ownerId" + EmbeddableManyToManyId.SPLIT_CHAR
+            + "(JSON, request mappings, value/param variables etc.) " + "for both [ownerId" + EmbeddableManyToManyId.SPLIT_CHAR
             + "friendId]" + " and [friendId] string representations.";
 
     @Override

@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -37,7 +34,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 
-@ModelResource(path = ClientError.API_PATH,
+@ModelResource(value = ClientError.API_PATH,
         apiName = "Client Errors", apiDescription = "Client Error Operations")
 @Entity
 @Table(name = "error_client")

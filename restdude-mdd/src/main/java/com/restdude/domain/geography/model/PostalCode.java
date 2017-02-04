@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -38,7 +35,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "geo_pocode")
-@ModelResource(path = "postalCodes", apiName = "PostalCodes", apiDescription = "Postal code operations")
+@ModelResource(value = "postalCodes", apiName = "PostalCodes", apiDescription = "Postal code operations")
 @ApiModel(value = "PostalCode", description = "A model representing apostal code")
 public class PostalCode extends AbstractFormalRegion<Locality, String> {
 

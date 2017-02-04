@@ -1,8 +1,0 @@
-{
-  "name": "backbone.marionette.handlebars",
-  "version": "0.2.0",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/asciidisco/Backbone.Marionette.Handlebars"
-  }
-}

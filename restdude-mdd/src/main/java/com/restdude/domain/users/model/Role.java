@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -40,7 +37,7 @@ import java.util.Collection;
 
 /**
  */
-@ModelResource(path = "roles", controllerSuperClass = AbstractModelController.class, 
+@ModelResource(value = "roles", controllerSuperClass = AbstractModelController.class,
 	apiName = "Roles", apiDescription = "Operations about roles")
 @Entity
 @Table(name = "role")

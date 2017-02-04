@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -31,7 +28,7 @@ import javax.validation.constraints.NotNull;
 
 
 /**
- * A base class for path-like resource entities: files, folders, categories etc.
+ * A base class for value-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
 public abstract class AbstractNamedResource extends AbstractSystemUuidPersistableResource {

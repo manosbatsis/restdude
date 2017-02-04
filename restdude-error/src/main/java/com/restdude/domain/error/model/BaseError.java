@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -51,7 +48,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
-@ModelResource(path = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(value = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "Errors", apiDescription = "Generic error information (readonly)")
 @ApiModel(value = "BaseError", description = "Generic error superclass")
 @Entity
@@ -67,7 +64,7 @@ import java.time.LocalDateTime;
 @PreAuthorizePatch(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
-public class BaseError extends AbstractSystemUuidPersistableResource implements PersistableError<String> {
+public class BaseError extends AbstractSystemUuidPersistableResource  implements  PersistableError<String>{
     public static final String API_PATH = "allErrors";
 
     @CreatedDate

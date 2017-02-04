@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -126,7 +123,7 @@ public interface FilePersistenceService {
     }
 
     /**
-     * The method saves the given multipart file to the path specified, ignoring the original file name.
+     * The method saves the given multipart file to the value specified, ignoring the original file name.
      * @param fileField
      * @param file
      * @return the URL for the saved file
@@ -198,7 +195,7 @@ public interface FilePersistenceService {
     }
 
     /**
-     * The method saves the given multipart file to the path specified, ignoring the original file name.
+     * The method saves the given multipart file to the value specified, ignoring the original file name.
      *
      * @param fileField
      * @param file

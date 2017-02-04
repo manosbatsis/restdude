@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-framework, https://manosbatsis.github.io/restdude/restdude-framework
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -80,7 +77,7 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
         response.setContentType(JSON_UTF8);
         if (LOGGER.isDebugEnabled()) {
             String method = requestMethodOverride != null ? requestMethodOverride : request.getMethod();
-            LOGGER.debug("doFilterInternal, method: " + method + ", path: " + request.getRequestURL() + ", contextPath: " + request.getContextPath() + ", method override: " + requestMethodOverride + ", authToken: " + cookieToken);
+            LOGGER.debug("doFilterInternal, method: " + method + ", value: " + request.getRequestURL() + ", contextPath: " + request.getContextPath() + ", method override: " + requestMethodOverride + ", authToken: " + cookieToken);
         }
         if (!StringUtils.isEmpty(requestMethodOverride) || !StringUtils.isEmpty(cookieToken)) {
             HttpServletRequest wrapper = new RestRequestNormalizerRequestWrapper(request, requestMethodOverride, cookieToken);

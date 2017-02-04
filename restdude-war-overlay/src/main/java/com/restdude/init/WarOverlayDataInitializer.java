@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -23,6 +20,7 @@
  */
 package com.restdude.init;
 
+import com.restdude.domain.error.model.Error;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.service.ErrorLogService;
@@ -107,8 +105,8 @@ public class WarOverlayDataInitializer extends DataInitializer {
     }
 
 
-    protected List<SystemError> initSystemErrors(Iterable<User> users) {
-        List<SystemError> errors = new LinkedList<SystemError>();
+    protected List<Error> initSystemErrors(Iterable<User> users) {
+        List<Error> errors = new LinkedList<Error>();
         Iterator<User> usersIterator = users.iterator();
         User user = null;
         Object[][] stackTraces = {

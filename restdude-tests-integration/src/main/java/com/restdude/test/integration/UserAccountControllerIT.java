@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-tests-integration, https://manosbatsis.github.io/restdude/restdude-tests-integration
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -119,7 +116,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
     @Test(description = "Test logging in with correct credentials")
     public void testAnonymousRemember() throws Exception {
 
-        ExtractableResponse<Response> rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).when()
+        ExtractableResponse<Response> rs = given().accept(MIME_APPLICATION_JSON_UTF8).contentType(MIME_APPLICATION_JSON_UTF8).when()
                 .get(WEBCONTEXT_PATH + "/api/auth/userDetails")
                 .then()
                 .log().all()

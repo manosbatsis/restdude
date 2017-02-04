@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-websocket, https://manosbatsis.github.io/restdude/restdude-websocket
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -39,7 +36,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "stomp_session")
-@ModelResource(path = StompSession.API_PATH, apiName = "STOMP Sessions", apiDescription = "STOMP Session Operations")
+@ModelResource(value = StompSession.API_PATH, apiName = "STOMP Sessions", apiDescription = "STOMP Session Operations")
 @ApiModel(value = "STOMP Session", description = "A model representing a websocket STOMP session")
 public class StompSession extends AbstractAssignedIdPersistableResource<String> {
 

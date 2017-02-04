@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -55,7 +52,7 @@ class NestedJunctions {
 			String path, String[] values) {
 		String[] junctionKeyAndPropName = path.split(":");
 		if (junctionKeyAndPropName.length != 2) {
-			LOGGER.warn("Ignoring invalid path for nested/junctioned param: "
+			LOGGER.warn("Ignoring invalid value for nested/junctioned param: "
 					+ path);
 		} else {
 			Map<String, String[]> groupedPrams = junctions

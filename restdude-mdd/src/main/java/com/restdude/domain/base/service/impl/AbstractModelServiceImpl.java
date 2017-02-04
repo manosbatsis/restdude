@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -30,6 +27,7 @@ import com.restdude.domain.base.repository.ModelRepository;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistenceService;
+import com.restdude.domain.users.model.LocalUser;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.mdd.specifications.SpecificationUtils;
@@ -95,7 +93,7 @@ public abstract class AbstractModelServiceImpl<T extends CalipsoPersistable<PK>,
 	}
 	
 	@Override
-	public User getPrincipalLocalUser() {
+	public LocalUser getPrincipalLocalUser() {
 		ICalipsoUserDetails principal = getPrincipal();
 		User user = null;
 		if (principal != null && principal.getPk() != null) {

@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -43,7 +40,7 @@ public class FileDTO {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("path", this.getPath())
+                .append("value", this.getPath())
                 .append("contentLength", this.getContentLength())
                 .append("contentType", this.getContentType())
                 .toString();

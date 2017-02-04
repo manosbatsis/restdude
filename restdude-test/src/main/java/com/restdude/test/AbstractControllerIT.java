@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-test, https://manosbatsis.github.io/restdude/restdude-test
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -75,7 +72,8 @@ public class AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractControllerIT.class);
 
-    protected static final String JSON_UTF8 = "application/json; charset=UTF-8";
+    protected static final String MIME_APPLICATION_JSON_UTF8 = "application/json; charset=UTF-8";
+    protected static final String MIME_APPLICATION_VND_API_JSON_UTF8 = "application/vnd.api+json; charset=UTF-8";
 
     protected static final Configuration CONFIG = ConfigurationFactory.getConfiguration();
 
@@ -243,7 +241,7 @@ public class AbstractControllerIT {
         loginSubmission.put("password", password);
 
         // attempt login and test for a proper result
-        Response rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).body(loginSubmission).log().all().when()
+        Response rs = given().accept(MIME_APPLICATION_JSON_UTF8).contentType(MIME_APPLICATION_JSON_UTF8).body(loginSubmission).log().all().when()
                 .post(WEBCONTEXT_PATH + "/api/auth/userDetails");
 
         // validate login
@@ -266,7 +264,7 @@ public class AbstractControllerIT {
     }
 
     protected RequestSpecification getRequestSpec(String ssoToken) {
-        return this.getRequestSpec(ssoToken, JSON_UTF8, JSON_UTF8);
+        return this.getRequestSpec(ssoToken, MIME_APPLICATION_JSON_UTF8, MIME_APPLICATION_JSON_UTF8);
     }
 
     protected RequestSpecification getRequestSpec(String ssoToken, String accept, String contentType) {

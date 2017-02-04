@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -23,6 +20,7 @@
  */
 package com.restdude.mdd.util;
 
+import com.restdude.domain.base.controller.AbstractModelController;
 import com.restdude.mdd.annotation.ModelRelatedResource;
 import com.restdude.mdd.annotation.ModelResource;
 import com.restdude.util.ClassUtils;
@@ -99,7 +97,7 @@ public final class ModelContext {
         Assert.notNull(domainClass, "A domain class is required");
         String packageName = domainClass.getPackage().getName();
         this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-        this.modelType = (Class<?>) domainClass;
+        this.modelType = domainClass;
         this.modelResource = modelResource;
 
         this.name = getPath(domainClass);
@@ -114,45 +112,16 @@ public final class ModelContext {
 
     }
 
-    public ModelContext(ModelRelatedResource resource, Class<?> domainClass){
-        String packageName = domainClass.getPackage().getName();
-        this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-
-        this.name = getPath(domainClass);
-        this.apiAnnotationMembers = getApiAnnotationMembers(domainClass);
-
-        String parentProperty = resource.parentProperty();
-        this.parentClass = (Class<?>) ReflectionUtils.findField(domainClass, parentProperty).getType();
-
-        String parentName = getPath(parentClass);
-        this.path = "/" + parentName + "/{peId}/" + this.name;
-
-        this.modelType = (Class<?>) domainClass;
-        this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
-        this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
-
-        this.parentProperty = resource.parentProperty();
-    }
 
 
     public static ModelContext from(Class<?> domainClass){
 
         ModelResource ar = domainClass.getAnnotation(ModelResource.class);
-        ModelRelatedResource anr = domainClass.getAnnotation(ModelRelatedResource.class);
 
         ModelContext wrapper = null;
         if( ar != null ){
             wrapper = new ModelContext(ar, domainClass);
-        }else if( anr != null ){
-            wrapper = new ModelContext(anr, domainClass);
         }
-        /*else{
-            // look for an ancestor who might be a resource
-            Class<?> superClass = domainClass.getSuperclass();
-            if( superClass != null && !Object.class.equals( superClass )){
-                wrapper = from( domainClass.getSuperclass() );
-            }
-        }*/
 
         // finally add a wrapper for limited processing if needed
         if (wrapper == null) {
@@ -175,7 +144,11 @@ public final class ModelContext {
 
     
     public Class getControllerSuperClass(){
-    	return this.modelResource.controllerSuperClass();
+        Class sClass = this.modelResource.controllerSuperClass();
+        if(sClass == null || Object.class.equals(sClass)){
+            sClass = AbstractModelController.class;
+        }
+        return  sClass;
     }
     
     public Class<?> getServiceInterfaceType() {
@@ -245,21 +218,33 @@ public final class ModelContext {
         ModelResource ar = domainClass.getAnnotation(ModelResource.class);
         ModelRelatedResource anr = domainClass.getAnnotation(ModelRelatedResource.class);
 
-        String result;
+        StringBuffer result = new StringBuffer();
+
+        // parent app path
+        String appParent = ar.applicationParent();
+        if(StringUtils.isNotBlank(appParent)){
+            result.append(appParent);
+            if(!appParent.endsWith("/")){
+                result.append("/");
+            }
+        }
+
+        // append app name
+        String appName;
         if( ar != null ){
-            result = ar.path();
+            appName = ar.value();
         }else if( anr != null){
-            result = anr.path();
+            appName = anr.path();
         }else{
             throw new IllegalStateException("Not an entity");
         }
-
-        if( result == null || result.trim().isEmpty() ){
-            result = domainClass.getSimpleName();
-            result = result.toLowerCase().charAt(0) + result.substring(1) + "s";
+        if( StringUtils.isBlank(appName)){
+            appName = domainClass.getSimpleName();
+            appName = appName.toLowerCase().charAt(0) + result.substring(1) + "s";
         }
+        result.append(appName);
 
-        return result;
+        return result.toString();
     }
 
     public static Map<String, Object> getApiAnnotationMembers(Class<?> domainClass){
@@ -273,10 +258,10 @@ public final class ModelContext {
             	String[] tags = {resource.apiName()};
             	apiAnnotationMembers.put("tags", tags);
             }
-            // or path
-            else if(StringUtils.isNotBlank(resource.path())){
+            // or value
+            else if(StringUtils.isNotBlank(resource.value())){
 
-            	String[] tags = {resource.path()};
+            	String[] tags = {resource.value()};
             	apiAnnotationMembers.put("tags", tags);
             }
             // or simple name

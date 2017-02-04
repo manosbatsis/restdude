@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -41,7 +38,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "images")
-public class BinaryFile extends AbstractSystemUuidPersistableResource {
+public class BinaryFile extends AbstractSystemUuidPersistableResource implements UploadedFile {
     
     private String name;
 
@@ -80,6 +77,7 @@ public class BinaryFile extends AbstractSystemUuidPersistableResource {
 
 	public BinaryFile() {}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -89,7 +87,7 @@ public class BinaryFile extends AbstractSystemUuidPersistableResource {
 //	public String toString() {
 //		return "BinaryFile [name=" + name + ", thumbnailFilename="
 //				+ thumbnailFilename + ", newFilename=" + newFilename
-//				+ ", fileNameExtention=" + fileNameExtention + ", path=" + path
+//				+ ", fileNameExtention=" + fileNameExtention + ", value=" + value
 //				+ ", parentPath=" + parentPath + ", contentType=" + contentType
 //				+ ", size=" + size + ", thumbnailSize=" + thumbnailSize
 //				+ ", url=" + url + ", thumbnailUrl=" + thumbnailUrl
@@ -113,128 +111,159 @@ public class BinaryFile extends AbstractSystemUuidPersistableResource {
 //				+ hashCode() + ", getClass()=" + getClass() + "]";
 //	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getThumbnailFilename() {
 		return thumbnailFilename;
 	}
 
+	@Override
 	public void setThumbnailFilename(String thumbnailFilename) {
 		this.thumbnailFilename = thumbnailFilename;
 	}
 
+	@Override
 	public String getNewFilename() {
 		return newFilename;
 	}
 
+	@Override
 	public void setNewFilename(String newFilename) {
 		this.newFilename = newFilename;
 	}
 
+	@Override
 	public String getFileNameExtention() {
 		return fileNameExtention;
 	}
 
+	@Override
 	public void setFileNameExtention(String fileNameExtention) {
 		this.fileNameExtention = fileNameExtention;
 	}
 
+	@Override
 	public String getPath() {
 		return path;
 	}
 
+	@Override
 	public void setPath(String path) {
 		this.path = path;
 	}
 
+	@Override
 	public String getParentPath() {
 		return parentPath;
 	}
 
+	@Override
 	public void setParentPath(String parentPath) {
 		this.parentPath = parentPath;
 	}
 
+	@Override
 	public String getContentType() {
 		return contentType;
 	}
 
+	@Override
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
 
+	@Override
 	public Long getSize() {
 		return size;
 	}
 
+	@Override
 	public void setSize(Long size) {
 		this.size = size;
 	}
 
+	@Override
 	public Long getThumbnailSize() {
 		return thumbnailSize;
 	}
 
+	@Override
 	public void setThumbnailSize(Long thumbnailSize) {
 		this.thumbnailSize = thumbnailSize;
 	}
 
+	@Override
 	public String getUrl() {
 		return url;
 	}
 
+	@Override
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
+	@Override
 	public String getThumbnailUrl() {
 		return thumbnailUrl;
 	}
 
+	@Override
 	public void setThumbnailUrl(String thumbnailUrl) {
 		this.thumbnailUrl = thumbnailUrl;
 	}
 
+	@Override
 	public String getDeleteUrl() {
 		return deleteUrl;
 	}
 
+	@Override
 	public void setDeleteUrl(String deleteUrl) {
 		this.deleteUrl = deleteUrl;
 	}
 
+	@Override
 	public String getDeleteType() {
 		return deleteType;
 	}
 
+	@Override
 	public void setDeleteType(String deleteType) {
 		this.deleteType = deleteType;
 	}
 
-    public List<String> getInitialPreviewConfig() {
+    @Override
+	public List<String> getInitialPreviewConfig() {
 		return initialPreviewConfig;
 	}
 
+	@Override
 	public void setInitialPreviewConfig(List<String> initialPreviewConfig) {
 		this.initialPreviewConfig = initialPreviewConfig;
 	}
 
+	@Override
 	public List<String> getInitialPreview() {
 		return initialPreview;
 	}
 
+	@Override
 	public void setInitialPreview(List<String> initialPreview) {
 		this.initialPreview = initialPreview;
 	}
 
+	@Override
 	public boolean addInitialPreview(String initialPreview){
 		if(CollectionUtils.isEmpty(this.initialPreview)){
 			this.initialPreview = new LinkedList<String>();
 		}
 		return this.initialPreview.add(initialPreview);
 	}
+	@Override
 	public boolean addInitialPreviewConfig(String initialPreviewConfig){
 		if(CollectionUtils.isEmpty(this.initialPreviewConfig)){
 			this.initialPreviewConfig = new LinkedList<String>();

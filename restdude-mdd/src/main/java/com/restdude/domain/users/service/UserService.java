@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -27,6 +24,7 @@ import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetReque
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.domain.base.service.ModelService;
+import com.restdude.domain.users.model.LocalUser;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
@@ -90,7 +88,7 @@ public interface UserService extends ModelService<User, String>{
 	 */
 	User findById(String userId);
 
-	User createForImplicitSignup(User user);
+	LocalUser createForImplicitSignup(User user);
 
 	/**
 	 * Get a local application user matching the given credentials, after adding

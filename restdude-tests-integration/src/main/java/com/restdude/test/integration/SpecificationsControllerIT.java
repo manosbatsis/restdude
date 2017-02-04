@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-tests-integration, https://manosbatsis.github.io/restdude/restdude-tests-integration
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -95,7 +92,7 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
                 body("content[0].parent.pk", equalTo("AS"));
     }
 
-    @Test(description = "Test path to related entities simple type property")
+    @Test(description = "Test value to related entities simple type property")
     public void testPathToRelatedSimpleTypeProperty() throws Exception {
         LOGGER.debug("testPathToRelatedSimpleTypeProperty");
         given().spec(adminRequestSpec).

@@ -38,6 +38,8 @@
     </scm>
 
     <modules>
+        <module>restdude-api</module>
+        <module>restdude-jsonapi</module>
         <module>restdude-resources</module>
         <module>restdude-util</module>
         <module>restdude-mdd</module>
@@ -113,6 +115,7 @@
         <commons-collections4.version>4.1</commons-collections4.version>
 
         <!-- Misc -->
+        <elide-core.version>2.5.1-SNAPSHOT</elide-core.version>
         <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.1.2</thymeleaf-layout-dialect.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
@@ -922,7 +925,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
+            <!-- Elide -->
+            <dependency>
+                <groupId>com.yahoo.elide</groupId>
+                <artifactId>elide-core</artifactId>
+                <version>${elide-core.version}</version>
+            </dependency>
             <!--Hibernate -->
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -974,6 +982,11 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
                 <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>1.1.0.Final</version>
             </dependency>
             <dependency>
                 <groupId>taglibs</groupId>
@@ -1219,6 +1232,13 @@
                 <groupId>org.eclipse.jetty.websocket</groupId>
                 <artifactId>websocket-client</artifactId>
                 <version>${jetty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.12</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
 

@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -48,7 +45,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@ModelResource(path = SystemError.API_PATH, controllerSuperClass = AbstractModelController.class,
+@ModelResource(value = SystemError.API_PATH, controllerSuperClass = AbstractModelController.class,
         apiName = "System Errors", apiDescription = "System Error Operations (readonly)")
 @Entity
 @Table(name = "error_system")

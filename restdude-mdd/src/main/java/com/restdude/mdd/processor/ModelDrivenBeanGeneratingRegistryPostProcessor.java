@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -178,7 +175,7 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 	 * 
 	 * <pre>
 	 * {@code
-	 * &#64;ModelResource(path = "countries", apiName = "Countries", apiDescription = "Operations about countries") one
+	 * &#64;ModelResource(value = "countries", apiName = "Countries", apiDescription = "Operations about countries") one
 	 * }
 	 * </pre>
 	 * 
@@ -244,7 +241,7 @@ public class ModelDrivenBeanGeneratingRegistryPostProcessor implements BeanDefin
 			// set request mapping annotation
 			Map<String, Object> members = new HashMap<String, Object>();
 			String[] path = {"/api/rest" + modelContext.getPath()};
-			members.put("path", path);
+			members.put("value", path);
 			String[] types = { "application/json", "application/xml" };
 			members.put("produces", types);
 			//members.put("consumes", types);

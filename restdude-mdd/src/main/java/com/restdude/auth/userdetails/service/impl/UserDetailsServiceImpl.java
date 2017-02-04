@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -292,7 +289,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     user.setFirstName(socialFirstName);
                     user.setLastName(socialLastName);
                     try {
-                        user = userService.createForImplicitSignup(user);
+                        user = (User) userService.createForImplicitSignup(user);
 
                         //username = user.getUsername();
                     } catch (Exception e) {
@@ -340,7 +337,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             User user) {
         LOGGER.info("#createForImplicitSignup, user: {}", user);
         ICalipsoUserDetails userDetails = UserDetails
-				.fromUser(this.userService.createForImplicitSignup(user));
+				.fromUser((User) this.userService.createForImplicitSignup(user));
 		return userDetails;
 	}
 

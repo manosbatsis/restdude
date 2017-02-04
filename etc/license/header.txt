@@ -1,9 +1,6 @@
 
 Restdude
 -------------------------------------------------------------------
-Module ${project.name}, ${project.url}
-
-${project.description}
 
 Copyright © ${project.inceptionYear} ${owner} (${email})
 

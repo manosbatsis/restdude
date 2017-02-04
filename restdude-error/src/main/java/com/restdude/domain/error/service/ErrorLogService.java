@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -23,7 +20,7 @@
  */
 package com.restdude.domain.error.service;
 
-import com.restdude.domain.base.service.AbstractAssignedIdModelService;
+import com.restdude.domain.base.service.impl.AbstractAssignedIdModelService;
 import com.restdude.domain.error.model.ErrorLog;
 
 

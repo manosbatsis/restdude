@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -47,7 +44,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 	@Column(name = "name", nullable = false)
 	private String name;
 	@NotNull
-	@Column(name = "path", nullable = false)
+	@Column(name = "value", nullable = false)
 	private String path;
 	@NotNull
 	@Column(name = "path_level", nullable = false)
@@ -79,7 +76,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
      */
     @Override
     public void preSave() {
-        // set path
+        // set value
 		if(this.getPath() == null){
 			StringBuffer path = new StringBuffer();
 			if(this.getParent() != null){
@@ -89,7 +86,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 			path.append(this.getName());
 			this.setPath(path.toString());
 		}
-		// set path level
+		// set value level
 		Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
 		this.setPathLevel(pathLevel.shortValue());
 		

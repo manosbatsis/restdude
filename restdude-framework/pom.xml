@@ -69,6 +69,12 @@
 
         <dependency>
             <groupId>com.restdude</groupId>
+            <artifactId>restdude-jsonapi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.restdude</groupId>
             <artifactId>restdude-auth-spel</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -4,7 +4,7 @@ define([
         "underscore",
         "backbone",
         'modules/collections/TwitterCollection',
-        'backbone.marionette'
+        'marionette'
     ],
 
     function (_, Backbone, TwitterCollection) {

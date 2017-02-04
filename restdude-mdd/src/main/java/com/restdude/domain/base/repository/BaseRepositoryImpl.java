@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -25,6 +22,7 @@ package com.restdude.domain.base.repository;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.cms.model.BinaryFile;
+import com.restdude.domain.cms.model.UploadedFile;
 import com.restdude.domain.metadata.model.MetadataSubject;
 import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.mdd.util.EntityUtil;
@@ -295,7 +293,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-    public List<BinaryFile> getUploadsForProperty(PK subjectId, String propertyName) {
+    public List<UploadedFile> getUploadsForProperty(PK subjectId, String propertyName) {
         CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 
 		CriteriaQuery<BinaryFile> query = cb.createQuery(BinaryFile.class);
@@ -303,7 +301,12 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
         query.where(cb.equal(root.get("pk"), subjectId));
         Selection<? extends BinaryFile> join = root.join(propertyName, JoinType.INNER);
         query.select(join);
-        return this.entityManager.createQuery(query).getResultList();
+        List<BinaryFile> results = this.entityManager.createQuery(query).getResultList();
+        List<UploadedFile> casted = new ArrayList<>(results.size());
+        for(BinaryFile f : results){
+        	casted.addAll(results);
+		}
+        return casted;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -435,7 +438,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 		// We build the entity graph based on the paths with highest depth first
 		for (String path : attributePaths) {
 
-			// Fast path - just single attribute
+			// Fast value - just single attribute
 			if (!path.contains(".")) {
 				entityGraph.addAttributeNodes(path);
 				continue;
@@ -453,19 +456,4 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 		}
 	}
 
-	public static enum EntityGraphType {
-
-		FETCH("javax.persistence.fetchgraph"),
-		LOAD("javax.persistence.loadgraph");
-
-		private String type;
-
-		EntityGraphType(String type) {
-			this.type = type;
-		}
-
-		public String getType() {
-			return type;
-		}
-	}
 }

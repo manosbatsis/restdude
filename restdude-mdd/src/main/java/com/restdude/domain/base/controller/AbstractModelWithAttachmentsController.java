@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -26,6 +23,7 @@ package com.restdude.domain.base.controller;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.service.ModelService;
 import com.restdude.domain.cms.model.BinaryFile;
+import com.restdude.domain.cms.model.UploadedFile;
 import com.restdude.domain.cms.service.BinaryFileService;
 import com.restdude.mdd.specifications.SpecificationUtils;
 import com.restdude.util.ConfigurationFactory;
@@ -67,10 +65,10 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 	@RequestMapping(value = "{subjectId}/uploads/{propertyName}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get file uploads by property")
-    public List<BinaryFile> getUploadsByProperty(@PathVariable PK subjectId,
-                                                 @PathVariable String propertyName) {
+    public List<UploadedFile> getUploadsByProperty(@PathVariable PK subjectId,
+												   @PathVariable String propertyName) {
 		LOGGER.info("uploadGet called");
-		List<BinaryFile> uploads = null;
+		List<UploadedFile> uploads = null;
 		// attach file
         Class clazz = SpecificationUtils.getMemberType(this.service.getDomainClass(), propertyName);
         if (BinaryFile.class.isAssignableFrom(clazz)) {
@@ -161,12 +159,12 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 				bf.setContentType(mpf.getContentType());
 				bf.setSize(mpf.getSize());
 
-				// request targets specific path?
+				// request targets specific value?
 				StringBuffer uploadsPath = new StringBuffer('/')
 						.append(this.service.getDomainClass().getDeclaredField("PATH_FRAGMENT").get(String.class))
 						.append('/').append(subjectId).append("/uploads/").append(propertyName);
 				bf.setParentPath(uploadsPath.toString());
-				LOGGER.info("Saving image entity with path: " + bf.getParentPath());
+				LOGGER.info("Saving image entity with value: " + bf.getParentPath());
 				bf = binaryFileService.create(bf);
 
 				LOGGER.info("file name: {}", bf.getNewFilename());
@@ -184,7 +182,7 @@ public abstract class AbstractModelWithAttachmentsController<T extends CalipsoPe
 
 				File newFile = new File(storageDirectory, bf.getNewFilename());
 				newFile.createNewFile();
-				LOGGER.info("newFile path: {}", newFile.getAbsolutePath());
+				LOGGER.info("newFile value: {}", newFile.getAbsolutePath());
 				Files.copy(mpf.getInputStream(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				BufferedImage thumbnail = Scalr.resize(ImageIO.read(newFile), 290);

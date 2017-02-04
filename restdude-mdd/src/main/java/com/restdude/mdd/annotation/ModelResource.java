@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -42,7 +39,7 @@ import java.lang.annotation.*;
  *  
  *  <pre class="code">
  * &#064;ModelResource(
- * 		path = "countries", 
+ * 		value = "countries",
  * 		apiName = "Countries", 
  * 		apiDescription = "Operations about countries", 
  * 		controllerSuperClass = AbstractModelController.class
@@ -82,19 +79,24 @@ import java.lang.annotation.*;
  */
 public @interface ModelResource {
 
-    Class<? extends Serializable> idClass() default String.class;
+    public static final String DEFAULT_PARENT_APP = "";
+
     /**
      * The superclass for the generated controller. must implement 
      * {@link AbstractModelController}. The default
      * is {@link AbstractNoDeleteModelController}.
      */
-    @SuppressWarnings("rawtypes")
-    Class<? extends AbstractModelController> controllerSuperClass() default AbstractNoDeleteModelController.class;
+    Class<?> controllerSuperClass() default Object.class;
 
     /**
-     * The request mapping path for the generated controller
+     * The "parent" part of the request mapping for the generated controller
      */
-    String path();
+    String applicationParent() default DEFAULT_PARENT_APP;
+
+    /**
+     * The last URI component of the request mapping for the generated controller
+     */
+    String value();
     /**
      * 
      * The API (grouping) name for the generated controller. Used for swagger documentation.
@@ -112,6 +114,6 @@ public @interface ModelResource {
      * Hint to enable (javers auditing b
      */
     boolean auditable() default false;
-    
+
     
 }

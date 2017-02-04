@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -516,13 +513,13 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	 */
 	@Override
 	@Transactional(readOnly = false)
-    public User createForImplicitSignup(User userAccountData) {
+    public LocalUser createForImplicitSignup(User userAccountData) {
 		// simplify further condition checks
 		if (userAccountData.getCredentials() == null) {
 			userAccountData.setCredentials(new UserCredentials());
 		}
 
-        User existing = this.getPrincipalLocalUser();
+        LocalUser existing = this.getPrincipalLocalUser();
 		if (existing == null) {
 			String email = userAccountData.getContactDetails().getPrimaryEmail() != null ? userAccountData.getContactDetails().getPrimaryEmail().getValue() : null;
 			if (StringUtils.isNotBlank(email) && email.contains("@")) {

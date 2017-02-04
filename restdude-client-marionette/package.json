@@ -1,5 +1,5 @@
 {
-  "name": "marionette-js-boilerplate",
+  "name": "restdude-client-marionette",
   "version": "2.1.2-SNAPSHOT",
   "devDependencies": {
     "grunt": "1.0.1",

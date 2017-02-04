@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -24,7 +21,6 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.users.model.User;
 
 import java.io.Serializable;
@@ -34,15 +30,12 @@ import java.time.LocalDateTime;
  * @param <PK>
  */
 @JsonIgnoreProperties("pk")
-public interface PersistableError<PK extends Serializable> extends CalipsoPersistable<PK> {
+public interface PersistableError<PK extends Serializable> extends Error<PK> {
 
     public static final int MAX_MSTACKTRACE_LENGTH = 40000;
     public static final int MAX_DESCRIPTION_LENGTH = 1000;
     public static final int MAX_MESSAGE_LENGTH = 500;
 
-    String getMessage();
-
-    void setMessage(String message);
 
     User getUser();
 

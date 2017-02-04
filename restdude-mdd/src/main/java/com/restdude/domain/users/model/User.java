@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -74,7 +71,7 @@ import java.util.Locale;
 @PreAuthorizePatch(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class User extends AbstractMetadataSubject<UserMetadatum> {
+public class User extends AbstractMetadataSubject<UserMetadatum> implements LocalUser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = -7942906897981646998L;
@@ -173,6 +170,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> {
         this.setPk(id);
     }
 
+    @Override
     public Locale getLocaleObject() {
         if (this.localeObject == null) {
             this.localeObject = new Locale(this.getLocale() != null ? this.getLocale() : "en");
@@ -180,6 +178,7 @@ public class User extends AbstractMetadataSubject<UserMetadatum> {
         return localeObject;
     }
 
+    @Override
     public boolean hasRole(String roleName) {
         Assert.notNull(roleName, "Role name cannot be null");
         boolean hasIt = false;
@@ -230,10 +229,12 @@ public class User extends AbstractMetadataSubject<UserMetadatum> {
                 .toString();
     }
 
+    @Override
     public Boolean getActive() {
         return active;
     }
 
+    @Override
     public void setActive(Boolean active) {
         this.active = active;
     }
@@ -270,17 +271,20 @@ public class User extends AbstractMetadataSubject<UserMetadatum> {
     }
 
     // serialize user name to response
+    @Override
     @JsonProperty
     public String getUsername() {
         return username;
     }
 
     // but ignore when de-serializing from request
+    @Override
     @JsonIgnore
     public void setUsername(String userName) {
         this.username = userName;
     }
 
+    @Override
     @JsonGetter("fullName")
     public String getFullName() {
         StringBuffer s = new StringBuffer("");
@@ -330,78 +334,97 @@ public class User extends AbstractMetadataSubject<UserMetadatum> {
         }
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    @Override
     public String getLastName() {
         return lastName;
     }
 
+    @Override
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    @Override
     public String getEmailHash() {
         return emailHash;
     }
 
+    @Override
     public void setEmailHash(String emailHash) {
         this.emailHash = emailHash;
     }
 
+    @Override
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
+    @Override
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 
+    @Override
     public String getBannerUrl() {
         return bannerUrl;
     }
 
+    @Override
     public void setBannerUrl(String bannerUrl) {
         this.bannerUrl = bannerUrl;
     }
 
+    @Override
     public LocalDateTime getLastVisit() {
         return lastVisit;
     }
 
+    @Override
     public void setLastVisit(LocalDateTime lastVisit) {
         this.lastVisit = lastVisit;
     }
 
+    @Override
     public String getLocale() {
         return locale;
     }
 
+    @Override
     public void setLocale(String locale) {
         this.locale = locale;
     }
 
+    @Override
     public List<? extends GrantedAuthority> getRoles() {
         return this.roles;
     }

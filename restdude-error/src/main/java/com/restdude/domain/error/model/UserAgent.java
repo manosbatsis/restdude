@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-error, https://manosbatsis.github.io/restdude/restdude-error
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -39,7 +36,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 
-@ModelResource(path = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(value = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "User Agents", apiDescription = "Collection of UA signatures")
 @ApiModel(value = "UserAgent", description = "UA signatures")
 @Relation(value = "userAgent", collectionRelation = UserAgent.API_PATH)

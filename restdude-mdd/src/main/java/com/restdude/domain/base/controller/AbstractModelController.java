@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -34,6 +31,9 @@ import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.model.RawJson;
 import com.restdude.domain.base.service.ModelService;
+import com.restdude.jsonapi.SimpleResource;
+import com.restdude.jsonapi.SimpleDocument;
+import com.restdude.jsonapi.JsonApiUtils;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.CurrentPrincipal;
 import com.restdude.mdd.annotation.CurrentPrincipalField;
@@ -92,8 +92,7 @@ import java.util.Set;
  * @param <PK> Resource pk type, usually Long or String
  * @param <S>  The service class
  */
-
-public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>> implements InitializingBean {
+public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>> extends EntityModelControllerContract<T, PK, S> implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelController.class);
 
@@ -127,13 +126,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
     }
 
 
-    /**
-     * Create a new resource<br />
-     * REST webservice published : POST /
-     *
-     * @param resource The resource to create
-     * @return CREATED http status code if the request has been correctly processed, with updated resource enclosed in the body, usually with and additional identifier automatically created by the database
-     */
+    @Override
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new resource")
@@ -157,14 +150,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         }
     }
 
-    /**
-     * Update an existing resource<br/>
-     * REST webservice published : PUT /{pk}
-     *
-     * @param pk       The identifier of the resource to update, usually a Long or String identifier. It is explicitely provided in order to handle cases where the identifier could be changed.
-     * @param resource The resource to update
-     * @return OK http status code if the request has been correctly processed, with the updated resource enclosed in the body
-     */
+    //@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
@@ -178,9 +164,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return resource;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    //@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
@@ -193,13 +177,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return resource;
     }
 
-    /**
-     * Find all resources, and return the full collection (plain list not paginated)<br/>
-     * REST webservice published : GET /?page=no
-     *
-     * @return OK http status code if the request has been correctly processed, with the list of all resource enclosed in the body.
-     * Be careful, this list should be big since it will return ALL resources. In this case, consider using paginated findAll method instead.
-     */
+    //@Override
     @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = "application/json")
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     @ModelDrivenPreAuth
@@ -207,15 +185,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return service.findAll();
     }
 
-    /**
-     * Find all resources, and return a paginated and optionaly sorted collection
-     *
-     * @param page       Page number starting from 0. default to 0
-     * @param size       Number of resources by pages. default to 10
-     * @param direction  Optional sort direction, could be "ASC" or "DESC"
-     * @param direction Ordered list of comma separated property names used for sorting results. At least one property should be provided if direction is specified
-     * @return OK http status code if the request has been correctly processed, with the a paginated collection of all resource enclosed in the body.
-     */
+    //@Override
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated collection."
             + " Besides the predefined paging properties (page, size, properties, direction) all serialized member names "
@@ -238,13 +208,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return findPaginated(page, size, sort, direction, request.getParameterMap(), applyCurrentPrincipalIdPredicate);
     }
 
-    /**
-     * Find a resource by its identifier<br/>
-     * REST webservice published : GET /{pk}
-     *
-     * @param pk The identifier of the resouce to find
-     * @return OK http status code if the request has been correctly processed, with resource found enclosed in the body
-     */
+    //@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.GET)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
@@ -258,16 +222,25 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return resource;
     }
 
-    /**
-     * Find multiple resources by their identifiers<br/>
-     * REST webservice published : GET /?ids[]=
-     * <p/>
-     * example : /?pks[]=1&pks[]=2&pks[]=3
-     *
-     * @param pks List of ids to retrieve
-     * @return OK http status code with list of retrieved resources. Not found resources are ignored:
-     * no Exception thrown. List is empty if no resource found with any of the given ids.
-     */
+
+    //@Override
+    @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
+    public SimpleDocument<T, PK> findResourceById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
+        T resource = this.findById(pk);
+
+        if (resource == null) {
+            throw new NotFoundException();
+        }
+        addResourceLinks(resource);
+        SimpleResource<T, PK> jsonApiResource = new SimpleResource<>(resource);
+        SimpleDocument<T, PK> jsonApiDocument = new SimpleDocument<>(jsonApiResource);
+        return jsonApiDocument;
+    }
+
+
+    //@Override
     @RequestMapping(params = "pks", method = RequestMethod.GET)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
@@ -276,13 +249,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return this.service.findByIds(pks);
     }
 
-    /**
-     * Delete a resource by its identifier<br />
-     * REST webservice published : DELETE /{pk}<br />
-     * Return No Content http status code if the request has been correctly processed
-     *
-     * @param pk The identifier of the resource to delete
-     */
+    //@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
@@ -292,11 +259,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         this.service.delete(resource);
     }
 
-    /**
-     * Delete all resources<br/>
-     * REST webservice published : DELETE /<br/>
-     * Return No Content http status code if the request has been correctly processed
-     */
+    //@Override
     @RequestMapping(method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete all resources")
     @ModelDrivenPreAuth
@@ -304,6 +267,7 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         this.service.deleteAllWithCascade();
     }
 
+    //@Override
     @RequestMapping(value = "jsonschema", produces = {"application/json"}, method = RequestMethod.GET)
     @ApiOperation(value = "Get JSON Schema", notes = "Get the JSON Schema for the controller entity type")
     public RawJson getJsonSchema() throws JsonProcessingException {

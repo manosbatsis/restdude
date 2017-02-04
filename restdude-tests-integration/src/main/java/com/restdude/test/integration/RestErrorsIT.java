@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-tests-integration, https://manosbatsis.github.io/restdude/restdude-tests-integration
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -108,7 +105,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         loginSubmission.put("password", "invalid");
 
         // attempt login and test for a proper result
-        Response rs = given().accept(JSON_UTF8).contentType(JSON_UTF8).body(loginSubmission).when()
+        Response rs = given().accept(MIME_APPLICATION_JSON_UTF8).contentType(MIME_APPLICATION_JSON_UTF8).body(loginSubmission).when()
                 .post(WEBCONTEXT_PATH + "/api/auth/userDetails");
 
         // validate login

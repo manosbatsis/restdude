@@ -97,7 +97,7 @@ module.exports = function (grunt) {
             'dist-step-1': {
                 expand: true,
                 cwd: '<%= dirs.root %>',
-                src: ['**', 'css/style.css'],
+                src: ['**', 'css/style.css', 'js/lib/*.js'],
                 dest: '<%= dirs.staging %>/step1/'
             },
 
@@ -152,7 +152,7 @@ module.exports = function (grunt) {
 
                 baseUrl: '<%= dirs.staging %>/step1/js',
 
-                almond: true,
+                almond: false,
 
                 //optimize: 'uglify2',
 
@@ -160,9 +160,9 @@ module.exports = function (grunt) {
 
                 logLevel: 2,
 
-                name: 'vendor/almond/almond',
+                name: 'main',
 
-                include: ['modules/TwitterSearchApp'],
+                //include: ['modules/TwitterSearchApp'],
 
                 mainConfigFile: '<%= dirs.staging %>/step1/js/main.js',
 
@@ -249,7 +249,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-regarde');
     grunt.loadNpmTasks('grunt-usemin');
@@ -265,7 +265,7 @@ module.exports = function (grunt) {
         'clean',
         'copy:dist-step-1',
         //'compass:dist',
-        'requirejs:prod',
+        //'requirejs:prod',
         'copy:dist-step-2',
         'copy:dist-step-3',
         //'htmlmin:dist',

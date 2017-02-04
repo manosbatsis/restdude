@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-war-overlay, https://manosbatsis.github.io/restdude/restdude-war-overlay
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -146,10 +143,9 @@ require.config({
         templateExtension: ".hbs",
     },
     shim: {
-
-        'underscore': {
-            exports: '_'
-        },
+        'json2'       : { exports : "JSON" },
+        'jquery'      : { exports : "jQuery" },
+        'underscore'  : { exports : "_" },
         'underscore-string': {
             deps: ['underscore']
         },
@@ -159,9 +155,8 @@ require.config({
         'handlebars-orig': {
             exports: 'Handlebars'
         },
-
-        'backbone': {
-            deps: ['underscore'],
+        'backbone'    : {
+            deps : ["jquery", "underscore", "json2"],
             exports: function () {
                 return this.Backbone;
             }
@@ -221,18 +216,18 @@ require.config({
             deps: ['jquery'],
             exports: 'Markdown'
         },
-        'bootstrap-switch': {
-            deps: ['jquery'],
-        },
-        'keymaster': {
-            exports: 'key'
-        },
-        'async': {
-            exports: 'async'
-        },
-        'restdude': {
-            deps: ["i18n!nls/labels", "i18n!nls/labels-custom", 'underscore', 'handlebars', 'restdude-hbs', 'moment', 'backbone', 'backbone.paginator', 'backbone-forms', 'backbone-forms-bootstrap3', 'backbone-bootstrap-modal', 'backbone-forms-list', 'marionette', 'backgrid', 'backgrid-moment', 'backgrid-text', 'backgrid-paginator', 'bloodhound', 'typeahead', 'bootstrap-datetimepicker', 'bootstrap-switch', 'jquery-color', 'intlTelInput', 'q', 'chart'],
-            exports: 'restdude',
+            'bootstrap-switch': {
+                deps: ['jquery'],
+            },
+            'keymaster': {
+                exports: 'key'
+            },
+            'async': {
+                exports: 'async'
+            },
+            'restdude': {
+                deps: ["i18n!nls/labels", "i18n!nls/labels-custom", 'underscore', 'handlebars', 'restdude-hbs', 'moment', 'backbone', 'backbone.paginator', 'backbone-forms', 'backbone-forms-bootstrap3', 'backbone-bootstrap-modal', 'backbone-forms-list', 'marionette', 'backgrid', 'backgrid-moment', 'backgrid-text', 'backgrid-paginator', 'bloodhound', 'typeahead', 'bootstrap-datetimepicker', 'bootstrap-switch', 'jquery-color', 'intlTelInput', 'q', 'chart'],
+                exports: 'restdude',
         },
 
         'cookie': {

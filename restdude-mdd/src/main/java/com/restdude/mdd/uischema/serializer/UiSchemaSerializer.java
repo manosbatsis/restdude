@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -129,13 +126,13 @@ public class UiSchemaSerializer extends JsonSerializer<UiSchema> {
 				ModelResource superResource = (ModelResource) domainClass.getSuperclass().getAnnotation(ModelResource.class);
 				if(superResource != null){
 					jgen.writeFieldName("superPathFragment");
-					jgen.writeString(superResource.path());
+					jgen.writeString(superResource.value());
 				}
 
 				// write pathFragment
 				ModelResource modelResource = (ModelResource) domainClass.getAnnotation(ModelResource.class);
 				jgen.writeFieldName("pathFragment");
-				jgen.writeString(modelResource.path());
+				jgen.writeString(modelResource.value());
 				
 				// write simple class name
 				jgen.writeFieldName("simpleClassName");

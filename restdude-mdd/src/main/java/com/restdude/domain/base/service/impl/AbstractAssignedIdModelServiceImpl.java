@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -25,7 +22,6 @@ package com.restdude.domain.base.service.impl;
 
 import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
 import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.domain.base.service.AbstractAssignedIdModelService;
 import com.restdude.mdd.annotation.ModelDrivenPreAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

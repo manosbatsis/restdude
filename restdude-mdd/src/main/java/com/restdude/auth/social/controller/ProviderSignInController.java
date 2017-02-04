@@ -2,9 +2,6 @@
  *
  * Restdude
  * -------------------------------------------------------------------
- * Module restdude-mdd, https://manosbatsis.github.io/restdude/restdude-mdd
- *
- * Full stack, high level framework for horizontal, model-driven application hackers.
  *
  * Copyright © 2005 Manos Batsis (manosbatsis gmail)
  *
@@ -163,7 +160,6 @@ public class ProviderSignInController extends org.springframework.social.connect
 	/**
 	* Creates a new user account by calling the service method. If the email address is found
 	* from the database, this method adds a field error to the email field of the form object.
-	*/
     private ICalipsoUserDetails createUserAccount(RegistrationForm userAccountData, BindingResult result) {
         LOGGER.debug("createUserAccount, userAccountData: {}", userAccountData);
 		ICalipsoUserDetails registered = null;
@@ -183,6 +179,7 @@ public class ProviderSignInController extends org.springframework.social.connect
 		return registered;
 	}
 
+	 */
 	private void addFieldError(String objectName, String fieldName, String fieldValue, String errorCode, BindingResult result) {
 		LOGGER.debug("Adding field error object's: {} field: {}", objectName, fieldName);
 		FieldError error = new FieldError(objectName, fieldName, fieldValue, false, new String[] { errorCode }, new Object[] {}, errorCode);
