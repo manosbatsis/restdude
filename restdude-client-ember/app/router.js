@@ -12,6 +12,11 @@ Router.map(function() {
   this.route('rentals', function() {
     this.route('show', { path: '/:rental_id' });
   });
+  this.route('not-found', { path: '/*path' });
+  this.route('server-error');
+  this.route('login');
+  this.route('register');
+  this.route('user');
 });
 
 export default Router;
