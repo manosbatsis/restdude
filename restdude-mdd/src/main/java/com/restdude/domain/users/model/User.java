@@ -29,6 +29,7 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.fs.FilePersistence;
@@ -63,6 +64,7 @@ import java.util.Locale;
 
 @ShallowReference
 @Entity
+@ModelResource(pathFragment = "")
 @ApiModel(description = "Human users")
 @Relation(value = "user", collectionRelation = "users")
 @Table(name = "users")

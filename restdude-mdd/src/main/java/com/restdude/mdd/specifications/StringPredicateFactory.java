@@ -52,11 +52,11 @@ public class StringPredicateFactory extends AbstractPredicateFactory<String> {
         LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 
         Path path = this.<Date>getPath(root, propertyName, fieldType);
-        // no value i.e. match NULL
+        // no pathFragment i.e. match NULL
         if (propertyValues.length == 0) {
             predicate = path.isNull();
         }
-        // single value, equals, like or IS NULL
+        // single pathFragment, equals, like or IS NULL
         else if (propertyValues.length == 1) {
             String value = propertyValues[0];
             if (value.startsWith(WILDCARD) || value.endsWith(WILDCARD)) {

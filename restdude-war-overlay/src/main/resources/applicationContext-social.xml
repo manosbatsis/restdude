@@ -36,7 +36,7 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
                 <bean class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
                     <constructor-arg value="${facebook.clientId}"/>
                     <constructor-arg value="${facebook.clientSecret}"/>
-                    <!--property name="defaultScope" value="email" /-->
+                    <!--property name="defaultScope" pathFragment="email" /-->
                     <property name="scope" value="email"/>
                 </bean>
                 <bean class="org.springframework.social.github.connect.GitHubConnectionFactory">
@@ -97,7 +97,7 @@ http://www.springframework.org/schema/social http://www.springframework.org/sche
             Defaults to "/".
            -->
         <property name="postSignInUrl" value="/client/"/>
-        <!--property name="applicationUrl" value="${restdude.baseurl}" /-->
+        <!--property name="applicationUrl" pathFragment="${restdude.baseurl}" /-->
         <property name="signInInterceptors">
             <list>
                 <bean class="com.restdude.auth.userdetails.util.FacebookConnectInterceptor"/>

@@ -21,8 +21,9 @@
 package com.restdude.domain.error.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.domain.base.annotation.controller.ModelController;
+import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.service.ClientErrorService;
 import io.swagger.annotations.Api;
@@ -35,10 +36,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@RestController
+@ModelController
 @ExposesResourceFor(ClientError.class)
 @Api(tags = "Client Error", description = "Client Error Operations")
-@RequestMapping(value = "/api/rest/" + ClientError.API_PATH, produces = {"application/json", "application/xml"})
 public class ClientErrorController extends AbstractModelController<ClientError, String, ClientErrorService> {
 
     /**

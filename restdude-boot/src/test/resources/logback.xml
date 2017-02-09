@@ -28,19 +28,19 @@
     </appender>
 
     <!--     <LOGGER name="org.hibernate"> -->
-    <!--         <level value="ERROR" /> -->
+    <!--         <level pathFragment="ERROR" /> -->
     <!--     </LOGGER> -->
     <!--     <LOGGER name="org.hibernate.SQL"> -->
-    <!--         <level value="ERROR" /> -->
+    <!--         <level pathFragment="ERROR" /> -->
     <!--     </LOGGER> -->
     <!--     <LOGGER name="org.hibernate.type"> -->
-    <!--         <level value="ERROR" /> -->
+    <!--         <level pathFragment="ERROR" /> -->
     <!--     </LOGGER> -->
     <!--     <LOGGER name="org.springframework.messaging"> -->
-    <!--         <level value="debug" /> -->
+    <!--         <level pathFragment="debug" /> -->
     <!--     </LOGGER> -->
     <!--     <LOGGER name="gr.abiss.restdude.websocket"> -->
-    <!--         <level value="debug" /> -->
+    <!--         <level pathFragment="debug" /> -->
 
     <logger name="com.restdude.test">
         <level value="debug"/>

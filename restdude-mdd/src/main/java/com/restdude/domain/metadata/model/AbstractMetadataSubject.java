@@ -23,7 +23,7 @@ package com.restdude.domain.metadata.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.metadata.binding.MetadataMapDeserializer;
 import com.restdude.domain.metadata.binding.MetadatumToStringValueSerializer;
 import org.jodah.typetools.TypeResolver;

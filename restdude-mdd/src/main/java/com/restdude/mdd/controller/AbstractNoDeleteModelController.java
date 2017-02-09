@@ -1,0 +1,75 @@
+/**
+ *
+ * Restdude
+ * -------------------------------------------------------------------
+ *
+ * Copyright © 2005 Manos Batsis (manosbatsis gmail)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.restdude.mdd.controller;
+
+import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.domain.base.service.ModelService;
+import com.restdude.util.exception.http.NotImplementedException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Base class for model controllers not allowing HTTP DELETE
+ * operations.
+ */
+public abstract class AbstractNoDeleteModelController<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>>
+        extends AbstractModelController<T, PK, S> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNoDeleteModelController.class);
+
+
+    @Override
+	@ApiOperation(hidden = true, value = "Delete a resource (unsupported)")
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK id) {
+        throw new NotImplementedException("Method is unsupported.");
+    }
+
+	@Override
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ApiOperation(hidden = true, value = "Delete all resources (unsupported)")
+    public void delete() {
+        throw new NotImplementedException("Method is unsupported.");
+    }
+
+	@ApiOperation(hidden = true, value = "Delete an uploaded file")
+    @RequestMapping(value = "{subjectId}/uploads/{propertyName}/{id}", method = RequestMethod.DELETE)
+    public List deleteById(@PathVariable String subjectId, @PathVariable String propertyName, @PathVariable String id) {
+        throw new NotImplementedException("Method is unsupported.");
+    }
+
+	@RequestMapping(value = "{subjectId}/metadata/{predicate}", method = RequestMethod.DELETE)
+	@ApiOperation(hidden = true, value = "Remove metadatum")
+    public void removeMetadatum(@PathVariable PK subjectId, @PathVariable String predicate) {
+        throw new NotImplementedException("Method is unsupported.");
+    }
+}

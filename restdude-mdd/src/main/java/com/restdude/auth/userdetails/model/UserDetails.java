@@ -24,9 +24,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.domain.base.binding.SkipPropertyDeserializer;
-import com.restdude.domain.base.binding.SkipPropertySerializer;
+import com.restdude.mdd.binding.SkipPropertyDeserializer;
+import com.restdude.mdd.binding.SkipPropertySerializer;
 import com.restdude.domain.users.model.Role;
+import com.restdude.domain.users.model.Roles;
 import com.restdude.domain.users.model.User;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -51,7 +52,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserDetails.class);
 
-    public static final List<GrantedAuthority> ROLES_ANONYMOUD = Collections.unmodifiableList(Arrays.asList(new Role(Role.ROLE_ANONYMOUS)));
+    public static final List<GrantedAuthority> ROLES_ANONYMOUD = Collections.unmodifiableList(Arrays.asList(new Role(Roles.ROLE_ANONYMOUS)));
 
 
 	private String pk;
@@ -124,10 +125,10 @@ public class UserDetails implements  ICalipsoUserDetails{
 			if (!CollectionUtils.isEmpty(user.getRoles())) {
 				details.setAuthorities(user.getRoles());
 				for (GrantedAuthority authority : user.getRoles()) {
-					if (authority.getAuthority().equals(Role.ROLE_ADMIN)) {
+					if (authority.getAuthority().equals(Roles.ROLE_ADMIN)) {
 						details.isAdmin = true;
 					} else if (authority.getAuthority()
-							.equals(Role.ROLE_SITE_OPERATOR)) {
+							.equals(Roles.ROLE_SITE_OPERATOR)) {
 						details.isSiteAdmin = true;
 					}
 				}

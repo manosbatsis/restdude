@@ -95,22 +95,24 @@ public class AbstractControllerIT {
 
     protected StompSession getStompSession(String url, Loggedincontext loginContext, StompSessionHandler sessionHandler,
                                            WebSocketHttpHeaders handshakeHeaders, StompHeaders connectHeaders) {
-        LOGGER.debug("Creating STOMP session for user {}:{}", loginContext.userId, loginContext.ssoToken);
-        if (sessionHandler == null) {
-            sessionHandler = new DefaultStompSessionHandler();
-        }
+
         StompSession ownerSession = null;
+        try{
+            LOGGER.debug("Creating STOMP session for user {}:{}, url: {}", loginContext.userId, loginContext.ssoToken, url);
+            if (sessionHandler == null) {
+                sessionHandler = new DefaultStompSessionHandler();
+            }
 
-        // add auth
-        if (handshakeHeaders == null) {
-            handshakeHeaders = new WebSocketHttpHeaders();
-        }
-        handshakeHeaders.add("Authorization", "Basic " + loginContext.ssoToken);
+            // add auth
+            if (handshakeHeaders == null) {
+                handshakeHeaders = new WebSocketHttpHeaders();
+            }
+            handshakeHeaders.add("Authorization", "Basic " + loginContext.ssoToken);
 
 
-        try {
             ownerSession = getWebSocketStompClient().connect(url, handshakeHeaders, connectHeaders, sessionHandler).get(5, SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+        } catch (Exception e) {
+            LOGGER.error("Failed obtainint a STOMP session", e);
             throw new RuntimeException(e);
         }
 

@@ -21,7 +21,7 @@
 package com.restdude.domain.details.contact.service.impl;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.details.contact.model.*;
 import com.restdude.domain.details.contact.repository.ContactDetailsRepository;
 import com.restdude.domain.details.contact.repository.EmailDetailRepository;

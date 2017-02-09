@@ -23,7 +23,7 @@ package com.restdude.config;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.AnonymousAuthenticationFilter;
 import com.restdude.auth.userdetails.util.RestAuthenticationEntryPoint;
-import com.restdude.domain.users.model.Role;
+import com.restdude.domain.users.model.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -112,12 +112,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signin/**").permitAll()
                 .antMatchers("/signup/**").permitAll()
-                .antMatchers("/api/management/**").hasAnyAuthority(Role.ROLE_ADMIN)
-                .antMatchers("/v2/api-docs").hasAnyAuthority(Role.ROLE_USER)
-                .antMatchers(HttpMethod.POST, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
-                .antMatchers(HttpMethod.PATCH, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
-                .antMatchers(HttpMethod.PUT, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
-                .antMatchers(HttpMethod.DELETE, "/api/rest/**").hasAnyAuthority(Role.ROLE_USER)
+                .antMatchers("/api/management/**").hasAnyAuthority(Roles.ROLE_ADMIN)
+                .antMatchers("/v2/api-docs").hasAnyAuthority(Roles.ROLE_USER)
+                .antMatchers(HttpMethod.POST, "/api/rest/**").hasAnyAuthority(Roles.ROLE_USER)
+                .antMatchers(HttpMethod.PATCH, "/api/rest/**").hasAnyAuthority(Roles.ROLE_USER)
+                .antMatchers(HttpMethod.PUT, "/api/rest/**").hasAnyAuthority(Roles.ROLE_USER)
+                .antMatchers(HttpMethod.DELETE, "/api/rest/**").hasAnyAuthority(Roles.ROLE_USER)
 
                 .anyRequest().authenticated()
                 .and()

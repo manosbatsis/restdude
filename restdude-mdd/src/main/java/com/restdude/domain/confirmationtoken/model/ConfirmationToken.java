@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.confirmationtoken.model;
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import org.javers.core.metamodel.annotation.ShallowReference;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;

@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.misc.model;
 
-import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.geography.model.Country;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;
@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  */
 @ShallowReference
-@ModelResource(value = "hosts", controllerSuperClass = AbstractModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
+@ModelResource(pathFragment = "hosts", controllerSuperClass = AbstractModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
 @Entity
 @Table(name = "host")
 public class Host extends AbstractSystemUuidPersistableResource {

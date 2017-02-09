@@ -21,7 +21,7 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonPropertyOrder({"pk", "available", "username", "batchId", "batchName"})

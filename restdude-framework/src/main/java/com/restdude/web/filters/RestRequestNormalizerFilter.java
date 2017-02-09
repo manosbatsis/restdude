@@ -77,7 +77,7 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
         response.setContentType(JSON_UTF8);
         if (LOGGER.isDebugEnabled()) {
             String method = requestMethodOverride != null ? requestMethodOverride : request.getMethod();
-            LOGGER.debug("doFilterInternal, method: " + method + ", value: " + request.getRequestURL() + ", contextPath: " + request.getContextPath() + ", method override: " + requestMethodOverride + ", authToken: " + cookieToken);
+            LOGGER.debug("doFilterInternal, method: " + method + ", pathFragment: " + request.getRequestURL() + ", contextPath: " + request.getContextPath() + ", method override: " + requestMethodOverride + ", authToken: " + cookieToken);
         }
         if (!StringUtils.isEmpty(requestMethodOverride) || !StringUtils.isEmpty(cookieToken)) {
             HttpServletRequest wrapper = new RestRequestNormalizerRequestWrapper(request, requestMethodOverride, cookieToken);
@@ -98,12 +98,12 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
                 Cookie cookie = cookies[i];
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("Found cookie '" + cookie.getName() + "', secure:  " + cookie.getSecure() + ", comment: " + cookie.getComment()
-                            + ", domain: " + cookie.getDomain() + ", value: " + cookie.getValue());
+                            + ", domain: " + cookie.getDomain() + ", pathFragment: " + cookie.getValue());
                 }
                 if (cookie.getName().equalsIgnoreCase(ssoCookieName)) {
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug("Matched calipso SSO cookie'" + cookie.getName() + "', secure:  " + cookie.getSecure() + ", comment: " + cookie.getComment()
-                                + ", domain: " + cookie.getDomain() + ", value: " + cookie.getValue());
+                                + ", domain: " + cookie.getDomain() + ", pathFragment: " + cookie.getValue());
                     }
                     authToken = cookie.getValue();
                     break;

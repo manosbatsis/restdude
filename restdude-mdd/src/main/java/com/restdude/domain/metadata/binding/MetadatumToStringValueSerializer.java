@@ -37,9 +37,9 @@ public class MetadatumToStringValueSerializer extends JsonSerializer<Metadatum> 
 	public void serialize(Metadatum value, JsonGenerator jgen,
 			SerializerProvider provider) throws IOException,
 			JsonGenerationException {
-		// LOGGER.info("serialize value: "+value);
+		// LOGGER.info("serialize pathFragment: "+pathFragment);
 		if (null == value || null == value.getObject()) {
-			// write the word 'null' if there's no value available
+			// write the word 'null' if there's no pathFragment available
 			jgen.writeNull();
 		} else {
 			jgen.writeRawValue(new StringBuffer("\"").append(value.getObject())

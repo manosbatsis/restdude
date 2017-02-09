@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -54,8 +54,8 @@ import java.util.Set;
  * @Ex@Configuration
  * @EnableTransactionManagement
  * @EnableJpaRepositories(basePackages = {"**.restdude"},
- *     repositoryFactoryBeanClass = com.restdude.domain.base.repository.ModelRepositoryFactoryBean.class,
- *     repositoryBaseClass = com.restdude.domain.base.repository.BaseRepositoryImpl.class
+ *     repositoryFactoryBeanClass = com.restdude.mdd.repository.ModelRepositoryFactoryBean.class,
+ *     repositoryBaseClass = com.restdude.mdd.repository.BaseRepositoryImpl.class
  * )
  * @EnableJpaAuditing
  * public class PersistenceJPAConfig extends AbstractPersistenceJPAConfig{

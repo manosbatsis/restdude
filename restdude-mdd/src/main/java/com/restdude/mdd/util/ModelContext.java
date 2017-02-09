@@ -20,16 +20,20 @@
  */
 package com.restdude.mdd.util;
 
-import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.mdd.annotation.ModelRelatedResource;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.domain.base.annotation.model.ModelRelatedResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.registry.ModelInfo;
+import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.util.ClassUtils;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.ManyToAny;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.core.GenericCollectionTypeResolver;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
@@ -41,8 +45,8 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Adapter-ish context class for classes with {@link com.restdude.mdd.annotation.ModelResource}
- * and {@link com.restdude.mdd.annotation.ModelRelatedResource}
+ * Adapter-ish context class for classes with {@link ModelResource}
+ * and {@link ModelRelatedResource}
  * annotations.
  */
 public final class ModelContext {
@@ -50,125 +54,72 @@ public final class ModelContext {
 	private static final String AUDITABLE2 = "auditable";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelContext.class);
+    private ModelInfo modelInfo;
 
-    private Class<?> modelType;
-    
-    private Class<?> modelIdType;
 
     private Class<?> parentClass;
-    private String name, path, parentProperty, generatedClassNamePrefix, beansBasePackage;
+    private String parentProperty;
 
-    private Class<?> repositoryType;
-    private Class<?> serviceInterfaceType;
-    private Class<?> serviceImplType;
-    private AbstractBeanDefinition repositoryDefinition, serviceDefinition, controllerDefinition;
+    @Getter
+    private String generatedClassNamePrefix;
+
+    @Getter
+    private Class<?> repositoryType, serviceInterfaceType, serviceImplType;
+
+    @Getter @Setter
+    private BeanDefinition repositoryDefinition, serviceDefinition;
+    @Getter
+    private BeanDefinition controllerDefinition;
 
 	private Map<String, Object> apiAnnotationMembers;
 
 	private ModelResource modelResource;
-	
+
+	@Getter
 	private boolean auditable;
 
-	public boolean isAuditable() {
-		return auditable;
+
+	private ModelContext() {
+
 	}
+
+    public ModelContext(@NonNull ModelInfo modelInfo) {
+        this.modelInfo = modelInfo;
+        Class<?> modelClass = modelInfo.getModelType();
+
+        this.generatedClassNamePrefix = modelClass.getSimpleName().replace("Model", "").replace("Entity", "");
+        this.modelResource = modelClass.getAnnotation(ModelResource.class);
+		this.generatedClassNamePrefix = modelClass.getSimpleName().replace("Model", "").replace("Entity", "");
+        if(this.modelResource != null){
+            this.parentClass = null;
+            this.parentProperty = null;
+        }
+    }
 
 	public List<Class<?>> getGenericTypes() {
 		List<Class<?>> genericTypes = new LinkedList<Class<?>>();
 		genericTypes.add(this.getModelType());
-        if (this.getModelIdType() != null) {
-            genericTypes.add(this.getModelIdType());
-        }
-        return genericTypes;
-    }
-
-    public ModelContext(Class<?> domainClass) {
-        Assert.notNull(domainClass, "A domain class is required");
-        LOGGER.debug("domainClass: {}", domainClass);
-        String packageName = domainClass.getPackage().getName();
-        this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-        this.modelType = domainClass;
-        this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
-        this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
-    }
-
-
-    public ModelContext(ModelResource modelResource, Class<?> domainClass){
-        Assert.notNull(domainClass, "A domain class is required");
-        String packageName = domainClass.getPackage().getName();
-        this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-        this.modelType = domainClass;
-        this.modelResource = modelResource;
-
-        this.name = getPath(domainClass);
-        this.apiAnnotationMembers = getApiAnnotationMembers(domainClass);
-        this.path = "/" + name;
-
-        this.generatedClassNamePrefix = domainClass.getSimpleName().replace("Model", "").replace("Entity", "");
-        this.parentClass = null;
-        this.parentProperty = null;
-
-        this.modelIdType = ClassUtils.getBeanPropertyType(domainClass, "pk", true);
-
-    }
-
-
-
-    public static ModelContext from(Class<?> domainClass){
-
-        ModelResource ar = domainClass.getAnnotation(ModelResource.class);
-
-        ModelContext wrapper = null;
-        if( ar != null ){
-            wrapper = new ModelContext(ar, domainClass);
-        }
-
-        // finally add a wrapper for limited processing if needed
-        if (wrapper == null) {
-            wrapper = new ModelContext(domainClass);
-        }
-        return wrapper;
-    }
-
-    private void setModelType(Class<?> modelType) {
-		this.modelType = modelType;
+		if (this.getModelIdType() != null) {
+			genericTypes.add(this.getModelIdType());
+		}
+		return genericTypes;
 	}
 
-	public static ModelContext from(Field field){
-        Class<?> domainClass = field.getType();
-        if( Collection.class.isAssignableFrom(domainClass) ){
-            domainClass = GenericCollectionTypeResolver.getCollectionFieldType(field);
-        }
-        return from(domainClass);
-    };
 
-    
-    public Class getControllerSuperClass(){
-        Class sClass = this.modelResource.controllerSuperClass();
-        if(sClass == null || Object.class.equals(sClass)){
-            sClass = AbstractModelController.class;
-        }
-        return  sClass;
-    }
-    
-    public Class<?> getServiceInterfaceType() {
-		return serviceInterfaceType;
+	public Class getControllerSuperClass(){
+		Class sClass = this.modelResource.controllerSuperClass();
+		if(sClass == null || Object.class.equals(sClass)){
+			sClass = AbstractModelController.class;
+		}
+		return  sClass;
 	}
 
 	public void setServiceInterfaceType(Class<?> serviceInterfaceType) {
 		this.serviceInterfaceType = serviceInterfaceType;
 	}
 
-	public Class<?> getServiceImplType() {
-		return serviceImplType;
-	}
-
 	public void setServiceImplType(Class<?> serviceImplType) {
 		this.serviceImplType = serviceImplType;
-	}
-
-	public Class<?> getRepositoryType() {
-		return repositoryType;
 	}
 
 	public void setRepositoryType(Class<?> repositoryType) {
@@ -179,15 +130,11 @@ public final class ModelContext {
         return parentClass != null;
     }
 
-    public String getGeneratedClassNamePrefix() {
-		return generatedClassNamePrefix;
-	}
-
 	public boolean isNestedCollection(){
         if( !isNested() ){
             return false;
         }
-
+        Class<?> modelType = this.modelInfo.getModelType();
         ModelRelatedResource anr = modelType.getAnnotation(ModelRelatedResource.class);
         Assert.notNull(anr, "Not a nested resource");
 
@@ -214,126 +161,72 @@ public final class ModelContext {
         return false;
     }
 
-    public static String getPath(Class<?> domainClass){
-        ModelResource ar = domainClass.getAnnotation(ModelResource.class);
-        ModelRelatedResource anr = domainClass.getAnnotation(ModelRelatedResource.class);
 
-        StringBuffer result = new StringBuffer();
+    public Map<String, Object> getApiAnnotationMembers(){
+    	// init if needed
+    	if(this.apiAnnotationMembers == null){
+			apiAnnotationMembers = new HashMap<>();
 
-        // parent app path
-        String appParent = ar.applicationParent();
-        if(StringUtils.isNotBlank(appParent)){
-            result.append(appParent);
-            if(!appParent.endsWith("/")){
-                result.append("/");
-            }
-        }
+			Class<?> modelType = this.getModelType();
+			ModelResource resource = modelType.getAnnotation(ModelResource.class);
+			if( resource != null ){
+				// auditable?
+				apiAnnotationMembers.put(AUDITABLE2, resource.auditable());
+				// get tags (grouping key, try API name)
+				if(StringUtils.isNotBlank(resource.apiName())){
+					String[] tags = {resource.apiName()};
+					apiAnnotationMembers.put("tags", tags);
+				}
+				// or pathFragment
+				else if(StringUtils.isNotBlank(resource.pathFragment())){
 
-        // append app name
-        String appName;
-        if( ar != null ){
-            appName = ar.value();
-        }else if( anr != null){
-            appName = anr.path();
-        }else{
-            throw new IllegalStateException("Not an entity");
-        }
-        if( StringUtils.isBlank(appName)){
-            appName = domainClass.getSimpleName();
-            appName = appName.toLowerCase().charAt(0) + result.substring(1) + "s";
-        }
-        result.append(appName);
-
-        return result.toString();
-    }
-
-    public static Map<String, Object> getApiAnnotationMembers(Class<?> domainClass){
-        ModelResource resource = domainClass.getAnnotation(ModelResource.class);
-        Map<String, Object> apiAnnotationMembers = new HashMap<String, Object>();
-        if( resource != null ){
-        	// auditable?
-        	apiAnnotationMembers.put(AUDITABLE2, resource.auditable());
-        	// get tags (grouping key, try API name)
-            if(StringUtils.isNotBlank(resource.apiName())){
-            	String[] tags = {resource.apiName()};
-            	apiAnnotationMembers.put("tags", tags);
-            }
-            // or value
-            else if(StringUtils.isNotBlank(resource.value())){
-
-            	String[] tags = {resource.value()};
-            	apiAnnotationMembers.put("tags", tags);
-            }
-            // or simple name
-            else{
-            	String[] tags = {StringUtils.join(
-           		     StringUtils.splitByCharacterTypeCamelCase(domainClass.getSimpleName()),
-           		     ' '
-           		)};
-            	apiAnnotationMembers.put("tags", tags);
-            }
-            // add description
-            if(StringUtils.isNotBlank(resource.apiDescription())){
-            	apiAnnotationMembers.put("description", resource.apiDescription());
-            }
-        }else{
-            throw new IllegalStateException("Not an entity");
-        }
+					String[] tags = {resource.pathFragment()};
+					apiAnnotationMembers.put("tags", tags);
+				}
+				// or simple name
+				else{
+					String[] tags = {StringUtils.join(
+							StringUtils.splitByCharacterTypeCamelCase(modelType.getSimpleName()),
+							' '
+					)};
+					apiAnnotationMembers.put("tags", tags);
+				}
+				// add description
+				if(StringUtils.isNotBlank(resource.apiDescription())){
+					apiAnnotationMembers.put("description", resource.apiDescription());
+				}
+			}else{
+				throw new IllegalStateException("Not an entity");
+			}
+		}
 
         return apiAnnotationMembers.size() > 0 ? apiAnnotationMembers : null;
     }
 
-	
+
 	public Class<?> getModelIdType() {
-		return modelIdType;
+		return this.modelInfo.getIdentifierType();
 	}
 
 	public Class<?> getModelType() {
-		return modelType;
+		return this.modelInfo.getModelType();
 	}
 
 	public String getName() {
-		return name;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public Map<String, Object> getApiAnnotationMembers() {
-		return apiAnnotationMembers;
-	}
-
-	public String getParentProperty() {
-		return parentProperty;
-	}
-
-	public AbstractBeanDefinition getRepositoryDefinition() {
-		return repositoryDefinition;
-	}
-
-	public void setRepositoryDefinition(AbstractBeanDefinition repositoryDefinition) {
-		this.repositoryDefinition = repositoryDefinition;
-	}
-
-	public AbstractBeanDefinition getServiceDefinition() {
-		return serviceDefinition;
-	}
-
-	public void setServiceDefinition(AbstractBeanDefinition serviceDefinition) {
-		this.serviceDefinition = serviceDefinition;
-	}
-
-	public AbstractBeanDefinition getControllerDefinition() {
-		return controllerDefinition;
-	}
-
-	public void setControllerDefinition(AbstractBeanDefinition controllerDefinition) {
-		this.controllerDefinition = controllerDefinition;
+		return this.modelInfo.getPackageName();
 	}
 
 	public String getBeansBasePackage() {
-		return beansBasePackage;
+		return this.modelInfo.getBeansBasePackage();
 	};
+
+	public void setPredicateFactory(IPredicateFactory predicateFactory) {
+		this.modelInfo.setPredicateFactory(predicateFactory);
+	}
+
+	public void setControllerDefinition(BeanDefinition controllerDefinition) {
+		this.controllerDefinition = controllerDefinition;
+		this.modelInfo.setModelControllerType(ClassUtils.getClass(controllerDefinition.getBeanClassName()));
+	}
 
 }

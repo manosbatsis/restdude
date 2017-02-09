@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.cms.model;
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
-import com.restdude.domain.base.type.ResourceProtocol;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.enums.ResourceProtocol;
 import com.restdude.domain.misc.model.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

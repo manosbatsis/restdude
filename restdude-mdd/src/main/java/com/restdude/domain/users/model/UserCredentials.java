@@ -25,11 +25,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.base.binding.SkipPropertySerializer;
-import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractPersistableResource;
+import com.restdude.mdd.binding.SkipPropertySerializer;
+import com.restdude.mdd.controller.AbstractReadOnlyModelController;
+import com.restdude.mdd.model.AbstractPersistableResource;
 import com.restdude.domain.users.validation.UserRegistrationCodeConstraint;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -43,7 +43,7 @@ import java.time.LocalDateTime;
 @ShallowReference
 @Entity
 @Table(name = "user_credentials")
-@ModelResource(value = "userCredentials", apiName = "User Credentials", apiDescription = "Operations about user credentials", controllerSuperClass = AbstractReadOnlyModelController.class)
+@ModelResource(pathFragment = "userCredentials", apiName = "User Credentials", apiDescription = "Operations about user credentials", controllerSuperClass = AbstractReadOnlyModelController.class)
 @ApiModel(value = "UserCredentials", description = "User login information")
 
 @PreAuthorizeCount(controller = SpelUtil.DENY_ALL)

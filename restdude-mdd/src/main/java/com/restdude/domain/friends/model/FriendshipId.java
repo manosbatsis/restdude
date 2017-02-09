@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.friends.model;
 
-import com.restdude.domain.base.model.EmbeddableManyToManyId;
+import com.restdude.mdd.model.EmbeddableManyToManyId;
 import com.restdude.domain.users.model.User;
 import io.swagger.annotations.ApiModel;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class FriendshipId extends EmbeddableManyToManyId<User, String, User, Str
     private static final Logger LOGGER = LoggerFactory.getLogger(FriendshipId.class);
     public static final String CLASS_DESCRIPTION = "An {@link javax.persistence;Embeddable} JPA composite key. "
             + "The custom implementation provides support to all relevant de)serialization components "
-            + "(JSON, request mappings, value/param variables etc.) " + "for both [ownerId" + EmbeddableManyToManyId.SPLIT_CHAR
+            + "(JSON, request mappings, pathFragment/param variables etc.) " + "for both [ownerId" + EmbeddableManyToManyId.SPLIT_CHAR
             + "friendId]" + " and [friendId] string representations.";
 
     @Override

@@ -23,7 +23,7 @@ package com.restdude.domain.users.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.restdude.domain.base.binding.LowCaseDeserializer;
+import com.restdude.mdd.binding.LowCaseDeserializer;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.websocket.message.IMessageResource;

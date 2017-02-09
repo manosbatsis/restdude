@@ -109,8 +109,8 @@ public class ProviderSignInController extends org.springframework.social.connect
 //	/**
 //	* Renders the registration page.
 //	*/
-//	@RequestMapping(value = "/register", method = { RequestMethod.GET })
-//	//@RequestMapping(value = "/popup/register", method = { RequestMethod.GET, RequestMethod.POST })
+//	@RequestMapping(pathFragment = "/register", method = { RequestMethod.GET })
+//	//@RequestMapping(pathFragment = "/popup/register", method = { RequestMethod.GET, RequestMethod.POST })
 //	public String showRegistrationForm(WebRequest request, Model model) {
 //		LOGGER.debug("showRegistrationForm, userAccountData: {}", model);
 //
@@ -127,7 +127,7 @@ public class ProviderSignInController extends org.springframework.social.connect
 //	/**
 //	* Processes the form submissions of the registration form.
 //	*/
-//	@RequestMapping(value = "/register", method = RequestMethod.POST)
+//	@RequestMapping(pathFragment = "/register", method = RequestMethod.POST)
 //	public String registerUserAccount(@Valid @ModelAttribute("user") RegistrationForm userAccountData, BindingResult result,
 //			WebRequest request, HttpServletRequest nativeRquest, HttpServletResponse response) throws DuplicateEmailException {
 //		LOGGER.debug("registerUserAccount with data: " + userAccountData);

@@ -28,6 +28,7 @@ import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.service.ContinentService;
 import com.restdude.domain.geography.service.CountryService;
 import com.restdude.domain.users.model.Role;
+import com.restdude.domain.users.model.Roles;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.UserRegistrationCodeBatchRepository;
@@ -130,7 +131,7 @@ public abstract class DataInitializer {
         LOGGER.debug("run, testEmailDomain: {}", testEmailDomain);
         SecurityContextHolder.getContext().setAuthentication(
                 new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
-                        Arrays.asList(new Role[]{new Role(Role.ROLE_USER, "Logged in user"), new Role(Role.ROLE_ADMIN, "System Administrator.")})));
+                        Arrays.asList(new Role[]{new Role(Roles.ROLE_USER, "Logged in user"), new Role(Roles.ROLE_ADMIN, "System Administrator.")})));
 
         if (initData && this.userRepository.count() == 0) {
             LOGGER.debug("postInitialize, creating data");
@@ -142,8 +143,8 @@ public abstract class DataInitializer {
             List<User> users = new LinkedList<User>();
 
 
-            Role adminRole = this.roleService.findByIdOrName(Role.ROLE_ADMIN);
-            Role operatorRole = this.roleService.findByIdOrName(Role.ROLE_SITE_OPERATOR);
+            Role adminRole = this.roleService.findByIdOrName(Roles.ROLE_ADMIN);
+            Role operatorRole = this.roleService.findByIdOrName(Roles.ROLE_SITE_OPERATOR);
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -229,13 +230,13 @@ public abstract class DataInitializer {
 
     protected void initRoles() {
         if (this.roleService.count() == 0) {
-            Role adminRole = new Role(Role.ROLE_ADMIN, "System Administrator.");
+            Role adminRole = new Role(Roles.ROLE_ADMIN, "System Administrator.");
             LOGGER.debug("#initRoles, creating");
             adminRole = this.roleService.create(adminRole);
-            Role siteAdminRole = new Role(Role.ROLE_SITE_OPERATOR, "Site Operator.");
+            Role siteAdminRole = new Role(Roles.ROLE_SITE_OPERATOR, "Site Operator.");
             siteAdminRole = this.roleService.create(siteAdminRole);
             // this is added to users by user service, just creating it
-            Role userRole = new Role(Role.ROLE_USER, "Logged in user");
+            Role userRole = new Role(Roles.ROLE_USER, "Logged in user");
             userRole = this.roleService.create(userRole);
         } else {
 

@@ -21,9 +21,9 @@
 package com.restdude.mdd.util;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.base.validation.CaseSensitive;
-import com.restdude.mdd.annotation.ModelRelatedResource;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.validation.CaseSensitive;
+import com.restdude.domain.base.annotation.model.ModelRelatedResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import com.restdude.util.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;

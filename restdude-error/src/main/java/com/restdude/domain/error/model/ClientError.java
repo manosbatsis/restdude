@@ -21,26 +21,29 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.restdude.domain.base.annotation.controller.ModelController;
 import com.restdude.domain.fs.FilePersistence;
 import com.restdude.domain.fs.FilePersistencePreview;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 
-@ModelResource(value = ClientError.API_PATH,
+@ModelResource(pathFragment = ClientError.API_PATH,
         apiName = "Client Errors", apiDescription = "Client Error Operations")
 @Entity
 @Table(name = "error_client")
 @ApiModel(value = "ClientError", description = "Client errors are created upon client request and refer to exceptions occurred " +
         "specifically within client application code. ")
 @JsonIgnoreProperties("pk")
+@RequestMapping("/base/path/parent/path" + ModelController.MODEL_URI_COMPONENT_WILDCARD)
 public class ClientError extends BaseError implements PersistableError<String> {
 
     public static final String API_PATH = "clientErrors";

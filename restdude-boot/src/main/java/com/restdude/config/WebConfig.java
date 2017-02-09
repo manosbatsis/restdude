@@ -20,27 +20,34 @@
  */
 package com.restdude.config;
 
-import com.restdude.domain.base.binding.CsvMessageConverter;
-import com.restdude.domain.base.binding.CustomEnumConverterFactory;
-import com.restdude.domain.base.binding.StringToEmbeddableManyToManyIdConverterFactory;
+import com.restdude.mdd.binding.CsvMessageConverter;
+import com.restdude.mdd.binding.CustomEnumConverterFactory;
+import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
+import com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping;
 import com.restdude.domain.error.resolver.RestExceptionHandler;
 import com.restdude.web.filters.RestRequestNormalizerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebMvcRegistrations;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.List;
 
@@ -48,6 +55,8 @@ import java.util.List;
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
+
+
 
     @Bean
     public HandlerExceptionResolver restExceptionHandler() {
@@ -114,5 +123,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .defaultContentType(MediaType.APPLICATION_JSON)
                 .mediaType("json", MediaType.APPLICATION_JSON)
                 .mediaType("xml", MediaType.APPLICATION_XML);
+    }
+
+
+    @Bean
+    public RequestMappingHandlerMapping modelControllerRequestMappingHandlerMapping() {
+        LOGGER.debug("modelControllerRequestMappingHandlerMapping");
+        ModelControllerRequestMappingHandlerMapping mapping = new ModelControllerRequestMappingHandlerMapping();
+        mapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return mapping;
     }
 }

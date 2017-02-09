@@ -63,6 +63,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -76,7 +77,6 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.8</version>
         </dependency>
         <dependency>
             <groupId>io.github.swagger2markup</groupId>
@@ -85,7 +85,6 @@
         <dependency>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj</artifactId>
-            <version>1.5.4</version>
         </dependency>
 
         <dependency>

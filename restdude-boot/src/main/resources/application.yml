@@ -68,13 +68,11 @@ spring:
 logging:
   level:
     root: WARN
-    org.springframework:
-#      context: DEBUG
-     security: WARN
-#      boot.autoconfigure: DEBUG
-#    com.restdude.domain:
-#      error: DEBUG
-#      base:
+    org.springframework: WARN
+    com.restdude:
+      test: DEBUG
+      mdd.controller: DEBUG
+
 #        repository: DEBUG
 #        validation: DEBUG
 
@@ -90,8 +88,13 @@ server:
 # Restdude specific properties
 # ===================================================================
 restdude:
+  api:
+    basePath: /api/rest
+    defaultParentPath:
+    prepend:
+      excludes: /api/rest, /api/auth, /apiauth, /ws, /app, /queue, /topic
   testEmailDomain: restdude.com
-  baseurl: "http://localhost:8080/restdude"
+  baseurl: http://localhost:8080/restdude
   appVersion: 2.1.2-SNAPSHOT
   contact:
     name: Manos Batsis

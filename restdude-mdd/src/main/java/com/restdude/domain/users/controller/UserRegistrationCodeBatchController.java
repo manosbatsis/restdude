@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.controller;
 
-import com.restdude.domain.base.controller.AbstractNoDeleteModelController;
+import com.restdude.mdd.controller.AbstractNoDeleteModelController;
 import com.restdude.domain.users.model.UserRegistrationCodeBatch;
 import com.restdude.domain.users.model.UserRegistrationCodeInfo;
 import com.restdude.domain.users.service.UserRegistrationCodeBatchService;

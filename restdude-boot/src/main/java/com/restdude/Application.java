@@ -20,6 +20,8 @@
  */
 package com.restdude;
 
+import com.restdude.mdd.repository.BaseRepositoryImpl;
+import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
@@ -48,11 +50,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class})
+@SpringBootApplication(/*scanBasePackages = "${restdude.scan.packages}", */ exclude = {ErrorMvcAutoConfiguration.class})
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"**.restdude", "**.calipso"},
-        repositoryFactoryBeanClass = com.restdude.domain.base.repository.ModelRepositoryFactoryBean.class,
-        repositoryBaseClass = com.restdude.domain.base.repository.BaseRepositoryImpl.class
+        repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class,
+        repositoryBaseClass = BaseRepositoryImpl.class
 )
 @EnableJpaAuditing
 @EnableScheduling

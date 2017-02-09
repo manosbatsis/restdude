@@ -21,7 +21,7 @@
 package com.restdude.mdd.specifications;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.mdd.processor.ModelDrivenBeanGeneratingRegistryPostProcessor;
+import com.restdude.mdd.registry.ModelBasedComponentGenerator;
 import com.restdude.mdd.util.ModelContext;
 import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
@@ -110,7 +110,7 @@ public class SpecificationUtils<T extends CalipsoPersistable<PK>, PK extends Ser
      *
      * @param clazz
      * @param factory
-     * @see ModelDrivenBeanGeneratingRegistryPostProcessor#createPredicateFactory(ModelContext)
+     * @see ModelBasedComponentGenerator#createPredicateFactory(ModelContext)
      */
     public static void addFactoryForClass(Class clazz, IPredicateFactory factory) {
         Assert.notNull(clazz, "clazz cannot be null");

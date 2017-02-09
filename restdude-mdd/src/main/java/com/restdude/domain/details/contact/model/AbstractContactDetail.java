@@ -22,7 +22,7 @@ package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.base.model.CalipsoPersistable;
 
 import javax.persistence.*;

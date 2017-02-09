@@ -23,7 +23,7 @@ package com.restdude.websocket.service.impl;
 
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
 import com.restdude.auth.userdetails.model.UserDetails;
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;

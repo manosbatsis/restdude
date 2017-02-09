@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.model;
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

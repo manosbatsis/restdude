@@ -61,6 +61,8 @@
         </property>
     </bean>
 
+    <bean id="modelHandlerMapping"
+          class="com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping"/>
     <bean id="handlerMapping"
           class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
 
@@ -97,9 +99,9 @@
         <property name="order" value="1"/>
     </bean>
     <!--bean pk="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-        <property name="prefix" value="/WEB-INF/templates/" /> <property name="suffix"
-        value=".html" /> <property name="templateMode" value="HTML5" /> <property
-        name="characterEncoding" value="UTF-8" /> </bean -->
+        <property name="prefix" pathFragment="/WEB-INF/templates/" /> <property name="suffix"
+        pathFragment=".html" /> <property name="templateMode" pathFragment="HTML5" /> <property
+        name="characterEncoding" pathFragment="UTF-8" /> </bean -->
     <!-- THYMELEAF: Template Engine (Spring3-specific version) -->
 
     <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
@@ -124,7 +126,7 @@
         <!--bean class="org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter"
               p:objectMapper-ref="xmlObjectMapperFactory"/-->
         <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
-        <bean class="com.restdude.domain.base.binding.CsvMessageConverter"/>
+        <bean class="com.restdude.mdd.binding.CsvMessageConverter"/>
     </util:list>
 
     <mvc:resources mapping="/static/**" location="/static/"/>

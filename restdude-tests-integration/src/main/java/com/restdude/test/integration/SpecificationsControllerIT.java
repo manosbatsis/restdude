@@ -92,7 +92,7 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
                 body("content[0].parent.pk", equalTo("AS"));
     }
 
-    @Test(description = "Test value to related entities simple type property")
+    @Test(description = "Test pathFragment to related entities simple type property")
     public void testPathToRelatedSimpleTypeProperty() throws Exception {
         LOGGER.debug("testPathToRelatedSimpleTypeProperty");
         given().spec(adminRequestSpec).

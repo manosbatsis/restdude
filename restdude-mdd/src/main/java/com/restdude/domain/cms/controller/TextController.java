@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.controller;
 
-import com.restdude.domain.base.controller.AbstractModelController;
+import com.restdude.mdd.controller.AbstractModelController;
 import com.restdude.domain.cms.model.Text;
 import com.restdude.domain.cms.service.TextService;
 import io.swagger.annotations.Api;

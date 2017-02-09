@@ -52,7 +52,7 @@ class NestedJunctions {
 			String path, String[] values) {
 		String[] junctionKeyAndPropName = path.split(":");
 		if (junctionKeyAndPropName.length != 2) {
-			LOGGER.warn("Ignoring invalid value for nested/junctioned param: "
+			LOGGER.warn("Ignoring invalid pathFragment for nested/junctioned param: "
 					+ path);
 		} else {
 			Map<String, String[]> groupedPrams = junctions

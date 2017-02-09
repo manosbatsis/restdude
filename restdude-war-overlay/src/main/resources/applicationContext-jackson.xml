@@ -50,12 +50,12 @@
         </property>
         <property name="serializers">
             <array>
-                <bean class="com.restdude.domain.base.binding.EmbeddableManyToManyIdSerializer"/>
+                <bean class="com.restdude.mdd.binding.EmbeddableManyToManyIdSerializer"/>
             </array>
         </property>
         <property name="deserializers">
             <array>
-                <bean class="com.restdude.domain.base.binding.EmbeddableManyToManyIdDeserializer"/>
+                <bean class="com.restdude.mdd.binding.EmbeddableManyToManyIdDeserializer"/>
             </array>
         </property>
 
@@ -72,8 +72,8 @@
         <property name="converters">
             <set>
                 <!-- converters is a set of both converters and converterfactories -->
-                <bean class="com.restdude.domain.base.binding.CustomEnumConverterFactory"/>
-                <bean class="com.restdude.domain.base.binding.StringToEmbeddableManyToManyIdConverterFactory"/>
+                <bean class="com.restdude.mdd.binding.CustomEnumConverterFactory"/>
+                <bean class="com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory"/>
             </set>
         </property>
     </bean>

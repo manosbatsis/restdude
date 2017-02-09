@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.geography.service.impl;
 
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.repository.CountryRepository;
 import com.restdude.domain.geography.service.CountryService;

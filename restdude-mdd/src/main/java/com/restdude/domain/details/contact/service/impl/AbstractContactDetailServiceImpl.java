@@ -22,7 +22,7 @@ package com.restdude.domain.details.contact.service.impl;
 
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
 import com.restdude.domain.confirmationtoken.repository.ConfirmationTokenReposirory;
 import com.restdude.domain.details.contact.model.ContactDetail;

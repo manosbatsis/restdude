@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.model;
 
-import com.restdude.domain.base.model.AbstractCategory;
+import com.restdude.mdd.model.AbstractCategory;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

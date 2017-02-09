@@ -21,7 +21,7 @@
 package com.restdude.auth.spel.binding;
 
 import com.restdude.auth.spel.annotations.*;
-import com.restdude.domain.base.controller.AbstractModelController;
+import com.restdude.mdd.controller.AbstractModelController;
 import com.restdude.domain.base.service.ModelService;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;

@@ -21,7 +21,7 @@
 package com.restdude.domain.cms.model;
 
 
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.Formula;
 
@@ -87,7 +87,7 @@ public class BinaryFile extends AbstractSystemUuidPersistableResource implements
 //	public String toString() {
 //		return "BinaryFile [name=" + name + ", thumbnailFilename="
 //				+ thumbnailFilename + ", newFilename=" + newFilename
-//				+ ", fileNameExtention=" + fileNameExtention + ", value=" + value
+//				+ ", fileNameExtention=" + fileNameExtention + ", pathFragment=" + pathFragment
 //				+ ", parentPath=" + parentPath + ", contentType=" + contentType
 //				+ ", size=" + size + ", thumbnailSize=" + thumbnailSize
 //				+ ", url=" + url + ", thumbnailUrl=" + thumbnailUrl

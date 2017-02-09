@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import com.restdude.mdd.uischema.annotation.FormSchemas;
 import com.restdude.mdd.uischema.model.UiSchema;
 import org.apache.commons.beanutils.PropertyUtilsBean;
@@ -126,13 +126,13 @@ public class UiSchemaSerializer extends JsonSerializer<UiSchema> {
 				ModelResource superResource = (ModelResource) domainClass.getSuperclass().getAnnotation(ModelResource.class);
 				if(superResource != null){
 					jgen.writeFieldName("superPathFragment");
-					jgen.writeString(superResource.value());
+					jgen.writeString(superResource.pathFragment());
 				}
 
 				// write pathFragment
 				ModelResource modelResource = (ModelResource) domainClass.getAnnotation(ModelResource.class);
 				jgen.writeFieldName("pathFragment");
-				jgen.writeString(modelResource.value());
+				jgen.writeString(modelResource.pathFragment());
 				
 				// write simple class name
 				jgen.writeFieldName("simpleClassName");

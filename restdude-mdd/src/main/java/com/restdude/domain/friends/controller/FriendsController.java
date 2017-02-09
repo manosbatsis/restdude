@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.friends.controller;
 
-import com.restdude.domain.base.controller.PageableUtil;
+import com.restdude.mdd.controller.PageableUtil;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipStatus;
 import com.restdude.domain.friends.service.FriendshipService;
@@ -146,7 +146,7 @@ public class FriendsController {
 		else{
 			for(String stat : status){
 				if(stat.equals(FriendshipStatus.BLOCK_INVERSE) || FriendshipStatus.valueOf(stat) == null){
-					throw new IllegalArgumentException("Invalid status value: "+ stat);
+					throw new IllegalArgumentException("Invalid status pathFragment: "+ stat);
 				}
 			}
 		}

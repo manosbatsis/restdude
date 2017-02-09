@@ -10279,7 +10279,7 @@ var requirejs, require, define, xpcUtil;
                         this.nSavings = 0;
                     },
                     /**
-                     * The processor of <abbr title="abstract syntax tree">AST</abbr>s found
+                     * The registry of <abbr title="abstract syntax tree">AST</abbr>s found
                      * in UglifyJS.
                      * @namespace
                      * @type {!TProcessor}

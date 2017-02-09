@@ -24,7 +24,7 @@ import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetReque
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
@@ -194,7 +194,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 		// set user role in advance if no confirmation is needed,
 		// clear roles otherwise
 		if (skipConfirmation) {
-			Role userRole = roleRepository.findByName(Role.ROLE_USER);
+			Role userRole = roleRepository.findByName(Roles.ROLE_USER);
 			resource.addRole(userRole);
 		} else {
 			resource.setRoles(null);
@@ -360,7 +360,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 			EmailDetail email = user.getContactDetails().getPrimaryEmail();
 			user.getContactDetails().setPrimaryEmail(this.emailDetailService.forceVerify(email));
 
-			Role userRole = roleRepository.findByName(Role.ROLE_USER);
+			Role userRole = roleRepository.findByName(Roles.ROLE_USER);
 			user.addRole(userRole);
 			user = this.repository.save(user);
 		}

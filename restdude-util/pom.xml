@@ -124,12 +124,6 @@
             <artifactId>uap-java</artifactId>
         </dependency>
 
-        <!--exception hashes -->
-        <dependency>
-            <groupId>com.github.tkawachi</groupId>
-            <artifactId>exhash-core</artifactId>
-        </dependency>
-
         <!-- JavaMail -->
         <dependency>
             <groupId>javax.mail</groupId>

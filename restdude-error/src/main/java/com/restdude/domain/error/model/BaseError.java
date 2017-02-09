@@ -25,14 +25,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.controller.AbstractReadOnlyModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.error.ErrorUtil;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
-import com.restdude.mdd.annotation.CurrentPrincipal;
-import com.restdude.mdd.annotation.CurrentPrincipalField;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.CurrentPrincipal;
+import com.restdude.domain.base.annotation.model.CurrentPrincipalField;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +48,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
-@ModelResource(value = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(pathFragment = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "Errors", apiDescription = "Generic error information (readonly)")
 @ApiModel(value = "BaseError", description = "Generic error superclass")
 @Entity

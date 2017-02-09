@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.error.model;
 
-import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.controller.AbstractReadOnlyModelController;
+import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +36,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 
-@ModelResource(value = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(pathFragment = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "User Agents", apiDescription = "Collection of UA signatures")
 @ApiModel(value = "UserAgent", description = "UA signatures")
 @Relation(value = "userAgent", collectionRelation = UserAgent.API_PATH)
@@ -64,7 +64,7 @@ public class UserAgent extends AbstractAssignedIdPersistableResource<String> {
 
 
     @NotNull
-    @ApiModelProperty(value = "UA signature string value")
+    @ApiModelProperty(value = "UA signature string pathFragment")
     @Column(name = "ua_value", nullable = false, updatable = false, length = MAX_VALUE_LENGTH)
     private String value;
 
@@ -82,7 +82,7 @@ public class UserAgent extends AbstractAssignedIdPersistableResource<String> {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("pk", this.getPk())
-                .append("value", this.getValue())
+                .append("pathFragment", this.getValue())
                 .toString();
     }
 

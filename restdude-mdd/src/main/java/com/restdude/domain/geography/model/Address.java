@@ -22,7 +22,7 @@ package com.restdude.domain.geography.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;

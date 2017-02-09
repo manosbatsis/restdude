@@ -31,16 +31,19 @@
         <level value="debug"/>
     </logger>
 
-    <logger name="com.restdude.mdd">
+    <logger name="com.restdude.auth">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping">
         <level value="debug"/>
     </logger>
 
-    <logger name="com.restdude.init">
-        <level value="debug"/>
+    <!--logger name="com.restdude.init">
+        <level pathFragment="debug"/>
     </logger>
     <logger name="com.restdude.util.ClassUtils">
-        <level value="debug"/>
-    </logger>
+        <level pathFragment="debug"/>
+    </logger-->
 
     <root level="warn">
         <appender-ref ref="STDOUT"/>

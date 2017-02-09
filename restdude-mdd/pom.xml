@@ -65,30 +65,6 @@
             <version>${project.version}</version>
         </dependency>
 
-
-        <!-- Commons -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency>
-
-
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -265,7 +241,7 @@
         </dependency>
 
 
-        <!-- Jasyst Encryption -->
+        <!-- jasypt Encryption -->
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
@@ -299,22 +275,6 @@
             <artifactId>thymeleaf-spring4</artifactId>
         </dependency>
 
-        <!-- Joda Time -->
-        <!--
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jadira.usertype</groupId>
-            <artifactId>usertype.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-        </dependency>
-
-        -->
         <!-- Commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>

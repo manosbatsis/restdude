@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Api(tags = "Auth", description = "Authentication operations")
 @RestController
-@RequestMapping(value = {"/apiauth/userDetails", "/api/auth/userDetails"}, produces = {"application/json", "application/xml"})
+@RequestMapping(value = {"/apiauth/userDetails", "/api/auth/userDetails"}, produces = {"application/json"})
 public class UserDetailsController {
 
     private static final Logger LOGGER = LoggerFactory

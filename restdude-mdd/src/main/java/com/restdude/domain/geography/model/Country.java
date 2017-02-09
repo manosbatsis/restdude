@@ -25,7 +25,7 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -46,7 +46,7 @@ import javax.persistence.*;
         @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
         @AttributeOverride(name = "name", column = @Column(unique = true, nullable = false, length = 50)),
 })
-@ModelResource(value = "countries", apiName = "Countries", apiDescription = "Operations about countries")
+@ModelResource(pathFragment = "countries", apiName = "Countries", apiDescription = "Operations about countries")
 @ApiModel(value = "Country", description = "A model representing a country, meaning a region that is identified as a distinct entity in political geography.")
 @Relation(value = "country", collectionRelation = "countries")
 @PreAuthorizeFindPaginated(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)

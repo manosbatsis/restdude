@@ -5906,7 +5906,7 @@
                 oSettings.bInitialised = true;
 
                 /* Check if we need to initialise the table (it might not have been handed off to the
-                 * language processor)
+                 * language registry)
                  */
                 if (bInitHandedOff === false) {
                     _fnInitialise(oSettings);

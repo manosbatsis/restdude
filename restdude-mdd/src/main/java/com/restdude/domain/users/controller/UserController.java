@@ -22,8 +22,9 @@ package com.restdude.domain.users.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.domain.base.controller.AbstractNoDeleteModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
+import com.restdude.domain.base.annotation.controller.ModelController;
+import com.restdude.mdd.controller.AbstractNoDeleteModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
@@ -39,10 +40,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-@RestController
+@ModelController
 @ExposesResourceFor(User.class)
 @Api(tags = "Users", description = "User management operations")
-@RequestMapping(value = "/api/rest/users", produces = {"application/json", "application/xml"})
 public class UserController extends AbstractNoDeleteModelController<User, String, UserService> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -68,9 +68,7 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource", hidden = true)
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public
-    @ResponseBody
-    User update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 
@@ -92,9 +90,7 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public
-    @ResponseBody
-    User patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         LOGGER.debug("patch, resource: {}", resource);
         ICalipsoUserDetails principal = this.service.getPrincipal();
         LOGGER.debug("patch, principal: {}", principal);

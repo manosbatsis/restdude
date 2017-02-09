@@ -61,7 +61,7 @@ public class ConfigurationFactory {
 
 
     private static CompositeConfiguration config = new CompositeConfiguration();
-	
+
 	static {
 		// add default and custom calipso properties
         String[] propertyFiles = {"restdude.properties", "restdude.defaults.properties"};

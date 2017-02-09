@@ -74,8 +74,8 @@
         We are using a snapshot because of
         https://jira.spring.io/browse/SPR-14520
          -->
-        <spring.version>4.3.5.RELEASE</spring.version>
-        <spring-boot.version>1.4.3.RELEASE</spring-boot.version>
+        <spring.version>4.3.6.RELEASE</spring.version>
+        <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
         <spring.aspects.version>${spring.version}</spring.aspects.version>
         <spring-hateoas.version>0.23.0.RELEASE</spring-hateoas.version>
         <!-- Spring Security -->
@@ -88,10 +88,6 @@
         <spring-data-jpa-version>1.10.6.RELEASE</spring-data-jpa-version>
         <spring-data-commons-version>1.12.6.RELEASE</spring-data-commons-version>
         <spring-data-elasticsearch-version>2.0.6.RELEASE</spring-data-elasticsearch-version>
-        <!-- javers auditing -->
-        <javers-core.version>2.3.0</javers-core.version>
-        <javers-spring.version>2.3.0</javers-spring.version>
-        <javers-spring-data.version>1.1.0-RC1</javers-spring-data.version>
 
         <!-- Spring Social -->
         <spring-social.version>1.1.4.RELEASE</spring-social.version>
@@ -101,10 +97,18 @@
         <spring-social-twitter-version>1.1.0.RELEASE</spring-social-twitter-version>
         <spring-social-google-version>1.0.0.RELEASE</spring-social-google-version>
 
-        <hibernate.version>5.2.4.Final</hibernate.version>
+        <hibernate.version>5.2.6.Final</hibernate.version>
+        <hibernate-validator.version>5.2.1.Final</hibernate-validator.version>
 
         <!-- springfox swagger -->
         <springfox.version>2.5.0</springfox.version>
+        <swagger2markup.version>1.2.0</swagger2markup.version>
+        <asm.version>5.1</asm.version>
+
+        <!-- javers auditing -->
+        <javers-core.version>2.3.0</javers-core.version>
+        <javers-spring.version>2.3.0</javers-spring.version>
+        <javers-spring-data.version>1.1.0-RC1</javers-spring-data.version>
 
         <!-- Apache Commons -->
         <commons-lang3.version>3.4</commons-lang3.version>
@@ -135,7 +139,7 @@
         <slf4j.version>1.7.21</slf4j.version>
 
         <!-- Jetty -->
-        <jetty.version>9.3.11.v20160721</jetty.version>
+        <jetty.version>9.4.1.v20170120</jetty.version>
         <it.skip>true</it.skip>
     </properties>
 
@@ -263,7 +267,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
-
+                <plugin>
+                    <groupId>org.asciidoctor</groupId>
+                    <artifactId>asciidoctor-maven-plugin</artifactId>
+                    <version>1.5.3</version>
+                </plugin>
                 <plugin>
                     <groupId>pl.project13.maven</groupId>
                     <artifactId>git-commit-id-plugin</artifactId>
@@ -576,13 +584,26 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- MODULES -->
-            <!-- 			<dependency> -->
-            <!-- 				<groupId>com.restdude</groupId> -->
-            <!-- 				<artifactId>restdude-spring</artifactId> -->
-            <!-- 				<version>${restdude.version}</version> -->
-            <!-- 			</dependency> -->
-            <!-- jackson/fasterxml -->
+            <!--dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
+                <version>${asm.version}</version>
+            </dependency-->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
@@ -893,6 +914,15 @@
                 <artifactId>spring-data-commons</artifactId>
                 <version>${spring-data-commons-version}</version>
             </dependency>
+
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.12</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- javers auditing -->
             <dependency>
                 <groupId>org.javers</groupId>
@@ -944,14 +974,13 @@
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>${hibernate.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-ehcache</artifactId>
                 <version>${hibernate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
             </dependency>
 
             <!-- AWS -->
@@ -966,7 +995,6 @@
                 <groupId>javax.websocket</groupId>
                 <artifactId>javax.websocket-api</artifactId>
                 <version>1.0</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -1175,7 +1203,7 @@
             <dependency>
                 <groupId>io.github.swagger2markup</groupId>
                 <artifactId>swagger2markup</artifactId>
-                <version>1.0.0</version>
+                <version>${swagger2markup.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
@@ -1200,6 +1228,11 @@
                 <version>4.12</version>
             </dependency>
             <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>6.8.8</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
@@ -1210,24 +1243,29 @@
                 <version>${spring-security.version}</version>
             </dependency>
 
+            <!-- Jetty -->
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
 
+            <!-- Jetty Websocket -->
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
                 <artifactId>websocket-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-api</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
                 <artifactId>websocket-client</artifactId>
@@ -1239,6 +1277,12 @@
                 <artifactId>lombok</artifactId>
                 <version>1.16.12</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctorj</artifactId>
+                <version>1.5.4.1</version>
             </dependency>
         </dependencies>
 

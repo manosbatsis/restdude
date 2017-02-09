@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,26 +35,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "geo_pocode")
-@ModelResource(value = "postalCodes", apiName = "PostalCodes", apiDescription = "Postal code operations")
+@ModelResource(pathFragment = "postalCodes", apiName = "PostalCodes", apiDescription = "Postal code operations")
 @ApiModel(value = "PostalCode", description = "A model representing apostal code")
 public class PostalCode extends AbstractFormalRegion<Locality, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PostalCode.class);
-
-
-    public static String SERVICE_PRE_AUTHORIZE_SEARCH = "hasRole('ROLE_USER')";
-    public static String SERVICE_PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_USER')";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE = "denyAll";
-
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_COUNT = "denyAll";
 
     public PostalCode() {
         super();

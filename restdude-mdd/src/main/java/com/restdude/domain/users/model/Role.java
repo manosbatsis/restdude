@@ -21,9 +21,9 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.base.controller.AbstractModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -37,7 +37,7 @@ import java.util.Collection;
 
 /**
  */
-@ModelResource(value = "roles", controllerSuperClass = AbstractModelController.class,
+@ModelResource(pathFragment = "roles", controllerSuperClass = AbstractModelController.class,
 	apiName = "Roles", apiDescription = "Operations about roles")
 @Entity
 @Table(name = "role")
@@ -48,15 +48,8 @@ public class Role extends AbstractSystemUuidPersistableResource implements Grant
 
 	private static final long serialVersionUID = 3558291745762331656L;
 
-	// global roles
-	public static final String ROLE_ADMIN = "ROLE_ADMIN";
-	public static final String ROLE_SITE_OPERATOR = "ROLE_SITE_OPERATOR";
-	public static final String ROLE_USER = "ROLE_USER";
-    public static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
-    public static final String ROLE_UNCONFIRMED_USER = "UNCONFIRMED_USER";
 
-
-    @NotNull
+	@NotNull
     @Column(unique = true, nullable = false)
 	private String name;
 	

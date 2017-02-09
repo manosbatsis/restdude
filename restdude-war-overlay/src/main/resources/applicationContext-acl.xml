@@ -61,11 +61,11 @@
     <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/hierarchicalroles/RoleHierarchyImpl.html 
     <bean pk="roleHierarchy"  class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
         <property name="hierarchy">
-            <value>
+            <pathFragment>
                 ROLE_ADMIN > ROLE_MODERATOR
                 ROLE_MODERATOR > ROLE_USER
                 ROLE_USER > ROLE_VISITOR
-            </value>
+            </pathFragment>
         </property>
     </bean>
     -->

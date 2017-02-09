@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.error.service;
 
-import com.restdude.domain.base.service.impl.AbstractAssignedIdModelService;
+import com.restdude.mdd.service.AbstractAssignedIdModelService;
 import com.restdude.domain.error.model.ErrorLog;
 
 

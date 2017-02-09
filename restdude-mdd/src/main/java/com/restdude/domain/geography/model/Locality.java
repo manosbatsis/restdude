@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,7 +35,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "geo_locality")
-@ModelResource(value = "localities", apiName = "Localities", apiDescription = "Locality operations")
+@ModelResource(pathFragment = "localities", apiName = "Localities", apiDescription = "Locality operations")
 @ApiModel(value = "Locality", description = "A model representing an incorporated city or town political entity")
 public class Locality extends AbstractFormalRegion<Country, String> {
 

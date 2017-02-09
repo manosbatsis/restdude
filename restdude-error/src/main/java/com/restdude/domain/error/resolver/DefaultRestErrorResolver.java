@@ -50,7 +50,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -68,7 +67,6 @@ public class DefaultRestErrorResolver implements RestErrorResolver, MessageSourc
     private static Map<Class, Integer> exceptionStatuses = new HashMap<Class, Integer>();
 
     static {
-        exceptionStatuses.put(NoSuchRequestHandlingMethodException.class, HttpServletResponse.SC_NOT_FOUND);
         exceptionStatuses.put(AuthenticationException.class, HttpServletResponse.SC_UNAUTHORIZED);
         exceptionStatuses.put(UsernameNotFoundException.class, HttpServletResponse.SC_UNAUTHORIZED);
         exceptionStatuses.put(AccessDeniedException.class, HttpServletResponse.SC_UNAUTHORIZED);

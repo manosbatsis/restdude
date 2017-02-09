@@ -21,7 +21,7 @@
 package com.restdude.domain.geography.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
+import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -44,7 +44,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 	@Column(name = "name", nullable = false)
 	private String name;
 	@NotNull
-	@Column(name = "value", nullable = false)
+	@Column(name = "pathFragment", nullable = false)
 	private String path;
 	@NotNull
 	@Column(name = "path_level", nullable = false)
@@ -76,7 +76,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
      */
     @Override
     public void preSave() {
-        // set value
+        // set pathFragment
 		if(this.getPath() == null){
 			StringBuffer path = new StringBuffer();
 			if(this.getParent() != null){
@@ -86,7 +86,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 			path.append(this.getName());
 			this.setPath(path.toString());
 		}
-		// set value level
+		// set pathFragment level
 		Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
 		this.setPathLevel(pathLevel.shortValue());
 		

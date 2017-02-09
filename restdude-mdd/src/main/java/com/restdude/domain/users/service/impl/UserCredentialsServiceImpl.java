@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.service.impl;
 
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.UserCredentialsRepository;
 import com.restdude.domain.users.repository.UserRepository;

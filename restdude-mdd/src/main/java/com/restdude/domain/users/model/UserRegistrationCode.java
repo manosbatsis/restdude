@@ -21,9 +21,9 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractSystemUuidPersistableResource;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.controller.AbstractReadOnlyModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Formula;
@@ -34,7 +34,7 @@ import javax.persistence.*;
 @ShallowReference
 @Entity
 @ApiModel(description = "UserRegistrationCode")
-@ModelResource(value = "userRegistrationCodes", controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(pathFragment = "userRegistrationCodes", controllerSuperClass = AbstractReadOnlyModelController.class,
         apiName = "UserRegistrationCode", apiDescription = "User registration codes (read-only)")
 @Table(name = "registration_code")
 @Inheritance(strategy = InheritanceType.JOINED)

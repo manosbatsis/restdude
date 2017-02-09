@@ -20,9 +20,9 @@
  */
 package com.restdude.websocket.model;
 
-import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
+import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 
 import javax.persistence.Entity;
@@ -36,7 +36,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "stomp_session")
-@ModelResource(value = StompSession.API_PATH, apiName = "STOMP Sessions", apiDescription = "STOMP Session Operations")
+@ModelResource(pathFragment = StompSession.API_PATH, apiName = "STOMP Sessions", apiDescription = "STOMP Session Operations")
 @ApiModel(value = "STOMP Session", description = "A model representing a websocket STOMP session")
 public class StompSession extends AbstractAssignedIdPersistableResource<String> {
 

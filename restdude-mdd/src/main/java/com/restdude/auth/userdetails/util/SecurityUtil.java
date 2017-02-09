@@ -87,10 +87,10 @@ public class SecurityUtil {
 	}
 
 	/**
-	 * Writes a cookie to the response. In case of a blank value the method will 
+	 * Writes a cookie to the response. In case of a blank pathFragment the method will
 	 * set the max age to zero, effectively marking the cookie for immediate 
 	 * deletion by the client if the <code>allowClear</code> is true or throw an exception if false.
-	 * Blank value strings mark cookie deletion. If 
+	 * Blank pathFragment strings mark cookie deletion. If
 	 * @param response
 	 * @param cookieName
 	 * @param cookieValue
@@ -98,13 +98,13 @@ public class SecurityUtil {
 	 */
 	private static void addCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue, boolean allowClear, UserDetailsConfig userDetailsConfig) {
 		if (StringUtils.isBlank(cookieValue) && !allowClear) {
-			throw new RuntimeException("Was given a blank cookie value but allowClear is false for cookie name: " + cookieName);
+			throw new RuntimeException("Was given a blank cookie pathFragment but allowClear is false for cookie name: " + cookieName);
 		}
 
 		String server = (String) request.getAttribute(Constants.DOMAIN_KEY);
 		if(LOGGER.isDebugEnabled()){
 			LOGGER.debug("addCookie, cookieName: " + cookieName + 
-				", cookie value: " + cookieValue+
+				", cookie pathFragment: " + cookieValue+
 					", domain: " + server +
 				", secure: "+userDetailsConfig.isCookiesSecure() +
 					", http-only: " + userDetailsConfig.isCookiesHttpOnly());

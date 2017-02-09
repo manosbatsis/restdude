@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.error.model;
 
-import com.restdude.domain.base.controller.AbstractReadOnlyModelController;
-import com.restdude.domain.base.model.AbstractAssignedIdPersistableResource;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.mdd.controller.AbstractReadOnlyModelController;
+import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,7 +41,7 @@ import java.time.LocalDateTime;
 /**
  * {@value #CLASS_DESCRIPTION}
  */
-@ModelResource(value = ErrorLog.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class, apiName = "ErrorLogs",
+@ModelResource(pathFragment = ErrorLog.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class, apiName = "ErrorLogs",
         apiDescription = "Stacktrace or other error log details.")
 
 @Entity

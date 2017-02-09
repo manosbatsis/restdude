@@ -40,7 +40,7 @@ public class FileDTO {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("value", this.getPath())
+                .append("pathFragment", this.getPath())
                 .append("contentLength", this.getContentLength())
                 .append("contentType", this.getContentType())
                 .toString();

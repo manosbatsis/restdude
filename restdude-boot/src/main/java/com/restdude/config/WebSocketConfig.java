@@ -99,7 +99,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
         policy.setInputBufferSize(8192);
         policy.setIdleTimeout(600000);
 
-        return new CalipsoHandshakeHandler(new JettyRequestUpgradeStrategy(new WebSocketServerFactory(policy)));
+        return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(policy));
     }
 
     @Bean

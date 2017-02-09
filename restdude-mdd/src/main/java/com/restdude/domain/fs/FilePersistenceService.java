@@ -123,7 +123,7 @@ public interface FilePersistenceService {
     }
 
     /**
-     * The method saves the given multipart file to the value specified, ignoring the original file name.
+     * The method saves the given multipart file to the pathFragment specified, ignoring the original file name.
      * @param fileField
      * @param file
      * @return the URL for the saved file
@@ -195,7 +195,7 @@ public interface FilePersistenceService {
     }
 
     /**
-     * The method saves the given multipart file to the value specified, ignoring the original file name.
+     * The method saves the given multipart file to the pathFragment specified, ignoring the original file name.
      *
      * @param fileField
      * @param file

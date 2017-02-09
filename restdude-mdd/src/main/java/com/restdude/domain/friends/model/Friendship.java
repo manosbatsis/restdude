@@ -22,9 +22,9 @@ package com.restdude.domain.friends.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeDelete;
-import com.restdude.domain.base.model.AbstractPersistableResource;
+import com.restdude.mdd.model.AbstractPersistableResource;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.annotation.ModelResource;
+import com.restdude.domain.base.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "friendships")
-@ModelResource(value = Friendship.API_PATH, apiName = "Friendships", apiDescription = "Operations about friendships")
+@ModelResource(pathFragment = Friendship.API_PATH, apiName = "Friendships", apiDescription = "Operations about friendships")
 @ApiModel(value = "Friendship", description = Friendship.CLASS_DESCRIPTION)
 @PreAuthorizeDelete(controller = " hasRole('ROLE_USER') ", service = " hasRole('ROLE_USER') ")
 public class Friendship extends AbstractPersistableResource<FriendshipId> {

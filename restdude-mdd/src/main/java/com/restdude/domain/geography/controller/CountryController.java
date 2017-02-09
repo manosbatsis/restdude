@@ -20,7 +20,9 @@
  */
 package com.restdude.domain.geography.controller;
 
-import com.restdude.domain.base.controller.AbstractModelController;
+import com.restdude.domain.base.annotation.controller.ModelController;
+import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractModelController;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.service.CountryService;
 import io.swagger.annotations.Api;
@@ -30,11 +32,9 @@ import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@ModelController
 @ExposesResourceFor(Country.class)
 @Api(tags = "Countries", description = "Operations about countries")
-@RequestMapping(value = "/api/rest/countries", 
-	produces = { "application/json", "application/xml" })
 public class CountryController extends AbstractModelController<Country, String, CountryService> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CountryController.class);

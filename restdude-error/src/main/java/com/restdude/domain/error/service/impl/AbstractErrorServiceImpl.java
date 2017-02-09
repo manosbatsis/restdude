@@ -21,7 +21,7 @@
 package com.restdude.domain.error.service.impl;
 
 import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.domain.base.service.impl.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.PersistableError;
 import com.restdude.domain.error.service.ErrorLogService;
