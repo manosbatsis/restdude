@@ -1,9 +1,0 @@
-{
-  "node": true,
-  "browser": true,
-  "globals": {
-    "angular": false,
-    "confirm": false,
-    "CryptoJS": false
-  }
-}
