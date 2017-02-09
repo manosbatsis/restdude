@@ -22,12 +22,13 @@ package com.restdude.mdd.registry;
 
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
+import com.yahoo.elide.security.checks.Check;
+import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -37,6 +38,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.persistence.Entity;
 import java.util.*;
 
 /**
@@ -63,6 +65,9 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
     private Map<Class<?>, ModelInfo> modelEntries = new HashMap<>();
 
     private Map<Class<?>, Class<?>> handlerModelTypes = new HashMap<>();
+
+    @Getter
+    private EntityDictionary entityDictionary = new EntityDictionary();
 
     public void setApplicationContext(ApplicationContext appContext) throws BeansException {
         applicationContext = appContext;
@@ -94,6 +99,16 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
                 this.addEntryFor(modelType);
             }
         }
+
+
+        Set<Class<?>> entityTypes = this.entityDictionary.getBindings();
+        LOGGER.debug("scanPackages finished, bindings: {}", entityTypes);
+
+
+        for(Class<?> entityType : entityTypes){
+            LOGGER.debug("scanPackages finished, entity json name: {}, type: {}", this.entityDictionary.getJsonAliasFor(entityType), entityType);
+
+        }
     }
 
     protected void addEntryFor(Class modelClass){
@@ -109,6 +124,12 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
         // add entry
         this.modelEntries.put(modelClass, entry);
+
+        // if an entity, add to dictionary
+        if(modelClass.isAnnotationPresent(Entity.class)){
+            LOGGER.debug("addEntryFor binding dictionary entity: {}", modelClass);
+            this.entityDictionary.bindEntity(modelClass);
+        }
     }
 
     @Override

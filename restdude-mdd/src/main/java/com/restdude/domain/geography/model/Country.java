@@ -26,6 +26,7 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
 import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
 import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.base.annotation.model.ModelResource;
+import com.yahoo.elide.annotation.Include;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -41,7 +42,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "country")
-
+@Include(type = "country", rootLevel = true)
 @AttributeOverrides({
         @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
         @AttributeOverride(name = "name", column = @Column(unique = true, nullable = false, length = 50)),

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.jsonapi.binding.SearchRequest;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.domain.base.model.RawJson;
@@ -38,6 +39,7 @@ import com.restdude.domain.users.model.User;
 import com.restdude.domain.base.annotation.model.CurrentPrincipal;
 import com.restdude.domain.base.annotation.model.CurrentPrincipalField;
 import com.restdude.domain.base.annotation.model.ModelDrivenPreAuth;
+import com.restdude.mdd.registry.ModelInfoRegistry;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.util.exception.http.NotFoundException;
 import io.swagger.annotations.ApiOperation;
@@ -55,10 +57,15 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -103,7 +110,10 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
     protected HttpServletRequest request;
 
     @Autowired
-    private EntityLinks entityLinks;
+    protected ModelInfoRegistry mmdelInfoRegistry;
+
+    @Autowired
+    protected EntityLinks entityLinks;
 
     protected S service;
     protected Class<T> modelType;
@@ -144,10 +154,10 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
      * @param resource
      */
     protected void addResourceLinks(@RequestBody T resource) {
-       /* if (this.isResourceSupport && resource.getPk() != null) {
+        if (this.isResourceSupport && resource.getPk() != null) {
             ResourceSupport resourceSupport = (ResourceSupport) resource;
             resourceSupport.add(this.entityLinks.linkToSingleResource(this.modelType, resource.getPk()));
-        }*/
+        }
     }
 
     //@Override
@@ -208,8 +218,9 @@ public class AbstractModelController<T extends CalipsoPersistable<PK>, PK extend
         return findPaginated(page, size, sort, direction, request.getParameterMap(), applyCurrentPrincipalIdPredicate);
     }
 
+
     //@Override
-    @RequestMapping(value = "{pk}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "{pk}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth

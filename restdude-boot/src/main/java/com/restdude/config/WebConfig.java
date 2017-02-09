@@ -20,6 +20,7 @@
  */
 package com.restdude.config;
 
+import com.restdude.domain.base.annotation.controller.ModelController;
 import com.restdude.mdd.binding.CsvMessageConverter;
 import com.restdude.mdd.binding.CustomEnumConverterFactory;
 import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
@@ -35,6 +36,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -52,11 +54,35 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.List;
 
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistrations {
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
 
+    @Override
+    public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+
+        RequestMappingHandlerMapping mapping = new RequestMappingHandlerMapping(){
+            @Override
+            protected boolean isHandler(Class<?> beanType) {
+                boolean is = super.isHandler(beanType) && (AnnotationUtils.findAnnotation(beanType, ModelController.class) == null);
+                LOGGER.debug("isHandler: {}, beanType: {}", is, beanType);
+                return is;
+            }
+        };
+        return mapping;
+    }
+
+    @Override
+    public RequestMappingHandlerAdapter getRequestMappingHandlerAdapter() {
+        return null;
+    }
+
+    @Override
+    public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
+        return null;
+    }
 
     @Bean
     public HandlerExceptionResolver restExceptionHandler() {

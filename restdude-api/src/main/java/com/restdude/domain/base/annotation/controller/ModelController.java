@@ -23,6 +23,7 @@ package com.restdude.domain.base.annotation.controller;
 import com.restdude.domain.base.annotation.model.ModelResource;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,8 +34,9 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Component
+@RestController
 @ResponseBody
+@RequestMapping(value = ModelController.MODEL_MAPPING_WILDCARD, produces = MimeTypeUtils.APPLICATION_JSON_VALUE, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE)
 public @interface ModelController {
 
     /**
@@ -131,7 +133,7 @@ public @interface ModelController {
      * @return the suggested component name, if any
      * @since 4.0.1
      */
-    @AliasFor(annotation = Component.class, attribute = "value")
+    @AliasFor(annotation = RestController.class, attribute = "value")
     String value() default "";
 
 }

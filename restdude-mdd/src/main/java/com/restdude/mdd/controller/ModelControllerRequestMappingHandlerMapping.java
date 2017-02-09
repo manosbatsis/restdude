@@ -28,28 +28,17 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.annotation.AnnotationBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.EmbeddedValueResolverAware;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.handler.MatchableHandlerMapping;
-import org.springframework.web.servlet.handler.RequestMatchResult;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -104,30 +93,42 @@ public class ModelControllerRequestMappingHandlerMapping extends RequestMappingH
         if(handlerType.isAnnotationPresent(ModelController.class)){
 
             RequestMapping methodRequestMapping = AnnotatedElementUtils.findMergedAnnotation(method, RequestMapping.class);
-            RequestMapping handlerRequestMapping = DefaultRequestMappingAnnotatedElement.class.getAnnotation(RequestMapping.class);
+            if(methodRequestMapping != null){
 
-            // look for a model type match
-            Class<?> modelType = this.modelInfoRegistry.getHandlerModelType(handlerType);
-            // get model type meta
-            ModelInfo modelInfo = modelType != null ? this.modelInfoRegistry.getEntryFor(modelType) : null;
-            if(modelInfo != null){
-                LOGGER.debug("createRequestMappingInfo, method: {}, handlerType: {}, modelInfo: {}", method, handlerType, modelInfo);
-                requestMappingInfo = createRequestMappingInfo(method, methodRequestMapping, modelInfo);
-                if (requestMappingInfo != null) {
-                    RequestMappingInfo typeInfo = createRequestMappingInfo(handlerType, handlerRequestMapping, modelInfo);
-                    if (typeInfo != null) {
-                        LOGGER.debug("createRequestMappingInfo typeInfo patterns: {}, for handlerType: {}", typeInfo.getPatternsCondition().getPatterns(), handlerType);
-                        requestMappingInfo = typeInfo.combine(requestMappingInfo);
+                RequestMapping handlerRequestMapping = AnnotatedElementUtils.findMergedAnnotation(handlerType, RequestMapping.class);
+                LOGGER.info("getMappingForMethod, handler patterns: {}, method patterns: {}", handlerRequestMapping.path(), methodRequestMapping.path());
+                //RequestMapping handlerRequestMapping = DefaultRequestMappingAnnotatedElement.class.getAnnotation(RequestMapping.class);
+
+                // look for a model type match
+                Class<?> modelType = this.modelInfoRegistry.getHandlerModelType(handlerType);
+                // get model type meta
+                ModelInfo modelInfo = modelType != null ? this.modelInfoRegistry.getEntryFor(modelType) : null;
+                if(modelInfo != null){
+                    LOGGER.debug("createRequestMappingInfo, method: {}, handlerType: {}, modelInfo: {}", method, handlerType, modelInfo);
+                    requestMappingInfo = createRequestMappingInfo(method, methodRequestMapping, modelInfo);
+                    if (requestMappingInfo != null) {
+                        RequestMappingInfo typeInfo = createRequestMappingInfo(handlerType, handlerRequestMapping, modelInfo);
+                        if (typeInfo != null) {
+                            LOGGER.debug("createRequestMappingInfo typeInfo patterns: {}, for handlerType: {}", typeInfo.getPatternsCondition().getPatterns(), handlerType);
+                            requestMappingInfo = typeInfo.combine(requestMappingInfo);
+                        }
+                        else{
+                            throw new RuntimeException("Type-level RequestMappingInfo is null for handlerType: " + handlerType);
+                        }
                     }
                     else{
-                        throw new RuntimeException("Type-level RequestMappingInfo is null for handlerType: " + handlerType);
+                        throw new RuntimeException("Method-level RequestMappingInfo is null for handlerType: " + handlerType + ", method: " +method);
                     }
+                }
+                else{
+                    throw new RuntimeException("Model type used by a ModelController has no model type or iInfo registered: {}" + handlerType);
                 }
             }
             else{
-                throw new RuntimeException("Model type used by a ModelController has no model type or iInfo registered: {}" + handlerType);
+                LOGGER.debug("No mapping present, ignoring handler: (), method: {}", handlerType, method);
             }
         }
+
         else{
             throw new RuntimeException("Handler is not a ModelController: {}" + handlerType);
         }
@@ -185,7 +186,7 @@ public class ModelControllerRequestMappingHandlerMapping extends RequestMappingH
         this.shadowConfig.setRegisteredSuffixPatternMatch(useRegisteredSuffixPatternMatch());
         this.shadowConfig.setContentNegotiationManager(getContentNegotiationManager());
 
-        super.afterPropertiesSet();
+        initHandlerMethods();//super.afterPropertiesSet();
     }
 
 
