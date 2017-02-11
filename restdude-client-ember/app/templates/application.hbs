@@ -14,8 +14,19 @@
       {{/link-to}}
     </div>
   </div>
+  {{#if session.isAuthenticated}}
+    <button {{action 'logout'}}>Logout</button>
+  {{else}}
+    {{#link-to 'login'}}
+        Login  
+     {{/link-to}}
+     {{/if}}   
   <div class="body">
     {{outlet}}
   </div>
 </div>
 
+<!-- {{#link-to 'protected'}}
+        Protected 
+     {{/link-to}}
+-->
