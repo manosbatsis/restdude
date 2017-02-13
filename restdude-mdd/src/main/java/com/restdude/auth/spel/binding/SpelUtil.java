@@ -56,7 +56,7 @@ public class SpelUtil {
     static {
 
         METHOD_SPEL_ANNOTATIONS.put("count", PreAuthorizeCount.class);
-        METHOD_SPEL_ANNOTATIONS.put("create", PreAuthorizeCreate.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonPost", PreAuthorizeCreate.class);
         //METHOD_SPEL_ANNOTATIONS.put("findOrCreate", PreAuthorizeFindCreate.class);
 
 
@@ -65,18 +65,18 @@ public class SpelUtil {
         METHOD_SPEL_ANNOTATIONS.put("deleteAllWithCascade", PreAuthorizeDeleteWithCascade.class);
 
 
-        METHOD_SPEL_ANNOTATIONS.put("findAll", PreAuthorizeFindAll.class);
-        METHOD_SPEL_ANNOTATIONS.put("findById", PreAuthorizeFindById.class);
-        METHOD_SPEL_ANNOTATIONS.put("findByIds", PreAuthorizeFindByIds.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonGetAll", PreAuthorizeFindAll.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonGetById", PreAuthorizeFindById.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonGetByIds", PreAuthorizeFindByIds.class);
 
-        METHOD_SPEL_ANNOTATIONS.put("findPaginated", PreAuthorizeFindPaginated.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonGetPage", PreAuthorizeFindPaginated.class);
 
 
         METHOD_SPEL_ANNOTATIONS.put("addMetadatum", PreAuthorizePatch.class);
-        METHOD_SPEL_ANNOTATIONS.put("patch", PreAuthorizePatch.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonPatch", PreAuthorizePatch.class);
 
         METHOD_SPEL_ANNOTATIONS.put("removeMetadatum", PreAuthorizeUpdate.class);
-        METHOD_SPEL_ANNOTATIONS.put("update", PreAuthorizeUpdate.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonPut", PreAuthorizeUpdate.class);
         METHOD_SPEL_ANNOTATIONS.put("updateFiles", PreAuthorizeUpdate.class);
 
 

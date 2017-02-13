@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi.support;
+package com.restdude.jsonapi.util;
 
 /**
- * Created by manos on 1/2/2017.
+ * Provides utilities for working with JSON API
  */
 public class JsonApiUtils {
 

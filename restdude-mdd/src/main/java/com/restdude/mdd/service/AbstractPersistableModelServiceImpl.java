@@ -63,292 +63,292 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistableModelServiceImpl.class);
 
-	protected R repository;
-	private SpecificationsBuilder<T, PK> specificationsBuilder;
+    protected R repository;
+    private SpecificationsBuilder<T, PK> specificationsBuilder;
 
-	@Autowired
-	public void setRepository(R repository) {
-		this.repository = repository;
-	}
+    @Autowired
+    public void setRepository(R repository) {
+        this.repository = repository;
+    }
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
+    @Override
+    public void afterPropertiesSet() throws Exception {
 
-		this.specificationsBuilder = new SpecificationsBuilder<T, PK>(this.getDomainClass(), this.getConversionService());
-	}
+        this.specificationsBuilder = new SpecificationsBuilder<T, PK>(this.getDomainClass(), this.getConversionService());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Class<T> getDomainClass() {
-		return this.repository.getDomainClass();
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public T create(@P("resource") T resource) {
-		Assert.notNull(resource, "Resource can't be null");
-		LOGGER.debug("create resource: {}", resource);
-		resource = repository.persist(resource);
-		this.postCreate(resource);
-		return resource;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Class<T> getDomainClass() {
+        return this.repository.getDomainClass();
+    }
 
 
-	@Override
-	public void postCreate(T resource) {
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public T update(@P("resource") T resource) {
-		Assert.notNull(resource, "Resource can't be null");
-		LOGGER.debug("update resource: {}", resource);
-		return repository.save(resource);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public T patch(@P("resource") T resource) {
-		LOGGER.debug("patch resource: {}", resource);
-		return repository.patch(resource);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public void delete(T resource) {
-		Assert.notNull(resource, "Resource can't be null");
-		repository.delete(resource);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public void delete(PK id) {
-		Assert.notNull(id, "Resource PK can't be null");
-		repository.delete(id);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public void deleteAll() {
-		repository.deleteAll();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	@ModelDrivenPreAuth
-	public void deleteAllWithCascade() {
-		Iterable<T> list = repository.findAll();
-		for (T entity : list) {
-			repository.delete(entity);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@ModelDrivenPreAuth
-	public T findById(PK id) {
-		Assert.notNull(id, "Resource PK can't be null");
-		return repository.findOne(id);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@ModelDrivenPreAuth
-	public List<T> findByIds(Set<PK> ids) {
-		Assert.notNull(ids, "Resource ids can't be null");
-		return repository.findAll(ids);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@ModelDrivenPreAuth
-	public List<T> findAll() {
-		return repository.findAll();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@ModelDrivenPreAuth
-	public Page<T> findPaginated(Pageable pageable) {
-		Assert.notNull(pageable, "page request can't be null");
-		LOGGER.debug("findPaginated, pageable: {}", pageable);
-
-		// if
-		if (pageable instanceof ParameterMapBackedPageRequest) {
-			@SuppressWarnings("unchecked")
-			Map<String, String[]> params = ((ParameterMapBackedPageRequest) pageable).getParameterMap();
-			Specification<T> spec = this.specificationsBuilder.<T>build(params);
-
-			LOGGER.debug("findPaginated, spec: {}", spec);
-			return this.repository.findAll(spec, pageable);
-		} else {
-			return this.repository.findAll(pageable);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@ModelDrivenPreAuth
-	public Long count() {
-		return repository.count();
-	}
-
-	/***
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<ConstraintViolation<T>> validateConstraints(T resource) {
-		return this.repository.validateConstraints(resource);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Transactional(readOnly = false)
-	public void addMetadatum(PK subjectId, MetadatumModel dto) {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("addMetadatum subjectId: " + subjectId + ", metadatum: " + dto);
-		}
-		this.repository.addMetadatum(subjectId, dto.getPredicate(),
-				dto.getObject());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Transactional(readOnly = false)
-	public void addMetadata(PK subjectId, Collection<MetadatumModel> dtos) {
-		if (!CollectionUtils.isEmpty(dtos)) {
-			for (MetadatumModel dto : dtos) {
-				this.addMetadatum(subjectId, dto);
-			}
-		}
-	}
-
-	@Transactional(readOnly = false)
-	public void removeMetadatum(PK subjectId, String predicate) {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("removeMetadatum subjectId: " + subjectId + ", predicate: "
-					+ predicate);
-		}
-		this.repository.removeMetadatum(subjectId, predicate);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public T create(@P("resource") T resource) {
+        Assert.notNull(resource, "Resource can't be null");
+        LOGGER.debug("create resource: {}", resource);
+        resource = repository.persist(resource);
+        this.postCreate(resource);
+        return resource;
+    }
 
 
-	/**
-	 * Get the entity's file uploads for this propert
-	 *
-	 * @param subjectId    the entity pk
-	 * @param propertyName the property holding the upload(s)
-	 * @return the uploads
-	 */
-	public List<UploadedFileModel> getUploadsForProperty(PK subjectId, String propertyName) {
-		return this.repository.getUploadsForProperty(subjectId, propertyName);
-	}
+    @Override
+    public void postCreate(T resource) {
 
-	@Override
-	@Transactional(readOnly = false)
-	public T updateFiles(@PathVariable PK id, MultipartHttpServletRequest request, HttpServletResponse response) {
-		T entity = this.findById(id);
-		LOGGER.debug("Entity before uploading files: {}", entity);
-		try {
-			String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
-					.append('/').append(id).append('/').toString();
-			String propertyName;
-			for (Iterator<String> iterator = request.getFileNames(); iterator.hasNext(); ) {
-				// get the property name
-				propertyName = iterator.next();
+    }
 
-				// verify the property exists
-				Field fileField = SpecificationUtils.getField(this.getDomainClass(), propertyName);
-				if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
-					throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
-				}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public T update(@P("resource") T resource) {
+        Assert.notNull(resource, "Resource can't be null");
+        LOGGER.debug("update resource: {}", resource);
+        return repository.save(resource);
+    }
 
-				// store the file and update the property URL
-				String url = this.filePersistenceService.saveFile(fileField, request.getFile(propertyName), basePath + propertyName);
-				BeanUtils.setProperty(entity, propertyName, url);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public T patch(@P("resource") T resource) {
+        LOGGER.debug("patch resource: {}", resource);
+        return repository.patch(resource);
+    }
 
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to update files", e);
-		}
-		// return the updated entity
-		entity = this.update(entity);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public void delete(T resource) {
+        Assert.notNull(resource, "Resource can't be null");
+        repository.delete(resource);
+    }
 
-		LOGGER.debug("Entity after uploading files: {}", entity);
-		return entity;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public void delete(PK id) {
+        Assert.notNull(id, "Resource PK can't be null");
+        repository.delete(id);
+    }
 
-	/**
-	 * Utility method to be called by implementations
-	 *
-	 * @param id
-	 * @param filenames
-	 */
-	@Override
-	@PreAuthorize("hasRole('ROLE_USER')")
-	@Transactional(readOnly = false)
-	public void deleteFiles(PK id, String... filenames) {
-		String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
-				.append('/').append(id).append('/').toString();
-		List<String> keys = new LinkedList<String>();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 
-		for (String propertyName : filenames) {
-			// verify the property exists
-			Field fileField = SpecificationUtils.getField(this.getDomainClass(), propertyName);
-			if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
-				throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
-			}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    @ModelDrivenPreAuth
+    public void deleteAllWithCascade() {
+        Iterable<T> list = repository.findAll();
+        for (T entity : list) {
+            repository.delete(entity);
+        }
+    }
 
-			// store the file key
-			keys.add(basePath + propertyName);
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @ModelDrivenPreAuth
+    public T findById(PK id) {
+        Assert.notNull(id, "Resource PK can't be null");
+        return repository.findOne(id);
+    }
 
-		// delete files
-		this.filePersistenceService.deleteFiles(keys.toArray(new String[keys.size()]));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @ModelDrivenPreAuth
+    public List<T> findByIds(Set<PK> ids) {
+        Assert.notNull(ids, "Resource ids can't be null");
+        return repository.findAll(ids);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @ModelDrivenPreAuth
+    public List<T> findAll() {
+        return repository.findAll();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @ModelDrivenPreAuth
+    public Page<T> findPaginated(Pageable pageable) {
+        Assert.notNull(pageable, "page request can't be null");
+        LOGGER.debug("findPaginated, pageable: {}", pageable);
+
+        // if
+        if (pageable instanceof ParameterMapBackedPageRequest) {
+            @SuppressWarnings("unchecked")
+            Map<String, String[]> params = ((ParameterMapBackedPageRequest) pageable).getParameterMap();
+            Specification<T> spec = this.specificationsBuilder.<T>build(params);
+
+            LOGGER.debug("findPaginated, spec: {}", spec);
+            return this.repository.findAll(spec, pageable);
+        } else {
+            return this.repository.findAll(pageable);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @ModelDrivenPreAuth
+    public Long count() {
+        return repository.count();
+    }
+
+    /***
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<ConstraintViolation<T>> validateConstraints(T resource) {
+        return this.repository.validateConstraints(resource);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = false)
+    public void addMetadatum(PK subjectId, MetadatumModel dto) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("addMetadatum subjectId: " + subjectId + ", metadatum: " + dto);
+        }
+        this.repository.addMetadatum(subjectId, dto.getPredicate(),
+                dto.getObject());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = false)
+    public void addMetadata(PK subjectId, Collection<MetadatumModel> dtos) {
+        if (!CollectionUtils.isEmpty(dtos)) {
+            for (MetadatumModel dto : dtos) {
+                this.addMetadatum(subjectId, dto);
+            }
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void removeMetadatum(PK subjectId, String predicate) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("removeMetadatum subjectId: " + subjectId + ", predicate: "
+                    + predicate);
+        }
+        this.repository.removeMetadatum(subjectId, predicate);
+    }
+
+
+    /**
+     * Get the entity's file uploads for this propert
+     *
+     * @param subjectId    the entity pk
+     * @param propertyName the property holding the upload(s)
+     * @return the uploads
+     */
+    public List<UploadedFileModel> getUploadsForProperty(PK subjectId, String propertyName) {
+        return this.repository.getUploadsForProperty(subjectId, propertyName);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public T updateFiles(@PathVariable PK id, MultipartHttpServletRequest request, HttpServletResponse response) {
+        T entity = this.findById(id);
+        LOGGER.debug("Entity before uploading files: {}", entity);
+        try {
+            String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
+                    .append('/').append(id).append('/').toString();
+            String propertyName;
+            for (Iterator<String> iterator = request.getFileNames(); iterator.hasNext(); ) {
+                // get the property name
+                propertyName = iterator.next();
+
+                // verify the property exists
+                Field fileField = SpecificationUtils.getField(this.getDomainClass(), propertyName);
+                if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
+                    throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
+                }
+
+                // store the file and update the property URL
+                String url = this.filePersistenceService.saveFile(fileField, request.getFile(propertyName), basePath + propertyName);
+                BeanUtils.setProperty(entity, propertyName, url);
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update files", e);
+        }
+        // return the updated entity
+        entity = this.update(entity);
+
+        LOGGER.debug("Entity after uploading files: {}", entity);
+        return entity;
+    }
+
+    /**
+     * Utility method to be called by implementations
+     *
+     * @param id
+     * @param filenames
+     */
+    @Override
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional(readOnly = false)
+    public void deleteFiles(PK id, String... filenames) {
+        String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
+                .append('/').append(id).append('/').toString();
+        List<String> keys = new LinkedList<String>();
+
+        for (String propertyName : filenames) {
+            // verify the property exists
+            Field fileField = SpecificationUtils.getField(this.getDomainClass(), propertyName);
+            if (fileField == null || !fileField.isAnnotationPresent(FilePersistence.class)) {
+                throw new IllegalArgumentException("No FilePersistence annotation found for member: " + propertyName);
+            }
+
+            // store the file key
+            keys.add(basePath + propertyName);
+        }
+
+        // delete files
+        this.filePersistenceService.deleteFiles(keys.toArray(new String[keys.size()]));
+    }
 
 }

@@ -60,10 +60,14 @@ PATCH  | /api/rest/hosts/{id} | Partially update the host matching the id
 DELETE | /api/rest/hosts/{id} | Delete the host matching the id
 GET    | /api/rest/hosts/jsonschema | Get the JSONSchema for hosts
 
+The endpoints support both `application/json` and `application/vnd.api+json` content types, with request/response bodies being model-based or [JSON-API-compliant](http://jsonapi.org/format) JSON structures respectively.
 
 ## Behind the Schenes
 
-Contrary to other frameworks like spring-data-rest and jhipster, restdude generates controller, service and repository classes during application startup to provide an extensible 3-tier architecture. You can replace/extend those implicit componenets with your own at any time to provide custom or otherwise additional functionality.
+Contrary to other frameworks like spring-data-rest and jhipster, restdude provides effortless SCRUD services by generating controller, service and repository classes during application startup. 
+
+This provides an extensible 3-tier architecture without any need for boilerplate code and allows to replace and extend the generated components with your own at any time when custom or 
+otherwise additional functionality is needed. Restdude will simply not generate components that overlap with those already available.
 
 
 ## Documentation

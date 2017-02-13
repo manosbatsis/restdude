@@ -30,8 +30,8 @@ import java.lang.annotation.Target;
  *
  * <pre>
  * &#064;FormSchemaEntry(json = "{
- * 		create = &quot;{ \&quot;validators\&quot;: [\&quot;required\&quot;, \&quot;email\&quot;] }&quot;, 
- * 		update = &quot;{ \&quot;validators\&quot;: [\&quot;required\&quot;, \&quot;email\&quot;] }&quot;, 
+ * 		create = &quot;{ \&quot;validators\&quot;: [\&quot;required\&quot;, \&quot;email\&quot;] }&quot;,
+ * 		update = &quot;{ \&quot;validators\&quot;: [\&quot;required\&quot;, \&quot;email\&quot;] }&quot;,
  * 		search = &quot;{ \&quot;validators\&quot;: [\&quot;email\&quot;] }&quot;
  *        }"
  * )

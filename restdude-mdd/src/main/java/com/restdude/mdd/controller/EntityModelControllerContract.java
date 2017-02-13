@@ -73,7 +73,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @ApiOperation(value = "Create a new resource")
      * @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
      * @ModelDrivenPreAuth
-     * T create(@RequestBody T resource){
+     * T plainJsonPost(@RequestBody T resource){
      *     ///
      * }
      *
@@ -96,7 +96,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @ApiOperation(value = "Update a resource")
      * @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
      * @ModelDrivenPreAuth
-     * T update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource){
+     * T plainJsonPut(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource){
      *     ///
      * }
      *
@@ -111,7 +111,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
     abstract T update(PK pk, T resource);
 
     /**
-     * PErform a partial update of an existing resource<br/>
+     * Perform a partial update of an existing resource<br/>
      * REST webservice published : PATCH /{pk}
      *
      * <pre>
@@ -121,7 +121,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @ApiOperation(value = "Patch (partially update) a resource", notes = "....")
      * @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
      * @ModelDrivenPreAuth
-     * T patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource){
+     * T plainJsonPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource){
      *     ///
      * }
      * 
@@ -145,7 +145,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @RequestMapping(method = RequestMethod.GET, params = "page=no")
      * @ApiOperation(value = "Get the full collection of resources", notes = "...")
      * @ModelDrivenPreAuth
-     * Iterable<T> findAll(){
+     * Iterable<T> plainJsonGetAll(){
      *     //...
      * }
      * 
@@ -167,7 +167,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @RequestMapping(method = RequestMethod.GET)
      * @ApiOperation(value = "Search for resources (paginated).", notes = "...")
      * @ModelDrivenPreAuth
-     * Page<T> findPaginated(
+     * Page<T> plainJsonGetPage(
      *      @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
      *      @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
      *      @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
@@ -198,7 +198,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @ApiOperation(value = "Find by identifier", notes = "Find a resource by it's identifier")
      * @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
      * @ModelDrivenPreAuth
-     * T findById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk){
+     * T plainJsonGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk){
      *     //...
      * }
      *
@@ -219,7 +219,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * {@code
      *
      * @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
-     * JsonApiDocument<JsonApiResource<T, PK>, T, PK> findResourceById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk){
+     * JsonApiDocument<JsonApiResource<T, PK>, T, PK> jsonApiGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk){
      *     //...
      * }
      *
@@ -244,7 +244,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @RequestMapping(params = "pks", method = RequestMethod.GET)
      * @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
      * @ModelDrivenPreAuth
-     * Iterable<T> findByIds(@RequestParam(value = "pks[]") Set<PK> pks){
+     * Iterable<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks){
      *     //...
      * }
      *

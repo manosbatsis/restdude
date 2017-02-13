@@ -27,9 +27,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import com.restdude.jsonapi.*;
-import com.restdude.jsonapi.support.JsonApiUtils;
+import com.restdude.jsonapi.util.JsonApiUtils;
 import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.jsonapi.binding.DocumentBuilder;
+import com.restdude.jsonapi.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
@@ -65,6 +65,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -77,12 +78,12 @@ import java.util.Set;
  * If you don't have a real service (also called business layer), consider using RepositoryBasedRestController</p>
  * <p/>
  * <p>Default implementation uses "pk" field (usually a Long) in order to identify resources in web request.
- * If your want to identity resources by a slug (human readable identifier), your should override findById() method with for example :
+ * If your want to identity resources by a slug (human readable identifier), your should override plainJsonGetById() method with for example :
  * <p/>
  * <pre>
  * <code>
  * {@literal @}Override
- * public Sample findById({@literal @}PathVariable String pk) {
+ * public Sample plainJsonGetById({@literal @}PathVariable String pk) {
  * Sample sample = this.service.findByName(pk);
  * if (sample == null) {
  * throw new NotFoundException();
@@ -158,52 +159,96 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return this.modelInfo;
     }
 
-    //@Override
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a new resource")
-    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    @ModelDrivenPreAuth
-    public T create(@NonNull @RequestBody T resource) {
-        applyCurrentPrincipal(resource);
-        addResourceLinks(resource);
-        return this.service.create(resource);
+    /**
+     * Wrap the given model in a JSON API Document
+     * @param model the model to wrap
+     * @return
+     */
+    protected JsonApiModelDocument<T, PK> toDocument(T model) {
+        return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
+                .withData(model)
+                .buildModelDocument();
     }
 
-    //@Override
-    @RequestMapping(method = RequestMethod.POST, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a new JSON API Resource")
-    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    @ModelDrivenPreAuth
-    public JsonApiModelDocument<T, PK> createResource(@NonNull @RequestBody JsonApiModelDocument<T, PK> document) {
-        T entity = null;
+    /**
+     * Wrap the given collection of models in a JSON API Document
+     * @param models the models to wrap
+     * @return
+     */
+    protected JsonApiModelCollectionDocument<T, PK> toDocument(Collection<T> models) {
+        return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
+                .withData(models)
+                .buildModelCollectionDocument();
+    }
 
-        // obtain submitted entity model
+    /**
+     * Wrap the given iterable of models of models in a JSON API Document
+     * @param models the models to wrap
+     * @return
+     */
+    protected JsonApiModelCollectionDocument<T, PK> toDocument(Iterable<T> models) {
+        return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
+                .withData(models)
+                .buildModelCollectionDocument();
+    }
+
+    /**
+     * Wrap the given {@link Page} of models in a JSON API Document
+     * @param page the page to wrap
+     * @return
+     */
+    protected JsonApiModelCollectionDocument<T, PK> toDocument(Page<T> page) {
+        return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
+                .withData(page)
+                .buildModelCollectionDocument();
+    }
+
+    /**
+     * Unwrap the single model given as a JSON API Document
+     * @param document
+     * @return
+     */
+    protected T toModel(@NonNull @RequestBody JsonApiModelDocument<T, PK> document) {
+        T entity = null;
         JsonApiResource<T, PK> resource = document.getData();
         if(resource != null ){
             entity = resource.getAttributes();
             entity.setPk(resource.getIdentifier());
         }
-
-        // persist
-        entity = this.create(entity);
-
-        // repackage as a JSON API Document
-        document = new DocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
-                .withData(entity)
-                .buildModelDocument();
-
-        // return
-        return document;
+        return entity;
     }
 
-    //@Override
-    @RequestMapping(value = "{pk}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a new resource")
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
+    @ModelDrivenPreAuth
+    public T plainJsonPost(@NonNull @RequestBody T resource) {
+        applyCurrentPrincipal(resource);
+        addResourceLinks(resource);
+        return this.service.create(resource);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a new JSON API Resource")
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
+    @ModelDrivenPreAuth
+    public JsonApiModelDocument<T, PK> jsonApiPost(@NonNull @RequestBody JsonApiModelDocument<T, PK> document) {
+
+        // unwrap the submitted model and save
+        T model = toModel(document);
+        model = this.plainJsonPost(model);
+
+        // repackage and return as a JSON API Document
+        return this.toDocument(model);
+    }
+
+    @RequestMapping(value = "{pk}", method = RequestMethod.PUT, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update a resource")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
-    public T update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
+    public T plainJsonPut(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
         Assert.notNull(pk, "pk cannot be null");
         resource.setPk(pk);
         applyCurrentPrincipal(resource);
@@ -212,12 +257,11 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return resource;
     }
 
-    //@Override
-    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, produces = "application/json")
+    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
-    public T patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
+    public T plainJsonPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T resource) {
         applyCurrentPrincipal(resource);
         resource.setPk(pk);
         resource = this.service.patch(resource);
@@ -225,21 +269,46 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return resource;
     }
 
-    //@Override
-        @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = "application/json")
+    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @ApiOperation(value = "Patch (partially plainJsonPut) a resource given as a JSON API Document", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
+    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
+    @ModelDrivenPreAuth
+    public JsonApiModelDocument<T, PK> jsonApiPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody JsonApiModelDocument<T, PK> document) {
+
+        // unwrap the submitted model and save changes
+        T model = toModel(document);
+        model = this.plainJsonPatch(pk, model);
+
+        // repackage and return as a JSON API Document
+        return this.toDocument(model);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     @ModelDrivenPreAuth
-    public Iterable<T> findAll() {
+    public Iterable<T> plainJsonGetAll() {
         return service.findAll();
     }
 
+    @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
+    @ModelDrivenPreAuth
+    public JsonApiModelCollectionDocument jsonApiGetAll() {
+
+        // obtain result models
+        Iterable<T> models = this.plainJsonGetAll();
+
+        // repackage and return as a JSON API Document
+        return this.toDocument(models);
+    }
+
     //@Override
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated collection."
             + " Besides the predefined paging properties (page, size, properties, direction) all serialized member names "
             + "of the resource are supported as search criteria in the form of HTTP URL parameters.")
     @ModelDrivenPreAuth
-    public Page<T> findPaginated(
+    public Page<T> plainJsonGetPage(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
@@ -268,33 +337,27 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             }
         }
 
-        return findPaginated(page, size, sort, direction, request.getParameterMap(), applyCurrentPrincipalIdPredicate);
+        return plainJsonGetPage(page, size, sort, direction, request.getParameterMap(), applyCurrentPrincipalIdPredicate);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated JSON API Document.")
     @ModelDrivenPreAuth
-    public JsonApiModelCollectionDocument<T, PK> findResourcesPaginated(
+    public JsonApiModelCollectionDocument<T, PK> jsonApiGetPage(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
             @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
-        Page<T> resultsPage = this.findPaginated(page, size, sort, direction);
 
-        JsonApiModelCollectionDocument document = new DocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
-                .withPage(resultsPage)
-                .buildModelCollectionDocument();
-
-        return document;
+        return toDocument(this.plainJsonGetPage(page, size, sort, direction));
     }
 
-    //@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     @ModelDrivenPreAuth
-    public T findById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
-        LOGGER.debug("findById, pk: {}, model type: {}", pk, this.service.getDomainClass());
+    public T plainJsonGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
+        LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
         T resource = this.service.findById(pk);
         if (resource == null) {
             throw new NotFoundException();
@@ -303,53 +366,47 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return resource;
     }
 
-    //@Override
     @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public JsonApiModelDocument<T, PK> findResourceById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
-        T resource = this.findById(pk);
-        if (resource == null) {
-            throw new NotFoundException();
-        }
+    public JsonApiModelDocument<T, PK> jsonApiGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
 
-        JsonApiModelDocument document = new DocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
-                .withData(resource)
-                .buildModelDocument();
-
-        return document;
+        return toDocument(this.plainJsonGetById(pk));
     }
 
-
-    //@Override
-    @RequestMapping(params = "pks", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(params = "pks", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public Iterable<T> findByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
+    public Iterable<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
         Assert.notNull(pks, "pks list cannot be null");
         return this.service.findByIds(pks);
     }
 
-    //@Override
-    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(params = "pks", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
+    @ModelDrivenPreAuth
+    public JsonApiModelCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
+        return toDocument(this.plainJsonGetByIds(pks));
+    }
+
+    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, consumes = {JsonApiUtils.JSONAPI_CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE}, produces = {JsonApiUtils.JSONAPI_CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
     public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
-        T resource = this.findById(pk);
+        T resource = this.plainJsonGetById(pk);
         this.service.delete(resource);
     }
 
-    //@Override
-    @RequestMapping(method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, consumes = {JsonApiUtils.JSONAPI_CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE}, produces = {JsonApiUtils.JSONAPI_CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete all resources")
     @ModelDrivenPreAuth
     public void delete() {
         this.service.deleteAllWithCascade();
     }
 
-    //@Override
-    @RequestMapping(value = "jsonschema", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "jsonschema", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get JSON Schema", notes = "Get the JSON Schema for the controller entity type")
     public RawJson getJsonSchema() throws JsonProcessingException {
         JsonSchemaConfig config = JsonSchemaConfig.nullableJsonSchemaDraft4();
@@ -361,7 +418,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return new RawJson(jsonSchemaAsString);
     }
 
-    @RequestMapping(value = "uischema", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "uischema", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
     @Deprecated
     public UiSchema getSchema() {
@@ -369,15 +426,15 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return schema;
     }
 
-    @RequestMapping(method = RequestMethod.OPTIONS, produces = "application/json")
+    @RequestMapping(method = RequestMethod.OPTIONS, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
     @Deprecated
     public UiSchema getSchemas() {
         return this.getSchema();
     }
 
-    protected Page<T> findPaginated(Integer page, Integer size, String sort,
-                                    String direction, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
+    protected Page<T> plainJsonGetPage(Integer page, Integer size, String sort,
+                                       String direction, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
 
         // add implicit criteria?
         Map<String, String[]> parameters = null;
@@ -390,7 +447,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
                 UserDetailsModel principal = this.service.getPrincipal();
                 // TODO
                 String[] excludeRoles = predicate.ignoreforRoles();
-                boolean skipPredicate = this.hasAnyRoles(predicate.ignoreforRoles());
+                boolean skipPredicate = this.hasAnyRole(predicate.ignoreforRoles());
                 if (!skipPredicate) {
                     String pk = principal != null ? principal.getPk() : "ANONYMOUS";
                     String[] val = {pk};
@@ -410,15 +467,15 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     }
 
 
-    protected boolean hasAnyRoles(String[] roles) {
-        boolean skipPredicate = false;
+    protected boolean hasAnyRole(String... roles) {
+        boolean hasOne = false;
         for (int i = 0; i < roles.length; i++) {
             if (request.isUserInRole(roles[i])) {
-                skipPredicate = true;
+                hasOne = true;
                 break;
             }
         }
-        return skipPredicate;
+        return hasOne;
     }
 
     protected void applyCurrentPrincipal(T resource) {
@@ -433,7 +490,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
                 // if property is not already set
                 try {
                     if (PropertyUtils.getProperty(resource, field.getName()) == null) {
-                        boolean skipApply = this.hasAnyRoles(applyRule.ignoreforRoles());
+                        boolean skipApply = this.hasAnyRole(applyRule.ignoreforRoles());
                         // if role is not ignored
                         if (!skipApply) {
                             String pk = principal != null ? principal.getPk() : null;

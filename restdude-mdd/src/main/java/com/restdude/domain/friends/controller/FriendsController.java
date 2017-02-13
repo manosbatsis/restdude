@@ -51,23 +51,23 @@ import java.util.Map;
 @RequestMapping(value = "/api/rest/friends", produces = { "application/json", "application/xml" })
 public class FriendsController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FriendsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FriendsController.class);
 
-	@Autowired
-	protected HttpServletRequest request;
-	
-	@Inject
-	@Qualifier(FriendshipService.BEAN_ID)
-	FriendshipService friendshipService;
+    @Autowired
+    protected HttpServletRequest request;
 
-	@Inject
-	@Qualifier("userService")
-	UserService userService;
+    @Inject
+    @Qualifier(FriendshipService.BEAN_ID)
+    FriendshipService friendshipService;
+
+    @Inject
+    @Qualifier("userService")
+    UserService userService;
 
 
-	@RequestMapping(value = {"my" }, method = RequestMethod.GET)
-	@ApiOperation(value = "Find all friends (paginated)", notes = "Find all friends of the current user. Returns paginated results")
-	public Page<UserDTO> findMyFriendsPaginated(
+    @RequestMapping(value = {"my" }, method = RequestMethod.GET)
+    @ApiOperation(value = "Find all friends (paginated)", notes = "Find all friends of the current user. Returns paginated results")
+    public Page<UserDTO> findMyFriendsPaginated(
             @ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
             @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -81,7 +81,7 @@ public class FriendsController {
 
     @RequestMapping(value = {"{friendId}"}, method = RequestMethod.GET)
     @ApiOperation(value = "Find all friends of a friend (paginated)", notes = "Find all friends of a friend. Returns paginated results")
-	public Page<UserDTO> findAFriendsFriendsPaginated(
+    public Page<UserDTO> findAFriendsFriendsPaginated(
             @ApiParam(name = "friendId", required = true, value = "string") @PathVariable String friendId,
             @ApiParam(name = "status", required = false, allowableValues = "SENT, PENDING, CONFIRMED, BLOCK", allowMultiple = true, defaultValue = "CONFIRMED")
             @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
@@ -98,15 +98,15 @@ public class FriendsController {
 //						|| FriendshipStatus.PENDING.equals(friendship.getStatus()))){
 //			throw new IllegalArgumentException("Unauthorized");
 //		}
-		
-		// validate status
-		status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.CONFIRMED});
-		
-		return this.findFriendsPaginated(friendId, status, page, size, sort, direction);
-	}	
 
-	
-	protected Page<UserDTO> findFriendsPaginated(
+        // validate status
+        status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.CONFIRMED});
+
+        return this.findFriendsPaginated(friendId, status, page, size, sort, direction);
+    }
+
+
+    protected Page<UserDTO> findFriendsPaginated(
             String targetId,
             String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -121,37 +121,37 @@ public class FriendsController {
         ParameterMapBackedPageRequest pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
 
         LOGGER.debug("Build pageable {}", pageable.getParameterMap());
-		MapUtils.verbosePrint(System.out, "pageable", pageable.getParameterMap());
+        MapUtils.verbosePrint(System.out, "pageable", pageable.getParameterMap());
         Page<Friendship> friendshipPage = this.friendshipService.findPaginated(pageable);
         LOGGER.debug("Found {} friendships for status {}", friendshipPage.getTotalElements(), status);
-		// TODO: move DTO selection to query
-		List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());
-		for(Friendship friendship : friendshipPage){
+        // TODO: move DTO selection to query
+        List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());
+        for(Friendship friendship : friendshipPage){
             frieds.add(UserDTO.fromUser(friendship.getPk().getRight()));
         }
-		
-		PageImpl<UserDTO> friends = new PageImpl<UserDTO>(frieds, pageable, friendshipPage.getTotalElements());
-		return friends;
-	}
+
+        PageImpl<UserDTO> friends = new PageImpl<UserDTO>(frieds, pageable, friendshipPage.getTotalElements());
+        return friends;
+    }
 
 
-	/**
-	 * @return
-	 */
-	protected String[] getValidatedStatus(String[] status, FriendshipStatus[] allowed) {
-		// validate status
-		if(status == null || status.length == 0){
-			status = new String[]{FriendshipStatus.CONFIRMED.toString()};
-		}
-		else{
-			for(String stat : status){
-				if(stat.equals(FriendshipStatus.BLOCK_INVERSE) || FriendshipStatus.valueOf(stat) == null){
-					throw new IllegalArgumentException("Invalid status pathFragment: "+ stat);
-				}
-			}
-		}
-		return status;
-	}
+    /**
+     * @return
+     */
+    protected String[] getValidatedStatus(String[] status, FriendshipStatus[] allowed) {
+        // validate status
+        if(status == null || status.length == 0){
+            status = new String[]{FriendshipStatus.CONFIRMED.toString()};
+        }
+        else{
+            for(String stat : status){
+                if(stat.equals(FriendshipStatus.BLOCK_INVERSE) || FriendshipStatus.valueOf(stat) == null){
+                    throw new IllegalArgumentException("Invalid status pathFragment: "+ stat);
+                }
+            }
+        }
+        return status;
+    }
 
 
 }

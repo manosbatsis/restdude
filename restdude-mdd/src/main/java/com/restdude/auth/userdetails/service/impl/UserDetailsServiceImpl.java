@@ -59,163 +59,163 @@ import java.util.Map;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-	private UserDetailsConfig userDetailsConfig = new SimpleUserDetailsConfig();
+    private UserDetailsConfig userDetailsConfig = new SimpleUserDetailsConfig();
 
-	private StringKeyGenerator keyGenerator = KeyGenerators.string();
+    private StringKeyGenerator keyGenerator = KeyGenerators.string();
 
-	private UserService userService;
+    private UserService userService;
 
-	@Autowired(required = false)
-	public void setUserDetailsConfig(UserDetailsConfig userDetailsConfig) {
-		this.userDetailsConfig = userDetailsConfig;
-	}
+    @Autowired(required = false)
+    public void setUserDetailsConfig(UserDetailsConfig userDetailsConfig) {
+        this.userDetailsConfig = userDetailsConfig;
+    }
 
-	@Autowired(required = true)
-	@Qualifier("userService") // somehow required for CDI to work on 64bit JDK?
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    @Autowired(required = true)
+    @Qualifier("userService") // somehow required for CDI to work on 64bit JDK?
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void updateLastLogin(UserDetailsModel u){
-		this.userService.updateLastLogin(u);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
-	 */
-	@Override
-	public UserDetailsModel loadUserByUsername(
-			String findByUsernameOrEmail) throws UsernameNotFoundException {
+    @Override
+    @Transactional(readOnly = false)
+    public void updateLastLogin(UserDetailsModel u){
+        this.userService.updateLastLogin(u);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+     */
+    @Override
+    public UserDetailsModel loadUserByUsername(
+            String findByUsernameOrEmail) throws UsernameNotFoundException {
 
         LOGGER.debug("#loadUserByUsername, findByUsernameOrEmail: {}", findByUsernameOrEmail);
         UserDetailsModel userDetails = null;
 
         User user = this.userService.findActiveByUserNameOrEmail(findByUsernameOrEmail);
-		if (user == null) {
-			throw new UsernameNotFoundException("Could not match username: " + findByUsernameOrEmail);
-		}
+        if (user == null) {
+            throw new UsernameNotFoundException("Could not match username: " + findByUsernameOrEmail);
+        }
         LOGGER.debug("#loadUserByUsername, user: {}", user);
         return UserDetails.fromUser(user);
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Transactional(readOnly = false)
-	@Override
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = false)
+    @Override
     public UserDetailsModel create(final UserDetailsModel tryUserDetails) {
         LOGGER.debug("create, userDetails: {}", tryUserDetails);
         UserDetailsModel userDetails = null;
-		if (tryUserDetails != null) {
-			String usernameOrEmail = tryUserDetails.getUsername();
+        if (tryUserDetails != null) {
+            String usernameOrEmail = tryUserDetails.getUsername();
             /*if (StringUtils.isBlank(usernameOrEmail)) {
                 usernameOrEmail = tryUserDetails.getEmail();
 			}*/
-			String password = tryUserDetails.getPassword();
-			// TODO
-			Map<String, String> metadata = tryUserDetails.getMetadata();
+            String password = tryUserDetails.getPassword();
+            // TODO
+            Map<String, String> metadata = tryUserDetails.getMetadata();
 
             LOGGER.debug("create, usernameOrEmail: {}, pw: {}", usernameOrEmail, password);
             // make sure we have credentials to send
-			if (StringUtils.isNotBlank(usernameOrEmail)
-					&& StringUtils.isNotBlank(password)) {
+            if (StringUtils.isNotBlank(usernameOrEmail)
+                    && StringUtils.isNotBlank(password)) {
 
-				// ask for the corresponding persisted user
-				User user = this.userService
-						.findActiveByCredentials(usernameOrEmail, password, metadata);
+                // ask for the corresponding persisted user
+                User user = this.userService
+                        .findActiveByCredentials(usernameOrEmail, password, metadata);
                 if (user != null && user.getPk() != null) {
 
                     LOGGER.info("#create, user: {}", user);
                     // convert to UserDetails if not null
-					userDetails = UserDetails.fromUser(user);
-				} else {
+                    userDetails = UserDetails.fromUser(user);
+                } else {
                     throw new InvalidCredentialsException();
                 }
 
-			}
+            }
 
-		}
-		return userDetails;
-	}
+        }
+        return userDetails;
+    }
 
 
-	@Override
-	@Transactional(readOnly = false)
-	public void handlePasswordResetRequest(String usernameOrEmail) {
-		// require user handle
-		if (StringUtils.isBlank(usernameOrEmail)) {
-			throw new BadRequestException("Unauthorised request must provide a username or email");
-		}
-		this.userService.handlePasswordResetRequest(usernameOrEmail);
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public void handlePasswordResetRequest(String usernameOrEmail) {
+        // require user handle
+        if (StringUtils.isBlank(usernameOrEmail)) {
+            throw new BadRequestException("Unauthorised request must provide a username or email");
+        }
+        this.userService.handlePasswordResetRequest(usernameOrEmail);
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public UserDetailsModel updateUsername(UsernameChangeRequest usernameChangeRequest) {
-		String pw = usernameChangeRequest.getPassword();
-		User user = this.userService.updateUsername(usernameChangeRequest);
-		UserDetailsModel userDetails = UserDetails.fromUser(user);
-		userDetails.setPassword(pw);
-		return userDetails;
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public UserDetailsModel updateUsername(UsernameChangeRequest usernameChangeRequest) {
+        String pw = usernameChangeRequest.getPassword();
+        User user = this.userService.updateUsername(usernameChangeRequest);
+        UserDetailsModel userDetails = UserDetails.fromUser(user);
+        userDetails.setPassword(pw);
+        return userDetails;
+    }
 
-	@Override
-	@Transactional(readOnly = false)
+    @Override
+    @Transactional(readOnly = false)
     public UserDetailsModel resetPassword(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
         UserDetailsModel userDetails = this.getPrincipal();
-		User u = null;
+        User u = null;
         // Case 1: if authorized as current user and in an attempt to directly change password, require current password
         if (userDetails != null && userDetails.getPk() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
             u = this.userService.changePassword(
                     userDetails.getUsername(),
                     passwordResetRequest.getCurrentPassword(),
-					passwordResetRequest.getPassword(),
-					passwordResetRequest.getPasswordConfirmation());
-		}
+                    passwordResetRequest.getPassword(),
+                    passwordResetRequest.getPasswordConfirmation());
+        }
         // Case 2: if using reset token
         else if (StringUtils.isNotBlank(passwordResetRequest.getResetPasswordToken())) {
             // password and password confirmation must match
             if (passwordResetRequest.getPassword() != null && (StringUtils.isBlank(passwordResetRequest.getPassword()) || !passwordResetRequest.getPassword().equals(passwordResetRequest.getPasswordConfirmation()))) {
                 throw new BadRequestException("A password, when given, must be non-blank and equal to the password confirmation");
             }
-			// update matching user credentials
+            // update matching user credentials
             u = this.userService.handleConfirmationOrPasswordResetToken(passwordResetRequest);
             //userDetails = this.create(new UserDetails( new LoginSubmission(u.getEmail(), passwordResetRequest.getPassword())));
-		}
-		// Case 3: forgotten password
-		else {
-			String usernameOrEmail = userDetails != null ? userDetails.getUsername() : passwordResetRequest.getEmailOrUsername();
-			this.handlePasswordResetRequest(usernameOrEmail);
-			userDetails = new UserDetails();
-		}
-		userDetails = u != null ? UserDetails.fromUser(u) : new UserDetails();
+        }
+        // Case 3: forgotten password
+        else {
+            String usernameOrEmail = userDetails != null ? userDetails.getUsername() : passwordResetRequest.getEmailOrUsername();
+            this.handlePasswordResetRequest(usernameOrEmail);
+            userDetails = new UserDetails();
+        }
+        userDetails = u != null ? UserDetails.fromUser(u) : new UserDetails();
         userDetails.setPassword(u.getCredentials().getPassword());
 
-		return userDetails;
-	}
+        return userDetails;
+    }
 
-	@Override
+    @Override
     public Authentication getAuthentication() {
         return SecurityUtil.getAuthentication();
     }
 
     @Override
     public UserDetailsModel getPrincipal() {
-		return SecurityUtil.getPrincipal();
-	}
+        return SecurityUtil.getPrincipal();
+    }
 
-	@Override
-	public User getPrincipalLocalUser() {
-		UserDetailsModel principal = getPrincipal();
-		User user = null;
-		if (principal != null) {
-			String username = principal.getUsername();
+    @Override
+    public User getPrincipalLocalUser() {
+        UserDetailsModel principal = getPrincipal();
+        User user = null;
+        if (principal != null) {
+            String username = principal.getUsername();
             /*
             if(StringUtils.isBlank(username)){
 				username = principal.getEmail();
@@ -224,22 +224,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user = this.userService.findActiveByUserNameOrEmail(username);
             }
             */
-		}
+        }
 
-		if(LOGGER.isDebugEnabled()){
+        if(LOGGER.isDebugEnabled()){
             LOGGER.debug("#getPrincipalUser, user: {}", user);
         }
-		return user;
-	}
+        return user;
+    }
 
 
 
-	/**
-	 * @see org.springframework.social.security.SocialUserDetailsService#loadUserByUserId(java.lang.String)
-	 */
-	@Override
-	public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
-		UserDetailsModel userDetails = null;
+    /**
+     * @see org.springframework.social.security.SocialUserDetailsService#loadUserByUserId(java.lang.String)
+     */
+    @Override
+    public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
+        UserDetailsModel userDetails = null;
 
         LOGGER.info("#loadUserByUserId using: {}", userId);
         User user = this.userService.findActiveById(userId);
@@ -247,30 +247,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LOGGER.info("#loadUserByUserId user: {}", user);
         if (user != null && user.getCredentials().getActive()) {
             userDetails = UserDetails.fromUser(user);
-		}
+        }
 
-		if (user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("Could not match user pk: " + userId);
         }
         return userDetails;
     }
-	
-	/**
-	 * @see org.springframework.social.connect.ConnectionSignUp#execute(org.springframework.social.connect.Connection)
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	public String execute(Connection<?> connection) {
-		
-		UserProfile profile = connection.fetchUserProfile();
 
-		String socialUsername = profile.getUsername();
-		String socialName = profile.getName();
-		String socialEmail = profile.getEmail();
-		String socialFirstName = profile.getFirstName();
-		String socialLastName = profile.getLastName();
+    /**
+     * @see org.springframework.social.connect.ConnectionSignUp#execute(org.springframework.social.connect.Connection)
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public String execute(Connection<?> connection) {
 
-		User user = this.getPrincipalLocalUser();
+        UserProfile profile = connection.fetchUserProfile();
+
+        String socialUsername = profile.getUsername();
+        String socialName = profile.getName();
+        String socialEmail = profile.getEmail();
+        String socialFirstName = profile.getFirstName();
+        String socialLastName = profile.getLastName();
+
+        User user = this.getPrincipalLocalUser();
 
         if (user == null) {
             if (!StringUtils.isBlank(socialEmail)) {
@@ -302,21 +302,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     LOGGER.debug("ConnectionSignUp#execute, Social email was not accessible, unable to implicitly sign in user");
                 }
             }
-		}
-		//userService.createAccount(account);
+        }
+        //userService.createAccount(account);
         String result = user != null && user.getPk() != null ? user.getPk().toString() : null;
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("ConnectionSignUp#execute, returning result: {}", result);
         }
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 *  {@inheritDoc}
-	 * @see org.springframework.social.connect.web.SignInAdapter#signIn(java.lang.String, org.springframework.social.connect.Connection, org.springframework.web.context.request.NativeWebRequest)
-	 */
-	@Override
-	public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
+    /**
+     *  {@inheritDoc}
+     * @see org.springframework.social.connect.web.SignInAdapter#signIn(java.lang.String, org.springframework.social.connect.Connection, org.springframework.web.context.request.NativeWebRequest)
+     */
+    @Override
+    public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
         LOGGER.info("#signIn, userId: {}", userId);
 
         User user = this.userService.findActiveById(userId);
@@ -327,19 +327,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             LOGGER.info("#signIn userId: " + userId + ", connection: " + connection.getKey() + ", mached user: {}", user);
         }
         if(user != null){
-			SecurityUtil.login((HttpServletRequest) request.getNativeRequest(), (HttpServletResponse) request.getNativeResponse(), user, this.userDetailsConfig, this);
-		}
-		return null;
-	}
+            SecurityUtil.login((HttpServletRequest) request.getNativeRequest(), (HttpServletResponse) request.getNativeResponse(), user, this.userDetailsConfig, this);
+        }
+        return null;
+    }
 
-	@Override
-	public UserDetailsModel createForImplicitSignup(
+    @Override
+    public UserDetailsModel createForImplicitSignup(
             User user) {
         LOGGER.info("#createForImplicitSignup, user: {}", user);
         UserDetailsModel userDetails = UserDetails
-				.fromUser((User) this.userService.createForImplicitSignup(user));
-		return userDetails;
-	}
+                .fromUser((User) this.userService.createForImplicitSignup(user));
+        return userDetails;
+    }
 
 
 }

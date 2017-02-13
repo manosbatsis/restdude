@@ -68,7 +68,7 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource", hidden = true)
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public User update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User plainJsonPut(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 
@@ -87,10 +87,11 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
     /**
      * {@inheritDoc}
      */
+    @Override
     @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public User patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User plainJsonPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         LOGGER.debug("patch, resource: {}", resource);
         UserDetailsModel principal = this.service.getPrincipal();
         LOGGER.debug("patch, principal: {}", principal);
@@ -100,7 +101,7 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
         resource.setCredentials(null);
         resource.setContactDetails(null);
         resource.setUsername(null);
-        User user = super.patch(id, resource);
+        User user = super.plainJsonPatch(id, resource);
         LOGGER.debug("patch, user: {}", user);
         LOGGER.debug("patch, user: {}", user.getClass().getCanonicalName());
         return user;

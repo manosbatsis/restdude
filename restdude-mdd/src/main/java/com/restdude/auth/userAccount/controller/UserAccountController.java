@@ -53,18 +53,18 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = {"/api/auth/account", "/api/auth/accounts"}, produces = {"application/json", "application/xml"})
 public class UserAccountController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
 
-	private UserService service;
+    private UserService service;
 
     private UserDetailsService userDetailsService;
     protected UserDetailsConfig userDetailsConfig = new SimpleUserDetailsConfig();
 
-	@Inject
-	@Qualifier("userService")
-	public void setService(UserService service) {
-		this.service = service;
-	}
+    @Inject
+    @Qualifier("userService")
+    public void setService(UserService service) {
+        this.service = service;
+    }
 
     @Inject
     @Qualifier("userDetailsService")
@@ -77,37 +77,37 @@ public class UserAccountController {
         this.userDetailsConfig = userDetailsConfig;
     }
 
-	@RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Register new account", notes = "Register a new user")
     public User create(@RequestBody UserAccountRegistration resource) {
         LOGGER.debug("create, resource: {}", resource);
 
-		// get config
-		Configuration config = ConfigurationFactory.getConfiguration();
-		boolean forceCodes = config.getBoolean(ConfigurationFactory.FORCE_CODES, false);
+        // get config
+        Configuration config = ConfigurationFactory.getConfiguration();
+        boolean forceCodes = config.getBoolean(ConfigurationFactory.FORCE_CODES, false);
 
-		// require email
+        // require email
         if (StringUtils.isBlank(resource.getEmail())) {
             throw new BadRequestException("Email is required");
-		}
-		// force registration codes?
-		if (forceCodes && StringUtils.isBlank(resource.getRegistrationCode())) {
-			throw new BadRequestException("Registration code is required");
-		}
-		// passwords match?
-		if (StringUtils.isNotBlank(resource.getPassword())
-				&& StringUtils.isNotBlank(resource.getPasswordConfirmation())
-				&& !resource.getPassword().equals(resource.getPasswordConfirmation())) {
-			throw new BadRequestException("Password and password confirmation do not match");
-		}
+        }
+        // force registration codes?
+        if (forceCodes && StringUtils.isBlank(resource.getRegistrationCode())) {
+            throw new BadRequestException("Registration code is required");
+        }
+        // passwords match?
+        if (StringUtils.isNotBlank(resource.getPassword())
+                && StringUtils.isNotBlank(resource.getPasswordConfirmation())
+                && !resource.getPassword().equals(resource.getPasswordConfirmation())) {
+            throw new BadRequestException("Password and password confirmation do not match");
+        }
 
-		// create user
+        // create user
         User u = this.service.create(resource.asUser());
         LOGGER.debug("created, user: {}", u);
         return u;
 
-	}
+    }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ApiOperation(value = "Confirm registration email and/or update account password", notes = "Confirm registration email and/or update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
@@ -118,34 +118,34 @@ public class UserAccountController {
 
         UserDetailsModel userDetails = this.userDetailsService.resetPassword(resource);
 
-		// (re)login if appropriate
-		if (userDetails == null) {
-			userDetails = new UserDetails();
+        // (re)login if appropriate
+        if (userDetails == null) {
+            userDetails = new UserDetails();
         } else if (userDetails.getPk() != null) {
             //userDetails = this.userDetailsService.create(userDetails);
             //userDetails.setPassword(resource.getPassword());
             LOGGER.debug("update, loggin-in userDetails: {}", userDetails);
-			SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
-		}
-		return userDetails;
+            SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
+        }
+        return userDetails;
     }
 
 
-	@RequestMapping(value = "username", method = RequestMethod.PUT)
-	@ApiOperation(value = "Update username", notes = "Updates the username of the curent user and updates the auth token cookie.")
-	public UserDetailsModel updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
-		LOGGER.debug("updateUsername, resource: {}", resource);
+    @RequestMapping(value = "username", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update username", notes = "Updates the username of the curent user and updates the auth token cookie.")
+    public UserDetailsModel updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("updateUsername, resource: {}", resource);
 
-		UserDetailsModel userDetails = this.userDetailsService.updateUsername(resource);
-		if (userDetails.getUsername().equals(resource.getUsername())) {
-			LOGGER.debug("updateUsername updated, updating login userDetails: {}, pw: {}", userDetails, userDetails.getPassword());
-			SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
-		} else {
-			LOGGER.warn("updateUsername not updated, userDetails: {}", userDetails);
-		}
-		return userDetails;
+        UserDetailsModel userDetails = this.userDetailsService.updateUsername(resource);
+        if (userDetails.getUsername().equals(resource.getUsername())) {
+            LOGGER.debug("updateUsername updated, updating login userDetails: {}, pw: {}", userDetails, userDetails.getPassword());
+            SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);
+        } else {
+            LOGGER.warn("updateUsername not updated, userDetails: {}", userDetails);
+        }
+        return userDetails;
 
-	}
+    }
 
 
 }

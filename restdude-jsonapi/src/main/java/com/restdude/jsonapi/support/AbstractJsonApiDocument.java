@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.jsonapi.JsonApiDocument;
 import com.restdude.jsonapi.JsonApiResource;
+import com.restdude.jsonapi.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.mdd.model.Model;
 import org.springframework.hateoas.Link;
 import com.restdude.mdd.model.ErrorModel;
@@ -36,7 +37,7 @@ import java.util.*;
 /**
  * Abstract base class implementation of {@JsonApiDocument}
  *
- * @see com.restdude.jsonapi.binding.DocumentBuilder
+ * @see JsonApiModelBasedDocumentBuilder
  * @see <a href="http://jsonapi.org/format/upcoming/#document-structure">JSON API Resources</a>
  */
 public abstract class AbstractJsonApiDocument<D extends Object, T extends Model<ID>, ID extends Serializable> implements JsonApiDocument<D, T, ID> {

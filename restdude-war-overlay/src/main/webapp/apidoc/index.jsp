@@ -97,9 +97,9 @@
 
                 function oAuthIsDefined(security) {
                     return security.clientId
-                            && security.clientSecret
-                            && security.appName
-                            && security.realm;
+                        && security.clientSecret
+                        && security.appName
+                        && security.realm;
                 }
 
                 function initializeSpringfox() {
@@ -144,8 +144,8 @@
                     $urlDropdown.empty();
                     $.each(data, function (i, resource) {
                         var option = $('<option></option>')
-                                .attr("value", maybePrefix(resource.location, relativeLocation))
-                                .text(resource.name + " (" + resource.location + ")");
+                            .attr("value", maybePrefix(resource.location, relativeLocation))
+                            .text(resource.name + " (" + resource.location + ")");
                         $urlDropdown.append(option);
                     });
                     $urlDropdown.change();

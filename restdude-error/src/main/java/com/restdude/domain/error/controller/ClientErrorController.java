@@ -49,7 +49,7 @@ public class ClientErrorController extends AbstractPersistableModelController<Cl
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new resource")
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public ClientError create(@RequestBody ClientError resource) {
+    public ClientError plainJsonPost(@RequestBody ClientError resource) {
         resource.addRequestInfo(this.request);
         return this.service.create(resource);
     }

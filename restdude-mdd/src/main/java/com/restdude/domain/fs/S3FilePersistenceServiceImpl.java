@@ -34,72 +34,72 @@ import java.io.InputStream;
 /**
  * An implementation of {@link FilePersistenceService} that uses Amazon S3 for
  * file storage. Configuration properties from dev.properties:
- * 
+ *
  * build.aws_access_key_id=
  * build.aws_secret_access_key=
  * build.aws_namecard_bucket=:
- * 
+ *
  * from bean config: awsAccessKey, awsSecretAccessKey, nameCardBucket
- * 
+ *
  */
 public class S3FilePersistenceServiceImpl implements FilePersistenceService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(S3FilePersistenceServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(S3FilePersistenceServiceImpl.class);
 
-	@Value("${aws_namecard_bucket}")
-	private String nameCardBucket;
+    @Value("${aws_namecard_bucket}")
+    private String nameCardBucket;
 
-	@Value("${aws_access_key_id}")
-	private String awsAccessKey;
+    @Value("${aws_access_key_id}")
+    private String awsAccessKey;
 
-	@Value("${aws_secret_access_key}")
-	private String awsSecretAccessKey;
+    @Value("${aws_secret_access_key}")
+    private String awsSecretAccessKey;
 
-	private AmazonS3Client s3Client;
+    private AmazonS3Client s3Client;
 
-	@PostConstruct
-	public void postConstruct() {
-		// create S3 credentials
-		BasicAWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretAccessKey);
-		// setup client
-		this.s3Client = new AmazonS3Client(credentials);
-		LOGGER.debug("Created S3 client");
-	}
+    @PostConstruct
+    public void postConstruct() {
+        // create S3 credentials
+        BasicAWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretAccessKey);
+        // setup client
+        this.s3Client = new AmazonS3Client(credentials);
+        LOGGER.debug("Created S3 client");
+    }
 
 
-	/**
-	 * Save file in S3
-	 * @see FilePersistenceService#saveFile(java.io.InputStream, long, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public String saveFile(InputStream in, long contentLength, String contentType, String path) {
-		String url;
-		// create metadata
-		ObjectMetadata meta = new ObjectMetadata();
-		meta.setContentLength(contentLength);
-		meta.setContentType(contentType);
+    /**
+     * Save file in S3
+     * @see FilePersistenceService#saveFile(java.io.InputStream, long, java.lang.String, java.lang.String)
+     */
+    @Override
+    public String saveFile(InputStream in, long contentLength, String contentType, String path) {
+        String url;
+        // create metadata
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(contentLength);
+        meta.setContentType(contentType);
 
-		// save to bucket
-		PutObjectResult putObjectResult = s3Client.putObject(new PutObjectRequest(nameCardBucket, path, in, meta)
-				.withCannedAcl(CannedAccessControlList.PublicRead));
+        // save to bucket
+        PutObjectResult putObjectResult = s3Client.putObject(new PutObjectRequest(nameCardBucket, path, in, meta)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
 
-		// set the URL to return
-		url = s3Client.getUrl(nameCardBucket, path).toString();
-		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("File saved, url: {}, size: {}, contentType: {}, expires: {}, exp. rule: {}", url, contentLength, contentType, putObjectResult.getExpirationTime(), putObjectResult.getExpirationTimeRuleId());
-		}//
-		return url;
-	}
+        // set the URL to return
+        url = s3Client.getUrl(nameCardBucket, path).toString();
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("File saved, url: {}, size: {}, contentType: {}, expires: {}, exp. rule: {}", url, contentLength, contentType, putObjectResult.getExpirationTime(), putObjectResult.getExpirationTimeRuleId());
+        }//
+        return url;
+    }
 
-	/**
-	 * Delete files from S3
-	 *
-	 * @see FilePersistenceService#deleteFiles(String...)
-	 */
-	@Override
-	public void deleteFiles(String... paths) {
-		// delete from bucket
-		s3Client.deleteObjects(new DeleteObjectsRequest(nameCardBucket).withKeys(paths));
-	}
+    /**
+     * Delete files from S3
+     *
+     * @see FilePersistenceService#deleteFiles(String...)
+     */
+    @Override
+    public void deleteFiles(String... paths) {
+        // delete from bucket
+        s3Client.deleteObjects(new DeleteObjectsRequest(nameCardBucket).withKeys(paths));
+    }
 
 }

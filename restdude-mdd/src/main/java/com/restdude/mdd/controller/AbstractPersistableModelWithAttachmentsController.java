@@ -193,7 +193,7 @@ public abstract class AbstractPersistableModelWithAttachmentsController<T extend
 				bf = binaryFileService.update(bf);
 
 				// attach file
-				// TODO: add/update to collection
+                // TODO: add/update to collection
                 Class clazz = SpecificationUtils.getMemberType(this.service.getDomainClass(), propertyName);
                 if (BinaryFile.class.isAssignableFrom(clazz)) {
                     T target = this.service.findById(subjectId);

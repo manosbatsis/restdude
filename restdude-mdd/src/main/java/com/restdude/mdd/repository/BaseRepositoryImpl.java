@@ -144,9 +144,9 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
         LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);
         // update it by copying all non-null properties from the given transient instance
         String[] nullPropertyNames = EntityUtil.getNullPropertyNames(delta);
-		LOGGER.debug("patch, nullPropertyNames: {}", nullPropertyNames);
-		BeanUtils.copyProperties(delta, persisted, nullPropertyNames);
-		LOGGER.debug("patch, patched persisted: {}", persisted);
+        LOGGER.debug("patch, nullPropertyNames: {}", nullPropertyNames);
+        BeanUtils.copyProperties(delta, persisted, nullPropertyNames);
+        LOGGER.debug("patch, patched persisted: {}", persisted);
 		// validate
 		this.validate(persisted);
 		// persist changes
@@ -192,7 +192,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 							metadata.get(predicate));
 					this.getEntityManager().persist(metadatum);
 				} else {
-					// if exists, only update the value
+                    // if exists, only update the value
 					metadatum.setObject(metadata.get(predicate));
 					metadatum = this.getEntityManager().merge(metadatum);
 				}
