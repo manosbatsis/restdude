@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.cms.model.Text;
 import com.restdude.domain.cms.repository.PageRepository;
 import com.restdude.domain.cms.service.TextService;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("textService")
-public class TextServiceImpl extends AbstractModelServiceImpl<Text, String, PageRepository> 
+public class TextServiceImpl extends AbstractPersistableModelServiceImpl<Text, String, PageRepository>
 	implements TextService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextServiceImpl.class);

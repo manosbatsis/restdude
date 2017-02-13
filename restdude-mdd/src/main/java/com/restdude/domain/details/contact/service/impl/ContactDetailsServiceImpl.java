@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.details.contact.service.impl;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.details.contact.model.*;
 import com.restdude.domain.details.contact.repository.ContactDetailsRepository;
 import com.restdude.domain.details.contact.repository.EmailDetailRepository;
@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Named;
 
 @Named(ContactDetailsService.BEAN_ID)
-public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactDetails, String, ContactDetailsRepository> implements ContactDetailsService {
+public class ContactDetailsServiceImpl extends AbstractPersistableModelServiceImpl<ContactDetails, String, ContactDetailsRepository> implements ContactDetailsService {
 
     protected EmailDetailRepository emailDetailRepository;
 
@@ -67,9 +67,9 @@ public class ContactDetailsServiceImpl extends AbstractModelServiceImpl<ContactD
     }
 
     /**
-     * Reroute to {@link #patch(CalipsoPersistable)}
+     * Reroute to {@link #patch(PersistableModel)}
      *
-     * @see #patch(CalipsoPersistable)
+     * @see #patch(PersistableModel)
      */
     @Override
     @Transactional(readOnly = false)

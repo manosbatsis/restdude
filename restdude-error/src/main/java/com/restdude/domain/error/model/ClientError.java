@@ -21,11 +21,11 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.restdude.domain.base.annotation.controller.ModelController;
-import com.restdude.domain.fs.FilePersistence;
-import com.restdude.domain.fs.FilePersistencePreview;
+import com.restdude.mdd.annotation.controller.ModelController;
+import com.restdude.mdd.annotation.model.FilePersistence;
+import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.domain.users.model.User;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;

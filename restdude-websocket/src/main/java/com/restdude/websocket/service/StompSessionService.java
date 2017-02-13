@@ -20,11 +20,11 @@
  */
 package com.restdude.websocket.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.websocket.model.StompSession;
 import org.springframework.web.socket.messaging.*;
 
-public interface StompSessionService extends ModelService<StompSession, String> {
+public interface StompSessionService extends PersistableModelService<StompSession, String> {
 
 	public static final String BEAN_ID = "stompSessionService";
 

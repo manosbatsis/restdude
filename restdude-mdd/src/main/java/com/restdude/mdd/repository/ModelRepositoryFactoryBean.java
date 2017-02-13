@@ -20,8 +20,7 @@
  */
 package com.restdude.mdd.repository;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.model.PersistableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ import javax.validation.Validator;
 import java.io.Serializable;
 
 //@Component
-public class ModelRepositoryFactoryBean<R extends JpaRepository<T, PK>, T extends CalipsoPersistable<PK>, PK extends Serializable>
+public class ModelRepositoryFactoryBean<R extends JpaRepository<T, PK>, T extends PersistableModel<PK>, PK extends Serializable>
         extends JpaRepositoryFactoryBean<R, T, PK> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelRepositoryFactoryBean.class);
@@ -56,7 +55,7 @@ public class ModelRepositoryFactoryBean<R extends JpaRepository<T, PK>, T extend
 		return new RepositoryFactory(entityManager, this.validator);
 	}
 
-    private static class RepositoryFactory<T extends CalipsoPersistable<PK>, PK extends Serializable> extends JpaRepositoryFactory {
+    private static class RepositoryFactory<T extends PersistableModel<PK>, PK extends Serializable> extends JpaRepositoryFactory {
 
 		private EntityManager entityManager;
 		private Validator validator;

@@ -20,18 +20,9 @@
  */
 package com.restdude.mdd.registry;
 
-import com.restdude.domain.base.annotation.model.ModelResource;
-import com.yahoo.elide.annotation.Exclude;
-import com.yahoo.elide.annotation.Include;
-import com.yahoo.elide.core.exceptions.DuplicateMappingException;
 import com.yahoo.elide.security.checks.Check;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.text.WordUtils;
-import org.springframework.stereotype.Service;
 
-import javax.persistence.Entity;
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**

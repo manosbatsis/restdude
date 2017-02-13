@@ -29,12 +29,13 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
-import com.restdude.domain.fs.FilePersistence;
-import com.restdude.domain.fs.FilePersistencePreview;
+import com.restdude.mdd.annotation.model.FilePersistence;
+import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.domain.metadata.model.AbstractMetadataSubject;
+import com.restdude.mdd.model.UserModel;
 import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -73,7 +74,7 @@ import java.util.Locale;
 @PreAuthorizePatch(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class User extends AbstractMetadataSubject<UserMetadatum> implements LocalUser {
+public class User extends AbstractMetadataSubject<UserMetadatum> implements UserModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = -7942906897981646998L;

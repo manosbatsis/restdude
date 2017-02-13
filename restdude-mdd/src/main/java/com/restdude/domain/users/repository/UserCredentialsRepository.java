@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.repository;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.users.model.UserCredentials;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.stereotype.Repository;

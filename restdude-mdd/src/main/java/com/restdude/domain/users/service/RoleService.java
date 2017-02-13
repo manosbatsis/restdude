@@ -20,11 +20,11 @@
  */
 package com.restdude.domain.users.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.users.model.Role;
 import com.restdude.domain.users.model.User;
 
-public interface RoleService extends ModelService<Role, String> {
+public interface RoleService extends PersistableModelService<Role, String> {
 
 	Role findByIdOrName(String idOrName);
 

@@ -27,8 +27,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.restdude.mdd.binding.SkipPropertyDeserializer;
 import com.restdude.mdd.binding.SkipPropertySerializer;
 import com.restdude.domain.users.model.Role;
-import com.restdude.domain.users.model.Roles;
+import com.restdude.mdd.model.Roles;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.model.UserDetailsModel;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ import java.util.*;
 
 //@ApiModel
 @XmlRootElement(name = "loggedInUserDetails")
-public class UserDetails implements  ICalipsoUserDetails{
+public class UserDetails implements UserDetailsModel {
 	
 	private static final long serialVersionUID = 5206010308112791343L;
 
@@ -103,14 +104,14 @@ public class UserDetails implements  ICalipsoUserDetails{
 	private Boolean isResetPasswordReguest = false;
 
 
-    public static ICalipsoUserDetails anonymous() {
+    public static UserDetailsModel anonymous() {
         UserDetails details = new UserDetails();
         details.setUsername("anonymousUser");
         details.authorities = ROLES_ANONYMOUD;
         return details;
     }
 
-	public static ICalipsoUserDetails fromUser(User user) {
+	public static UserDetailsModel fromUser(User user) {
 		UserDetails details = null;
 		if (user != null) {
 			details = new UserDetails();
@@ -167,7 +168,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#getPk()
+	 * @see UserDetailsModel#getPk()
 	 */
 	@Override
 	public String getPk() {
@@ -175,7 +176,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#setPk(java.lang.String)
+	 * @see UserDetailsModel#setPk(java.lang.String)
 	 */
 	@Override
 	public void setPk(String pk) {
@@ -196,7 +197,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getFirstName()
+     * @see UserDetailsModel#getFirstName()
      */
 	@Override
 	public String getFirstName() {
@@ -204,7 +205,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setFirstName(java.lang.String)
+     * @see UserDetailsModel#setFirstName(java.lang.String)
      */
 	@Override
 	public void setFirstName(String firstName) {
@@ -212,7 +213,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getLastName()
+     * @see UserDetailsModel#getLastName()
      */
 	@Override
 	public String getLastName() {
@@ -220,7 +221,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setLastName(java.lang.String)
+     * @see UserDetailsModel#setLastName(java.lang.String)
      */
 	@Override
 	public void setLastName(String lastName) {
@@ -228,7 +229,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getLastPassWordChangeDate()
+     * @see UserDetailsModel#getLastPassWordChangeDate()
      */
 	@Override
 	public LocalDateTime getLastPassWordChangeDate() {
@@ -236,7 +237,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#setLastPassWordChangeDate(LocalDateTime)
+	 * @see UserDetailsModel#setLastPassWordChangeDate(LocalDateTime)
 	 */
 	@Override
 	public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate) {
@@ -244,7 +245,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 	
 	/**
-     * @see ICalipsoUserDetails#getEmailHash()
+     * @see UserDetailsModel#getEmailHash()
      */
 	@Override
 	public String getEmailHash() {
@@ -252,7 +253,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setEmailHash(java.lang.String)
+     * @see UserDetailsModel#setEmailHash(java.lang.String)
      */
 	@Override
 	public void setEmailHash(String emailHash) {
@@ -260,7 +261,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getAvatarUrl()
+     * @see UserDetailsModel#getAvatarUrl()
      */
 	@Override
 	public String getAvatarUrl() {
@@ -268,7 +269,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setAvatarUrl(java.lang.String)
+     * @see UserDetailsModel#setAvatarUrl(java.lang.String)
      */
 	@Override
 	public void setAvatarUrl(String avatarUrl) {
@@ -277,7 +278,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	
 
 	/**
-     * @see ICalipsoUserDetails#getTelephone()
+     * @see UserDetailsModel#getTelephone()
      */
 	@Override
 	public String getTelephone() {
@@ -285,7 +286,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setTelephone(java.lang.String)
+     * @see UserDetailsModel#setTelephone(java.lang.String)
      */
 	@Override
 	public void setTelephone(String telephone) {
@@ -293,7 +294,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getCellphone()
+     * @see UserDetailsModel#getCellphone()
      */
 	@Override
 	public String getCellphone() {
@@ -301,7 +302,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setCellphone(java.lang.String)
+     * @see UserDetailsModel#setCellphone(java.lang.String)
      */
 	@Override
 	public void setCellphone(String cellphone) {
@@ -309,7 +310,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getBirthDay()
+     * @see UserDetailsModel#getBirthDay()
      */
 	@Override
 	public LocalDate getBirthDay() {
@@ -317,7 +318,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#setBirthDay(LocalDate)
+	 * @see UserDetailsModel#setBirthDay(LocalDate)
 	 */
 	@Override
 	public void setBirthDay(LocalDate birthDay) {
@@ -325,7 +326,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getLastVisit()
+     * @see UserDetailsModel#getLastVisit()
      */
 	@Override
 	public LocalDateTime getLastVisit() {
@@ -333,7 +334,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#setLastVisit(LocalDateTime)
+	 * @see UserDetailsModel#setLastVisit(LocalDateTime)
 	 */
 	@Override
 	public void setLastVisit(LocalDateTime lastVisit) {
@@ -341,7 +342,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getLastPost()
+     * @see UserDetailsModel#getLastPost()
      */
 	@Override
 	public LocalDateTime getLastPost() {
@@ -349,7 +350,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#setLastPost(LocalDateTime)
+	 * @see UserDetailsModel#setLastPost(LocalDateTime)
 	 */
 	@Override
 	public void setLastPost(LocalDateTime lastPost) {
@@ -357,7 +358,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getLoginAttempts()
+     * @see UserDetailsModel#getLoginAttempts()
      */
 	@Override
 	public Short getLoginAttempts() {
@@ -365,7 +366,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setLoginAttempts(java.lang.Short)
+     * @see UserDetailsModel#setLoginAttempts(java.lang.Short)
      */
 	@Override
 	public void setLoginAttempts(Short loginAttempts) {
@@ -373,7 +374,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getActive()
+     * @see UserDetailsModel#getActive()
      */
 	@Override
 	public Boolean getActive() {
@@ -381,7 +382,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setActive(java.lang.Boolean)
+     * @see UserDetailsModel#setActive(java.lang.Boolean)
      */
 	@Override
 	public void setActive(Boolean active) {
@@ -389,7 +390,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getInactivationReason()
+     * @see UserDetailsModel#getInactivationReason()
      */
 	@Override
 	public String getInactivationReason() {
@@ -397,7 +398,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setInactivationReason(java.lang.String)
+     * @see UserDetailsModel#setInactivationReason(java.lang.String)
      */
 	@Override
 	public void setInactivationReason(String inactivationReason) {
@@ -405,7 +406,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getInactivationDate()
+     * @see UserDetailsModel#getInactivationDate()
      */
 	@Override
 	public LocalDateTime getInactivationDate() {
@@ -413,7 +414,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-	 * @see ICalipsoUserDetails#setInactivationDate(LocalDateTime)
+	 * @see UserDetailsModel#setInactivationDate(LocalDateTime)
 	 */
 	@Override
 	public void setInactivationDate(LocalDateTime inactivationDate) {
@@ -421,7 +422,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getLocale()
+     * @see UserDetailsModel#getLocale()
      */
 	@Override
 	public String getLocale() {
@@ -429,7 +430,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setLocale(java.lang.String)
+     * @see UserDetailsModel#setLocale(java.lang.String)
      */
 	@Override
 	public void setLocale(String locale) {
@@ -437,7 +438,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getDateFormat()
+     * @see UserDetailsModel#getDateFormat()
      */
 	@Override
 	public String getDateFormat() {
@@ -445,7 +446,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setDateFormat(java.lang.String)
+     * @see UserDetailsModel#setDateFormat(java.lang.String)
      */
 	@Override
 	public void setDateFormat(String dateFormat) {
@@ -453,7 +454,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#isAdmin()
+     * @see UserDetailsModel#isAdmin()
      */
 	@Override
 	public boolean isAdmin() {
@@ -461,7 +462,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setAdmin(boolean)
+     * @see UserDetailsModel#setAdmin(boolean)
      */
 	@Override
 	public void setAdmin(boolean isAdmin) {
@@ -469,7 +470,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#isSiteAdmin()
+     * @see UserDetailsModel#isSiteAdmin()
      */
 	@Override
 	public boolean isSiteAdmin() {
@@ -477,7 +478,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setSiteAdmin(boolean)
+     * @see UserDetailsModel#setSiteAdmin(boolean)
      */
 	@Override
 	public void setSiteAdmin(boolean isSiteAdmin) {
@@ -485,7 +486,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setRedirectUrl(java.lang.String)
+     * @see UserDetailsModel#setRedirectUrl(java.lang.String)
      */
 	@Override
 	public void setRedirectUrl(String redirectUrl) {
@@ -493,7 +494,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getRedirectUrl()
+     * @see UserDetailsModel#getRedirectUrl()
      */
 	@Override
 	public String getRedirectUrl() {
@@ -503,7 +504,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 
 
 	/**
-     * @see ICalipsoUserDetails#getMetadata()
+     * @see UserDetailsModel#getMetadata()
      */
 	@Override
 	public Map<String, String> getMetadata() {
@@ -511,7 +512,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setMetadata(java.util.Map)
+     * @see UserDetailsModel#setMetadata(java.util.Map)
      */
 	@Override
 	public void setMetadata(Map<String, String> metadata) {
@@ -519,7 +520,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#addMetadatum(java.lang.String, java.lang.String)
+     * @see UserDetailsModel#addMetadatum(java.lang.String, java.lang.String)
      */
 	@Override
 	public void addMetadatum(String predicate, String object) {
@@ -533,7 +534,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 
 
 	/**
-     * @see ICalipsoUserDetails#setUsername(java.lang.String)
+     * @see UserDetailsModel#setUsername(java.lang.String)
      */
 	@Override
 	public void setUsername(String username) {
@@ -541,7 +542,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setPassword(java.lang.String)
+     * @see UserDetailsModel#setPassword(java.lang.String)
      */
 	@Override
 	public void setPassword(String password) {
@@ -549,7 +550,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#setAuthorities(List)
+     * @see UserDetailsModel#setAuthorities(List)
      */
 	@Override
 	public void setAuthorities(
@@ -560,7 +561,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	// SocialUserDetails
 
 	/**
-     * @see ICalipsoUserDetails#getAuthorities()
+     * @see UserDetailsModel#getAuthorities()
      */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -568,7 +569,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getPassword()
+     * @see UserDetailsModel#getPassword()
      */
 	@Override
 	public String getPassword() {
@@ -576,7 +577,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getUsername()
+     * @see UserDetailsModel#getUsername()
      */
 	@Override
 	public String getUsername() {
@@ -584,7 +585,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#isAccountNonExpired()
+     * @see UserDetailsModel#isAccountNonExpired()
      */
 	@Override
 	public boolean isAccountNonExpired() {
@@ -592,7 +593,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#isAccountNonLocked()
+     * @see UserDetailsModel#isAccountNonLocked()
      */
 	@Override
 	public boolean isAccountNonLocked() {
@@ -600,7 +601,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#isCredentialsNonExpired()
+     * @see UserDetailsModel#isCredentialsNonExpired()
      */
 	@Override
 	public boolean isCredentialsNonExpired() {
@@ -608,7 +609,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#isEnabled()
+     * @see UserDetailsModel#isEnabled()
      */
 	@Override
 	public boolean isEnabled() {
@@ -616,7 +617,7 @@ public class UserDetails implements  ICalipsoUserDetails{
 	}
 
 	/**
-     * @see ICalipsoUserDetails#getUserId()
+     * @see UserDetailsModel#getUserId()
      */
 	@Override
 	public String getUserId() {

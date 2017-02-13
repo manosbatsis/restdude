@@ -20,7 +20,7 @@
  */
 package com.restdude.init;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.geography.model.Continent;
@@ -28,7 +28,7 @@ import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.service.ContinentService;
 import com.restdude.domain.geography.service.CountryService;
 import com.restdude.domain.users.model.Role;
-import com.restdude.domain.users.model.Roles;
+import com.restdude.mdd.model.Roles;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.UserRegistrationCodeBatchRepository;

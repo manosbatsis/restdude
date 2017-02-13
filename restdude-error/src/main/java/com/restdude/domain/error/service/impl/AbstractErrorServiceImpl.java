@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.PersistableError;
 import com.restdude.domain.error.service.ErrorLogService;
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 
 public abstract class AbstractErrorServiceImpl<T extends PersistableError<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
-        extends AbstractModelServiceImpl<T, PK, R> {
+        extends AbstractPersistableModelServiceImpl<T, PK, R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractErrorServiceImpl.class);
 

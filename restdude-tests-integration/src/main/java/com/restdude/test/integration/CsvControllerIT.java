@@ -52,7 +52,7 @@ public class CsvControllerIT extends AbstractControllerIT {
     public void testBatchLyfecycle() throws Exception {
 
         // login as admin
-        Loggedincontext lctx = this.getLoggedinContext("admin", "admin");
+        Loggedincontext lctx = this.getAdminContext();
 
         // create and utilize 5 batches
         for (int i = 0; i < 5; i++) {

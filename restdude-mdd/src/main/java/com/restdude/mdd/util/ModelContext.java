@@ -20,9 +20,9 @@
  */
 package com.restdude.mdd.util;
 
-import com.restdude.mdd.controller.AbstractModelController;
-import com.restdude.domain.base.annotation.model.ModelRelatedResource;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
+import com.restdude.mdd.annotation.model.ModelRelatedResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.util.ClassUtils;
@@ -109,7 +109,7 @@ public final class ModelContext {
 	public Class getControllerSuperClass(){
 		Class sClass = this.modelResource.controllerSuperClass();
 		if(sClass == null || Object.class.equals(sClass)){
-			sClass = AbstractModelController.class;
+			sClass = AbstractPersistableModelController.class;
 		}
 		return  sClass;
 	}

@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.restdude.domain.metadata.model.Metadatum;
+import com.restdude.mdd.model.MetadatumModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -65,7 +65,7 @@ public class MetadataMapDeserializer extends JsonDeserializer<Map<String, ?>>
 	@Override
 	public Map<String, ?> deserialize(JsonParser jp, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
-		// Metadatum metadatum = targetType.newInstance();
+		// MetadatumModel metadatum = targetType.newInstance();
 		// metadatum.setObject(jp.getText());
 		// JsonNode node = jp.readValueAsTree();
 		// if ("".equals(node.asText()))
@@ -81,11 +81,11 @@ public class MetadataMapDeserializer extends JsonDeserializer<Map<String, ?>>
 		if(LOGGER.isDebugEnabled()){
 			LOGGER.debug("deserialize stringValueMap: " + stringValueMap);
 		}
-		Map<String, Metadatum> metadata = new HashMap<String, Metadatum>();
+		Map<String, MetadatumModel> metadata = new HashMap<String, MetadatumModel>();
 		if (!CollectionUtils.isEmpty(stringValueMap)) {
 			for (String predicate : stringValueMap.keySet()) {
 				try {
-					Metadatum metadatum = (Metadatum) targetType.newInstance();
+					MetadatumModel metadatum = (MetadatumModel) targetType.newInstance();
 					metadatum.setPredicate(predicate);
 					metadatum.setObject(stringValueMap.get(predicate));
 					metadata.put(predicate, metadatum);

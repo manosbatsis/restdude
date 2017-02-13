@@ -44,7 +44,7 @@ import java.util.*;
 /**
  * Provides metadata for all Model types and generates missing model-based components
  *  i.e. <code>Repository</code>, <code>Service</code> and
- * <code>Controller</code> tiers
+ * <code>Controller</code> mdd
  *
  * @see ModelBasedComponentGenerator
  */

@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.users.model.Role;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.RoleRepository;
@@ -31,7 +31,7 @@ import javax.inject.Named;
 
 
 @Named("roleService")
-public class RoleServiceImpl extends AbstractModelServiceImpl<Role, String, RoleRepository> implements RoleService {
+public class RoleServiceImpl extends AbstractPersistableModelServiceImpl<Role, String, RoleRepository> implements RoleService {
 
 	@Override
 	public Role findByIdOrName(String idOrName) {

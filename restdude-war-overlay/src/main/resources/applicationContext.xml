@@ -98,7 +98,7 @@
         <property name="characterEncoding" value="UTF-8"/>
         <property name="order" value="1"/>
     </bean>
-    <!--bean pk="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+    <!--bean identifier="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
         <property name="prefix" pathFragment="/WEB-INF/templates/" /> <property name="suffix"
         pathFragment=".html" /> <property name="templateMode" pathFragment="HTML5" /> <property
         name="characterEncoding" pathFragment="UTF-8" /> </bean -->

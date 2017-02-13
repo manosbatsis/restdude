@@ -23,7 +23,6 @@ package com.restdude.mdd.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.binding.EmbeddableManyToManyIdDeserializer;
 import com.restdude.mdd.binding.EmbeddableManyToManyIdSerializer;
 import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
@@ -59,7 +58,7 @@ import java.io.Serializable;
 @MappedSuperclass
 @JsonSerialize(using = EmbeddableManyToManyIdSerializer.class)
 @JsonDeserialize(using = EmbeddableManyToManyIdDeserializer.class)
-public abstract class EmbeddableManyToManyId<L extends CalipsoPersistable<LPK>, LPK extends Serializable, R extends CalipsoPersistable<RPK>, RPK extends Serializable> implements Serializable, IEmbeddableManyToManyId<L, LPK, R, RPK> {
+public abstract class EmbeddableManyToManyId<L extends PersistableModel<LPK>, LPK extends Serializable, R extends PersistableModel<RPK>, RPK extends Serializable> implements Serializable, IEmbeddableManyToManyId<L, LPK, R, RPK> {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddableManyToManyId.class);

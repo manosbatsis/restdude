@@ -21,8 +21,8 @@
 package com.restdude.mdd.service;
 
 import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
-import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.domain.base.annotation.model.ModelDrivenPreAuth;
+import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.method.P;
@@ -37,7 +37,7 @@ import java.io.Serializable;
  * Created by manos on 30/11/2016.
  */
 public class AbstractAssignedIdModelServiceImpl<T extends AbstractAssignedIdPersistableResource<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
-        extends AbstractModelServiceImpl<T, PK, R> implements AbstractAssignedIdModelService<T, PK> {
+        extends AbstractPersistableModelServiceImpl<T, PK, R> implements AbstractAssignedIdModelService<T, PK> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAssignedIdModelServiceImpl.class);
 

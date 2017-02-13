@@ -23,7 +23,7 @@ package com.restdude.auth.userdetails.service.impl;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
@@ -80,7 +80,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void updateLastLogin(ICalipsoUserDetails u){
+	public void updateLastLogin(UserDetailsModel u){
 		this.userService.updateLastLogin(u);
 	}
 	
@@ -90,11 +90,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
 	 */
 	@Override
-	public ICalipsoUserDetails loadUserByUsername(
+	public UserDetailsModel loadUserByUsername(
 			String findByUsernameOrEmail) throws UsernameNotFoundException {
 
         LOGGER.debug("#loadUserByUsername, findByUsernameOrEmail: {}", findByUsernameOrEmail);
-        ICalipsoUserDetails userDetails = null;
+        UserDetailsModel userDetails = null;
 
         User user = this.userService.findActiveByUserNameOrEmail(findByUsernameOrEmail);
 		if (user == null) {
@@ -109,9 +109,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	 */
 	@Transactional(readOnly = false)
 	@Override
-    public ICalipsoUserDetails create(final ICalipsoUserDetails tryUserDetails) {
+    public UserDetailsModel create(final UserDetailsModel tryUserDetails) {
         LOGGER.debug("create, userDetails: {}", tryUserDetails);
-        ICalipsoUserDetails userDetails = null;
+        UserDetailsModel userDetails = null;
 		if (tryUserDetails != null) {
 			String usernameOrEmail = tryUserDetails.getUsername();
             /*if (StringUtils.isBlank(usernameOrEmail)) {
@@ -157,18 +157,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public ICalipsoUserDetails updateUsername(UsernameChangeRequest usernameChangeRequest) {
+	public UserDetailsModel updateUsername(UsernameChangeRequest usernameChangeRequest) {
 		String pw = usernameChangeRequest.getPassword();
 		User user = this.userService.updateUsername(usernameChangeRequest);
-		ICalipsoUserDetails userDetails = UserDetails.fromUser(user);
+		UserDetailsModel userDetails = UserDetails.fromUser(user);
 		userDetails.setPassword(pw);
 		return userDetails;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-    public ICalipsoUserDetails resetPassword(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
-        ICalipsoUserDetails userDetails = this.getPrincipal();
+    public UserDetailsModel resetPassword(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
+        UserDetailsModel userDetails = this.getPrincipal();
 		User u = null;
         // Case 1: if authorized as current user and in an attempt to directly change password, require current password
         if (userDetails != null && userDetails.getPk() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
@@ -206,13 +206,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public ICalipsoUserDetails getPrincipal() {
+    public UserDetailsModel getPrincipal() {
 		return SecurityUtil.getPrincipal();
 	}
 
 	@Override
 	public User getPrincipalLocalUser() {
-		ICalipsoUserDetails principal = getPrincipal();
+		UserDetailsModel principal = getPrincipal();
 		User user = null;
 		if (principal != null) {
 			String username = principal.getUsername();
@@ -239,7 +239,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	 */
 	@Override
 	public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
-		ICalipsoUserDetails userDetails = null;
+		UserDetailsModel userDetails = null;
 
         LOGGER.info("#loadUserByUserId using: {}", userId);
         User user = this.userService.findActiveById(userId);
@@ -333,10 +333,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	@Override
-	public ICalipsoUserDetails createForImplicitSignup(
+	public UserDetailsModel createForImplicitSignup(
             User user) {
         LOGGER.info("#createForImplicitSignup, user: {}", user);
-        ICalipsoUserDetails userDetails = UserDetails
+        UserDetailsModel userDetails = UserDetails
 				.fromUser((User) this.userService.createForImplicitSignup(user));
 		return userDetails;
 	}

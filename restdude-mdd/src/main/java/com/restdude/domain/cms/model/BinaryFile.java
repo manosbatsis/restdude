@@ -22,6 +22,7 @@ package com.restdude.domain.cms.model;
 
 
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.UploadedFileModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.Formula;
 
@@ -38,7 +39,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "images")
-public class BinaryFile extends AbstractSystemUuidPersistableResource implements UploadedFile {
+public class BinaryFile extends AbstractSystemUuidPersistableResource implements UploadedFileModel {
     
     private String name;
 
@@ -106,7 +107,7 @@ public class BinaryFile extends AbstractSystemUuidPersistableResource implements
 //				+ ", getCreatedDate()=" + getCreatedDate()
 //				+ ", getLastModifiedBy()=" + getLastModifiedBy()
 //				+ ", getLastModifiedDate()=" + getLastModifiedDate()
-//				+ ", getPk()=" + getPk() + ", isNew()=" + isNew()
+//				+ ", getIdentifier()=" + getIdentifier() + ", isNew()=" + isNew()
 //				+ ", hashCode()="
 //				+ hashCode() + ", getClass()=" + getClass() + "]";
 //	}

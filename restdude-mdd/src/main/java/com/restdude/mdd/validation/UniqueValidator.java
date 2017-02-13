@@ -21,7 +21,7 @@
 package com.restdude.mdd.validation;
 
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.util.EntityUtil;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.proxy.HibernateProxyHelper;
@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersistable> {
+public class UniqueValidator implements ConstraintValidator<Unique, PersistableModel> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UniqueValidator.class);
 
@@ -63,7 +63,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isValid(CalipsoPersistable value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(PersistableModel value, ConstraintValidatorContext constraintValidatorContext) {
         LOGGER.debug("isValid pathFragment: {}", value);
         boolean valid = true;
         // skip validation if null
@@ -77,7 +77,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                 List<String> uniqueFieldNames = ValidatorUtil.getUniqueFieldNames(domainClass);
 
                 // get records matching the unique field values
-                List<CalipsoPersistable> resultSet = getViolatingRecords(value, domainClass, uniqueFieldNames);
+                List<PersistableModel> resultSet = getViolatingRecords(value, domainClass, uniqueFieldNames);
 
                 LOGGER.debug("isValid, resultSet size: {}", resultSet.size());
 
@@ -88,7 +88,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
                     // as it will point to  the object instead of the property
                     constraintValidatorContext.disableDefaultConstraintViolation();
 
-                    for (CalipsoPersistable match : resultSet) {
+                    for (PersistableModel match : resultSet) {
                         if (!match.getPk().equals(value.getPk())) {
                             for (String propertyName : uniqueFieldNames) {
                                 Object newValue = PropertyUtils.getProperty(value, propertyName);
@@ -123,12 +123,12 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
 
     }
 
-    private List<CalipsoPersistable> getViolatingRecords(CalipsoPersistable value, Class domainClass, List<String> uniqueFieldNames) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    private List<PersistableModel> getViolatingRecords(PersistableModel value, Class domainClass, List<String> uniqueFieldNames) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
         LOGGER.debug("getViolatingRecords, for pathFragment: {}, uniqueFieldNames: {}", value, uniqueFieldNames);
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(domainClass);
-        Root<? extends CalipsoPersistable<Serializable>> root = criteriaQuery.from(domainClass);
+        Root<? extends PersistableModel<Serializable>> root = criteriaQuery.from(domainClass);
         List<Predicate> predicates = new ArrayList<Predicate>(uniqueFieldNames.size());
         for (String propertyName : uniqueFieldNames) {
             LOGGER.debug("getViolatingRecords, adding predicate for field: {}", propertyName);
@@ -138,7 +138,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, CalipsoPersi
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
-        TypedQuery<CalipsoPersistable> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        TypedQuery<PersistableModel> typedQuery = this.entityManager.createQuery(criteriaQuery);
 
         // tell JPA not to flush just vbecause we want to check existing records
         typedQuery.setFlushMode(FlushModeType.COMMIT);

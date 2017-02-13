@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.cms.model.File;
 import com.restdude.domain.cms.repository.FileRepository;
 import com.restdude.domain.cms.service.FileService;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("fileService")
-public class FileServiceImpl extends AbstractModelServiceImpl<File, String, FileRepository> 
+public class FileServiceImpl extends AbstractPersistableModelServiceImpl<File, String, FileRepository>
 	implements FileService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileServiceImpl.class);

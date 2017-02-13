@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.geography.model;
 
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

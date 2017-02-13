@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.repository;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.cms.model.BinaryFile;
 
 public interface BinaryFileRepository extends ModelRepository<BinaryFile, String> {

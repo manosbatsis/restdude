@@ -24,18 +24,18 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.restdude.domain.metadata.model.Metadatum;
+import com.restdude.mdd.model.MetadatumModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class MetadatumToStringValueSerializer extends JsonSerializer<Metadatum> {
+public class MetadatumToStringValueSerializer extends JsonSerializer<MetadatumModel> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MetadatumToStringValueSerializer.class);
 
 	@Override
-	public void serialize(Metadatum value, JsonGenerator jgen,
-			SerializerProvider provider) throws IOException,
+	public void serialize(MetadatumModel value, JsonGenerator jgen,
+                          SerializerProvider provider) throws IOException,
 			JsonGenerationException {
 		// LOGGER.info("serialize pathFragment: "+pathFragment);
 		if (null == value || null == value.getObject()) {

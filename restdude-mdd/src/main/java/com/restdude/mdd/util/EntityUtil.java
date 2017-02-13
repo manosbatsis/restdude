@@ -20,10 +20,10 @@
  */
 package com.restdude.mdd.util;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.validation.CaseSensitive;
-import com.restdude.domain.base.annotation.model.ModelRelatedResource;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelRelatedResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.util.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -135,11 +135,11 @@ public class EntityUtil {
         return caseSensitive;
     }
 
-    public static <PK extends Serializable> PK idOrNull(CalipsoPersistable<PK> user) {
+    public static <PK extends Serializable> PK idOrNull(PersistableModel<PK> user) {
         return user != null ? user.getPk() : null;
     }
 
-    public static String idOrNEmpty(CalipsoPersistable entity) {
+    public static String idOrNEmpty(PersistableModel entity) {
         return entity != null ? entity.getPk().toString() : StringUtils.EMPTY;
     }
 }

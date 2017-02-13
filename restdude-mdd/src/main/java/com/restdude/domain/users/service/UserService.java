@@ -22,16 +22,16 @@ package com.restdude.domain.users.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.domain.base.service.ModelService;
-import com.restdude.domain.users.model.LocalUser;
+import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.mdd.model.UserModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
 
 import java.util.Map;
 
-public interface UserService extends ModelService<User, String>{
+public interface UserService extends PersistableModelService<User, String>{
 
 
 	/**
@@ -88,7 +88,7 @@ public interface UserService extends ModelService<User, String>{
 	 */
 	User findById(String userId);
 
-	LocalUser createForImplicitSignup(User user);
+	UserModel createForImplicitSignup(User user);
 
 	/**
 	 * Get a local application user matching the given credentials, after adding
@@ -131,7 +131,7 @@ public interface UserService extends ModelService<User, String>{
 	 */
 	User createAsConfirmed(User resource);
 
-	void updateLastLogin(ICalipsoUserDetails u);
+	void updateLastLogin(UserDetailsModel u);
 
 	void expireConfirmationOrPasswordResetTokens();
 

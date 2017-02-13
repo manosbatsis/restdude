@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.cms.model.Folder;
 import com.restdude.domain.cms.repository.FolderRepository;
 import com.restdude.domain.cms.service.FolderService;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("folderService")
-public class FolderServiceImpl extends AbstractModelServiceImpl<Folder, String, FolderRepository> 
+public class FolderServiceImpl extends AbstractPersistableModelServiceImpl<Folder, String, FolderRepository>
 	implements FolderService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FolderServiceImpl.class);

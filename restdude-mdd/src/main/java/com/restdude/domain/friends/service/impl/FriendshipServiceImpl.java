@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.friends.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipDTO;
 import com.restdude.domain.friends.model.FriendshipId;
@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Named;
 
 @Named(FriendshipService.BEAN_ID)
-public class FriendshipServiceImpl extends AbstractModelServiceImpl<Friendship, FriendshipId, FriendshipRepository>
+public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<Friendship, FriendshipId, FriendshipRepository>
         implements FriendshipService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FriendshipServiceImpl.class);

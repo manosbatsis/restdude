@@ -20,14 +20,14 @@
  */
 package com.restdude.mdd.registry;
 
-import com.restdude.domain.base.annotation.controller.ModelController;
-import com.restdude.mdd.controller.AbstractModelController;
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.annotation.controller.ModelController;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
-import com.restdude.domain.base.service.ModelService;
-import com.restdude.mdd.service.AbstractModelServiceImpl;
-import com.restdude.domain.base.annotation.model.ModelRelatedResource;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.mdd.annotation.model.ModelRelatedResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.specifications.AnyToOnePredicateFactory;
 import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.mdd.specifications.SpecificationUtils;
@@ -57,15 +57,13 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Identifiable;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Named;
 import java.util.*;
 
 /**
  * Generates <code>Repository</code>, <code>Service</code> and
- * <code>Controller</code> tiers for classes are annotated with
+ * <code>Controller</code> mdd for classes are annotated with
  * {@link ModelResource} or
  * {@link ModelRelatedResource}.
  */
@@ -178,7 +176,7 @@ public class ModelBasedComponentGenerator {
 	 * 	&#64;Api(tags = "Countries", description = "Operations about countries")
 	 * 	&#64;RequestMapping(pathFragment = "/api/rest/countries", produces = { "application/json",
 	 * 			"application/xml" }, consumes = { "application/json", "application/xml" })
-	 * 	public class CountryController extends AbstractModelController<Country, String, CountryService> {
+	 * 	public class CountryController extends AbstractPersistableModelController<Country, String, CountryService> {
 	 * 		private static final Logger LOGGER = LoggerFactory.getLogger(CountryController.class);
 	 * 	}
 	 * }
@@ -266,7 +264,7 @@ public class ModelBasedComponentGenerator {
 
 			// extend the base service interface
 			Class<?> newServiceInterface = JavassistUtil.createInterface(fullClassName,
-					ModelService.class, genericTypes);
+					PersistableModelService.class, genericTypes);
 			ArrayList<Class<?>> interfaces = new ArrayList<Class<?>>(1);
 			interfaces.add(newServiceInterface);
 
@@ -276,7 +274,7 @@ public class ModelBasedComponentGenerator {
 					.append(className)
 					.append("Impl").toString();
 			LOGGER.debug("createService class: {}", newBImpllassName);
-			CreateClassCommand createServiceCmd = new CreateClassCommand(newBImpllassName, AbstractModelServiceImpl.class);
+			CreateClassCommand createServiceCmd = new CreateClassCommand(newBImpllassName, AbstractPersistableModelServiceImpl.class);
 			createServiceCmd.setInterfaces(interfaces);
 			createServiceCmd.setGenericTypes(genericTypes);
 			createServiceCmd.addGenericType(modelContext.getRepositoryType());
@@ -301,7 +299,7 @@ public class ModelBasedComponentGenerator {
 				Class<?>[] serviceInterfaces = serviceType.getInterfaces();
 				if (ArrayUtils.isNotEmpty(serviceInterfaces)) {
 					for (Class<?> interfaze : serviceInterfaces) {
-						if (ModelService.class.isAssignableFrom(interfaze)) {
+						if (PersistableModelService.class.isAssignableFrom(interfaze)) {
 							modelContext.setServiceInterfaceType(interfaze);
 							break;
 						}
@@ -379,9 +377,9 @@ public class ModelBasedComponentGenerator {
 			if (d instanceof AbstractBeanDefinition) {
 				AbstractBeanDefinition def = (AbstractBeanDefinition) d;
 				// if controller
-                if (isOfType(def, AbstractModelController.class)) {
+                if (isOfType(def, AbstractPersistableModelController.class)) {
                     Class<?> entity = GenericTypeResolver.resolveTypeArguments(
-                            ClassUtils.getClass(def.getBeanClassName()), AbstractModelController.class)[0];
+                            ClassUtils.getClass(def.getBeanClassName()), AbstractPersistableModelController.class)[0];
 
 					ModelContext modelContext = entityModelContextsMap.get(entity);
 					if (modelContext != null) {
@@ -389,9 +387,9 @@ public class ModelBasedComponentGenerator {
 					}
 				}
 				// if service
-				if (isOfType(def, AbstractModelServiceImpl.class)) {
+				if (isOfType(def, AbstractPersistableModelServiceImpl.class)) {
 					Class<?> entity = GenericTypeResolver
-							.resolveTypeArguments(ClassUtils.getClass(def.getBeanClassName()), ModelService.class)[0];
+							.resolveTypeArguments(ClassUtils.getClass(def.getBeanClassName()), PersistableModelService.class)[0];
 					ModelContext modelContext = entityModelContextsMap.get(entity);
 					if (modelContext != null) {
 						modelContext.setServiceDefinition(def);

@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.cms.model.Tag;
 import com.restdude.domain.cms.repository.TagRepository;
 import com.restdude.domain.cms.service.TagService;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("tagService")
-public class TagServiceImpl extends AbstractModelServiceImpl<Tag, String, TagRepository> 
+public class TagServiceImpl extends AbstractPersistableModelServiceImpl<Tag, String, TagRepository>
 	implements TagService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);

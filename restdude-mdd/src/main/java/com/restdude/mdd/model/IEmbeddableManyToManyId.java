@@ -20,15 +20,13 @@
  */
 package com.restdude.mdd.model;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
-
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
  * Created by manos on 25/12/2016.
  */
-public interface IEmbeddableManyToManyId<L extends CalipsoPersistable<LPK>, LPK extends Serializable, R extends CalipsoPersistable<RPK>, RPK extends Serializable> {
+public interface IEmbeddableManyToManyId<L extends PersistableModel<LPK>, LPK extends Serializable, R extends PersistableModel<RPK>, RPK extends Serializable> {
     void init(@NotNull String value);
 
     void init(LPK left, @NotNull RPK right);

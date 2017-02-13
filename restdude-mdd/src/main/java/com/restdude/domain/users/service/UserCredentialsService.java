@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.users.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.users.model.UserCredentials;
 
-public interface UserCredentialsService extends ModelService<UserCredentials, String> {
+public interface UserCredentialsService extends PersistableModelService<UserCredentials, String> {
 
 }

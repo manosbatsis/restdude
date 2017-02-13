@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.fs;
 
+import com.restdude.mdd.service.FilePersistenceService;
 import com.restdude.util.ConfigurationFactory;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

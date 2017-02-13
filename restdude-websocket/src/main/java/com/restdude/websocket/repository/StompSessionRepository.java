@@ -20,7 +20,7 @@
  */
 package com.restdude.websocket.repository;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.websocket.model.StompSession;
 import org.springframework.data.jpa.repository.Query;
 

@@ -127,7 +127,7 @@ info:
     commit:
       id: ${git.commit.id}
 #OR (depends on commitIdGenerationMode)
-#      pk.full: ${git.commit.pk.full}
+#      identifier.full: ${git.commit.identifier.full}
       id.abbrev: ${git.commit.id.abbrev}
       id.describe: ${git.commit.id.describe}
       id.describe-short: ${git.commit.id.describe-short}

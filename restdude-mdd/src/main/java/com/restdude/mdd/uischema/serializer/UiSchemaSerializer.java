@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.uischema.annotation.FormSchemas;
 import com.restdude.mdd.uischema.model.UiSchema;
 import org.apache.commons.beanutils.PropertyUtilsBean;

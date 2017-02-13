@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ import java.io.Serializable;
 import java.util.*;
 
 
-public class SpecificationsBuilder<T extends CalipsoPersistable<PK>, PK extends Serializable> {
+public class SpecificationsBuilder<T extends PersistableModel<PK>, PK extends Serializable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpecificationsBuilder.class);
     private final Class<T> domainClass;

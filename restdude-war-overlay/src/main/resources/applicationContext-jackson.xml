@@ -8,15 +8,15 @@
         http://www.springframework.org/schema/util      http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
     <!--
-    <bean pk="xmlMapper" class="com.fasterxml.jackson.dataformat.xml.XmlMapper">
+    <bean identifier="xmlMapper" class="com.fasterxml.jackson.dataformat.xml.XmlMapper">
         <constructor-arg ref="xmlModule"/>
     </bean>
 
-    <bean pk="xmlModule" class="com.fasterxml.jackson.dataformat.xml.JacksonXmlModule">
+    <bean identifier="xmlModule" class="com.fasterxml.jackson.dataformat.xml.JacksonXmlModule">
         <property name="defaultUseWrapper" value="false"/>
     </bean>
 
-    <bean pk="xmlObjectMapperFactory" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+    <bean identifier="xmlObjectMapperFactory" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
           p:indentOutput="true" p:failOnEmptyBeans="false">
         <property name="featuresToDisable">
             <array>
@@ -65,7 +65,7 @@
     <bean class="com.fasterxml.jackson.datatype.jdk8.Jdk8Module"/>
     <bean class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/>
 
-    <!-- 	<bean pk="conversionService" -->
+    <!-- 	<bean identifier="conversionService" -->
     <!-- 		class="org.springframework.context.support.ConversionServiceFactoryBean"> -->
     <bean id="conversionService"
           class="org.springframework.format.support.FormattingConversionServiceFactoryBean">

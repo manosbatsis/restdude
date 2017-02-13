@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.error.repository;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.error.model.SystemError;
 
 public interface SystemErrorRepository extends ModelRepository<SystemError, String> {

@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.UserCredentialsRepository;
 import com.restdude.domain.users.repository.UserRepository;
@@ -34,7 +34,7 @@ import javax.inject.Named;
 
 
 @Named("userCredentialsService")
-public class UserCredentialsServiceImpl extends AbstractModelServiceImpl<UserCredentials, String, UserCredentialsRepository> implements UserCredentialsService {
+public class UserCredentialsServiceImpl extends AbstractPersistableModelServiceImpl<UserCredentials, String, UserCredentialsRepository> implements UserCredentialsService {
 
     private UserRepository roleRepository;
 

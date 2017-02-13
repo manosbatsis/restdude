@@ -20,12 +20,12 @@
  */
 package com.restdude.test.integration;
 
+import com.restdude.domain.users.model.Role;
+import com.restdude.jsonapi.JsonApiModelDocument;
+import com.restdude.jsonapi.binding.DocumentBuilder;
 import com.restdude.test.AbstractControllerIT;
-import com.restdude.util.Constants;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -42,12 +42,12 @@ public class JsonApiIT extends AbstractControllerIT {
 
 
     @Test(description = "Test invalid credentials", priority = 30)
-    public void testSingleResourceDocument() throws Exception {
+    public void testGetSingleResourceDocument() throws Exception {
 
         // --------------------------------
         // Login
         // --------------------------------
-        Loggedincontext lctx = this.getLoggedinContext("admin", "admin");
+        Loggedincontext lctx = this.getAdminContext();
         RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
 
 
@@ -62,8 +62,101 @@ public class JsonApiIT extends AbstractControllerIT {
                 .body("data.id", equalTo("GR"))
                 .body("data.attributes.name", equalTo("Greece"));
 
+    }
+
+    @Test(description = "Test search filters etc.", priority = 40 )
+    public void testSearch() throws Exception {
+
+        // --------------------------------
+        // Login
+        // --------------------------------
+        Loggedincontext lctx = this.getAdminContext();
+        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+
+
+        // get a country document
+        Response rs = given().spec(requestSpec)
+                .log().all()
+                .param("parent.pk", "EU")
+                .param("name", "Greece")
+                .get(WEBCONTEXT_PATH + "/api/rest/countries");
+
+        // validate response
+        rs.then().log().all().assertThat()
+                .statusCode(200)
+                .body("data[0].id", equalTo("GR"))
+                .body("data[0].attributes.name", equalTo("Greece"));
 
     }
+
+    @Test(description = "Test creating an entity as a JSON API Document/Resource", priority = 50 )
+    public void testCreate() throws Exception {
+
+        // --------------------------------
+        // Login
+        // --------------------------------
+        Loggedincontext lctx = this.getAdminContext();
+        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+
+        Role role = new Role("ROLE_TEST", "Test role");
+        JsonApiModelDocument<Role, String> document = new DocumentBuilder<Role, String>("roles")
+                .withData(role)
+                .buildModelDocument();
+
+        // get a country document
+        Response rs = given().spec(requestSpec)
+                .log().all()
+                .body(document)
+                .post(WEBCONTEXT_PATH + "/api/rest/roles");
+
+        // validate response
+        rs.then().log().all().assertThat()
+                .statusCode(201)
+                .body("data.id", notNullValue())
+                .body("data.attributes.name", equalTo("ROLE_TEST"));
+
+        // search for persisted
+        // get a country document
+        rs = given().spec(requestSpec)
+                .log().all()
+                .param("name", "ROLE_TEST")
+                .get(WEBCONTEXT_PATH + "/api/rest/roles");
+
+        // validate response
+        rs.then().log().all().assertThat()
+                .statusCode(200)
+                .body("data[0].id", notNullValue())
+                .body("data[0].attributes.name", equalTo("ROLE_TEST"));
+
+    }
+
+    //TODO
+    /*
+    @Test(description = "Test search filters etc.", priority = 40 )
+    public void testSearchDialects() throws Exception {
+
+        // --------------------------------
+        // Login
+        // --------------------------------
+        Loggedincontext lctx = this.getAdminContext();
+        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+
+
+        // get a country document
+        Response rs = given().spec(requestSpec)
+                .log().all()
+                .param("filter[country.name][prefix]", "G")
+                .param("filter[country.callingCode][not][postfix]", "9")
+                .get(WEBCONTEXT_PATH + "/api/rest/countries");
+
+        // validate response
+        rs.then().log().all().assertThat()
+                .statusCode(200)
+                .body("data.id", equalTo("GR"))
+                .body("data.attributes.name", equalTo("Greece"));
+
+    }
+    */
 
 
 }

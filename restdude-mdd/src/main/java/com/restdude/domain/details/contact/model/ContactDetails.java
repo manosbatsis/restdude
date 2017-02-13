@@ -21,7 +21,7 @@
 package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.domain.users.model.User;
 import io.swagger.annotations.ApiModel;
 import org.javers.core.metamodel.annotation.ShallowReference;
@@ -34,7 +34,7 @@ import java.util.List;
 @ApiModel(description = "ContactDetails")
 @Table(name = "details_contact")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class ContactDetails implements CalipsoPersistable<String> {
+public class ContactDetails implements PersistableModel<String> {
 
     @Id
     private String id;

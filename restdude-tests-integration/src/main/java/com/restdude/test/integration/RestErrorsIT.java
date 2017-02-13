@@ -134,7 +134,7 @@ public class RestErrorsIT extends AbstractControllerIT {
     @Test(description = "Test not found", priority = 50)
     public void testNotFound() throws Exception {
 
-        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+        Loggedincontext adminLoginContext = this.getAdminContext();
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
         // select user
         SystemError error = given().spec(adminRequestSpec)

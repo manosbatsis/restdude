@@ -22,7 +22,6 @@ package com.restdude.mdd.service;
 
 
 import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
-import com.restdude.domain.base.service.ModelService;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ import java.io.Serializable;
  */
 @Service
 public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistableResource<PK>, PK extends Serializable>
-        extends ModelService<T, PK> {
+        extends PersistableModelService<T, PK> {
 
     /**
      * Return the entity matching the PK of the given resource if any, or the newly persisted instance otherwise

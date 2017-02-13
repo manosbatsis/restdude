@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.rating.model;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.domain.rating.repository.RateableRepository;
 
 import java.io.Serializable;
@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @see RateableRepository
  */
-public interface Rateable<PK extends Serializable, R extends AbstractRating> extends CalipsoPersistable<PK> {
+public interface Rateable<PK extends Serializable, R extends AbstractRating> extends PersistableModel<PK> {
 
     /**
      * Get the average rating for this entity

@@ -21,7 +21,7 @@
 package com.restdude.mdd.uischema.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.uischema.serializer.UiSchemaSerializer;
 
 /**
@@ -42,7 +42,7 @@ public class UiSchema {
 	public UiSchema() {
 	}
 
-    public Class<? extends CalipsoPersistable> getDomainClass() {
+    public Class<? extends PersistableModel> getDomainClass() {
         return domainClass;
     }
 

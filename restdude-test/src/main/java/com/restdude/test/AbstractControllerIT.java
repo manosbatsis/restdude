@@ -79,6 +79,62 @@ public class AbstractControllerIT {
 
     protected String WEBSOCKET_URI;
     protected String WEBCONTEXT_PATH;
+    private   Loggedincontext adminContext;
+
+
+    @BeforeClass
+    public void setup() {
+
+        // log request/response in errors
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+        Configuration config = ConfigurationFactory.getConfiguration();
+        this.WEBCONTEXT_PATH = config.getString(ConfigurationFactory.APP_CONTEXT_PATH, "/restdude");
+
+        // pickup from the jetty port
+        RestAssured.port = CONFIG.getInt("jetty.http.port", 8080);
+        this.WEBSOCKET_URI = new StringBuffer("ws://localhost:")
+                .append(RestAssured.port)
+                .append(WEBCONTEXT_PATH)
+                .append("/ws")
+                .toString();
+        LOGGER.info("Using websocket URL {}", this.WEBSOCKET_URI);
+
+
+        // configure our object mapper
+        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
+                // config object mapper
+                new ObjectMapperConfig().jackson2ObjectMapperFactory(new Jackson2ObjectMapperFactory() {
+                    @Override
+                    public ObjectMapper create(Class aClass, String s) {
+                        ObjectMapper objectMapper = new ObjectMapper()
+                                .registerModule(new ParameterNamesModule())
+                                .registerModule(new Jdk8Module())
+                                .registerModule(new JavaTimeModule());
+
+                        // Disable features
+                        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                        objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
+                        objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
+                        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+                        // enable features
+                        objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+
+                        return objectMapper;
+                    }
+                }));
+
+
+        this.adminContext = this.getLoggedinContext("admin", "admin");
+
+    }
+
+
+
+    public Loggedincontext getAdminContext() {
+        return adminContext;
+    }
 
     protected static Configuration getConfig() {
         return CONFIG;
@@ -142,63 +198,6 @@ public class AbstractControllerIT {
                 new DefaultStompFrameHandler<JsonNode>(stompSession, JsonNode.class, queue));
         return queue;
     }
-
-    @BeforeClass
-    public void setup() {
-
-        // log request/response in errors
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
-        Configuration config = ConfigurationFactory.getConfiguration();
-        this.WEBCONTEXT_PATH = config.getString(ConfigurationFactory.APP_CONTEXT_PATH, "/restdude");
-
-        // pickup from the jetty port
-        RestAssured.port = CONFIG.getInt("jetty.http.port", 8080);
-        this.WEBSOCKET_URI = new StringBuffer("ws://localhost:")
-                .append(RestAssured.port)
-                .append(WEBCONTEXT_PATH)
-                .append("/ws")
-                .toString();
-        LOGGER.info("Using websocket URL {}", this.WEBSOCKET_URI);
-        // TODO:
-        // String basePath = System.getProperty("server.base");
-        // if (basePath == null) {
-        // basePath = "/rest-garage-sample/";
-        // }
-        // RestAssured.basePath = basePath;
-        //
-        // String baseHost = System.getProperty("server.host");
-        // if (baseHost == null) {
-        // baseHost = "http://localhost";
-        // }
-        // RestAssured.baseURI = baseHost;
-
-        // configure our object mapper
-        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-                // config object mapper
-                new ObjectMapperConfig().jackson2ObjectMapperFactory(new Jackson2ObjectMapperFactory() {
-                    @Override
-                    public ObjectMapper create(Class aClass, String s) {
-                        ObjectMapper objectMapper = new ObjectMapper()
-                                .registerModule(new ParameterNamesModule())
-                                .registerModule(new Jdk8Module())
-                                .registerModule(new JavaTimeModule());
-
-                        // Disable features
-                        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                        objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
-                        objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
-                        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-                        // enable features
-                        objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
-
-                        return objectMapper;
-                    }
-                }));
-
-    }
-
 
     protected String getConfirmationToken(User user) {
         LOGGER.debug("getConfirmationToken for user: {}, logging in as admin...", user);

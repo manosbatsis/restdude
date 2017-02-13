@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.geography.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.repository.CountryRepository;
 import com.restdude.domain.geography.service.CountryService;
@@ -29,6 +29,6 @@ import javax.inject.Named;
 
 
 @Named("countryService")
-public class CountryServiceImpl extends AbstractModelServiceImpl<Country, String, CountryRepository> implements CountryService {
+public class CountryServiceImpl extends AbstractPersistableModelServiceImpl<Country, String, CountryRepository> implements CountryService {
 
 }

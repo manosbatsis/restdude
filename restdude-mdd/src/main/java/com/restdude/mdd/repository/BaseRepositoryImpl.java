@@ -20,12 +20,11 @@
  */
 package com.restdude.mdd.repository;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.model.MetadataSubjectModel;
+import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.domain.cms.model.BinaryFile;
-import com.restdude.domain.cms.model.UploadedFile;
-import com.restdude.domain.metadata.model.MetadataSubject;
-import com.restdude.domain.metadata.model.Metadatum;
+import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BeanValidationException;
@@ -56,7 +55,7 @@ import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
 
-public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Serializable> extends SimpleJpaRepository<T, PK> implements ModelRepository<T, PK> {
+public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Serializable> extends SimpleJpaRepository<T, PK> implements ModelRepository<T, PK> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
     private final boolean skipValidation;
@@ -104,7 +103,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 	@Override
 	public T merge(T entity) {
 		this.validate(entity);
-		Map<String, Metadatum> metadata = noteMetadata(entity);
+		Map<String, MetadatumModel> metadata = noteMetadata(entity);
 		entity = this.getEntityManager().merge(entity);
 		persistNotedMetadata(metadata, entity);
 		return entity;
@@ -116,7 +115,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 	@Override
 	public T persist(T entity) {
 		this.validate(entity);
-		Map<String, Metadatum> metadata = noteMetadata(entity);
+		Map<String, MetadatumModel> metadata = noteMetadata(entity);
 		this.getEntityManager().persist(entity);
 		persistNotedMetadata(metadata, entity);
 		return entity;
@@ -128,7 +127,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 	@Override
 	public <S extends T> S save(S entity) {
 		this.validate(entity);
-		Map<String, Metadatum> metadata = noteMetadata(entity);
+		Map<String, MetadatumModel> metadata = noteMetadata(entity);
 		entity = super.save(entity);
 		persistNotedMetadata(metadata, entity);
 		return entity;
@@ -161,10 +160,10 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 	
 	
 	@Override
-    public Metadatum addMetadatum(PK subjectId, String predicate, String object) {
+    public MetadatumModel addMetadatum(PK subjectId, String predicate, String object) {
         Map<String, String> metadata = new HashMap<String, String>();
 		metadata.put(predicate, object);
-		List<Metadatum> saved = addMetadata(subjectId, metadata);
+		List<MetadatumModel> saved = addMetadata(subjectId, metadata);
 		if (!CollectionUtils.isEmpty(metadata)) {
 			return saved.get(0);
 		} else {
@@ -173,22 +172,22 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 	}
 
 	@Override
-    public List<Metadatum> addMetadata(PK subjectId,
-                                       Map<String, String> metadata) {
+    public List<MetadatumModel> addMetadata(PK subjectId,
+											Map<String, String> metadata) {
 		ensureMetadataIsSupported();
-		List<Metadatum> saved;
+		List<MetadatumModel> saved;
 		if (!CollectionUtils.isEmpty(metadata)) {
-			saved = new ArrayList<Metadatum>(metadata.size());
+			saved = new ArrayList<MetadatumModel>(metadata.size());
 			for (String predicate : metadata.keySet()) {
 				LOGGER.info("addMetadatum subjectId: " + subjectId
 						+ ", predicate: " + predicate);
-				Metadatum metadatum = this.findMetadatum(subjectId, predicate);
+				MetadatumModel metadatum = this.findMetadatum(subjectId, predicate);
 				LOGGER.info("addMetadatum metadatum: " + metadatum);
 				if (metadatum == null) {
 					T entity = this.findOne(subjectId);
-					// Class<?> metadatumClass = ((MetadataSubject) entity)
+					// Class<?> metadatumClass = ((MetadataSubjectModel) entity)
 					// .getMetadataDomainClass();
-					MetadataSubject subject = (MetadataSubject) entity;
+					MetadataSubjectModel subject = (MetadataSubjectModel) entity;
 					metadatum = this.buildMetadatum(subject, predicate,
 							metadata.get(predicate));
 					this.getEntityManager().persist(metadatum);
@@ -204,19 +203,19 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 				saved.add(metadatum);
 			}
 		} else {
-			saved = new ArrayList<Metadatum>(0);
+			saved = new ArrayList<MetadatumModel>(0);
 		}
 		LOGGER.info("addMetadatum returns: " + saved);
 		return saved;
 	}
 
 	@SuppressWarnings("unchecked")
-	private Metadatum buildMetadatum(MetadataSubject subject, String predicate,
-			String object) {
+	private MetadatumModel buildMetadatum(MetadataSubjectModel subject, String predicate,
+										  String object) {
 		Class<?> metadatumClass = subject.getMetadataDomainClass();
-		Metadatum metadatum = null;
+		MetadatumModel metadatum = null;
 		try {
-			metadatum = (Metadatum) metadatumClass.getConstructor(
+			metadatum = (MetadatumModel) metadatumClass.getConstructor(
 					this.getDomainClass(), String.class, String.class)
 					.newInstance(subject, predicate, object);
 		} catch (Exception e) {
@@ -232,10 +231,10 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 		Assert.notNull(predicate);
 		ensureMetadataIsSupported();
 		T subjectEntity = this.findOne(subjectId);
-		Class<?> metadatumClass = ((MetadataSubject) subjectEntity)
+		Class<?> metadatumClass = ((MetadataSubjectModel) subjectEntity)
 				.getMetadataDomainClass();
 		// TODO: refactor to criteria
-		Metadatum metadatum = findMetadatum(subjectId, predicate,
+		MetadatumModel metadatum = findMetadatum(subjectId, predicate,
 				metadatumClass);
 		if (metadatum != null) {
 			this.getEntityManager().remove(metadatum);
@@ -246,7 +245,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 		// criteria.where( builder.equal(root.get("predicate"), predicate));
 
 		// T entity = this.findOne(subjectId);
-		// MetadataSubject subject = (MetadataSubject) entity;
+		// MetadataSubjectModel subject = (MetadataSubjectModel) entity;
 		// if (subject.getMetadata() != null) {
 		// subject.getMetadata().remove(predicate);
 		// this.merge(entity);
@@ -254,17 +253,17 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 	}
 
 	@Override
-    public Metadatum findMetadatum(PK subjectId, String predicate) {
+    public MetadatumModel findMetadatum(PK subjectId, String predicate) {
         T subjectEntity = this.findOne(subjectId);
-		Class<?> metadatumClass = ((MetadataSubject) subjectEntity)
+		Class<?> metadatumClass = ((MetadataSubjectModel) subjectEntity)
 				.getMetadataDomainClass();
 		return this.findMetadatum(subjectId, predicate, metadatumClass);
 
 	}
 
-    protected Metadatum findMetadatum(PK subjectId, String predicate,
-                                      Class<?> metadatumClass) {
-		List<Metadatum> results = this
+    protected MetadatumModel findMetadatum(PK subjectId, String predicate,
+										   Class<?> metadatumClass) {
+		List<MetadatumModel> results = this
 				.getEntityManager()
 				.createQuery(
 						"from "
@@ -272,12 +271,12 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
 								+ " m where m.predicate = ?1 and m.subject.id = ?2")
 				.setParameter(1, predicate).setParameter(2, subjectId)
 				.getResultList();
-		Metadatum metadatum = results.isEmpty() ? null : results.get(0);
+		MetadatumModel metadatum = results.isEmpty() ? null : results.get(0);
 		return metadatum;
 	}
 
 	protected void ensureMetadataIsSupported() {
-		if (!MetadataSubject.class.isAssignableFrom(getDomainClass())) {
+		if (!MetadataSubjectModel.class.isAssignableFrom(getDomainClass())) {
 			throw new UnsupportedOperationException();
 		}
 	}
@@ -294,7 +293,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
-    public List<UploadedFile> getUploadsForProperty(PK subjectId, String propertyName) {
+    public List<UploadedFileModel> getUploadsForProperty(PK subjectId, String propertyName) {
         CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 
 		CriteriaQuery<BinaryFile> query = cb.createQuery(BinaryFile.class);
@@ -303,7 +302,7 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
         Selection<? extends BinaryFile> join = root.join(propertyName, JoinType.INNER);
         query.select(join);
         List<BinaryFile> results = this.entityManager.createQuery(query).getResultList();
-        List<UploadedFile> casted = new ArrayList<>(results.size());
+        List<UploadedFileModel> casted = new ArrayList<>(results.size());
         for(BinaryFile f : results){
         	casted.addAll(results);
 		}
@@ -311,17 +310,17 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void persistNotedMetadata(Map<String, Metadatum> metadata, T saved) {
+    private void persistNotedMetadata(Map<String, MetadatumModel> metadata, T saved) {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("persistNotedMetadata, noted: " + metadata);
         }
         if (!CollectionUtils.isEmpty(metadata)) {
-            MetadataSubject subject = (MetadataSubject) saved;
-            Metadatum[] metaArray = metadata.values().toArray(
-                    new Metadatum[metadata.values().size()]);
+            MetadataSubjectModel subject = (MetadataSubjectModel) saved;
+            MetadatumModel[] metaArray = metadata.values().toArray(
+                    new MetadatumModel[metadata.values().size()]);
             for (int i = 0; i < metaArray.length; i++) {
-                Metadatum metadatum = metaArray[i];
+                MetadatumModel metadatum = metaArray[i];
                 subject.addMetadatum(this.addMetadatum(
                         saved.getPk(), metadatum.getPredicate(),
                         metadatum.getObject()));
@@ -329,12 +328,12 @@ public class BaseRepositoryImpl<T extends CalipsoPersistable<PK>, PK extends Ser
         }
     }
 
-    private Map<String, Metadatum> noteMetadata(T resource) {
-        Map<String, Metadatum> metadata = null;
-        if (MetadataSubject.class.isAssignableFrom(this.getDomainClass())) {
-            metadata = ((MetadataSubject) resource).getMetadata();
-            ((MetadataSubject) resource)
-                    .setMetadata(new HashMap<String, Metadatum>());
+    private Map<String, MetadatumModel> noteMetadata(T resource) {
+        Map<String, MetadatumModel> metadata = null;
+        if (MetadataSubjectModel.class.isAssignableFrom(this.getDomainClass())) {
+            metadata = ((MetadataSubjectModel) resource).getMetadata();
+            ((MetadataSubjectModel) resource)
+                    .setMetadata(new HashMap<String, MetadatumModel>());
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("noteMetadata, noted: " + metadata);
             }

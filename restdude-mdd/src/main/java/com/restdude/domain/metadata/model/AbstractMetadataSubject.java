@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.metadata.binding.MetadataMapDeserializer;
 import com.restdude.domain.metadata.binding.MetadatumToStringValueSerializer;
+import com.restdude.mdd.model.MetadataSubjectModel;
+import com.restdude.mdd.model.MetadatumModel;
 import org.jodah.typetools.TypeResolver;
 import org.springframework.util.CollectionUtils;
 
@@ -43,8 +45,8 @@ import java.util.Map;
  * annotations
  */
 @MappedSuperclass
-public abstract class AbstractMetadataSubject<M extends Metadatum>
-        extends AbstractSystemUuidPersistableResource implements MetadataSubject<M> {
+public abstract class AbstractMetadataSubject<M extends MetadatumModel>
+        extends AbstractSystemUuidPersistableResource implements MetadataSubjectModel<M> {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 

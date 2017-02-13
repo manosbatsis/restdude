@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.details.contact.service.impl;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.base.repository.ModelRepository;
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
 import com.restdude.domain.confirmationtoken.repository.ConfirmationTokenReposirory;
 import com.restdude.domain.details.contact.model.ContactDetail;
@@ -39,7 +39,7 @@ import java.io.Serializable;
 ;
 
 public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
-        extends AbstractModelServiceImpl<T, PK, R> {
+        extends AbstractPersistableModelServiceImpl<T, PK, R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractContactDetailServiceImpl.class);
 
@@ -70,9 +70,9 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<P
     }
 
     /**
-     * Reroute to {@link #patch(CalipsoPersistable)}
+     * Reroute to {@link #patch(PersistableModel)}
      *
-     * @see #patch(CalipsoPersistable)
+     * @see #patch(PersistableModel)
      */
     @Override
     @Transactional(readOnly = false)

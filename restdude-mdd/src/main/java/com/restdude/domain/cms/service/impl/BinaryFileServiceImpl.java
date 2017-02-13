@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.domain.cms.repository.BinaryFileRepository;
 import com.restdude.domain.cms.service.BinaryFileService;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 
 @Named("binaryFileService")
-public class BinaryFileServiceImpl extends AbstractModelServiceImpl<BinaryFile, String, BinaryFileRepository> 
+public class BinaryFileServiceImpl extends AbstractPersistableModelServiceImpl<BinaryFile, String, BinaryFileRepository>
 	implements BinaryFileService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BinaryFileServiceImpl.class);

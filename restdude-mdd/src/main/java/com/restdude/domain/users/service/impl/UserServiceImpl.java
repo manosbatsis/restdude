@@ -23,13 +23,15 @@ package com.restdude.domain.users.service.impl;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.mdd.model.Roles;
+import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.model.UserModel;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
 import com.restdude.domain.details.contact.service.EmailDetailService;
-import com.restdude.domain.metadata.model.Metadatum;
 import com.restdude.domain.users.model.*;
 import com.restdude.domain.users.repository.RoleRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
@@ -62,7 +64,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 //@Named("userService")
-public class UserServiceImpl extends AbstractModelServiceImpl<User, String, UserRepository> 
+public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, String, UserRepository>
 	implements UserService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -120,7 +122,7 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void updateLastLogin(ICalipsoUserDetails u){
+	public void updateLastLogin(UserDetailsModel u){
         this.repository.updateLastLogin(u.getPk());
     }
 
@@ -136,8 +138,8 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
         user = this.findActiveByCredentials(userNameOrEmail, password);
         if (user != null) {
             if (!CollectionUtils.isEmpty(metadata)) {
-                List<Metadatum> saved = this.repository.addMetadata(user.getPk(), metadata);
-                for (Metadatum meta : saved) {
+                List<MetadatumModel> saved = this.repository.addMetadata(user.getPk(), metadata);
+                for (MetadatumModel meta : saved) {
                     user.addMetadatum((UserMetadatum) meta);
                 }
 
@@ -513,13 +515,13 @@ public class UserServiceImpl extends AbstractModelServiceImpl<User, String, User
 	 */
 	@Override
 	@Transactional(readOnly = false)
-    public LocalUser createForImplicitSignup(User userAccountData) {
+    public UserModel createForImplicitSignup(User userAccountData) {
 		// simplify further condition checks
 		if (userAccountData.getCredentials() == null) {
 			userAccountData.setCredentials(new UserCredentials());
 		}
 
-        LocalUser existing = this.getPrincipalLocalUser();
+        UserModel existing = this.getPrincipalLocalUser();
 		if (existing == null) {
 			String email = userAccountData.getContactDetails().getPrimaryEmail() != null ? userAccountData.getContactDetails().getPrimaryEmail().getValue() : null;
 			if (StringUtils.isNotBlank(email) && email.contains("@")) {

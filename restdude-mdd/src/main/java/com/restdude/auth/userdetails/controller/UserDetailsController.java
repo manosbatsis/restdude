@@ -21,7 +21,7 @@
 package com.restdude.auth.userdetails.controller;
 
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.model.LoginSubmission;
 import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
@@ -74,9 +74,9 @@ public class UserDetailsController {
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Login",
             notes = "Login using a JSON object with email/password properties.")
-    public ICalipsoUserDetails create(@RequestBody LoginSubmission resource) {
+    public UserDetailsModel create(@RequestBody LoginSubmission resource) {
         LOGGER.debug("#create, LoginSubmission: {}", resource);
-        ICalipsoUserDetails userDetails = new UserDetails(resource);
+        UserDetailsModel userDetails = new UserDetails(resource);
         LOGGER.debug("#create, userDetails: {}", userDetails);
         userDetails = this.service.create(userDetails);
         if (userDetails != null && userDetails.getPk() != null) {
@@ -94,8 +94,8 @@ public class UserDetailsController {
     @ApiOperation(value = "Remember",
             notes = "Login user if remembered")
     @RequestMapping(method = RequestMethod.GET)
-    public ICalipsoUserDetails remember() {
-        ICalipsoUserDetails userDetails = this.service.getPrincipal();
+    public UserDetailsModel remember() {
+        UserDetailsModel userDetails = this.service.getPrincipal();
         LOGGER.debug("#remember userDetails: {}", userDetails);
         if (userDetails == null) {
             LOGGER.debug("#remember failed, logging out");
@@ -119,8 +119,8 @@ public class UserDetailsController {
     @RequestMapping(value = "verification", method = RequestMethod.POST)
     @ApiOperation(value = "Verify",
             notes = "Validation utility operation, used to verify the user based on current password.")
-    public ICalipsoUserDetails verify(@RequestBody LoginSubmission resource) {
-        ICalipsoUserDetails userDetails = new UserDetails(resource);
+    public UserDetailsModel verify(@RequestBody LoginSubmission resource) {
+        UserDetailsModel userDetails = new UserDetails(resource);
         return this.service.create(userDetails);
     }
 

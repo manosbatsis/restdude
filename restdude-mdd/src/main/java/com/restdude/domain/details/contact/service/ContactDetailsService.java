@@ -21,11 +21,11 @@
 package com.restdude.domain.details.contact.service;
 
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.details.contact.model.*;
 import org.springframework.security.access.method.P;
 
-public interface ContactDetailsService extends ModelService<ContactDetails, String> {
+public interface ContactDetailsService extends PersistableModelService<ContactDetails, String> {
     public static final String BEAN_ID = "contactDetailsService";
 
     /**

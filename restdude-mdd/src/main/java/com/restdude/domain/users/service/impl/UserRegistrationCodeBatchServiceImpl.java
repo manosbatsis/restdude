@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.users.model.UserRegistrationCode;
 import com.restdude.domain.users.model.UserRegistrationCodeBatch;
 import com.restdude.domain.users.model.UserRegistrationCodeInfo;
@@ -38,7 +38,7 @@ import java.util.List;
 
 @Service("userRegistrationCodeBatch")
 @Transactional(readOnly = true)
-public class UserRegistrationCodeBatchServiceImpl extends AbstractModelServiceImpl<UserRegistrationCodeBatch, String, UserRegistrationCodeBatchRepository>
+public class UserRegistrationCodeBatchServiceImpl extends AbstractPersistableModelServiceImpl<UserRegistrationCodeBatch, String, UserRegistrationCodeBatchRepository>
         implements UserRegistrationCodeBatchService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRegistrationCodeBatchServiceImpl.class);

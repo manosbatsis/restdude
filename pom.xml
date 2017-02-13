@@ -145,6 +145,22 @@
 
     <profiles>
         <profile>
+            <id>libs</id>
+            <modules>
+                <module>restdude-api</module>
+                <module>restdude-jsonapi</module>
+                <module>restdude-resources</module>
+                <module>restdude-util</module>
+                <module>restdude-mdd</module>
+                <module>restdude-error</module>
+                <module>restdude-auth-spel</module>
+                <module>restdude-websocket</module>
+                <module>restdude-framework</module>
+                <module>restdude-test</module>
+                <module>restdude-tests-integration</module>
+            </modules>
+        </profile>
+        <profile>
             <id>release</id>
             <build>
                 <plugins>

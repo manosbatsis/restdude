@@ -22,7 +22,7 @@ package com.restdude.websocket.model;
 
 import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
 import com.restdude.domain.users.model.User;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 
 import javax.persistence.Entity;

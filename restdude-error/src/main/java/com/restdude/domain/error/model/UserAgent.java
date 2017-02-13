@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.error.model;
 
-import com.restdude.mdd.controller.AbstractReadOnlyModelController;
+import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
 import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +36,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 
-@ModelResource(pathFragment = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyModelController.class,
+@ModelResource(pathFragment = UserAgent.API_PATH, controllerSuperClass = AbstractReadOnlyPersistableModelController.class,
         apiName = "User Agents", apiDescription = "Collection of UA signatures")
 @ApiModel(value = "UserAgent", description = "UA signatures")
 @Relation(value = "userAgent", collectionRelation = UserAgent.API_PATH)

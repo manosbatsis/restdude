@@ -23,7 +23,7 @@ package com.restdude.config;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.AnonymousAuthenticationFilter;
 import com.restdude.auth.userdetails.util.RestAuthenticationEntryPoint;
-import com.restdude.domain.users.model.Roles;
+import com.restdude.mdd.model.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

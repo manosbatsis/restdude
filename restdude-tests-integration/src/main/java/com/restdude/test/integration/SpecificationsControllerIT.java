@@ -80,16 +80,18 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
     @Test(description = "Test related entity IDs")
     public void testRelatedEntityId() throws Exception {
         LOGGER.debug("testRelatedEntityId");
-        given().spec(adminRequestSpec).
-                param("parent.pk", "AS")
-                .log().all()
-                .get(WEBCONTEXT_PATH + "/api/rest/countries")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(200).
-                assertThat().
-                body("content[0].parent.pk", equalTo("AS"));
+        for(String parentIdPath : new String[]{"parent", "parent.pk"}){
+            given().spec(adminRequestSpec)
+                    .param(parentIdPath, "AS")
+                    .log().all()
+                    .get(WEBCONTEXT_PATH + "/api/rest/countries")
+                    .then()
+                    .log().all()
+                    .assertThat()
+                    .statusCode(200)
+                    .assertThat()
+                    .body("content[0].parent.pk", equalTo("AS"));
+        }
     }
 
     @Test(description = "Test pathFragment to related entities simple type property")

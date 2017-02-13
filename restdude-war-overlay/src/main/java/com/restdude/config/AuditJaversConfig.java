@@ -21,7 +21,7 @@
 package com.restdude.config;
 
 
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import org.javers.core.Javers;
 import org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook;
@@ -167,7 +167,7 @@ public class AuditJaversConfig {
     public static class UserDetailsIdgSecurityAuthorProvider implements AuthorProvider {
         @Override
         public String provide() {
-            Optional<ICalipsoUserDetails> ud = SecurityUtil.getPrincipalOptional();
+            Optional<UserDetailsModel> ud = SecurityUtil.getPrincipalOptional();
             return ud.isPresent() ? ud.get().getPk() : "unauthenticated";
         }
     }

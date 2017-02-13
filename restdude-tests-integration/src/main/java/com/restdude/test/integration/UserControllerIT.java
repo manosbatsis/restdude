@@ -47,7 +47,7 @@ public class UserControllerIT extends AbstractControllerIT {
         // --------------------------------
         // Login
         // --------------------------------
-        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+        Loggedincontext adminLoginContext = this.getAdminContext();
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
 
         // --------------------------------
@@ -80,7 +80,7 @@ public class UserControllerIT extends AbstractControllerIT {
         // login and get a request spec for stateless auth
         // essentially this posts to WEBCONTEXT_PATH + "/apiauth/userDetails"
         // with request body: {username: "admin", password: "admin"}
-        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+        Loggedincontext adminLoginContext = this.getAdminContext();
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
 
         // --------------------------------

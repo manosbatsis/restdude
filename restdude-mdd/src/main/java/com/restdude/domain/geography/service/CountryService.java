@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.geography.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.geography.model.Country;
 
-public interface CountryService extends ModelService<Country, String> {
+public interface CountryService extends PersistableModelService<Country, String> {
 
 }

@@ -22,6 +22,7 @@ package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.model.ErrorModel;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ import java.time.LocalDateTime;
  * @param <PK>
  */
 @JsonIgnoreProperties("pk")
-public interface PersistableError<PK extends Serializable> extends Error<PK> {
+public interface PersistableError<PK extends Serializable> extends ErrorModel<PK> {
 
     public static final int MAX_MSTACKTRACE_LENGTH = 40000;
     public static final int MAX_DESCRIPTION_LENGTH = 1000;

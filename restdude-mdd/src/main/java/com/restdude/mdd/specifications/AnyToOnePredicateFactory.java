@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * A predicates for members that are Many2one/OneToOne or members
  * annotated with {@link javax.persistence.Embedded} or {@link javax.persistence.EmbeddedId}
  */
-public class AnyToOnePredicateFactory<T extends CalipsoPersistable<PK>, PK extends Serializable> extends AbstractPredicateFactory<T> {
+public class AnyToOnePredicateFactory<T extends PersistableModel<PK>, PK extends Serializable> extends AbstractPredicateFactory<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnyToOnePredicateFactory.class);
 	private Class<PK> idType;
@@ -52,7 +52,7 @@ public class AnyToOnePredicateFactory<T extends CalipsoPersistable<PK>, PK exten
 		Predicate predicate = null;
 		try {
 			LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
-			if (!CalipsoPersistable.class.isAssignableFrom(fieldType)) {
+			if (!PersistableModel.class.isAssignableFrom(fieldType)) {
 				LOGGER.warn("Non-Entity type for property '" + propertyName + "': " + fieldType.getName());
 			}
             if (this.idType == null) {

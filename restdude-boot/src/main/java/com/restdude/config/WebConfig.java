@@ -20,7 +20,7 @@
  */
 package com.restdude.config;
 
-import com.restdude.domain.base.annotation.controller.ModelController;
+import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.binding.CsvMessageConverter;
 import com.restdude.mdd.binding.CustomEnumConverterFactory;
 import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
@@ -29,12 +29,10 @@ import com.restdude.domain.error.resolver.RestExceptionHandler;
 import com.restdude.web.filters.RestRequestNormalizerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.WebMvcRegistrations;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.format.FormatterRegistry;
@@ -60,34 +58,12 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
 
-    @Override
-    public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-
-        RequestMappingHandlerMapping mapping = new RequestMappingHandlerMapping(){
-            @Override
-            protected boolean isHandler(Class<?> beanType) {
-                boolean is = super.isHandler(beanType) && (AnnotationUtils.findAnnotation(beanType, ModelController.class) == null);
-                LOGGER.debug("isHandler: {}, beanType: {}", is, beanType);
-                return is;
-            }
-        };
-        return mapping;
-    }
-
-    @Override
-    public RequestMappingHandlerAdapter getRequestMappingHandlerAdapter() {
-        return null;
-    }
-
-    @Override
-    public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
-        return null;
-    }
-
+    /**
+     * Automatically collect and persist errors
+     */
     @Bean
     public HandlerExceptionResolver restExceptionHandler() {
-        RestExceptionHandler handler = new RestExceptionHandler();
-        return handler;
+        return new RestExceptionHandler();
     }
 
     @Bean
@@ -122,6 +98,35 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
         return builder;
     }
 
+    /**
+     * Custom RequestMappingHandlerMapping used exclusively for Controllers annotated with {@link ModelController}
+     *
+     * @see WebConfig#getRequestMappingHandlerMapping()
+     */
+    @Bean
+    public RequestMappingHandlerMapping modelControllerRequestMappingHandlerMapping() {
+        LOGGER.debug("modelControllerRequestMappingHandlerMapping");
+        ModelControllerRequestMappingHandlerMapping mapping = new ModelControllerRequestMappingHandlerMapping();
+        mapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return mapping;
+    }
+
+    /**
+     * Override the default RequestMappingHandlerMapping to ignore ignore controllers
+     * annotated with {@link ModelController}
+     *
+     * @see WebConfig#modelControllerRequestMappingHandlerMapping()
+     */
+    @Override
+    public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+        return new RequestMappingHandlerMapping(){
+            @Override
+            protected boolean isHandler(Class<?> beanType) {
+                return super.isHandler(beanType) && (AnnotationUtils.findAnnotation(beanType, ModelController.class) == null);
+            }
+        };
+    }
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
@@ -151,12 +156,15 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
                 .mediaType("xml", MediaType.APPLICATION_XML);
     }
 
-
-    @Bean
-    public RequestMappingHandlerMapping modelControllerRequestMappingHandlerMapping() {
-        LOGGER.debug("modelControllerRequestMappingHandlerMapping");
-        ModelControllerRequestMappingHandlerMapping mapping = new ModelControllerRequestMappingHandlerMapping();
-        mapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return mapping;
+    @Override
+    public RequestMappingHandlerAdapter getRequestMappingHandlerAdapter() {
+        return null;
     }
+
+    @Override
+    public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
+        return null;
+    }
+
+
 }

@@ -20,7 +20,7 @@
  */
 package com.restdude.auth.social.model;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;
@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "UserConnection")
-public class UserSocialConnection implements CalipsoPersistable<UserSocialConnectionId> {
+public class UserSocialConnection implements PersistableModel<UserSocialConnectionId> {
 
 	@NotNull
 	@ApiModelProperty(required = true)

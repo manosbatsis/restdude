@@ -20,11 +20,11 @@
  */
 package com.restdude.domain.details.contact.model;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 
 import java.io.Serializable;
 
-public interface ContactDetail<PK extends Serializable> extends CalipsoPersistable<PK> {
+public interface ContactDetail<PK extends Serializable> extends PersistableModel<PK> {
 
     String getValue();
 

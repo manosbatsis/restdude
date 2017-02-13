@@ -21,7 +21,7 @@
 package com.restdude.domain.friends.repository;
 
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipId;
 import com.restdude.domain.friends.model.FriendshipStatus;

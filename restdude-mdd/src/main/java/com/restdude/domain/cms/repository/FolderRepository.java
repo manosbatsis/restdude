@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.repository;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.cms.model.Folder;
 
 public interface FolderRepository extends ModelRepository<Folder, String> {

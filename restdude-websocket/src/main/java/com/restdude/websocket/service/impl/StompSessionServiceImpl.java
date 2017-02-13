@@ -21,9 +21,9 @@
 package com.restdude.websocket.service.impl;
 
 
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.model.UserDetails;
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.messaging.*;
 
 @Service(StompSessionService.BEAN_ID)
-public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSession, String, StompSessionRepository> implements StompSessionService {
+public class StompSessionServiceImpl extends AbstractPersistableModelServiceImpl<StompSession, String, StompSessionRepository> implements StompSessionService {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StompSessionServiceImpl.class);
@@ -185,14 +185,14 @@ public class StompSessionServiceImpl extends AbstractModelServiceImpl<StompSessi
 
 
     public void validateUser(StompSession resource) {
-        ICalipsoUserDetails ud = this.getPrincipal();
+        UserDetailsModel ud = this.getPrincipal();
         LOGGER.info("validateUser userDetails: {}", ud);
         if (resource.getUser() == null) {
             User user = this.userRepository.getOne(ud.getPk());
             LOGGER.info("validateUser adding current user: {} ", user);
             resource.setUser(user);
         }
-//		else if(!ud.getPk().equals(resource.getUser().getPk())){
+//		else if(!ud.getIdentifier().equals(resource.getUser().getIdentifier())){
 //			throw new IllegalArgumentException("Session user does not match current principal");
 //		}
     }

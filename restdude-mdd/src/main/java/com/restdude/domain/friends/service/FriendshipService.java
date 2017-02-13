@@ -20,13 +20,13 @@
  */
 package com.restdude.domain.friends.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipId;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.websocket.message.ActivityNotificationMessage;
 
-public interface FriendshipService extends ModelService<Friendship, FriendshipId> {
+public interface FriendshipService extends PersistableModelService<Friendship, FriendshipId> {
 
 	public static final String BEAN_ID = "friendshipService";
 

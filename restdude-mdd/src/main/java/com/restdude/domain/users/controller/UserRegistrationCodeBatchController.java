@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.controller;
 
-import com.restdude.mdd.controller.AbstractNoDeleteModelController;
+import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
 import com.restdude.domain.users.model.UserRegistrationCodeBatch;
 import com.restdude.domain.users.model.UserRegistrationCodeInfo;
 import com.restdude.domain.users.service.UserRegistrationCodeBatchService;
@@ -44,7 +44,7 @@ import java.util.List;
 @ExposesResourceFor(UserRegistrationCodeBatch.class)
 @Api(tags = "RegistrationCodeBatches", description = "Codes management (admin, operator)")
 @RequestMapping(value = "/api/rest/registrationCodeBatches", produces = {"application/json", "application/xml"})
-public class UserRegistrationCodeBatchController extends AbstractNoDeleteModelController<UserRegistrationCodeBatch, String, UserRegistrationCodeBatchService> {
+public class UserRegistrationCodeBatchController extends AbstractNoDeletePersistableModelController<UserRegistrationCodeBatch, String, UserRegistrationCodeBatchService> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserRegistrationCodeBatchController.class);
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";

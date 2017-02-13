@@ -21,9 +21,9 @@
 package com.restdude.domain.users.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
-import com.restdude.domain.base.annotation.controller.ModelController;
-import com.restdude.mdd.controller.AbstractNoDeleteModelController;
+import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
+import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 @ModelController
 @ExposesResourceFor(User.class)
 @Api(tags = "Users", description = "User management operations")
-public class UserController extends AbstractNoDeleteModelController<User, String, UserService> {
+public class UserController extends AbstractNoDeletePersistableModelController<User, String, UserService> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -92,7 +92,7 @@ public class UserController extends AbstractNoDeleteModelController<User, String
     @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
     public User patch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         LOGGER.debug("patch, resource: {}", resource);
-        ICalipsoUserDetails principal = this.service.getPrincipal();
+        UserDetailsModel principal = this.service.getPrincipal();
         LOGGER.debug("patch, principal: {}", principal);
         if (!principal.isAdmin() && !principal.isSiteAdmin()) {
             resource.setRoles(null);

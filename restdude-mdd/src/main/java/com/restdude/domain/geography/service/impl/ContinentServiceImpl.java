@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.geography.service.impl;
 
-import com.restdude.mdd.service.AbstractModelServiceImpl;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.geography.model.Continent;
 import com.restdude.domain.geography.repository.ContinentRepository;
 import com.restdude.domain.geography.service.ContinentService;
@@ -29,6 +29,6 @@ import javax.inject.Named;
 
 
 @Named("continentService")
-public class ContinentServiceImpl extends AbstractModelServiceImpl<Continent, String, ContinentRepository> implements ContinentService {
+public class ContinentServiceImpl extends AbstractPersistableModelServiceImpl<Continent, String, ContinentRepository> implements ContinentService {
 
 }

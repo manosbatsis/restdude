@@ -24,9 +24,9 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.domain.users.model.User;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.util.HttpUtil;
 import com.restdude.util.exception.http.ConstraintViolationException;
 import io.swagger.annotations.ApiModel;
@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@ModelResource(pathFragment = SystemError.API_PATH, controllerSuperClass = AbstractModelController.class,
+@ModelResource(pathFragment = SystemError.API_PATH, controllerSuperClass = AbstractPersistableModelController.class,
         apiName = "System Errors", apiDescription = "System Error Operations (readonly)")
 @Entity
 @Table(name = "error_system")

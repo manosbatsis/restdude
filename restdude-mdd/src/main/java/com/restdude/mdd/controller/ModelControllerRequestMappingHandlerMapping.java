@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.controller;
 
-import com.restdude.domain.base.annotation.controller.ModelController;
+import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.registry.ModelInfoRegistry;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,14 +38,19 @@ import org.springframework.web.servlet.handler.MatchableHandlerMapping;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
+import com.restdude.mdd.annotation.model.ModelResource;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * Makes type-level RequestMapping annotations optional
- * for model-based controllers annotated with RestController
+ * Maps Controllers annotated with {@link ModelController} using the
+ * corresponding Model's {@link ModelResource}
+ *
+ * The default type level mapping is <code>{@link ModelResource#basePath()}/{@link ModelResource#parentPath()}/{@link ModelResource#pathFragment()}</code>.
+ * If basePath is empty, the <code>restdude.api.basePath</code> application property is used instead.
+ *
+ * @see ModelController
  */
 public class ModelControllerRequestMappingHandlerMapping extends RequestMappingHandlerMapping implements MatchableHandlerMapping, EmbeddedValueResolverAware {
 
@@ -90,48 +95,34 @@ public class ModelControllerRequestMappingHandlerMapping extends RequestMappingH
     @Override
     protected RequestMappingInfo getMappingForMethod(Method method, Class<?> handlerType) {
         RequestMappingInfo requestMappingInfo = null;
-        if(handlerType.isAnnotationPresent(ModelController.class)){
 
-            RequestMapping methodRequestMapping = AnnotatedElementUtils.findMergedAnnotation(method, RequestMapping.class);
-            if(methodRequestMapping != null){
 
-                RequestMapping handlerRequestMapping = AnnotatedElementUtils.findMergedAnnotation(handlerType, RequestMapping.class);
-                LOGGER.info("getMappingForMethod, handler patterns: {}, method patterns: {}", handlerRequestMapping.path(), methodRequestMapping.path());
-                //RequestMapping handlerRequestMapping = DefaultRequestMappingAnnotatedElement.class.getAnnotation(RequestMapping.class);
+        RequestMapping methodRequestMapping = AnnotatedElementUtils.findMergedAnnotation(method, RequestMapping.class);
+        if(methodRequestMapping == null){
+            // No mapping present, ignore method
+            return null;
+        }
 
-                // look for a model type match
-                Class<?> modelType = this.modelInfoRegistry.getHandlerModelType(handlerType);
-                // get model type meta
-                ModelInfo modelInfo = modelType != null ? this.modelInfoRegistry.getEntryFor(modelType) : null;
-                if(modelInfo != null){
-                    LOGGER.debug("createRequestMappingInfo, method: {}, handlerType: {}, modelInfo: {}", method, handlerType, modelInfo);
-                    requestMappingInfo = createRequestMappingInfo(method, methodRequestMapping, modelInfo);
-                    if (requestMappingInfo != null) {
-                        RequestMappingInfo typeInfo = createRequestMappingInfo(handlerType, handlerRequestMapping, modelInfo);
-                        if (typeInfo != null) {
-                            LOGGER.debug("createRequestMappingInfo typeInfo patterns: {}, for handlerType: {}", typeInfo.getPatternsCondition().getPatterns(), handlerType);
-                            requestMappingInfo = typeInfo.combine(requestMappingInfo);
-                        }
-                        else{
-                            throw new RuntimeException("Type-level RequestMappingInfo is null for handlerType: " + handlerType);
-                        }
-                    }
-                    else{
-                        throw new RuntimeException("Method-level RequestMappingInfo is null for handlerType: " + handlerType + ", method: " +method);
-                    }
-                }
-                else{
-                    throw new RuntimeException("Model type used by a ModelController has no model type or iInfo registered: {}" + handlerType);
-                }
+        RequestMapping handlerRequestMapping = AnnotatedElementUtils.findMergedAnnotation(handlerType, RequestMapping.class);
+        Class<?> modelType = this.modelInfoRegistry.getHandlerModelType(handlerType);
+        ModelInfo modelInfo = modelType != null ? this.modelInfoRegistry.getEntryFor(modelType) : null;
+
+        // get method mapping
+        requestMappingInfo = modelInfo != null ? createRequestMappingInfo(method, methodRequestMapping, modelInfo) : null;
+        if (requestMappingInfo != null) {
+            RequestMappingInfo typeInfo = createRequestMappingInfo(handlerType, handlerRequestMapping, modelInfo);
+            if (typeInfo != null) {
+                LOGGER.debug("createRequestMappingInfo typeInfo patterns: {}, for handlerType: {}", typeInfo.getPatternsCondition().getPatterns(), handlerType);
+                requestMappingInfo = typeInfo.combine(requestMappingInfo);
             }
             else{
-                LOGGER.debug("No mapping present, ignoring handler: (), method: {}", handlerType, method);
+                throw new RuntimeException("Type-level RequestMappingInfo is null for handlerType: " + handlerType);
             }
         }
-
         else{
-            throw new RuntimeException("Handler is not a ModelController: {}" + handlerType);
+            throw new RuntimeException("Method-level RequestMappingInfo is null for handlerType: " + handlerType + ", method: " +method);
         }
+
         return requestMappingInfo;
     }
 
@@ -207,17 +198,14 @@ public class ModelControllerRequestMappingHandlerMapping extends RequestMappingH
             for(int i = 0; i < patterns.length; i++){
                 String pattern = patterns[i];
                 if(isPatternIncluded(pattern)){
-
                     pattern = pattern.replace(ModelController.MODEL_MAPPING_WILDCARD, "/" + ModelController.BASE_PATH_WILDCARD + "/" + ModelController.APP_PARENT_PATH_WILDCARD + "/" + ModelController.MODEL_URI_COMPONENT_WILDCARD);
                     pattern = pattern.replace(ModelController.BASE_PATH_WILDCARD, "/" + modelBasePath);
                     pattern = pattern.replace(ModelController.APP_PARENT_PATH_WILDCARD, "/" + modelParentPath);
                     pattern = pattern.replace(ModelController.MODEL_URI_COMPONENT_WILDCARD, "/" + modelUriComponent);
                     pattern = pattern.replaceAll("/{2,}", "/");
                 }
-
                 patternsNew[i] = pattern;
             }
-
             patterns = patternsNew;
         }
         return patterns;
@@ -248,40 +236,5 @@ public class ModelControllerRequestMappingHandlerMapping extends RequestMappingH
     protected static class DefaultRequestMappingAnnotatedElement{
 
     }
-
-    /**
-     * Create a {@link RequestMappingInfo} from the supplied
-     * {@link RequestMapping @RequestMapping} annotation, which is either
-     * a directly declared annotation, a meta-annotation, or the synthesized
-     * result of merging annotation attributes within an annotation hierarchy.
-    @Override
-    protected RequestMappingInfo createRequestMappingInfo(
-            RequestMapping requestMapping, RequestCondition<?> customCondition) {
-        LOGGER.warn("createRequestMappingInfo without a model info");
-        return RequestMappingInfo
-                .paths(resolveEmbeddedValuesInPatterns(requestMapping.path()))
-                .methods(requestMapping.method())
-                .params(requestMapping.params())
-                .headers(requestMapping.headers())
-                .consumes(requestMapping.consumes())
-                .produces(requestMapping.produces())
-                .mappingName(requestMapping.name())
-                .customCondition(customCondition)
-                .options(this.shadowConfig)
-                .build();
-    }
-
-    @Override
-    public RequestMatchResult match(HttpServletRequest request, String pattern) {
-        RequestMappingInfo info = RequestMappingInfo.paths(pattern).options(this.shadowConfig).build();
-        RequestMappingInfo matchingInfo = info.getMatchingCondition(request);
-        if (matchingInfo == null) {
-            return null;
-        }
-        Set<String> patterns = matchingInfo.getPatternsCondition().getPatterns();
-        String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
-        return new RequestMatchResult(patterns.iterator().next(), lookupPath, getPathMatcher());
-    }
-     */
 
 }

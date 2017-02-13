@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.cms.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.cms.model.Tag;
 
-public interface TagService extends ModelService<Tag, String> {
+public interface TagService extends PersistableModelService<Tag, String> {
 
 
 }

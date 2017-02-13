@@ -22,6 +22,8 @@ package com.restdude.domain.metadata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.MetadataSubjectModel;
+import com.restdude.mdd.model.MetadatumModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import javax.persistence.*;
@@ -36,8 +38,8 @@ import javax.validation.constraints.NotNull;
 @Table(uniqueConstraints = { 
 		@UniqueConstraint(columnNames = { "subject", "predicate" }) 
 	})
-public abstract class AbstractMetadatum<S extends MetadataSubject>
-        extends AbstractSystemUuidPersistableResource implements Metadatum<S> {
+public abstract class AbstractMetadatum<S extends MetadataSubjectModel>
+        extends AbstractSystemUuidPersistableResource implements MetadatumModel<S> {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 

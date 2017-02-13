@@ -21,7 +21,7 @@
 package com.restdude.auth.userdetails.util;
 
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.domain.users.model.User;
@@ -52,11 +52,11 @@ public class SecurityUtil {
 
     public static void login(HttpServletRequest request, HttpServletResponse response, User user,
                              UserDetailsConfig userDetailsConfig, UserDetailsService userDetailsService) {
-        ICalipsoUserDetails userDetails = UserDetails.fromUser(user);
+        UserDetailsModel userDetails = UserDetails.fromUser(user);
 		login(request, response, userDetails, userDetailsConfig, userDetailsService);
 	}
 
-	public static void login(HttpServletRequest request, HttpServletResponse response, ICalipsoUserDetails userDetails,
+	public static void login(HttpServletRequest request, HttpServletResponse response, UserDetailsModel userDetails,
 			UserDetailsConfig userDetailsConfig, UserDetailsService userDetailsService) {
 
         if (userDetails != null && StringUtils.isNoneBlank(userDetails.getPk(), userDetails.getUsername(), userDetails.getPassword())) {
@@ -138,12 +138,12 @@ public class SecurityUtil {
 		return auth;
 	}
 
-	public static Optional<ICalipsoUserDetails> getPrincipalOptional() {
+	public static Optional<UserDetailsModel> getPrincipalOptional() {
 		return Optional.ofNullable(getPrincipal()); 
 	}
 
 
-    public static ICalipsoUserDetails getPrincipal() {
+    public static UserDetailsModel getPrincipal() {
 		Object principal = null;
 		Authentication auth = getAuthentication();
 		if (auth != null) {
@@ -162,7 +162,7 @@ public class SecurityUtil {
 			}
 		}
 
-		return (ICalipsoUserDetails) principal;
+		return (UserDetailsModel) principal;
 	}
 
 	public static void anonymous() {

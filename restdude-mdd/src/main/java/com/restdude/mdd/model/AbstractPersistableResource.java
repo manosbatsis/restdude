@@ -21,7 +21,6 @@
 package com.restdude.mdd.model;
 
 import com.restdude.auth.spel.annotations.*;
-import com.restdude.domain.base.model.CalipsoPersistable;
 import com.restdude.mdd.validation.Unique;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -58,7 +57,7 @@ import java.io.Serializable;
 @PreAuthorizeFindPaginated
 @PreAuthorizePatch
 @PreAuthorizeUpdate
-public abstract class AbstractPersistableResource<PK extends Serializable> extends ResourceSupport implements CalipsoPersistable<PK> {
+public abstract class AbstractPersistableResource<PK extends Serializable> extends ResourceSupport implements PersistableModel<PK> {
 
     private static final long serialVersionUID = -6009587976502456848L;
 

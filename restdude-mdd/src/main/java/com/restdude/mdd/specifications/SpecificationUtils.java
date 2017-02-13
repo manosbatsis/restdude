@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.specifications;
 
-import com.restdude.domain.base.model.CalipsoPersistable;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.registry.ModelBasedComponentGenerator;
 import com.restdude.mdd.util.ModelContext;
 import com.restdude.util.ClassUtils;
@@ -43,7 +43,7 @@ import java.util.List;
  * A generic specifications class that builds predicates for any implementation
  * of org.springframework.data.domain.Persistable
  */
-public class SpecificationUtils<T extends CalipsoPersistable<PK>, PK extends Serializable> {
+public class SpecificationUtils<T extends PersistableModel<PK>, PK extends Serializable> {
 
 
     static final Logger LOGGER = LoggerFactory.getLogger(SpecificationUtils.class);

@@ -24,7 +24,7 @@ import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetReque
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
@@ -113,10 +113,10 @@ public class UserAccountController {
     @ApiOperation(value = "Confirm registration email and/or update account password", notes = "Confirm registration email and/or update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
             "currentPassword, password and passwordConfirmation to immediately change password. 2) when anonymous, provide resetPasswordToken, password and passwordConfirmation to immediately" +
             "change password. 3) when anonymous, provide email or username to have a password reset token and link sent to your inbox.")
-    public ICalipsoUserDetails update(@RequestBody EmailConfirmationOrPasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
+    public UserDetailsModel update(@RequestBody EmailConfirmationOrPasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.debug("update, resource: {}", resource);
 
-        ICalipsoUserDetails userDetails = this.userDetailsService.resetPassword(resource);
+        UserDetailsModel userDetails = this.userDetailsService.resetPassword(resource);
 
 		// (re)login if appropriate
 		if (userDetails == null) {
@@ -133,10 +133,10 @@ public class UserAccountController {
 
 	@RequestMapping(value = "username", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update username", notes = "Updates the username of the curent user and updates the auth token cookie.")
-	public ICalipsoUserDetails updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
+	public UserDetailsModel updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
 		LOGGER.debug("updateUsername, resource: {}", resource);
 
-		ICalipsoUserDetails userDetails = this.userDetailsService.updateUsername(resource);
+		UserDetailsModel userDetails = this.userDetailsService.updateUsername(resource);
 		if (userDetails.getUsername().equals(resource.getUsername())) {
 			LOGGER.debug("updateUsername updated, updating login userDetails: {}, pw: {}", userDetails, userDetails.getPassword());
 			SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);

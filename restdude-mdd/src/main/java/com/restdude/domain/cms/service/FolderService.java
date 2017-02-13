@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.cms.service;
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.cms.model.Folder;
 
-public interface FolderService extends ModelService<Folder, String> {
+public interface FolderService extends PersistableModelService<Folder, String> {
 
 
 }

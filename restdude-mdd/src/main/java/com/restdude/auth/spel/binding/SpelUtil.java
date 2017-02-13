@@ -21,8 +21,8 @@
 package com.restdude.auth.spel.binding;
 
 import com.restdude.auth.spel.annotations.*;
-import com.restdude.mdd.controller.AbstractModelController;
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
+import com.restdude.mdd.service.PersistableModelService;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -84,22 +84,22 @@ public class SpelUtil {
 
     public static boolean isCandidate(Class targetClass, Method method) {
         return METHOD_SPEL_ANNOTATIONS.containsKey(method.getName())
-                && (ModelService.class.isAssignableFrom(targetClass)
-                || AbstractModelController.class.isAssignableFrom(targetClass));
+                && (PersistableModelService.class.isAssignableFrom(targetClass)
+                || AbstractPersistableModelController.class.isAssignableFrom(targetClass));
     }
 
     public static Class getComponentModelInterfaceClass(Class targetClass) {
         Class interfaze = null;
-        if (ModelService.class.isAssignableFrom(targetClass)) {
-            interfaze = ModelService.class;
-        } else if (AbstractModelController.class.isAssignableFrom(targetClass)) {
-            interfaze = AbstractModelController.class;
+        if (PersistableModelService.class.isAssignableFrom(targetClass)) {
+            interfaze = PersistableModelService.class;
+        } else if (AbstractPersistableModelController.class.isAssignableFrom(targetClass)) {
+            interfaze = AbstractPersistableModelController.class;
         }
         return interfaze;
     }
 
     /**
-     * Used by ModelService and AbstractModelController components.
+     * Used by ModelService and AbstractPersistableModelController components.
      *
      * @return
      */
@@ -113,7 +113,7 @@ public class SpelUtil {
 
 
             if (modelInterfaceClass != null) {
-                boolean isService = ModelService.class.isAssignableFrom(modelInterfaceClass);
+                boolean isService = PersistableModelService.class.isAssignableFrom(modelInterfaceClass);
                 String methodKey = new StringBuffer(targetClass.getCanonicalName()).append('#').append(method.getName()).toString();
 
 

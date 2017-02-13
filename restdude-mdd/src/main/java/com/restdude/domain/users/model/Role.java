@@ -21,9 +21,9 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
-import com.restdude.domain.base.annotation.model.ModelResource;
+import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -37,7 +37,7 @@ import java.util.Collection;
 
 /**
  */
-@ModelResource(pathFragment = "roles", controllerSuperClass = AbstractModelController.class,
+@ModelResource(pathFragment = "roles", controllerSuperClass = AbstractPersistableModelController.class,
 	apiName = "Roles", apiDescription = "Operations about roles")
 @Entity
 @Table(name = "role")

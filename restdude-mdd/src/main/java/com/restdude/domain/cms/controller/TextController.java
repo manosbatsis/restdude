@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.controller;
 
-import com.restdude.mdd.controller.AbstractModelController;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.domain.cms.model.Text;
 import com.restdude.domain.cms.service.TextService;
 import io.swagger.annotations.Api;
@@ -35,7 +35,7 @@ import javax.inject.Inject;
 //@RestController
 @Api(hidden = true, tags = "Text resources", description = "Operations about text resources")
 @RequestMapping(value = "/api/rest/texts", produces = { "application/json", "application/xml" })
-public class TextController extends AbstractModelController<Text, String, TextService> {
+public class TextController extends AbstractPersistableModelController<Text, String, TextService> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextController.class);
 

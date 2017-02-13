@@ -21,7 +21,7 @@
 package com.restdude.domain.geography.repository;
 
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.geography.model.Continent;
 
 public interface ContinentRepository extends ModelRepository<Continent, String> {

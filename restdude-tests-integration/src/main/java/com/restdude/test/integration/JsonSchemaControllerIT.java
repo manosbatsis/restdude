@@ -41,7 +41,7 @@ public class JsonSchemaControllerIT extends AbstractControllerIT {
         // --------------------------------
         // Login
         // --------------------------------
-        Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+        Loggedincontext adminLoginContext = this.getAdminContext();
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
 
         // --------------------------------

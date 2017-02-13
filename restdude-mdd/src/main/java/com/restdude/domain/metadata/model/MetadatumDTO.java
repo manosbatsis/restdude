@@ -21,14 +21,16 @@
 package com.restdude.domain.metadata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.mdd.model.MetadataSubjectModel;
+import com.restdude.mdd.model.MetadatumModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-public class MetadatumDTO implements Metadatum {
+public class MetadatumDTO implements MetadatumModel {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 
 	@JsonIgnore
-	private MetadataSubject subject;
+	private MetadataSubjectModel subject;
 
 	private String predicate;
 
@@ -57,12 +59,12 @@ public class MetadatumDTO implements Metadatum {
 	}
 
 	@Override
-	public MetadataSubject getSubject() {
+	public MetadataSubjectModel getSubject() {
 		return subject;
 	}
 
 	@Override
-	public void setSubject(MetadataSubject subject) {
+	public void setSubject(MetadataSubjectModel subject) {
 		this.subject = subject;
 	}
 

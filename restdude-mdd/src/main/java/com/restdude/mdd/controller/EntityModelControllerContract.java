@@ -21,12 +21,11 @@
 package com.restdude.mdd.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.restdude.domain.base.model.CalipsoPersistable;
-import com.restdude.domain.base.model.JsonApiDocument;
-import com.restdude.domain.base.model.JsonApiResource;
-import com.restdude.domain.base.model.RawJson;
-import com.restdude.domain.base.service.ModelService;
-import com.restdude.jsonapi.SimpleDocument;
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.jsonapi.JsonApiDocument;
+import com.restdude.jsonapi.JsonApiResource;
+import com.restdude.mdd.model.RawJson;
+import com.restdude.mdd.service.PersistableModelService;
 import org.springframework.data.domain.Page;
 import java.io.Serializable;
 import java.util.Set;
@@ -41,7 +40,7 @@ import java.util.Set;
  * @param <PK> The model identifier type
  * @param <S>  The service class
  */
-public abstract class EntityModelControllerContract<T extends CalipsoPersistable<PK>, PK extends Serializable, S extends ModelService<T, PK>> {
+public abstract class EntityModelControllerContract<T extends PersistableModel<PK>, PK extends Serializable, S extends PersistableModelService<T, PK>> {
 
 
     /**

@@ -20,7 +20,7 @@
  */
 package com.restdude.util.audit;
 
-import com.restdude.auth.userdetails.model.ICalipsoUserDetails;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.domain.users.model.User;
@@ -50,7 +50,7 @@ public class AuditorBean implements AuditorAware<User> {
     @Override
     public User getCurrentAuditor() {
         if (currentAuditor == null) {
-            ICalipsoUserDetails userDetails = SecurityUtil.getPrincipal();
+            UserDetailsModel userDetails = SecurityUtil.getPrincipal();
             if (userDetails != null) {
                 currentAuditor = new User(userDetails.getPk());
             }

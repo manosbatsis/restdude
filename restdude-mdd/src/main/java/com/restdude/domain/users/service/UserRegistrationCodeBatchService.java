@@ -21,13 +21,13 @@
 package com.restdude.domain.users.service;
 
 
-import com.restdude.domain.base.service.ModelService;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.users.model.UserRegistrationCodeBatch;
 import com.restdude.domain.users.model.UserRegistrationCodeInfo;
 
 import java.util.List;
 
-public interface UserRegistrationCodeBatchService extends ModelService<UserRegistrationCodeBatch, String> {
+public interface UserRegistrationCodeBatchService extends PersistableModelService<UserRegistrationCodeBatch, String> {
 
     /**
      * Find the codes of the given batch (PK)

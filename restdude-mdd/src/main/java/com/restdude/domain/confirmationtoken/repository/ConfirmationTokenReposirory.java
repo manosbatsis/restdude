@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.confirmationtoken.repository;
 
-import com.restdude.domain.base.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
 import org.springframework.data.jpa.repository.Query;
 
