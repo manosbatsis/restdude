@@ -68,12 +68,12 @@ spring:
 logging:
   level:
     root: WARN
-    com.yahoo.elide.core: DEBUG
+    com.yahoo.elide.core: WARN
     org.springframework: WARN
     com.restdude:
-      test: DEBUG
-      mdd: DEBUG
-      jsonapi: DEBUG
+      test: WARN
+      mdd: WARN
+      jsonapi: WARN
 
 #        repository: DEBUG
 #        validation: DEBUG

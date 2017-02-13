@@ -28,14 +28,14 @@
     </appender>
 
     <logger name="com.restdude.test">
-        <level value="debug"/>
+        <level value="WARN"/>
     </logger>
 
     <logger name="com.restdude.auth">
-        <level value="debug"/>
+        <level value="WARN"/>
     </logger>
     <logger name="com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping">
-        <level value="debug"/>
+        <level value="WARN"/>
     </logger>
 
     <!--logger name="com.restdude.init">
