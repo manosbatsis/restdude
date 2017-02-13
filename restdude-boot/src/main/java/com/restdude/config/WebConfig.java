@@ -24,6 +24,7 @@ import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.binding.CsvMessageConverter;
 import com.restdude.mdd.binding.CustomEnumConverterFactory;
 import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
+import com.restdude.mdd.controller.ModelControllerIgnoringRequestMappingHandlerMapping;
 import com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping;
 import com.restdude.domain.error.resolver.RestExceptionHandler;
 import com.restdude.web.filters.RestRequestNormalizerFilter;
@@ -112,19 +113,14 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
     }
 
     /**
-     * Override the default RequestMappingHandlerMapping to ignore ignore controllers
+     * Override the default RequestMappingHandlerMapping to ignore controllers
      * annotated with {@link ModelController}
      *
      * @see WebConfig#modelControllerRequestMappingHandlerMapping()
      */
     @Override
     public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-        return new RequestMappingHandlerMapping(){
-            @Override
-            protected boolean isHandler(Class<?> beanType) {
-                return super.isHandler(beanType) && (AnnotationUtils.findAnnotation(beanType, ModelController.class) == null);
-            }
-        };
+        return new ModelControllerIgnoringRequestMappingHandlerMapping();
     }
 
     @Override

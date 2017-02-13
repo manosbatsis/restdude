@@ -226,34 +226,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     }
 
     //@Override
-    @RequestMapping(method = RequestMethod.PATCH, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
-    @ApiOperation(value = "Patch (partially update) a JSON API Resource")
-    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    @ModelDrivenPreAuth
-    public JsonApiModelDocument<T, PK> patchResource(@NonNull @RequestBody JsonApiModelDocument<T, PK> document) {
-        T entity = null;
-
-        // obtain submitted entity model
-        JsonApiResource<T, PK> resource = document.getData();
-        if(resource != null ){
-            entity = resource.getAttributes();
-            entity.setPk(resource.getIdentifier());
-        }
-
-        // patch update
-        entity = this.patch(entity.getPk(), entity);
-
-        // repackage as a JSON API Document
-        document = new DocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
-                .withData(entity)
-                .buildModelDocument();
-
-        // return
-        return document;
-    }
-
-    //@Override
-    @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = "application/json")
+        @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = "application/json")
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     @ModelDrivenPreAuth
     public Iterable<T> findAll() {
