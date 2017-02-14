@@ -51,7 +51,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.*;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -235,13 +235,15 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     }
 
 
-    protected T post(@NonNull T resource) {
+    
+    protected T create(@NonNull T resource) {
         applyCurrentPrincipal(resource);
         return this.service.create(resource);
     }
 
 
-    protected T put(PK pk, T resource) {
+    
+    protected T update(PK pk, T resource) {
         Assert.notNull(pk, "pk cannot be null");
         resource.setPk(pk);
         applyCurrentPrincipal(resource);
@@ -250,6 +252,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return resource;
     }
 
+    
     protected T patch(PK pk, T resource) {
         applyCurrentPrincipal(resource);
         resource.setPk(pk);
@@ -258,12 +261,14 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return resource;
     }
 
-    protected Iterable<T> getAll() {
+    
+    protected Iterable<T> findAll() {
         return service.findAll();
     }
 
 
-    protected Page<T> getPage(
+    
+    protected Page<T> findPaginated(
             Integer page,
             Integer size,
             String sort,
@@ -296,23 +301,27 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     }
 
 
-    protected T getById(PK pk) {
+    
+    protected T findById(PK pk) {
         LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
         T resource = this.service.findById(pk);
         return resource;
     }
 
-    protected Iterable<T> getByIds(@NonNull Set<PK> pks) {
+    
+    protected Iterable<T> findByIds(@NonNull Set<PK> pks) {
         Assert.notNull(pks, "pks list cannot be null");
         return this.service.findByIds(pks);
     }
 
+    
     protected void delete(@NonNull PK pk) {
-        T resource = this.getById(pk);
+        T resource = this.findById(pk);
         this.service.delete(resource);
     }
 
-    protected void delete() {
+    
+    protected void deleteAll() {
         this.service.deleteAllWithCascade();
     }
 

@@ -23,13 +23,8 @@ package com.restdude.mdd.controller;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.util.exception.http.NotImplementedException;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.Serializable;
 
@@ -42,12 +37,12 @@ public abstract class AbstractReadOnlyPersistableModelController<T extends Persi
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractReadOnlyPersistableModelController.class);
 
 	@Override
-    public T post(T resource) {
+    public T create(T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
-    public T put(PK pk, T resource) {
+    public T update(PK pk, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 

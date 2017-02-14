@@ -20,12 +20,12 @@
  */
 package com.restdude.domain.users.controller;
 
-import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.mdd.annotation.controller.ModelController;
+import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
+import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resource;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +67,7 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
      * Disallow complete PUT as clients keep updating properties to null etc.
      */
     @Override
-    public User put(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 

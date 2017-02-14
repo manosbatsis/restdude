@@ -22,13 +22,14 @@ package com.restdude.mdd.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.restdude.jsonapi.*;
+import com.restdude.jsonapi.JsonApiModelCollectionDocument;
+import com.restdude.jsonapi.JsonApiModelDocument;
 import com.restdude.jsonapi.util.JsonApiUtils;
+import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.model.Model;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.service.PersistableModelService;
-import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.util.exception.http.NotFoundException;
 import io.swagger.annotations.ApiOperation;
@@ -85,7 +86,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
     public Resource<T> plainJsonPost(@RequestBody T model) {
-        model = super.post(model);
+        model = super.create(model);
         return toHateoasResource(model);
     }
 
@@ -98,7 +99,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
         // unwrap the submitted model and save
         T model = toModel(document);
-        model = super.post(model);
+        model = super.create(model);
 
         // repackage and return as a JSON API Document
         return this.toDocument(model);
@@ -109,7 +110,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
     public Resource<T> plainJsonPut(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T model) {
-        model = super.put(pk, model);
+        model = super.update(pk, model);
         return toHateoasResource(model);
     }
 
@@ -140,16 +141,15 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     @ModelDrivenPreAuth
     public Resources<T> plainJsonGetAll() {
-        return toHateoasResources(super.getAll());
+        return toHateoasResources(super.findAll());
     }
 
     @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
-    @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument jsonApiGetAll() {
 
         // obtain result models
-        Iterable<T> models = super.getAll();
+        Iterable<T> models = super.findAll();
 
         // repackage and return as a JSON API Document
         return this.toDocument(models);
@@ -167,7 +167,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
             @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
 
-        return this.toHateoasPagedResources(super.getPage(page, size, sort, direction));
+        return this.toHateoasPagedResources(super.findPaginated(page, size, sort, direction));
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
@@ -179,7 +179,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
             @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
 
-        return toDocument(super.getPage(page, size, sort, direction));
+        return toDocument(super.findPaginated(page, size, sort, direction));
     }
 
     @RequestMapping(value = "{pk}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
@@ -188,7 +188,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @ModelDrivenPreAuth
     public Resource<T> plainJsonGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
         LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
-        T model = super.getById(pk);
+        T model = super.findById(pk);
         if (model == null) {
             throw new NotFoundException();
         }
@@ -198,23 +198,24 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(Model.ItemView.class)
+    @ModelDrivenPreAuth
     public JsonApiModelDocument<T, PK> jsonApiGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
 
-        return toDocument(super.getById(pk));
+        return toDocument(super.findById(pk));
     }
 
     @RequestMapping(params = "pks", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
     public Resources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
-        return this.toHateoasResources(super.getByIds(pks));
+        return this.toHateoasResources(super.findByIds(pks));
     }
 
     @RequestMapping(params = "pks", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
-        return toDocument(super.getByIds(pks));
+        return toDocument(super.findByIds(pks));
     }
 
     @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)

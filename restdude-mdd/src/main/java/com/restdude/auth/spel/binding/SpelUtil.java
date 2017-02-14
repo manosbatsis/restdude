@@ -54,30 +54,54 @@ public class SpelUtil {
     private static final SpelExpressionParser parser = new SpelExpressionParser();
 
     static {
-
         METHOD_SPEL_ANNOTATIONS.put("count", PreAuthorizeCount.class);
+
+        // create
+        METHOD_SPEL_ANNOTATIONS.put("create", PreAuthorizeCreate.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonPost", PreAuthorizeCreate.class);
-        //METHOD_SPEL_ANNOTATIONS.put("findOrCreate", PreAuthorizeFindCreate.class);
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiPost", PreAuthorizeCreate.class);
 
-
+        // delete
         METHOD_SPEL_ANNOTATIONS.put("delete", PreAuthorizeDelete.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonDelete", PreAuthorizeDelete.class);
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiDelete", PreAuthorizeDelete.class);
+
+        // delete all
         METHOD_SPEL_ANNOTATIONS.put("deleteAll", PreAuthorizeDeleteAll.class);
         METHOD_SPEL_ANNOTATIONS.put("deleteAllWithCascade", PreAuthorizeDeleteWithCascade.class);
 
-
+        // find all
+        METHOD_SPEL_ANNOTATIONS.put("findAll", PreAuthorizeFindAll.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonGetAll", PreAuthorizeFindAll.class);
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiGetAll", PreAuthorizeFindAll.class);
+
+        // find by single ID
+        METHOD_SPEL_ANNOTATIONS.put("findById", PreAuthorizeFindById.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonGetById", PreAuthorizeFindById.class);
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiGetById", PreAuthorizeFindById.class);
+
+        // find by multiple IDs
+        METHOD_SPEL_ANNOTATIONS.put("findByIds", PreAuthorizeFindByIds.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonGetByIds", PreAuthorizeFindByIds.class);
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiGetByIds", PreAuthorizeFindByIds.class);
 
-        METHOD_SPEL_ANNOTATIONS.put("buildPage", PreAuthorizeFindPaginated.class);
+        // find paginated
+        METHOD_SPEL_ANNOTATIONS.put("findPaginated", PreAuthorizeFindPaginated.class);
+        METHOD_SPEL_ANNOTATIONS.put("plainJsonGetPage", PreAuthorizeFindPaginated.class);
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiGetPage", PreAuthorizeFindPaginated.class);
 
-
+        // patch
         METHOD_SPEL_ANNOTATIONS.put("addMetadatum", PreAuthorizePatch.class);
+        METHOD_SPEL_ANNOTATIONS.put("patch", PreAuthorizePatch.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonPatch", PreAuthorizePatch.class);
-
+        METHOD_SPEL_ANNOTATIONS.put("jsonApiPatch", PreAuthorizePatch.class);
         METHOD_SPEL_ANNOTATIONS.put("removeMetadatum", PreAuthorizeUpdate.class);
+
+        // update
+        METHOD_SPEL_ANNOTATIONS.put("update", PreAuthorizeUpdate.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonPut", PreAuthorizeUpdate.class);
         METHOD_SPEL_ANNOTATIONS.put("updateFiles", PreAuthorizeUpdate.class);
+
 
 
     }
