@@ -18,41 +18,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi.binding;
+package com.restdude.hypermedia.jsonapi.binding;
 
 
-import com.yahoo.elide.annotation.OnCommit;
-import com.yahoo.elide.audit.AuditLogger;
-import com.yahoo.elide.core.*;
+import com.yahoo.elide.core.EntityDictionary;
 import com.yahoo.elide.core.exceptions.InvalidPredicateException;
 import com.yahoo.elide.core.filter.dialect.*;
-
-import com.yahoo.elide.core.filter.expression.AndFilterExpression;
 import com.yahoo.elide.core.filter.expression.FilterExpression;
 import com.yahoo.elide.core.pagination.Pagination;
 import com.yahoo.elide.core.sort.Sorting;
-import com.yahoo.elide.jsonapi.JsonApiMapper;
-import com.yahoo.elide.jsonapi.models.JsonApiDocument;
-import com.yahoo.elide.security.PermissionExecutor;
-import com.yahoo.elide.security.SecurityMode;
-import com.yahoo.elide.security.User;
-import com.yahoo.elide.security.executors.ActivePermissionExecutor;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.*;
 
 /**
  * Request scope object for relaying request-related data to various subsystems.

@@ -18,14 +18,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi.support;
+package com.restdude.hypermedia.jsonapi.support;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.jsonapi.JsonApiModelDocument;
-import com.restdude.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiResource;
 import com.restdude.mdd.model.Model;
-import com.restdude.mdd.model.PersistableModel;
 import io.swagger.annotations.ApiModel;
 
 import java.io.Serializable;

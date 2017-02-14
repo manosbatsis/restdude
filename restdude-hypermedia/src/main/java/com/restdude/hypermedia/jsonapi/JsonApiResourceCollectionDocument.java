@@ -18,15 +18,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi.util;
+package com.restdude.hypermedia.jsonapi;
+
+import com.restdude.mdd.model.Model;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
- * Provides utilities for working with JSON API
+ * A Document that may contain multiple Resources according to JSON API 1.1
+ *
+ * @param <D> the JSON API Resource collection type
+ * @param <T> the JSON API Resource model type
+ * @param <PK> the JSON API Resource model key type
  */
-public class JsonApiUtils {
-
-    public static final String MIME_APPLICATION_VND_PLUS_JSON = "application/vnd.api+json";
-    public static final String MIME_APPLICATIOM_HAL_PLUS_JSON = " application/hal+json";
-
+public interface JsonApiResourceCollectionDocument<D extends Collection<JsonApiResource<T, PK>>, T extends Model<PK>, PK extends Serializable> extends JsonApiDocument<D, T, PK> {
 
 }

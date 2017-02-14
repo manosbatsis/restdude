@@ -39,7 +39,7 @@
 
     <modules>
         <module>restdude-api</module>
-        <module>restdude-jsonapi</module>
+        <module>restdude-hypermedia</module>
         <module>restdude-resources</module>
         <module>restdude-util</module>
         <module>restdude-mdd</module>
@@ -148,7 +148,7 @@
             <id>libs</id>
             <modules>
                 <module>restdude-api</module>
-                <module>restdude-jsonapi</module>
+                <module>restdude-hypermedia</module>
                 <module>restdude-resources</module>
                 <module>restdude-util</module>
                 <module>restdude-mdd</module>

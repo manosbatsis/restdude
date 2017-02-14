@@ -54,7 +54,7 @@
         </dependency>
         <dependency>
             <groupId>com.restdude</groupId>
-            <artifactId>restdude-jsonapi</artifactId>
+            <artifactId>restdude-hypermedia</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

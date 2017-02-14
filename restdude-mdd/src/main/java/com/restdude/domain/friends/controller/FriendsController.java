@@ -20,23 +20,26 @@
  */
 package com.restdude.domain.friends.controller;
 
-import com.restdude.mdd.controller.PageableUtil;
 import com.restdude.domain.friends.model.Friendship;
+import com.restdude.domain.friends.model.FriendshipIdentifier;
 import com.restdude.domain.friends.model.FriendshipStatus;
 import com.restdude.domain.friends.service.FriendshipService;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.mdd.util.ParameterMapBackedPageRequest;
+import com.restdude.mdd.controller.PageableUtil;
+import com.restdude.mdd.specifications.SpecificationsBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -49,10 +52,11 @@ import java.util.Map;
 @RestController
 @Api(tags = "Friends", description = "Friend searches")
 @RequestMapping(value = "/api/rest/friends", produces = { "application/json", "application/xml" })
-public class FriendsController {
+public class FriendsController implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FriendsController.class);
 
+    private SpecificationsBuilder<Friendship, FriendshipIdentifier> specificationsBuilder;
     @Autowired
     protected HttpServletRequest request;
 
@@ -64,6 +68,10 @@ public class FriendsController {
     @Qualifier("userService")
     UserService userService;
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.specificationsBuilder = new SpecificationsBuilder<>(Friendship.class, this.friendshipService.getConversionService());
+    }
 
     @RequestMapping(value = {"my" }, method = RequestMethod.GET)
     @ApiOperation(value = "Find all friends (paginated)", notes = "Find all friends of the current user. Returns paginated results")
@@ -72,11 +80,10 @@ public class FriendsController {
             @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
-            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
         // validate status
         status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.SENT, FriendshipStatus.PENDING, FriendshipStatus.CONFIRMED, FriendshipStatus.BLOCK});
-        return this.findFriendsPaginated(this.friendshipService.getPrincipal().getPk(), status, page, size, sort, direction);
+        return this.findFriendsPaginated(this.friendshipService.getPrincipal().getPk(), status, page, size, sort);
     }
 
     @RequestMapping(value = {"{friendId}"}, method = RequestMethod.GET)
@@ -87,8 +94,7 @@ public class FriendsController {
             @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
-            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
         // validate targget friend
 //		FriendshipIdentifier friendshipId = new FriendshipIdentifier(this.friendshipService.getPrincipal().getIdentifier(), friendId);
@@ -102,7 +108,7 @@ public class FriendsController {
         // validate status
         status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.CONFIRMED});
 
-        return this.findFriendsPaginated(friendId, status, page, size, sort, direction);
+        return this.findFriendsPaginated(friendId, status, page, size, sort);
     }
 
 
@@ -111,18 +117,17 @@ public class FriendsController {
             String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
-            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
         Map<String, String[]> parameters = new HashMap<String, String[]>();
         parameters.put("pk.left.pk", new String[]{targetId});
         parameters.put("status", status);
 
-        ParameterMapBackedPageRequest pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
+        Pageable pageable = PageableUtil.buildPageable(page, size, sort);
 
-        LOGGER.debug("Build pageable {}", pageable.getParameterMap());
-        MapUtils.verbosePrint(System.out, "pageable", pageable.getParameterMap());
-        Page<Friendship> friendshipPage = this.friendshipService.findPaginated(pageable);
+        Specification<Friendship> spec = this.specificationsBuilder.<Friendship>build(parameters);
+
+        Page<Friendship> friendshipPage = this.friendshipService.findPaginated(spec, pageable);
         LOGGER.debug("Found {} friendships for status {}", friendshipPage.getTotalElements(), status);
         // TODO: move DTO selection to query
         List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());

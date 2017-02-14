@@ -21,8 +21,8 @@
 package com.restdude.mdd.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.restdude.jsonapi.JsonApiDocument;
-import com.restdude.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.JsonApiDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiResource;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.service.PersistableModelService;

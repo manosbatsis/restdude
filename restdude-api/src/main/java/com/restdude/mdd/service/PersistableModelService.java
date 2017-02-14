@@ -24,7 +24,6 @@ package com.restdude.mdd.service;
 import com.restdude.mdd.model.MetadatumModel;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.UploadedFileModel;
-//import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +35,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+//import com.restdude.domain.users.model.User;
 
 /**
  * Provides SCRUD and utility operations for {@link T} entities
@@ -49,7 +50,6 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
         extends ModelService<T, PK> {
 
     String PRE_AUTHORIZATION_PREFIX = "SERVICE_";
-
 
     void addMetadatum(PK subjectId, MetadatumModel dto);
 

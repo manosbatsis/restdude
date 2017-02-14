@@ -18,21 +18,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi.support;
+package com.restdude.hypermedia.jsonapi.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.jsonapi.JsonApiDocument;
-import com.restdude.jsonapi.JsonApiResource;
-import com.restdude.jsonapi.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.hypermedia.jsonapi.JsonApiDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.mdd.model.ErrorModel;
 import com.restdude.mdd.model.Model;
 import org.springframework.hateoas.Link;
-import com.restdude.mdd.model.ErrorModel;
 import org.springframework.hateoas.ResourceSupport;
 
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract base class implementation of {@JsonApiDocument}

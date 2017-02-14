@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi;
+package com.restdude.hypermedia.jsonapi;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.mdd.model.Model;
 import com.restdude.mdd.model.ErrorModel;
+import com.restdude.mdd.model.Model;
 import org.springframework.hateoas.Link;
 
 import java.io.Serializable;

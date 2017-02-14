@@ -18,30 +18,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.util;
+package com.restdude.hypermedia.jsonapi;
 
+import com.restdude.mdd.model.Model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
 
-import java.util.List;
 /**
- * 
- * Extends spring's PageImpl to add JsonCreator. Makes it easy for Jackson to use for de-serialization. 
+ * A Document that may contain up to a single Resource according to JSON API 1.1
  *
- * @param <T>
+ * @param <D> the JSON API Resource type
+ * @param <T> the JSON API Resource model type
+ * @param <PK> the JSON API Resource model key type
+ *
  */
-public class PageImpl<T> extends org.springframework.data.domain.PageImpl<T>{
-
-	/**
-	 * Creates a new {@link PageImpl} with the given content. This will result in the created {@link Page} being identical
-	 * to the entire {@link List}.
-	 * 
-	 * @param content must not be {@literal null}.
-	 */
-	@JsonCreator
-	public PageImpl(@JsonProperty("content") List<T> content) {
-		super(content);
-	}
+public interface JsonApiResourceDocument<D extends JsonApiResource<T, PK>, T extends Model<PK>, PK extends Serializable> extends JsonApiDocument<D, T, PK> {
 
 }

@@ -22,9 +22,9 @@ package com.restdude.mdd.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.restdude.jsonapi.JsonApiModelCollectionDocument;
-import com.restdude.jsonapi.JsonApiModelDocument;
-import com.restdude.jsonapi.util.JsonApiUtils;
+import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
+import com.restdude.hypermedia.jsonapi.util.JsonApiUtils;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.model.Model;
 import com.restdude.mdd.model.PersistableModel;
@@ -37,6 +37,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -164,10 +165,10 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     public PagedResources<T> plainJsonGetPage(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
-            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
-        return this.toHateoasPagedResources(super.findPaginated(page, size, sort, direction));
+        Pageable pageable = PageableUtil.buildPageable(page, size, sort);
+        return this.toHateoasPagedResources(super.findPaginated(pageable));
     }
 
     @RequestMapping(method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
@@ -176,10 +177,10 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetPage(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,
-            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
+            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
-        return toDocument(super.findPaginated(page, size, sort, direction));
+        Pageable pageable = PageableUtil.buildPageable(page, size, sort);
+        return toDocument(super.findPaginated(pageable));
     }
 
     @RequestMapping(value = "{pk}", method = RequestMethod.GET)

@@ -22,15 +22,15 @@ package com.restdude.mdd.service;
 
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
-import com.restdude.mdd.model.*;
+import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.specifications.SpecificationUtils;
-import com.restdude.mdd.specifications.SpecificationsBuilder;
-import com.restdude.mdd.util.ParameterMapBackedPageRequest;
+import lombok.NonNull;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,23 +59,17 @@ import java.util.*;
  */
 public abstract class AbstractPersistableModelServiceImpl<T extends PersistableModel<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
         extends AbstractBaseServiceImpl
-        implements PersistableModelService<T, PK>, InitializingBean {
+        implements PersistableModelService<T, PK>{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistableModelServiceImpl.class);
 
     protected R repository;
-    private SpecificationsBuilder<T, PK> specificationsBuilder;
 
     @Autowired
     public void setRepository(R repository) {
         this.repository = repository;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-        this.specificationsBuilder = new SpecificationsBuilder<T, PK>(this.getDomainClass(), this.getConversionService());
-    }
 
     /**
      * {@inheritDoc}
@@ -85,7 +79,6 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     public Class<T> getDomainClass() {
         return this.repository.getDomainClass();
     }
-
 
     /**
      * {@inheritDoc}
@@ -209,17 +202,10 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
      */
     @Override
     @ModelDrivenPreAuth
-    public Page<T> findPaginated(Pageable pageable) {
-        Assert.notNull(pageable, "page request can't be null");
+    public Page<T> findPaginated(Specification<T> spec, @NonNull Pageable pageable) {
         LOGGER.debug("findPaginated, pageable: {}", pageable);
 
-        // if
-        if (pageable instanceof ParameterMapBackedPageRequest) {
-            @SuppressWarnings("unchecked")
-            Map<String, String[]> params = ((ParameterMapBackedPageRequest) pageable).getParameterMap();
-            Specification<T> spec = this.specificationsBuilder.<T>build(params);
-
-            LOGGER.debug("findPaginated, spec: {}", spec);
+        if (spec != null) {
             return this.repository.findAll(spec, pageable);
         } else {
             return this.repository.findAll(pageable);

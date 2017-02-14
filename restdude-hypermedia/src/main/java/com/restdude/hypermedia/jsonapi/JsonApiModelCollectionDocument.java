@@ -18,37 +18,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi;
+package com.restdude.hypermedia.jsonapi;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.restdude.jsonapi.support.SimpleModelResource;
 import com.restdude.mdd.model.Model;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
- * A Resource as defined in JSON API 1.1. Deserialized as a @link SimpleModelResource} by default
+ * A Document that may contain multiple model-based Resources according to JSON API 1.1
  *
  * @param <T> the JSON API Resource model type
  * @param <PK> the JSON API Resource model key type
+ *
  */
-@JsonDeserialize(as=SimpleModelResource.class)
-public interface JsonApiResource<T extends Model<PK>, PK extends Serializable> extends LinksModel {
+public interface JsonApiModelCollectionDocument<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceCollectionDocument<Collection<JsonApiResource<T, PK>>, T, PK> {
 
-    @JsonGetter("id")
-    PK getIdentifier();
-
-    @JsonGetter("type")
-    String getType();
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(value = { "pk", "links" })
-    T getAttributes();
-
-    @JsonProperty
-    void setAttributes(T attributes);
 }

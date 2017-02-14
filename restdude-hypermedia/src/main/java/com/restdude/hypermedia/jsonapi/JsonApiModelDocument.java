@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi;
+package com.restdude.hypermedia.jsonapi;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.restdude.jsonapi.support.SimpleModelDocument;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelDocument;
 import com.restdude.mdd.model.Model;
 
 import java.io.Serializable;

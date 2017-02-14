@@ -34,7 +34,7 @@
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.2.1.Final" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.hateoas:spring-hateoas:0.23.0.RELEASE" level="project" />
-    <orderEntry type="module" module-name="restdude-jsonapi" />
+    <orderEntry type="module" module-name="restdude-hypermedia" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.5" level="project" />
     <orderEntry type="module" module-name="restdude-util" />
     <orderEntry type="library" name="Maven: commons-configuration:commons-configuration:1.9" level="project" />

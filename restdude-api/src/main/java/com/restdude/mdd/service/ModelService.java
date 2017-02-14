@@ -23,6 +23,8 @@ package com.restdude.mdd.service;
 import com.restdude.mdd.model.PersistableModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -129,10 +131,11 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
     /**
      * Find resources page-by-page
      *
+     * @param spec the query specification
      * @param pageRequest page request
      * @return resources
      */
-    Page<T> findPaginated(Pageable pageRequest);
+    Page<T> findPaginated(Specification<T> spec, Pageable pageRequest);
 
     /**
      * Count all resources.

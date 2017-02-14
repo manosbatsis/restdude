@@ -18,12 +18,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.jsonapi.util;
+package com.restdude.hypermedia.jsonapi.util;
 
-import com.restdude.jsonapi.*;
-import com.restdude.jsonapi.support.SimpleModelCollectionDocument;
-import com.restdude.jsonapi.support.SimpleModelDocument;
-import com.restdude.jsonapi.support.SimpleModelResource;
+import com.restdude.hypermedia.jsonapi.JsonApiDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelCollectionDocument;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelDocument;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
 import com.restdude.mdd.model.Model;
 import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;

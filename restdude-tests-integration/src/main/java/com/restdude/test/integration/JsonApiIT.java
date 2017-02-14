@@ -21,8 +21,8 @@
 package com.restdude.test.integration;
 
 import com.restdude.domain.users.model.Role;
-import com.restdude.jsonapi.JsonApiModelDocument;
-import com.restdude.jsonapi.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
+import com.restdude.hypermedia.jsonapi.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.test.AbstractControllerIT;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -31,7 +31,8 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @Test(/*singleThreaded = true, */description = "Test JSON API 1.1 compliance")
 @SuppressWarnings("unused")

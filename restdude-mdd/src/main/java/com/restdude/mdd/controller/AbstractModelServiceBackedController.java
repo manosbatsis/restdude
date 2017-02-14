@@ -26,10 +26,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import com.restdude.domain.users.model.User;
-import com.restdude.jsonapi.JsonApiModelCollectionDocument;
-import com.restdude.jsonapi.JsonApiModelDocument;
-import com.restdude.jsonapi.JsonApiResource;
-import com.restdude.jsonapi.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.annotation.model.CurrentPrincipalField;
 import com.restdude.mdd.model.PersistableModel;
@@ -38,7 +38,9 @@ import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.registry.ModelInfoRegistry;
 import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.mdd.specifications.SpecificationsBuilder;
 import com.restdude.mdd.uischema.model.UiSchema;
+import com.restdude.mdd.util.ParamsAwarePageImpl;
 import lombok.NonNull;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -49,6 +51,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.*;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -94,6 +97,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceBackedController.class);
 
     private ModelInfo modelInfo;
+    private SpecificationsBuilder<T, PK> specificationsBuilder;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -125,6 +129,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     public void afterPropertiesSet() throws Exception {
         this.modelType = this.service.getDomainClass();
         this.isResourceSupport = ResourceSupport.class.isAssignableFrom(this.modelType);
+        this.specificationsBuilder = new SpecificationsBuilder<T, PK>(this.modelType, this.service.getConversionService());
     }
 
     /**
@@ -268,11 +273,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
 
 
     
-    protected Page<T> findPaginated(
-            Integer page,
-            Integer size,
-            String sort,
-            String direction) {
+    protected ParamsAwarePageImpl<T> findPaginated(Pageable pageable) {
         // TODO: add support for query dialects: RequestParam MultiValueMap<String, String> httpParams
         /*
         MultivaluedHashMap<String, String> queryParams = new MultivaluedHashMap<>();
@@ -296,8 +297,10 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
                 LOGGER.debug("Skipping CurrentPrincipalField");
             }
         }
+        Map<String, String[]> params = request.getParameterMap();
+        Page<T> tmp = buildPage(pageable, params, applyCurrentPrincipalIdPredicate);
 
-        return buildPage(page, size, sort, direction, request.getParameterMap(), applyCurrentPrincipalIdPredicate);
+        return new ParamsAwarePageImpl<T>(params, tmp.getContent(), pageable, tmp.getTotalElements());
     }
 
 
@@ -340,8 +343,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return schema;
     }
 
-    protected Page<T> buildPage(Integer page, Integer size, String sort,
-                                String direction, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
+    protected Page<T> buildPage(Pageable pageable, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
 
         // add implicit criteria?
         Map<String, String[]> parameters = null;
@@ -368,8 +370,9 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
             parameters = paramsMap;
         }
 
-        Pageable pageable = PageableUtil.buildPageable(page, size, sort, direction, parameters);
-        return this.service.findPaginated(pageable);
+        Specification<T> spec = this.specificationsBuilder.<T>build(parameters);
+
+        return this.service.findPaginated(spec, pageable);
 
     }
 
