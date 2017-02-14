@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.users.model;
 
-import com.restdude.domain.metadata.model.AbstractMetadatum;
+import com.restdude.domain.metadata.model.AbstractMetadatumModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -30,7 +30,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user_metadatum")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class UserMetadatum extends AbstractMetadatum<User> {
+public class UserMetadatum extends AbstractMetadatumModel<User> {
 
 	private static final long serialVersionUID = 5885643690209874078L;
 

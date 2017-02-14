@@ -21,7 +21,7 @@
 package com.restdude.domain.error.model;
 
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
-import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
+import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
@@ -42,7 +42,7 @@ import javax.validation.constraints.NotNull;
 @Relation(value = "userAgent", collectionRelation = UserAgent.API_PATH)
 @Entity
 @Table(name = "user_agent")
-public class UserAgent extends AbstractAssignedIdPersistableResource<String> {
+public class UserAgent extends AbstractAssignedIdPersistableModel<String> {
 
     public static final String API_PATH = "userAgents";
 

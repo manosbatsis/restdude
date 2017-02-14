@@ -53,7 +53,7 @@ public interface RestErrorConverter<T> extends Converter<SystemError, T> {
      * Converts the RestError instance into an object that will then be used by an
      * {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter} to render the response body.
      *
-     * @param re the {@code RestError} instance to convert to another object instance 'understood' by other registered
+     * @param re the {@code SystemError} instance to convert to another object instance 'understood' by other registered
      *           {@code HttpMessageConverter} instances.
      * @return an object suited for HTTP response rendering by an {@code HttpMessageConverter}
      */

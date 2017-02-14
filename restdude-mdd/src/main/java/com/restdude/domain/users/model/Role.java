@@ -22,7 +22,7 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -44,7 +44,7 @@ import java.util.Collection;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Relation(value = "role", collectionRelation = "roles")
 @ApiModel(value = "Role", description = "User principal roles. Roles are principals themselves and can be assigned to users.")
-public class Role extends AbstractSystemUuidPersistableResource implements GrantedAuthority {
+public class Role extends AbstractSystemUuidPersistableModel implements GrantedAuthority {
 
 	private static final long serialVersionUID = 3558291745762331656L;
 

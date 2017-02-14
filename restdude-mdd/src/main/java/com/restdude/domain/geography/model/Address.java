@@ -22,7 +22,7 @@ package com.restdude.domain.geography.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
 import javax.persistence.*;
@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
 @ShallowReference
 @Entity
 @Table(name="postal_address")
-public class Address extends AbstractSystemUuidPersistableResource {
+public class Address extends AbstractSystemUuidPersistableModel {
 
     private static final long serialVersionUID = 1L;
 

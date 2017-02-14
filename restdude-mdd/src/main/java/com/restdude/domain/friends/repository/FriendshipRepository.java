@@ -21,9 +21,9 @@
 package com.restdude.domain.friends.repository;
 
 
+import com.restdude.domain.friends.model.FriendshipIdentifier;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.friends.model.Friendship;
-import com.restdude.domain.friends.model.FriendshipId;
 import com.restdude.domain.friends.model.FriendshipStatus;
 import com.restdude.domain.users.model.UserDTO;
 import org.springframework.data.jpa.repository.Query;
@@ -35,7 +35,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 //@JaversSpringDataAuditable
-public interface FriendshipRepository extends ModelRepository<Friendship, FriendshipId> {
+public interface FriendshipRepository extends ModelRepository<Friendship, FriendshipIdentifier> {
 
     static final String SELECT_FRIEND_AS_USERDTO = "select new com.restdude.domain.users.model.UserDTO(friendship.pk.right.pk, "
             + "		friendship.pk.right.firstName, "
@@ -66,7 +66,7 @@ public interface FriendshipRepository extends ModelRepository<Friendship, Friend
     List<String> findAllStompOnlineFriendUsernames(String userId);
 
     @Query("select f.status from Friendship f where f.pk = ?1 ")
-    FriendshipStatus getCurrentStatus(FriendshipId id);
+    FriendshipStatus getCurrentStatus(FriendshipIdentifier id);
 
     @Query(QUERY_FRIEND_USERNAMES_BY_USERID)
     Iterable<String> findAllFriendUsernames(String userId);

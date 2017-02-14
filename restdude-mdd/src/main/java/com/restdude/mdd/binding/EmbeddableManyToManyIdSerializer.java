@@ -24,14 +24,14 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.restdude.mdd.model.EmbeddableManyToManyId;
+import com.restdude.mdd.model.AbstractEmbeddableManyToManyIdentifier;
 
 import java.io.IOException;
 
-public class EmbeddableManyToManyIdSerializer extends JsonSerializer<EmbeddableManyToManyId> {
+public class EmbeddableManyToManyIdSerializer extends JsonSerializer<AbstractEmbeddableManyToManyIdentifier> {
 
     @Override
-    public void serialize(EmbeddableManyToManyId id, JsonGenerator gen, SerializerProvider provider)
+    public void serialize(AbstractEmbeddableManyToManyIdentifier id, JsonGenerator gen, SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
         gen.writeString(id.toStringRepresentation());
@@ -39,7 +39,7 @@ public class EmbeddableManyToManyIdSerializer extends JsonSerializer<EmbeddableM
 
     @Override
     public Class handledType() {
-        return EmbeddableManyToManyId.class;
+        return AbstractEmbeddableManyToManyIdentifier.class;
     }
 
 }

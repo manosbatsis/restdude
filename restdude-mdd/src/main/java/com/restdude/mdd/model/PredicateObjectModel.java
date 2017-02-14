@@ -20,26 +20,18 @@
  */
 package com.restdude.mdd.model;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * Created by manos on 25/12/2016.
+ * Interface for predicate value objects
  */
-public interface IEmbeddableManyToManyId<L extends PersistableModel<LPK>, LPK extends Serializable, R extends PersistableModel<RPK>, RPK extends Serializable> {
-    void init(@NotNull String value);
+public interface PredicateObjectModel<O, D extends Serializable> {
 
-    void init(LPK left, @NotNull RPK right);
+	public String getLinkPath();
 
-    void init(L left, @NotNull R right);
+	public O getObject();
 
-    String toStringRepresentation();
+	public D getDisplay();
 
-    L getLeft();
 
-    void setLeft(L left);
-
-    R getRight();
-
-    void setRight(R right);
 }

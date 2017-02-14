@@ -37,7 +37,7 @@ import javax.persistence.Table;
 @Table(name = "geo_locality")
 @ModelResource(pathFragment = "localities", apiName = "Localities", apiDescription = "Locality operations")
 @ApiModel(value = "Locality", description = "A model representing an incorporated city or town political entity")
-public class Locality extends AbstractFormalRegion<Country, String> {
+public class Locality extends AbstractFormalRegionModel<Country, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Locality.class);
 

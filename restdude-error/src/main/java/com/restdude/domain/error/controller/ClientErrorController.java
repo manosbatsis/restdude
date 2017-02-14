@@ -20,16 +20,13 @@
  */
 package com.restdude.domain.error.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.service.ClientErrorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -45,11 +42,7 @@ public class ClientErrorController extends AbstractPersistableModelController<Cl
      * {@inheritDoc}
      */
     @Override
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a new resource")
-    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public ClientError plainJsonPost(@RequestBody ClientError resource) {
+    public ClientError post(@RequestBody ClientError resource) {
         resource.addRequestInfo(this.request);
         return this.service.create(resource);
     }

@@ -20,19 +20,19 @@
  */
 package com.restdude.mdd.binding;
 
-import com.restdude.mdd.model.IEmbeddableManyToManyId;
+import com.restdude.mdd.model.EmbeddableManyToManyIdentifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 
-public class StringToEmbeddableManyToManyIdConverterFactory implements ConverterFactory<String, IEmbeddableManyToManyId> {
+public class StringToEmbeddableManyToManyIdConverterFactory implements ConverterFactory<String, EmbeddableManyToManyIdentifier> {
 
     @Override
-    public <T extends IEmbeddableManyToManyId> Converter<String, T> getConverter(Class<T> targetType) {
+    public <T extends EmbeddableManyToManyIdentifier> Converter<String, T> getConverter(Class<T> targetType) {
         return new StringToEmbeddableManyToManyIdConverter<T>(targetType);
     }
 
     @SuppressWarnings("rawtypes")
-    private final class StringToEmbeddableManyToManyIdConverter<T extends IEmbeddableManyToManyId> implements Converter<String, T> {
+    private final class StringToEmbeddableManyToManyIdConverter<T extends EmbeddableManyToManyIdentifier> implements Converter<String, T> {
 
         private Class targetType;
 

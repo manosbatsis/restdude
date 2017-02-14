@@ -21,7 +21,7 @@
 package com.restdude.domain.geography.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.model.AbstractAssignedIdPersistableResource;
+import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,7 +35,7 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK extends Serializable> extends AbstractAssignedIdPersistableResource<PK> {
+public abstract class AbstractFormalRegionModel<P extends AbstractFormalRegionModel, PK extends Serializable> extends AbstractAssignedIdPersistableModel<PK> {
 
 	private static final String PATH_SEPARATOR = ": ";
 
@@ -54,12 +54,12 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 	@JoinColumn(name="parent")
 	private P parent;
 
-	public AbstractFormalRegion() {
+	public AbstractFormalRegionModel() {
 		super();
 	}
 
 
-    public AbstractFormalRegion(PK pk, String name, P parent) {
+    public AbstractFormalRegionModel(PK pk, String name, P parent) {
         this.setPk(pk);
 		this.name = name;
 		this.parent = parent;
@@ -128,7 +128,7 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 	public int hashCode() {
 		return new HashCodeBuilder()
 				.appendSuper(super.hashCode())
-				.append(AbstractFormalRegion.class)
+				.append(AbstractFormalRegionModel.class)
 				.append(this.getName())
 				.append(this.getPath())
 				.toHashCode();
@@ -136,8 +136,8 @@ public abstract class AbstractFormalRegion<P extends AbstractFormalRegion, PK ex
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof AbstractFormalRegion) {
-			final AbstractFormalRegion other = (AbstractFormalRegion) obj;
+		if (obj instanceof AbstractFormalRegionModel) {
+			final AbstractFormalRegionModel other = (AbstractFormalRegionModel) obj;
 			return new EqualsBuilder()
 					.append(this.getName(), other.getName())
 					.append(this.getPath(), other.getPath())

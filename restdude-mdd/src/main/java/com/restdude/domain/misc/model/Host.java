@@ -21,7 +21,7 @@
 package com.restdude.domain.misc.model;
 
 import com.restdude.mdd.controller.AbstractPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.mdd.annotation.model.ModelResource;
 import org.javers.core.metamodel.annotation.ShallowReference;
@@ -37,23 +37,9 @@ import java.util.Set;
 @ModelResource(pathFragment = "hosts", controllerSuperClass = AbstractPersistableModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
 @Entity
 @Table(name = "host")
-public class Host extends AbstractSystemUuidPersistableResource {
+public class Host extends AbstractSystemUuidPersistableModel {
 
     private static final long serialVersionUID = -7942906897981646998L;
-
-    public static String SERVICE_PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE = "denyAll";
-
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_COUNT = "denyAll";
 
     @NotNull
     @Column(name = "name", nullable = false, unique = true)

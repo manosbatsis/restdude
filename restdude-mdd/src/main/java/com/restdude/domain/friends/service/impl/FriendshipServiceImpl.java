@@ -23,7 +23,7 @@ package com.restdude.domain.friends.service.impl;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipDTO;
-import com.restdude.domain.friends.model.FriendshipId;
+import com.restdude.domain.friends.model.FriendshipIdentifier;
 import com.restdude.domain.friends.model.FriendshipStatus;
 import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.friends.service.FriendshipService;
@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Named;
 
 @Named(FriendshipService.BEAN_ID)
-public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<Friendship, FriendshipId, FriendshipRepository>
+public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<Friendship, FriendshipIdentifier, FriendshipRepository>
         implements FriendshipService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FriendshipServiceImpl.class);
@@ -74,7 +74,7 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
             throw new RuntimeException("Friendship pk already exists: " + resource.getPk());
         }
         resource.setStatus(FriendshipStatus.CONFIRMED);
-        FriendshipId InverseId = resource.getInverseId();
+        FriendshipIdentifier InverseId = resource.getInverseId();
         if (InverseId == null) {
             throw new RuntimeException("Could not inverse friendship: " + resource);
         }

@@ -32,7 +32,7 @@ import javax.persistence.*;
 @AttributeOverrides({
         @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
 })
-public class Continent extends AbstractFormalRegion<Continent, String> {
+public class Continent extends AbstractFormalRegionModel<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
 

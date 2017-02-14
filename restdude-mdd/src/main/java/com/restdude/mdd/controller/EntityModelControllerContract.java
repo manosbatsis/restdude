@@ -167,7 +167,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * @RequestMapping(method = RequestMethod.GET)
      * @ApiOperation(value = "Search for resources (paginated).", notes = "...")
      * @ModelDrivenPreAuth
-     * Page<T> plainJsonGetPage(
+     * Page<T> buildPage(
      *      @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
      *      @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
      *      @RequestParam(value = "properties", required = false, defaultValue = "pk") String sort,

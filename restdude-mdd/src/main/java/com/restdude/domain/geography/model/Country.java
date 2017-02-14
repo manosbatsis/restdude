@@ -54,7 +54,7 @@ import javax.persistence.*;
 @PreAuthorizeFindByIds(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindAll(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class Country extends AbstractFormalRegion<Continent, String> {
+public class Country extends AbstractFormalRegionModel<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
 

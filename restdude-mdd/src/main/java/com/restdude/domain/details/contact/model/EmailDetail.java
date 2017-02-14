@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(description = "EmailDetail")
 @Table(name = "detail_contact_email")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class EmailDetail extends AbstractContactDetail {
+public class EmailDetail extends AbstractContactDetailModel {
 
     @NotNull
     @Email

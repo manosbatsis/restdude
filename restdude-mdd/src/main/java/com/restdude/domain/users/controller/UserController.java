@@ -20,11 +20,9 @@
  */
 package com.restdude.domain.users.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
 import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.mdd.annotation.controller.ModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
@@ -35,6 +33,7 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -50,8 +49,8 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
 
     @RequestMapping(value = "byUserNameOrEmail/{userNameOrEmail}", method = RequestMethod.GET)
     @ApiOperation(value = "Get one by username or email", notes = "Get the single user with the given username or email.")
-    public User getByUserNameOrEmail(@PathVariable String userNameOrEmail) {
-        return this.service.findOneByUserNameOrEmail(userNameOrEmail);
+    public Resource<User> getByUserNameOrEmail(@PathVariable String userNameOrEmail) {
+        return this.toHateoasResource(this.service.findOneByUserNameOrEmail(userNameOrEmail));
     }
 
     @RequestMapping(value = "{subjectId}/metadata", method = RequestMethod.PUT)
@@ -65,10 +64,7 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
      * Disallow complete PUT as clients keep updating properties to null etc.
      */
     @Override
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    @ApiOperation(value = "Update a resource", hidden = true)
-    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public User plainJsonPut(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User put(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 
@@ -88,20 +84,17 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
      * {@inheritDoc}
      */
     @Override
-    @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
-    @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
-    @JsonView(AbstractSystemUuidPersistableResource.ItemView.class)
-    public User plainJsonPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
-        LOGGER.debug("patch, resource: {}", resource);
+    public User patch(String id, User model) {
+        LOGGER.debug("patch, resource: {}", model);
         UserDetailsModel principal = this.service.getPrincipal();
         LOGGER.debug("patch, principal: {}", principal);
         if (!principal.isAdmin() && !principal.isSiteAdmin()) {
-            resource.setRoles(null);
+            model.setRoles(null);
         }
-        resource.setCredentials(null);
-        resource.setContactDetails(null);
-        resource.setUsername(null);
-        User user = super.plainJsonPatch(id, resource);
+        model.setCredentials(null);
+        model.setContactDetails(null);
+        model.setUsername(null);
+        User user = super.patch(id, model);
         LOGGER.debug("patch, user: {}", user);
         LOGGER.debug("patch, user: {}", user.getClass().getCanonicalName());
         return user;

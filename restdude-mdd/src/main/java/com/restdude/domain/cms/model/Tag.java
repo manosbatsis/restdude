@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.model;
 
-import com.restdude.mdd.model.AbstractCategory;
+import com.restdude.mdd.model.AbstractPersistableCategoryModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -31,7 +31,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "content_tag")
-public class Tag extends AbstractCategory<Tag> {
+public class Tag extends AbstractPersistableCategoryModel<Tag> {
 
 	public Tag(String name) {
 		super(name);

@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(description = "PostalAddressDetail")
 @Table(name = "detail_contact_postaladdress")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class PostalAddressDetail extends AbstractContactDetail {
+public class PostalAddressDetail extends AbstractContactDetailModel {
 
     @NotNull
     @Column(name = "addressline_1", nullable = false, updatable = true)

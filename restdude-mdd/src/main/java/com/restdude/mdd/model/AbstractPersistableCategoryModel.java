@@ -22,21 +22,25 @@ package com.restdude.mdd.model;
 
 import javax.persistence.MappedSuperclass;
 
+
 /**
- * Abstract base persistent class for dynamic bean properties
+ * Resource categories are hierarchical, have aliases and can be used as tags
  */
 @MappedSuperclass
-public abstract class AbstractPredicateType<O extends PredicateObject> extends
-        AbstractSystemUuidPersistableResource {
+public abstract class AbstractPersistableCategoryModel<T extends AbstractPersistableCategoryModel<T>> extends AbstractPersistableHierarchicalModel<T> {
 
-	private static final long serialVersionUID = -1468517690700208260L;
+    private static final long serialVersionUID = -1329254539598110186L;
 
-	private Class<O> objectType;
+    public AbstractPersistableCategoryModel() {
+        super();
+    }
 
-	private String name;
-	private String caption;
-	private String placeholder;
-	private String options;
+    public AbstractPersistableCategoryModel(String name) {
+        super(name);
+    }
 
+    public AbstractPersistableCategoryModel(String name, T parent) {
+        super(name, parent);
+    }
 
 }

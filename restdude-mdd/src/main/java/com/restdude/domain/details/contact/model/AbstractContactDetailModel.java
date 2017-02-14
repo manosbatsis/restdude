@@ -22,7 +22,7 @@ package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.model.PersistableModel;
 
 import javax.persistence.*;
@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @MappedSuperclass
-public abstract class AbstractContactDetail extends AbstractSystemUuidPersistableResource implements PersistableModel<String>, ContactDetail<String> {
+public abstract class AbstractContactDetailModel extends AbstractSystemUuidPersistableModel implements PersistableModel<String>, ContactDetail<String> {
 
 
     @Transient
@@ -52,7 +52,7 @@ public abstract class AbstractContactDetail extends AbstractSystemUuidPersistabl
     @JoinColumn(name = "details_contact_id", nullable = false, updatable = false)
     private ContactDetails contactDetails;
 
-    public AbstractContactDetail() {
+    public AbstractContactDetailModel() {
     }
 
     @Override

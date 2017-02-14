@@ -22,7 +22,7 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -38,7 +38,7 @@ import javax.persistence.*;
         apiName = "UserRegistrationCode", apiDescription = "User registration codes (read-only)")
 @Table(name = "registration_code")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class UserRegistrationCode extends AbstractSystemUuidPersistableResource {
+public class UserRegistrationCode extends AbstractSystemUuidPersistableModel {
 
     private static final long serialVersionUID = 1L;
 

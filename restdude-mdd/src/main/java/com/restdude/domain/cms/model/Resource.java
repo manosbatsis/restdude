@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cms.model;
 
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.model.enums.ResourceProtocol;
 import com.restdude.domain.misc.model.Host;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import static org.apache.commons.lang.CharEncoding.UTF_8;
 @Entity
 @Table(name = "content_resource")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Resource extends AbstractSystemUuidPersistableResource {
+public class Resource extends AbstractSystemUuidPersistableModel {
 
 	private static final long serialVersionUID = -7942906897981646998L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Resource.class);

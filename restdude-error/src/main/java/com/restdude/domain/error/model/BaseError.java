@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.domain.error.ErrorUtil;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
@@ -64,7 +64,7 @@ import java.time.LocalDateTime;
 @PreAuthorizePatch(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
-public class BaseError extends AbstractSystemUuidPersistableResource  implements  PersistableError<String>{
+public class BaseError extends AbstractSystemUuidPersistableModel implements  PersistableError<String>{
     public static final String API_PATH = "allErrors";
 
     @CreatedDate

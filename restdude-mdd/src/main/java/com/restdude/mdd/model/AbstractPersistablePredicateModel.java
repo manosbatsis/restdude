@@ -20,56 +20,22 @@
  */
 package com.restdude.mdd.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
- * Abstract base class for persistent entities with a System UUID primary key
+ * Abstract base persistent class for dynamic bean properties
  */
 @MappedSuperclass
-public abstract class AbstractSystemUuidPersistable extends AbstractPersistable<String> {
+public abstract class AbstractPersistablePredicateModel<V> extends AbstractSystemUuidPersistableModel {
 
-	private static final long serialVersionUID = -5418849804520876406L;
-	
-	@Id
-	@GeneratedValue(generator = "system-uuid")
-	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
-	private String pk;
-	
+	private static final long serialVersionUID = -1468517690700208260L;
 
-	/**
-     * {@inheritDoc}
-     */
-	@Override
-	public String getPk() {
-		return pk;
-	}
+	private String type;
 
-	/**
-     * {@inheritDoc}
-     */
-	public void setPk(String id) {
-		this.pk = id;
-	}
-	
-	/**
-     * {@inheritDoc}
-     */
-	@Override
-    @JsonIgnore
-    public boolean isNew() {
-		return null == getPk();
-	}
+	private String name;
+	private String caption;
+	private String placeholder;
+	private String options;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void preSave() {
 
-    }
 }

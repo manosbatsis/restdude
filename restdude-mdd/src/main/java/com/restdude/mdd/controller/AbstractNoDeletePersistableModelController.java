@@ -47,20 +47,16 @@ public abstract class AbstractNoDeletePersistableModelController<T extends Persi
 
 
     @Override
-	@ApiOperation(hidden = true, value = "Delete a resource (unsupported)")
-	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK id) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
-	@RequestMapping(method = RequestMethod.DELETE)
-	@ApiOperation(hidden = true, value = "Delete all resources (unsupported)")
     public void delete() {
         throw new NotImplementedException("Method is unsupported.");
     }
 
+    // TODO
 	@ApiOperation(hidden = true, value = "Delete an uploaded file")
     @RequestMapping(value = "{subjectId}/uploads/{propertyName}/{id}", method = RequestMethod.DELETE)
     public List deleteById(@PathVariable String subjectId, @PathVariable String propertyName, @PathVariable String id) {

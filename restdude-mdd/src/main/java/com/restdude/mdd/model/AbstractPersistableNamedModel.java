@@ -31,7 +31,8 @@ import javax.validation.constraints.NotNull;
  * A base class for value-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
-public abstract class AbstractNamedResource extends AbstractSystemUuidPersistableResource {
+public abstract class AbstractPersistableNamedModel extends AbstractSystemUuidPersistableModel {
+
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,11 +40,11 @@ public abstract class AbstractNamedResource extends AbstractSystemUuidPersistabl
     @Column(name = "name", length = 500, nullable = false)
 	private String name;
 
-	public AbstractNamedResource() {
+	public AbstractPersistableNamedModel() {
 		super();
 	}
 
-	public AbstractNamedResource(String name) {
+	public AbstractPersistableNamedModel(String name) {
 		this.name = name;
 	}
 
@@ -56,10 +57,10 @@ public abstract class AbstractNamedResource extends AbstractSystemUuidPersistabl
 		if (this == obj) {
 			return true;
 		}
-		if (!AbstractNamedResource.class.isAssignableFrom(obj.getClass())) {
+		if (!AbstractPersistableNamedModel.class.isAssignableFrom(obj.getClass())) {
 			return false;
 		}
-		AbstractNamedResource other = (AbstractNamedResource) obj;
+		AbstractPersistableNamedModel other = (AbstractPersistableNamedModel) obj;
 		EqualsBuilder builder = new EqualsBuilder();
 		builder.appendSuper(super.equals(obj));
 		builder.append(this.getName(), other.getName());

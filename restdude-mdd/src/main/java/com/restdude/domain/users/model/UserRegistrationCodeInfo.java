@@ -21,11 +21,11 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonPropertyOrder({"pk", "available", "username", "batchId", "batchName"})
-public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableResource {
+public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableModel {
 
     private static final long serialVersionUID = 1L;
 

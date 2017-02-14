@@ -28,14 +28,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
-import com.restdude.mdd.model.EmbeddableManyToManyId;
+import com.restdude.mdd.model.AbstractEmbeddableManyToManyIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EmbeddableManyToManyIdDeserializer<T extends EmbeddableManyToManyId> extends JsonDeserializer<T> implements ContextualDeserializer {
+public class EmbeddableManyToManyIdDeserializer<T extends AbstractEmbeddableManyToManyIdentifier> extends JsonDeserializer<T> implements ContextualDeserializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddableManyToManyIdDeserializer.class);
 
@@ -52,7 +52,7 @@ public class EmbeddableManyToManyIdDeserializer<T extends EmbeddableManyToManyId
 
     @Override
     public Class handledType() {
-        return EmbeddableManyToManyId.class;
+        return AbstractEmbeddableManyToManyIdentifier.class;
     }
 
     @Override

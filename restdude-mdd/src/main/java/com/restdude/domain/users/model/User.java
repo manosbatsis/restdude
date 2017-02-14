@@ -34,7 +34,7 @@ import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
-import com.restdude.domain.metadata.model.AbstractMetadataSubject;
+import com.restdude.domain.metadata.model.AbstractMetadataSubjectModel;
 import com.restdude.mdd.model.UserModel;
 import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
@@ -74,7 +74,7 @@ import java.util.Locale;
 @PreAuthorizePatch(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.PERMIT_ALL, service = SpelUtil.PERMIT_ALL)
-public class User extends AbstractMetadataSubject<UserMetadatum> implements UserModel {
+public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements UserModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = -7942906897981646998L;

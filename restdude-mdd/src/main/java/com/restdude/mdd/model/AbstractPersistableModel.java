@@ -56,17 +56,17 @@ import java.io.Serializable;
 @PreAuthorizeFindPaginated
 @PreAuthorizePatch
 @PreAuthorizeUpdate
-public abstract class AbstractPersistable<PK extends Serializable> implements PersistableModel<PK> {
+public abstract class AbstractPersistableModel<PK extends Serializable> implements PersistableModel<PK> {
 
     private static final long serialVersionUID = -6009587976502456848L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistableModel.class);
 
-    public AbstractPersistable() {
+    public AbstractPersistableModel() {
         super();
     }
 
-    public AbstractPersistable(PK pk) {
+    public AbstractPersistableModel(PK pk) {
         this.setPk(pk);
     }
 
@@ -98,10 +98,10 @@ public abstract class AbstractPersistable<PK extends Serializable> implements Pe
         if (this == obj) {
             return true;
         }
-        if (!AbstractPersistable.class.isAssignableFrom(obj.getClass())) {
+        if (!AbstractPersistableModel.class.isAssignableFrom(obj.getClass())) {
             return false;
         }
-        AbstractPersistable other = (AbstractPersistable) obj;
+        AbstractPersistableModel other = (AbstractPersistableModel) obj;
         return new EqualsBuilder()
                 .append(this.getPk(), other.getPk())
                 .isEquals();

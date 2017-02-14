@@ -20,56 +20,68 @@
  */
 package com.restdude.mdd.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Formula;
 
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
- * Abstract base class for persistent HATEOAS entities with a System UUID primary key
+ * Abstract base class for persistent entities with assigned pk
+ * @param <PK> The pk Serializable
  */
 @MappedSuperclass
-public abstract class AbstractSystemUuidPersistableResource extends AbstractPersistableResource<String> {
+public abstract class AbstractAssignedIdPersistableModel<PK extends Serializable> extends AbstractPersistableModel<PK> {
 
-    private static final long serialVersionUID = -5418849804520876406L;
+	private static final long serialVersionUID = 4340156130534111231L;
 
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    private String pk;
+	@Id
+    private PK pk;
 
+	@Formula(" (pk) ")
+    private PK savedPk;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getPk() {
+    public AbstractAssignedIdPersistableModel() {
+
+    }
+
+    public AbstractAssignedIdPersistableModel(PK pk) {
+        this.pk = pk;
+	}
+	
+	/**
+	 *{@inheritDoc}
+	 */
+	@Override
+    public PK getPk() {
         return pk;
-    }
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setPk(String id) {
-        this.pk = id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 *{@inheritDoc}
+	 */
     @Override
-    @JsonIgnore
-    public boolean isNew() {
-        return null == getPk();
-    }
+    public void setPk(PK pk) {
+        this.pk = pk;
+	}
 
-    /**
-     * {@inheritDoc}
+
+    private PK getSavedPk() {
+        return savedPk;
+	}
+
+	/**
+     * @inheritDoc}
      */
-    @Override
-    public void preSave() {
+	@Override
+	public boolean isNew() {
+		return null == getSavedPk();
+	}
 
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void preSave() {
+
+	}
 }

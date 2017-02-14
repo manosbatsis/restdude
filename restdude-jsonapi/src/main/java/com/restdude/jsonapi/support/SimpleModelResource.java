@@ -42,12 +42,22 @@ public class SimpleModelResource<T extends Model<PK>, PK extends Serializable> e
     private String type;
     private T attributes;
 
-    public SimpleModelResource(){
+    private SimpleModelResource(){
     }
 
     public SimpleModelResource(@NonNull T attributesModel, @NonNull String type){
         this.attributes = attributesModel;
         this.identifier = attributesModel.getPk();
+        this.type = type;
+    }
+
+    @JsonCreator
+    public SimpleModelResource(
+            @JsonProperty("id") PK identifier,
+            @NonNull @JsonProperty("attributes") T attributes,
+            @NonNull @JsonProperty("type") String type){
+        this.identifier = identifier;
+        this.attributes = attributes;
         this.type = type;
     }
 

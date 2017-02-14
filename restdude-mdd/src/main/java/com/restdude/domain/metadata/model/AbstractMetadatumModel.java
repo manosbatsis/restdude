@@ -21,7 +21,7 @@
 package com.restdude.domain.metadata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.model.MetadataSubjectModel;
 import com.restdude.mdd.model.MetadatumModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -38,8 +38,8 @@ import javax.validation.constraints.NotNull;
 @Table(uniqueConstraints = { 
 		@UniqueConstraint(columnNames = { "subject", "predicate" }) 
 	})
-public abstract class AbstractMetadatum<S extends MetadataSubjectModel>
-        extends AbstractSystemUuidPersistableResource implements MetadatumModel<S> {
+public abstract class AbstractMetadatumModel<S extends MetadataSubjectModel>
+        extends AbstractSystemUuidPersistableModel implements MetadatumModel<S> {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 
@@ -56,11 +56,11 @@ public abstract class AbstractMetadatum<S extends MetadataSubjectModel>
 	@Column(name = "object")
 	private String object;
 
-	public AbstractMetadatum() {
+	public AbstractMetadatumModel() {
 		super();
 	}
 
-	public AbstractMetadatum(S subject, String predicate, String object) {
+	public AbstractMetadatumModel(S subject, String predicate, String object) {
 		super();
 		this.predicate = predicate;
 		this.object = object;
@@ -77,11 +77,11 @@ public abstract class AbstractMetadatum<S extends MetadataSubjectModel>
 		if (this == obj) {
 			return true;
 		}
-		if (!AbstractMetadatum.class.isInstance(obj)) {
+		if (!AbstractMetadatumModel.class.isInstance(obj)) {
 			return false;
 		}
 		@SuppressWarnings("rawtypes")
-		AbstractMetadatum that = (AbstractMetadatum) obj;
+        AbstractMetadatumModel that = (AbstractMetadatumModel) obj;
 		return new EqualsBuilder()
 				.append(this.getSubject(), that.getSubject())
 				.append(this.getPredicate(), that.getPredicate()).isEquals();

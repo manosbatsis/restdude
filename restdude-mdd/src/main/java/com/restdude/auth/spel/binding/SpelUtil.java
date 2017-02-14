@@ -69,7 +69,7 @@ public class SpelUtil {
         METHOD_SPEL_ANNOTATIONS.put("plainJsonGetById", PreAuthorizeFindById.class);
         METHOD_SPEL_ANNOTATIONS.put("plainJsonGetByIds", PreAuthorizeFindByIds.class);
 
-        METHOD_SPEL_ANNOTATIONS.put("plainJsonGetPage", PreAuthorizeFindPaginated.class);
+        METHOD_SPEL_ANNOTATIONS.put("buildPage", PreAuthorizeFindPaginated.class);
 
 
         METHOD_SPEL_ANNOTATIONS.put("addMetadatum", PreAuthorizePatch.class);

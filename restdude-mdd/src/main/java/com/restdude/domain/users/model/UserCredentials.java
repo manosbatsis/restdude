@@ -27,7 +27,7 @@ import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.mdd.binding.SkipPropertySerializer;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
-import com.restdude.mdd.model.AbstractPersistableResource;
+import com.restdude.mdd.model.AbstractPersistableModel;
 import com.restdude.domain.users.validation.UserRegistrationCodeConstraint;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -57,7 +57,7 @@ import java.time.LocalDateTime;
 @PreAuthorizePatch(controller = SpelUtil.DENY_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.DENY_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN)
-public class UserCredentials extends AbstractPersistableResource<String> {
+public class UserCredentials extends AbstractPersistableModel<String> {
 
     private static final long serialVersionUID = 1L;
 

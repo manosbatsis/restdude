@@ -91,7 +91,7 @@ public class FriendsController {
             @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction) {
 
         // validate targget friend
-//		FriendshipId friendshipId = new FriendshipId(this.friendshipService.getPrincipal().getIdentifier(), friendId);
+//		FriendshipIdentifier friendshipId = new FriendshipIdentifier(this.friendshipService.getPrincipal().getIdentifier(), friendId);
 //		Friendship friendship = this.friendshipService.findById(friendshipId);
 //		if(friendship == null 
 //				|| !(FriendshipStatus.CONFIRMED.equals(friendship.getStatus())

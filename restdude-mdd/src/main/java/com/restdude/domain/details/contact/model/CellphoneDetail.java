@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(description = "CellphoneDetail")
 @Table(name = "detail_contact_cellphone")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class CellphoneDetail extends AbstractContactDetail {
+public class CellphoneDetail extends AbstractContactDetailModel {
 
     @Email
     @NotNull

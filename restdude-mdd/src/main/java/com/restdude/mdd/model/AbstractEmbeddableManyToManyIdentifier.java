@@ -23,10 +23,10 @@ package com.restdude.mdd.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.restdude.domain.friends.model.FriendshipIdentifier;
 import com.restdude.mdd.binding.EmbeddableManyToManyIdDeserializer;
 import com.restdude.mdd.binding.EmbeddableManyToManyIdSerializer;
 import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
-import com.restdude.domain.friends.model.FriendshipId;
 import com.restdude.mdd.util.EntityUtil;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -58,10 +58,10 @@ import java.io.Serializable;
 @MappedSuperclass
 @JsonSerialize(using = EmbeddableManyToManyIdSerializer.class)
 @JsonDeserialize(using = EmbeddableManyToManyIdDeserializer.class)
-public abstract class EmbeddableManyToManyId<L extends PersistableModel<LPK>, LPK extends Serializable, R extends PersistableModel<RPK>, RPK extends Serializable> implements Serializable, IEmbeddableManyToManyId<L, LPK, R, RPK> {
+public abstract class AbstractEmbeddableManyToManyIdentifier<L extends PersistableModel<LPK>, LPK extends Serializable, R extends PersistableModel<RPK>, RPK extends Serializable> implements Serializable, EmbeddableManyToManyIdentifier<L, LPK, R, RPK> {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddableManyToManyId.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractEmbeddableManyToManyIdentifier.class);
 
     public static final String SPLIT_CHAR = "_";
 
@@ -78,19 +78,19 @@ public abstract class EmbeddableManyToManyId<L extends PersistableModel<LPK>, LP
     @ManyToOne(optional = false)
     private R right;
 
-    public EmbeddableManyToManyId() {
+    public AbstractEmbeddableManyToManyIdentifier() {
     }
 
-    public EmbeddableManyToManyId(@NotNull String value) {
+    public AbstractEmbeddableManyToManyIdentifier(@NotNull String value) {
         init(value);
     }
 
-    public EmbeddableManyToManyId(LPK left, @NotNull RPK right) {
+    public AbstractEmbeddableManyToManyIdentifier(LPK left, @NotNull RPK right) {
         init(left, right);
     }
 
 
-    public EmbeddableManyToManyId(L left, @NotNull R right) {
+    public AbstractEmbeddableManyToManyIdentifier(L left, @NotNull R right) {
         init(left, right);
     }
 
@@ -109,8 +109,8 @@ public abstract class EmbeddableManyToManyId<L extends PersistableModel<LPK>, LP
         if (obj == null) {
             return false;
         }
-        if (FriendshipId.class.isAssignableFrom(obj.getClass())) {
-            final FriendshipId other = (FriendshipId) obj;
+        if (FriendshipIdentifier.class.isAssignableFrom(obj.getClass())) {
+            final FriendshipIdentifier other = (FriendshipIdentifier) obj;
             return new EqualsBuilder().append(EntityUtil.idOrNull(this.getLeft()), EntityUtil.idOrNull(other.getLeft()))
                     .append(EntityUtil.idOrNull(this.getRight()), EntityUtil.idOrNull(other.getRight())).isEquals();
         } else {

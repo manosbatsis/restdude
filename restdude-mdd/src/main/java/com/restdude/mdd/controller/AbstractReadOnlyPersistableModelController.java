@@ -42,25 +42,17 @@ public abstract class AbstractReadOnlyPersistableModelController<T extends Persi
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractReadOnlyPersistableModelController.class);
 
 	@Override
-	@RequestMapping(method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(hidden = true, value = "Create a resource (unsupported)")
-    public T plainJsonPost(T resource) {
+    public T post(T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
-    @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
-    @ApiOperation(hidden = true, value = "Update a resource (unsupported)")
-    public T plainJsonPut(PK pk, T resource) {
+    public T put(PK pk, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
-    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
-    @ApiOperation(hidden = true, value = "Perform a partial update (unsupported)")
-    public T plainJsonPatch(PK pk, T resource) {
-
+    public T patch(PK pk, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 

@@ -22,7 +22,7 @@ package com.restdude.domain.friends.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeDelete;
-import com.restdude.mdd.model.AbstractPersistableResource;
+import com.restdude.mdd.model.AbstractPersistableModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -43,7 +43,7 @@ import javax.validation.constraints.NotNull;
 @ModelResource(pathFragment = Friendship.API_PATH, apiName = "Friendships", apiDescription = "Operations about friendships")
 @ApiModel(value = "Friendship", description = Friendship.CLASS_DESCRIPTION)
 @PreAuthorizeDelete(controller = " hasRole('ROLE_USER') ", service = " hasRole('ROLE_USER') ")
-public class Friendship extends AbstractPersistableResource<FriendshipId> {
+public class Friendship extends AbstractPersistableModel<FriendshipIdentifier> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Friendship.class);
     private static final long serialVersionUID = 1L;
@@ -54,7 +54,7 @@ public class Friendship extends AbstractPersistableResource<FriendshipId> {
     @NotNull
     @ApiModelProperty(required = true)
     @EmbeddedId
-    private FriendshipId pk;
+    private FriendshipIdentifier pk;
 
     @ApiModelProperty(required = true, allowableValues = "NEW, CONFIRMED, BLOCK, DELETE")
     @NotNull
@@ -69,7 +69,7 @@ public class Friendship extends AbstractPersistableResource<FriendshipId> {
     public Friendship() {
     }
 
-    public Friendship(FriendshipId id) {
+    public Friendship(FriendshipIdentifier id) {
         this.pk = id;
     }
 
@@ -77,14 +77,14 @@ public class Friendship extends AbstractPersistableResource<FriendshipId> {
         this.status = status;
     }
 
-    public Friendship(FriendshipId id, FriendshipStatus status) {
+    public Friendship(FriendshipIdentifier id, FriendshipStatus status) {
         this(id);
         this.status = status;
     }
 
     public Friendship(User sender, User recipient) {
 
-        this.pk = new FriendshipId();
+        this.pk = new FriendshipIdentifier();
         this.pk.setLeft(sender);
         this.pk.setRight(recipient);
     }
@@ -99,11 +99,11 @@ public class Friendship extends AbstractPersistableResource<FriendshipId> {
     }
 
     @JsonIgnore
-    public FriendshipId getInverseId() {
-        FriendshipId inverse = null;
-        FriendshipId thisId = this.getPk();
+    public FriendshipIdentifier getInverseId() {
+        FriendshipIdentifier inverse = null;
+        FriendshipIdentifier thisId = this.getPk();
         if (thisId != null) {
-            inverse = new FriendshipId();
+            inverse = new FriendshipIdentifier();
             inverse.setLeft(thisId.getRight());
             inverse.setRight(thisId.getLeft());
         }
@@ -122,14 +122,14 @@ public class Friendship extends AbstractPersistableResource<FriendshipId> {
     /**
      * {@inheritDoc}
      */
-    public FriendshipId getPk() {
+    public FriendshipIdentifier getPk() {
         return pk;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setPk(FriendshipId id) {
+    public void setPk(FriendshipIdentifier id) {
         this.pk = id;
     }
 

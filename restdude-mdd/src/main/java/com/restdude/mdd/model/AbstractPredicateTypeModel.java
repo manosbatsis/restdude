@@ -26,11 +26,12 @@ import javax.persistence.MappedSuperclass;
  * Abstract base persistent class for dynamic bean properties
  */
 @MappedSuperclass
-public abstract class AbstractPredicate<V> extends AbstractSystemUuidPersistableResource {
+public abstract class AbstractPredicateTypeModel<O extends PredicateObjectModel> extends
+		AbstractSystemUuidPersistableModel {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 
-	private String type;
+	private Class<O> objectType;
 
 	private String name;
 	private String caption;

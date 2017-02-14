@@ -36,7 +36,7 @@ import java.util.List;
  * A base class for pathFragment-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
-public abstract class AbstractHierarchicalResource<T extends AbstractHierarchicalResource<T>> extends AbstractNamedResource {
+public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPersistableHierarchicalModel<T>> extends AbstractPersistableNamedModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -72,13 +72,13 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 	@OneToMany(mappedBy = "parent", /* cascade=CascadeType.ALL, */ fetch=FetchType.LAZY)
 	private List<T> children = new ArrayList<T>(0);
 
-	public AbstractHierarchicalResource() {
+	public AbstractPersistableHierarchicalModel() {
 		super();
 	}
-	public AbstractHierarchicalResource(String name) {
+	public AbstractPersistableHierarchicalModel(String name) {
 		this.setName(name);
 	}
-	public AbstractHierarchicalResource(String name, T parent) {
+	public AbstractPersistableHierarchicalModel(String name, T parent) {
 		this(name);
 		this.setParent(parent);
 	}
@@ -122,7 +122,7 @@ public abstract class AbstractHierarchicalResource<T extends AbstractHierarchica
 			return false;
 		}
 		
-		AbstractHierarchicalResource other = (AbstractHierarchicalResource) obj;
+		AbstractPersistableHierarchicalModel other = (AbstractPersistableHierarchicalModel) obj;
 		EqualsBuilder builder = new EqualsBuilder();
 		builder.appendSuper(super.equals(obj));
 		builder.append(this.getPath(), other.getPath());

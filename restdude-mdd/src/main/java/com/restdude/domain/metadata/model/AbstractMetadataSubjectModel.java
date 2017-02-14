@@ -23,7 +23,7 @@ package com.restdude.domain.metadata.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.domain.metadata.binding.MetadataMapDeserializer;
 import com.restdude.domain.metadata.binding.MetadatumToStringValueSerializer;
 import com.restdude.mdd.model.MetadataSubjectModel;
@@ -45,8 +45,8 @@ import java.util.Map;
  * annotations
  */
 @MappedSuperclass
-public abstract class AbstractMetadataSubject<M extends MetadatumModel>
-        extends AbstractSystemUuidPersistableResource implements MetadataSubjectModel<M> {
+public abstract class AbstractMetadataSubjectModel<M extends MetadatumModel>
+        extends AbstractSystemUuidPersistableModel implements MetadataSubjectModel<M> {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 
@@ -56,7 +56,7 @@ public abstract class AbstractMetadataSubject<M extends MetadatumModel>
 	@JsonSerialize(contentUsing = MetadatumToStringValueSerializer.class)
 	private Map<String, M> metadata;
 
-	public AbstractMetadataSubject() {
+	public AbstractMetadataSubjectModel() {
 		super();
 	}
 
@@ -96,7 +96,7 @@ public abstract class AbstractMetadataSubject<M extends MetadatumModel>
 	@SuppressWarnings("unchecked")
 	public M addMetadatum(String predicate, String object) {
 		Class<?> metadatumClass = TypeResolver.resolveRawArgument(
-				AbstractMetadataSubject.class, getClass());
+				AbstractMetadataSubjectModel.class, getClass());
 		M metadatum = null;
 		try {
 			metadatum = (M) metadatumClass.getConstructor(String.class,
