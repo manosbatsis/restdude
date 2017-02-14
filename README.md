@@ -60,7 +60,10 @@ PATCH  | /api/rest/hosts/{id} | Partially update the host matching the id
 DELETE | /api/rest/hosts/{id} | Delete the host matching the id
 GET    | /api/rest/hosts/jsonschema | Get the JSONSchema for hosts
 
-The endpoints support both `application/json` and `application/vnd.api+json` content types, with request/response bodies being model-based or [JSON-API-compliant](http://jsonapi.org/format) JSON structures respectively.
+The endpoints support the following content types:
+
+ - `application/json` and `application/hal+json` for HATEOAS Resource response and plain JSON request bodies, with both being based on model structure
+ - `application/vnd.api+json` for [JSON-API](http://jsonapi.org/format)-compliant request/response bodies
 
 ## Behind the Schenes
 

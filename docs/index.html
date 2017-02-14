@@ -124,8 +124,13 @@ isHome: true
         </tr>
         </tbody>
     </table>
-    <p>The endpoints support both <code>application/json</code> and <code>application/vnd.api+json</code> content types, with request/response bodies being model-based or
-        <a href="http://jsonapi.org/format">JSON-API-compliant</a> JSON structures respectively.</p>
+
+    <p>The endpoints support the following content types:</p>
+    <ul>
+        <li><code>application/json</code> and <code>application/hal+json</code> for HATEOAS Resource response and plain JSON request bodies, with both being based on model structure</li>
+        <li><code>application/vnd.api+json</code> for <a href="http://jsonapi.org/format">JSON-API-compliant</a> request/response bodies</li>
+    </ul>
+
 </section>
 
 <section class="bs-docs-section">
@@ -177,9 +182,8 @@ isHome: true
             href="http://docs.spring.io/spring-data/data-jpa/docs/1.7.0.DATAJPA-580-SNAPSHOT/reference/html/auditing.html">Spring
         Data/Hibernate Envers</a> annotations or
         interfaces in your models.
-        Complex auditing is supported via <a href="http://javers.org/documentation/">Javers
+        Complex auditing is supported via <a href="http://javers.org/documentation/">Javers</a>
     </p>
-    .</p>
 
     <h2>Error Management</h2>
 
