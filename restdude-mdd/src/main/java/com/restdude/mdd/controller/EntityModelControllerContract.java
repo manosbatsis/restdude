@@ -21,12 +21,13 @@
 package com.restdude.mdd.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.restdude.mdd.model.PersistableModel;
 import com.restdude.jsonapi.JsonApiDocument;
 import com.restdude.jsonapi.JsonApiResource;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.service.PersistableModelService;
 import org.springframework.data.domain.Page;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -218,7 +219,7 @@ public abstract class EntityModelControllerContract<T extends PersistableModel<P
      * <pre>
      * {@code
      *
-     * @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+     * @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
      * JsonApiDocument<JsonApiResource<T, PK>, T, PK> jsonApiGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk){
      *     //...
      * }

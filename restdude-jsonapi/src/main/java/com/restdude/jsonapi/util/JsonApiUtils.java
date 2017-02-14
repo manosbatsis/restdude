@@ -25,6 +25,8 @@ package com.restdude.jsonapi.util;
  */
 public class JsonApiUtils {
 
-    public static final String JSONAPI_CONTENT_TYPE = "application/vnd.api+json";
+    public static final String MIME_APPLICATION_VND_PLUS_JSON = "application/vnd.api+json";
+    public static final String MIME_APPLICATIOM_HAL_PLUS_JSON = " application/hal+json";
+
 
 }

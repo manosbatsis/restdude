@@ -21,6 +21,7 @@
 package com.restdude.mdd.annotation.controller;
 
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.util.Mimes;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeTypeUtils;
@@ -42,7 +43,8 @@ import java.lang.annotation.*;
 @ResponseBody
 @RequestMapping(
     value = ModelController.MODEL_MAPPING_WILDCARD,
-    produces = MimeTypeUtils.APPLICATION_JSON_VALUE
+    consumes = {MimeTypeUtils.APPLICATION_JSON_VALUE, Mimes.MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE},
+    produces = {MimeTypeUtils.APPLICATION_JSON_VALUE, Mimes.MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE}
 )
 public @interface ModelController {
 

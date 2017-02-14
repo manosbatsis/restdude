@@ -80,7 +80,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistableModelController.class);
 
 
-    @RequestMapping(method = RequestMethod.POST, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new resource")
     @JsonView(Model.ItemView.class)
@@ -90,7 +90,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(model);
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(method = RequestMethod.POST, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a new JSON API Resource")
     @JsonView(Model.ItemView.class)
@@ -105,7 +105,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return this.toDocument(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.PUT, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
@@ -114,7 +114,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
@@ -123,7 +123,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Patch (partially plainJsonPut) a resource given as a JSON API Document", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
@@ -137,14 +137,14 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return this.toDocument(model);
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, params = "page=no")
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     @ModelDrivenPreAuth
     public Resources<T> plainJsonGetAll() {
         return toHateoasResources(super.findAll());
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = "page=no", produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(method = RequestMethod.GET, params = "page=no", consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     public JsonApiModelCollectionDocument jsonApiGetAll() {
 
@@ -156,7 +156,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     }
 
     //@Override
-    @RequestMapping(method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated collection."
             + " Besides the predefined paging properties (page, size, properties, direction) all serialized member names "
             + "of the resource are supported as search criteria in the form of HTTP URL parameters.")
@@ -170,7 +170,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return this.toHateoasPagedResources(super.findPaginated(page, size, sort, direction));
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated JSON API Document.")
     @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetPage(
@@ -182,7 +182,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toDocument(super.findPaginated(page, size, sort, direction));
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.GET)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
@@ -195,7 +195,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
@@ -204,21 +204,21 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toDocument(super.findById(pk));
     }
 
-    @RequestMapping(params = "pks", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(params = "pks", method = RequestMethod.GET)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
     public Resources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
         return this.toHateoasResources(super.findByIds(pks));
     }
 
-    @RequestMapping(params = "pks", method = RequestMethod.GET, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(params = "pks", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
         return toDocument(super.findByIds(pks));
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
@@ -226,7 +226,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         super.delete(pk);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, consumes = JsonApiUtils.JSONAPI_CONTENT_TYPE, produces = JsonApiUtils.JSONAPI_CONTENT_TYPE)
+    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
@@ -234,13 +234,13 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         super.delete(pk);
     }
 
-    @RequestMapping(value = "jsonschema", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "jsonschema", method = RequestMethod.GET, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get JSON Schema", notes = "Get the JSON Schema for the controller entity type")
     public RawJson plainJsonGetJsonSchema() throws JsonProcessingException {
         return super.getJsonSchema();
     }
 
-    @RequestMapping(value = "uischema", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "uischema", method = RequestMethod.GET, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get UI schema", notes = "Get the UI achema for the controller entity type, including fields, use-cases etc.")
     @Deprecated
     public UiSchema plainJsonGetUiSchema() {

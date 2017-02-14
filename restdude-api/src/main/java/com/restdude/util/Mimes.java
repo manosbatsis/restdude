@@ -22,8 +22,6 @@ package com.restdude.util;
 
 import org.springframework.util.MimeType;
 
-import static org.springframework.util.MimeTypeUtils.*;
-
 public class Mimes {
 
     /**
@@ -36,8 +34,20 @@ public class Mimes {
      */
     public final static String APPLICATION_VND_API_PLUS_JSON_VALUE = "application/vnd.api+json";
 
+    /**
+     * Public constant mime type for {@code application/vnd.api+json}.
+     */
+    public final static MimeType MIME_APPLICATIOM_HAL_PLUS_JSON;
+
+    /**
+     * A String equivalent of {@link Mimes#MIME_APPLICATIOM_HAL_PLUS_JSON}.
+     */
+    public static final String MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE = "application/hal+json";
+
     static {
         APPLICATION_VND_API_PLUS_JSON = MimeType.valueOf(APPLICATION_VND_API_PLUS_JSON_VALUE);
+        MIME_APPLICATIOM_HAL_PLUS_JSON = MimeType.valueOf(MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE);
+
     }
 
 }
