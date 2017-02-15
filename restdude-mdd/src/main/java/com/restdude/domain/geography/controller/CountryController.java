@@ -20,17 +20,13 @@
  */
 package com.restdude.domain.geography.controller;
 
-import com.restdude.mdd.annotation.controller.ModelController;
-import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.service.CountryService;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.ExposesResourceFor;
 
-@ModelController
-@ExposesResourceFor(Country.class)
 @Api(tags = "Countries", description = "Operations about countries")
 public class CountryController extends AbstractPersistableModelController<Country, String, CountryService> {
 

@@ -20,22 +20,17 @@
  */
 package com.restdude.config;
 
-import com.restdude.mdd.annotation.controller.ModelController;
+import com.restdude.domain.error.resolver.RestExceptionHandler;
 import com.restdude.mdd.binding.CsvMessageConverter;
 import com.restdude.mdd.binding.CustomEnumConverterFactory;
 import com.restdude.mdd.binding.StringToEmbeddableManyToManyIdConverterFactory;
-import com.restdude.mdd.controller.ModelControllerIgnoringRequestMappingHandlerMapping;
-import com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping;
-import com.restdude.domain.error.resolver.RestExceptionHandler;
 import com.restdude.web.filters.RestRequestNormalizerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.WebMvcRegistrations;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -46,14 +41,11 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.List;
 
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistrations {
+public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegistrations*/ {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
@@ -99,30 +91,6 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
         return builder;
     }
 
-    /**
-     * Custom RequestMappingHandlerMapping used exclusively for Controllers annotated with {@link ModelController}
-     *
-     * @see WebConfig#getRequestMappingHandlerMapping()
-     */
-    @Bean
-    public RequestMappingHandlerMapping modelControllerRequestMappingHandlerMapping() {
-        LOGGER.debug("modelControllerRequestMappingHandlerMapping");
-        ModelControllerRequestMappingHandlerMapping mapping = new ModelControllerRequestMappingHandlerMapping();
-        mapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return mapping;
-    }
-
-    /**
-     * Override the default RequestMappingHandlerMapping to ignore controllers
-     * annotated with {@link ModelController}
-     *
-     * @see WebConfig#modelControllerRequestMappingHandlerMapping()
-     */
-    @Override
-    public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-        return new ModelControllerIgnoringRequestMappingHandlerMapping();
-    }
-
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
@@ -152,6 +120,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
                 .mediaType("xml", MediaType.APPLICATION_XML);
     }
 
+    /*
     @Override
     public RequestMappingHandlerAdapter getRequestMappingHandlerAdapter() {
         return null;
@@ -162,5 +131,6 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcRegistra
         return null;
     }
 
+*/
 
 }

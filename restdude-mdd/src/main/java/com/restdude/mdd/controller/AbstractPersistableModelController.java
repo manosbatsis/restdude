@@ -159,12 +159,15 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     //@Override
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated collection."
-            + " Besides the predefined paging properties (page, size, properties, direction) all serialized member names "
+            + "Predefined paging properties are _pn (page number), _ps (page size) and sort. All serialized member names "
             + "of the resource are supported as search criteria in the form of HTTP URL parameters.")
     @ModelDrivenPreAuth
     public PagedResources<T> plainJsonGetPage(
-            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[1, infinity]", defaultValue = "0")
+            @RequestParam(value = "_pn", required = false, defaultValue = "0") Integer page,
+            @ApiParam(name = "_ps", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
+            @RequestParam(value = "_ps", required = false, defaultValue = "10") Integer size,
+            @ApiParam(name = "sort", value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
@@ -175,8 +178,11 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated JSON API Document.")
     @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetPage(
-            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[1, infinity]", defaultValue = "0")
+            @RequestParam(value = "_pn", required = false, defaultValue = "0") Integer page,
+            @ApiParam(name = "_ps", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
+            @RequestParam(value = "_ps", required = false, defaultValue = "10") Integer size,
+            @ApiParam(name = "sort", value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);

@@ -61,10 +61,8 @@
         </property>
     </bean>
 
-    <bean id="modelHandlerMapping"
-          class="com.restdude.mdd.controller.ModelControllerRequestMappingHandlerMapping"/>
     <bean id="handlerMapping"
-          class="com.restdude.mdd.controller.ModelControllerIgnoringRequestMappingHandlerMapping"/>
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
 
     <mvc:default-servlet-handler/>
 

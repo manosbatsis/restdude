@@ -20,10 +20,10 @@
  */
 package com.restdude.mdd.util;
 
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.validation.CaseSensitive;
 import com.restdude.mdd.annotation.model.ModelRelatedResource;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.validation.CaseSensitive;
 import com.restdude.util.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -61,10 +61,10 @@ public class EntityUtil {
         return (T) parent;
     }
 
-    public static Set<BeanDefinition> findPersistableModels(String scanPackage) {
-        ClassPathScanningCandidateComponentProvider provider = createComponentScanner(Entity.class, Embeddable.class);
-        return provider.findCandidateComponents(scanPackage);
-    }
+	public static Set<BeanDefinition> findPersistableModels(String scanPackage) {
+		ClassPathScanningCandidateComponentProvider provider = createComponentScanner(Entity.class, Embeddable.class);
+		return provider.findCandidateComponents(scanPackage);
+	}
 
 	public static Set<BeanDefinition> findModelResources(String scanPackage) {
 		ClassPathScanningCandidateComponentProvider provider = createComponentScanner(ModelResource.class, ModelRelatedResource.class);

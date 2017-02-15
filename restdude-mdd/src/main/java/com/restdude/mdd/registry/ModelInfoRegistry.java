@@ -22,13 +22,11 @@ package com.restdude.mdd.registry;
 
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
-import com.yahoo.elide.security.checks.Check;
 import lombok.Getter;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -62,6 +60,13 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
         return applicationContext;
     }
 
+    //@Value("${restdude.api.basePath}")
+    private String basePath = "/api/rest";
+
+    //@Value("${restdude.api.defaultParentPath}")
+    private String defaultParentPath = "";
+
+
     private Map<Class<?>, ModelInfo> modelEntries = new HashMap<>();
 
     private Map<Class<?>, Class<?>> handlerModelTypes = new HashMap<>();
@@ -91,6 +96,8 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
     }
 
     protected void scanPackages(String... basePackages) {
+
+        // scan for models
         for (String basePackage : basePackages) {
             Set<BeanDefinition> entityBeanDefs = EntityUtil.findPersistableModels(basePackage);
             for (BeanDefinition beanDef : entityBeanDefs) {
@@ -99,7 +106,6 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
                 this.addEntryFor(modelType);
             }
         }
-
 
         Set<Class<?>> entityTypes = this.entityDictionary.getBindings();
         LOGGER.debug("scanPackages finished, bindings: {}", entityTypes);
@@ -134,14 +140,15 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        LOGGER.debug("postProcessBeanDefinitionRegistry, basePath: {}, defaultParentPath: {}, base packages:: {}", this.basePath, this.defaultParentPath, this.BASEPACKAGES_DEFAULT);
         this.scanPackages(BASEPACKAGES_DEFAULT);
-        ModelBasedComponentGenerator generator = new ModelBasedComponentGenerator();
-        generator.createComponentsFor(this.getEntries(), registry);
+        ModelBasedComponentGenerator generator = new ModelBasedComponentGenerator(registry, this.modelEntries, BASEPACKAGES_DEFAULT, this.basePath, this.defaultParentPath);
+        generator.createComponentsFor();
 
         for(ModelInfo info : this.getEntries()){
             if(!this.handlerModelTypes.containsKey(info.getModelControllerType())){
                 if(info.getModelControllerType() != null && info.getModelType() != null) {
-                    LOGGER.debug("Adding handlerModelType entry: {}:{}", info.getModelControllerType(), info.getModelType());
+                    LOGGER.debug("postProcessBeanDefinitionRegistry, adding handlerModelType entry: {}:{}", info.getModelControllerType(), info.getModelType());
                     this.handlerModelTypes.put(info.getModelControllerType(), info.getModelType());
                 }
             }

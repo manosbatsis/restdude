@@ -22,11 +22,8 @@ package com.restdude.domain.error.controller;
 
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.service.ClientErrorService;
-import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,10 +32,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-
-@ModelController
-@ExposesResourceFor(ClientError.class)
-@Api(tags = "Client Error", description = "Client Error Operations")
 public class ClientErrorController extends AbstractPersistableModelController<ClientError, String, ClientErrorService> {
 
     /**

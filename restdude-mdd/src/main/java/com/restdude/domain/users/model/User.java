@@ -29,12 +29,13 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
+import com.restdude.domain.metadata.model.AbstractMetadataSubjectModel;
+import com.restdude.domain.users.controller.UserController;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
-import com.restdude.domain.metadata.model.AbstractMetadataSubjectModel;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.model.UserModel;
 import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
@@ -65,7 +66,7 @@ import java.util.Locale;
 
 @ShallowReference
 @Entity
-@ModelResource(pathFragment = "")
+@ModelResource(pathFragment = "users", apiDescription = "User management operations", apiName = "Users", controllerSuperClass = UserController.class)
 @ApiModel(description = "Human users")
 @Relation(value = "user", collectionRelation = "users")
 @Table(name = "users")

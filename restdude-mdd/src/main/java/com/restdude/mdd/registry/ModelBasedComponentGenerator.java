@@ -21,13 +21,13 @@
 package com.restdude.mdd.registry;
 
 import com.restdude.mdd.annotation.controller.ModelController;
-import com.restdude.mdd.controller.AbstractPersistableModelController;
-import com.restdude.mdd.repository.ModelRepository;
-import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
-import com.restdude.mdd.service.PersistableModelService;
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.mdd.annotation.model.ModelRelatedResource;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractModelServiceBackedController;
+import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.specifications.AnyToOnePredicateFactory;
 import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.mdd.specifications.SpecificationUtils;
@@ -35,12 +35,13 @@ import com.restdude.mdd.util.CreateClassCommand;
 import com.restdude.mdd.util.JavassistUtil;
 import com.restdude.mdd.util.ModelContext;
 import com.restdude.util.ClassUtils;
+import com.restdude.util.Mimes;
 import io.swagger.annotations.Api;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -57,6 +58,9 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Identifiable;
 import org.springframework.util.Assert;
+import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Named;
 import java.util.*;
@@ -73,27 +77,34 @@ public class ModelBasedComponentGenerator {
 
     private Map<Class<?>, ModelContext> entityModelContextsMap = new HashMap<Class<?>, ModelContext>();
 
-    private List<ModelInfo> modelInfoEntries;
+    private Map<Class<?>, ModelInfo> modelInfoEntries;
+    private BeanDefinitionRegistry registry;
+    private String[] basePackages;
+    private String basePath;
+    private String defaultParentPath;
 
+    public ModelBasedComponentGenerator(BeanDefinitionRegistry registry, Map<Class<?>, ModelInfo> modelInfoEntries, String[] basePackages, String basePath, String defaultParentPath){
+        this.modelInfoEntries = modelInfoEntries;
+        this.registry = registry;
+        this.basePackages = basePackages;
+        this.basePath = basePath;
+        this.defaultParentPath = defaultParentPath;
+    }
     /**
      * Create and register missing model-based components
-     *
-     * @param registry the bean definition registry used by the application context
      */
-    public void createComponentsFor(List<ModelInfo> modelInfoEntries, BeanDefinitionRegistry registry) throws BeansException {
-        this.modelInfoEntries = modelInfoEntries;
+    public void createComponentsFor() throws BeansException {
         try {
             createModelContexts();
-            findExistingBeans(registry);
-            createMissingBeans(registry);
+            findExistingBeans();
+            createMissingBeans();
             LOGGER.info("Completed generation");
         } catch (Exception e) {
             throw new FatalBeanException("Failed generating ApiResources", e);
         }
     }
 
-
-    public void createMissingBeans(BeanDefinitionRegistry registry) throws NotFoundException, CannotCompileException {
+    private void createMissingBeans() throws NotFoundException, CannotCompileException {
 
         for (Class<?> model : this.entityModelContextsMap.keySet()) {
             // TODO: add related, after ensuring we have the necessary parent config set...
@@ -108,19 +119,19 @@ public class ModelBasedComponentGenerator {
 
 
             if (model.isAnnotationPresent(ModelResource.class) || model.isAnnotationPresent(ModelRelatedResource.class)) {
-                createMissingBeans(registry, model, modelContext);
+                createMissingBeans(model, modelContext);
             }
         }
 
     }
 
-    private void createMissingBeans(BeanDefinitionRegistry registry, Class<?> model, ModelContext modelContext)
+    private void createMissingBeans(Class<?> model, ModelContext modelContext)
             throws NotFoundException, CannotCompileException {
         Assert.notNull(modelContext, "No model context was found for model type " + model.getName());
 
-        createRepository(registry, modelContext);
-        createService(registry, modelContext);
-        createController(registry, modelContext);
+        createRepository(modelContext);
+        createService(modelContext);
+        createController(modelContext);
 
     }
 
@@ -182,15 +193,14 @@ public class ModelBasedComponentGenerator {
      * }
      * </pre>
      *
-     * @param registry
      * @param modelContext
      */
-    protected void createController(BeanDefinitionRegistry registry, ModelContext modelContext) {
+    protected void createController(ModelContext modelContext) {
 
         Class<?> controllerClass = null;
         BeanDefinition beanDefinition;
         if (modelContext.getControllerDefinition() == null) {
-            String className = modelContext.getGeneratedClassNamePrefix() + "Controller";
+            String className = "RestdudeGenerated" + modelContext.getGeneratedClassNamePrefix() + "Controller";
             String beanName = StringUtils.uncapitalize(className);
             String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
                     .append(".controller.")
@@ -201,20 +211,41 @@ public class ModelBasedComponentGenerator {
                     modelContext.getControllerSuperClass());
 
             // grab the generic types
-            List<Class<?>> genericTypes = modelContext.getGenericTypes();
-            genericTypes.add(modelContext.getServiceInterfaceType());
-            createControllerCmd.setGenericTypes(genericTypes);
-
-
-            LOGGER.debug("createController, Creating class " + fullClassName +
-                    ", super: " + modelContext.getControllerSuperClass().getName() +
-                    ", genericTypes: " + genericTypes);
-
+            if(ArrayUtils.isNotEmpty(modelContext.getControllerSuperClass().getTypeParameters())){
+                List<Class<?>> genericTypes = modelContext.getGenericTypes();
+                genericTypes.add(modelContext.getServiceInterfaceType());
+                createControllerCmd.setGenericTypes(genericTypes);
+                LOGGER.debug("createController, Creating class " + fullClassName +
+                        ", super: " + modelContext.getControllerSuperClass().getName() +
+                        ", genericTypes: " + genericTypes);
+            }
 
             // add @RestController stereotype annotation
             Map<String, Object> controllerMembers = new HashMap<String, Object>();
             controllerMembers.put("value", beanName);
-            createControllerCmd.addTypeAnnotation(ModelController.class, controllerMembers);
+            createControllerCmd.addTypeAnnotation(RestController.class, controllerMembers);
+
+            // @RequestMapping
+            ModelInfo modelInfo = this.modelInfoEntries.get(modelContext.getModelType());
+            String modelUriComponent = modelInfo.getUriComponent();
+            String modelParentPath = modelInfo.getParentPath(this.defaultParentPath);
+            String modelBasePath = modelInfo.getBasePath(this.basePath);
+            String pattern = new StringBuffer("/")
+                    .append(modelBasePath)
+                    .append("/")
+                    .append(modelParentPath)
+                    .append("/")
+                    .append(modelUriComponent).toString();
+            pattern = pattern.replaceAll("/{2,}", "/");
+            LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
+
+            Map<String, Object> requestMappingMembers = new HashMap<>();
+            requestMappingMembers.put("value", new String[]{pattern});
+            // add JSON and HAL defaults
+            String[] defaultMimes = {MimeTypeUtils.APPLICATION_JSON_VALUE, Mimes.MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE};
+            requestMappingMembers.put("consumes", defaultMimes);
+            requestMappingMembers.put("produces", defaultMimes);
+            createControllerCmd.addTypeAnnotation(RequestMapping.class, requestMappingMembers);
 
             // add HATEOAS links support?
             if (Identifiable.class.isAssignableFrom(modelContext.getModelType())) {
@@ -233,7 +264,7 @@ public class ModelBasedComponentGenerator {
             controllerClass = JavassistUtil.createClass(createControllerCmd);
 
             // add service dependency
-            String serviceDependency = StringUtils.uncapitalise(modelContext.getGeneratedClassNamePrefix()) + "Service";
+            String serviceDependency = StringUtils.uncapitalize(modelContext.getGeneratedClassNamePrefix()) + "Service";
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(controllerClass)
                     .addDependsOn(serviceDependency).setAutowireMode(Autowire.BY_NAME.value()).getBeanDefinition();
 
@@ -247,7 +278,7 @@ public class ModelBasedComponentGenerator {
     }
 
 
-    protected void createService(BeanDefinitionRegistry registry, ModelContext modelContext)
+    protected void createService(ModelContext modelContext)
             throws NotFoundException, CannotCompileException {
         if (modelContext.getServiceDefinition() == null) {
 
@@ -312,7 +343,7 @@ public class ModelBasedComponentGenerator {
         }
     }
 
-    protected void createRepository(BeanDefinitionRegistry registry, ModelContext modelContext)
+    protected void createRepository(ModelContext modelContext)
             throws NotFoundException, CannotCompileException {
         if (modelContext.getRepositoryDefinition() == null) {
             Class<?> repoSUperInterface = ModelRepository.class;
@@ -367,27 +398,43 @@ public class ModelBasedComponentGenerator {
      * Iterate over registered beans to find any manually-created components
      * (Controllers, Services, Repositories) we can skipp from generating.
      *
-     * @param registry
      */
-    protected void findExistingBeans(BeanDefinitionRegistry registry) {
+    protected void findExistingBeans() {
         for (String name : registry.getBeanDefinitionNames()) {
 
             BeanDefinition d = registry.getBeanDefinition(name);
 
-            if (d instanceof AbstractBeanDefinition) {
+            if (d instanceof AbstractBeanDefinition && d.getBeanClassName() != null) {
                 AbstractBeanDefinition def = (AbstractBeanDefinition) d;
-                // if controller
+                Class<?> beanType = ClassUtils.getClass(def.getBeanClassName());
+
+                // if model controller
+                if (beanType.isAnnotationPresent(ModelController.class) || isOfType(def, AbstractModelServiceBackedController.class)) {
+
+                    Class<?> modelType = getaControllerModelType(beanType);
+
+                    ModelContext modelContext = entityModelContextsMap.get(modelType);
+                    if (modelContext != null) {
+                        modelContext.setControllerDefinition(def);
+                    }
+                    else{
+                        throw new RuntimeException("Invalid model type " + modelType.getCanonicalName() + " specified for controller class " + beanType.getCanonicalName() + "");
+                    }
+                }
+                /*
                 if (isOfType(def, AbstractPersistableModelController.class)) {
                     Class<?> entity = GenericTypeResolver.resolveTypeArguments(
-                            ClassUtils.getClass(def.getBeanClassName()), AbstractPersistableModelController.class)[0];
+                            beanType, AbstractPersistableModelController.class)[0];
 
                     ModelContext modelContext = entityModelContextsMap.get(entity);
                     if (modelContext != null) {
                         modelContext.setControllerDefinition(def);
+                        LOGGER.debug("findExistingBeans, found existing model controller class: {}, mapping: {}", beanType.getCanonicalName(), beanType.getAnnotation(RequestMapping.class));
                     }
                 }
+                */
                 // if service
-                if (isOfType(def, AbstractPersistableModelServiceImpl.class)) {
+                else if (isOfType(def, AbstractPersistableModelServiceImpl.class)) {
                     Class<?> entity = GenericTypeResolver
                             .resolveTypeArguments(ClassUtils.getClass(def.getBeanClassName()), PersistableModelService.class)[0];
                     ModelContext modelContext = entityModelContextsMap.get(entity);
@@ -396,7 +443,6 @@ public class ModelBasedComponentGenerator {
                     }
                 }
                 // if repository
-
                 else if (isOfType(def, JpaRepositoryFactoryBean.class) || isOfType(def, JpaRepository.class)) {
                     String repoName = (String) def.getPropertyValues().get("repositoryInterface");
 
@@ -419,6 +465,24 @@ public class ModelBasedComponentGenerator {
         }
     }
 
+    private Class<?> getaControllerModelType(Class<?> controllerType) {
+        Class<?> modelType = null;
+        boolean isModelController = controllerType.isAnnotationPresent(ModelController.class);
+        boolean isControllerSubclass = AbstractModelServiceBackedController.class.isAssignableFrom(controllerType);
+        if(isControllerSubclass){
+            modelType = GenericTypeResolver.resolveTypeArguments(
+                    controllerType, AbstractModelServiceBackedController.class)[0];
+        }
+        else if(isModelController){
+            ModelController ann = controllerType.getAnnotation(ModelController.class);
+            modelType = ann.modelType();
+            if(Object.class.equals(modelType)){
+                throw new RuntimeException("Cannot determine model type for controller class " + controllerType.getCanonicalName() + " as ns class is not a recognized subclass and no modelType was specified in the annotation");
+            }
+        }
+        return modelType;
+    }
+
     /**
      * Checks if the given BeanDefinition extends/impleents the given target
      * type
@@ -437,7 +501,7 @@ public class ModelBasedComponentGenerator {
 
     // @Override
     protected void createModelContexts() throws Exception {
-        List<ModelInfo> modelRegistryEntries = this.modelInfoEntries;
+        Collection<ModelInfo> modelRegistryEntries = this.modelInfoEntries.values();
         for (ModelInfo modelInfo : modelRegistryEntries) {
             Class<?> modelType = modelInfo.getModelType();
             LOGGER.info("Found resource model class {}", modelType.getCanonicalName());

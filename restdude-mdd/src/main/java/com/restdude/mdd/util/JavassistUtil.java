@@ -20,18 +20,27 @@
  */
 package com.restdude.mdd.util;
 
+import com.restdude.mdd.registry.ModelInfo;
+import com.restdude.util.Mimes;
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.Identifiable;
+import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class JavassistUtil {
@@ -87,6 +96,61 @@ public class JavassistUtil {
 			attr.addAnnotation(
 				getTypeAnnotation(ccFile, ccFile.getConstPool(), annotationClass, typeAnnotations.get(annotationClass)));
 		}
+	}
+
+	public static Class<?> getMappedModelControllerClass(Class<?> existingClass, ModelInfo modelInfo, String basePath, String defaultParentPath){
+    	Class<?> newClass = null;
+    	if(org.apache.commons.lang3.StringUtils.isBlank(defaultParentPath)){
+			defaultParentPath = "";
+		}
+		try{
+			ClassPool pool = ClassPool.getDefault();
+			pool.appendClassPath(new ClassClassPath(existingClass));
+			CtClass ctClass = pool.get(existingClass.getName());
+			String beanName = StringUtils.uncapitalize(existingClass.getSimpleName());
+			Map<Class<?>, Map<String, Object>> typeAnnotations = new HashMap<>();
+
+			// @RestController
+			Map<String, Object> restControllerMembers = new HashMap<>();
+			restControllerMembers.put("value", beanName);
+			typeAnnotations.put(RestController.class, restControllerMembers);
+
+			// add HATEOAS links support?
+			if (Identifiable.class.isAssignableFrom(modelInfo.getModelType())) {
+				Map<String, Object> exposesResourceForMembers = new HashMap<>();
+				exposesResourceForMembers.put("value", modelInfo.getModelType());
+				typeAnnotations.put(ExposesResourceFor.class, exposesResourceForMembers);
+			}
+
+			// @RequestMapping
+			String modelUriComponent = modelInfo.getUriComponent();
+			String modelParentPath = modelInfo.getParentPath(defaultParentPath);
+			String modelBasePath = modelInfo.getBasePath(basePath);
+			String pattern = new StringBuffer("/")
+					.append(modelBasePath)
+					.append("/")
+					.append(modelParentPath)
+					.append("/")
+					.append(modelUriComponent).toString();
+			pattern = pattern.replaceAll("/{2,}", "/");
+			LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
+
+			Map<String, Object> requestMappingMembers = new HashMap<>();
+			requestMappingMembers.put("value", new String[]{pattern});
+			// add JSON and HAL defaults
+			String[] defaultMimes = {MimeTypeUtils.APPLICATION_JSON_VALUE, Mimes.MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE};
+			requestMappingMembers.put("consumes", defaultMimes);
+			requestMappingMembers.put("produces", defaultMimes);
+			typeAnnotations.put(RequestMapping.class, requestMappingMembers);
+
+			// add annotations to class
+			addTypeAnnotations(ctClass, typeAnnotations);
+			ctClass.setName(existingClass.getPackage().getName() + ".RestdudeGenerated" + existingClass.getSimpleName());
+			newClass = ctClass.toClass();
+		}catch(Exception e){
+			throw new RuntimeException("Failed to activate ModelController annotated class " + existingClass.getCanonicalName() + ": " + e.getMessage(), e);
+		}
+		return newClass;
 	}
 
     protected static Annotation getTypeAnnotation(ClassFile ccFile, ConstPool constPool, Class<?> annotationClass, Map<String, Object> members) {
@@ -174,7 +238,8 @@ public class JavassistUtil {
 		}
 		return memberVal;
 	}
-	
+
+
     public static Class<?> createClass(CreateClassCommand command) {
         try{
             ClassPool pool = ClassPool.getDefault();
@@ -196,8 +261,9 @@ public class JavassistUtil {
             }
             
             // apply our generic signature
-            impl.setGenericSignature( getGenericSignature(pool, command.getBaseImpl(), command.getInterfaces(), command.getGenericTypes()) );
-
+			if(CollectionUtils.isNotEmpty(command.getGenericTypes())) {
+				impl.setGenericSignature(getGenericSignature(pool, command.getBaseImpl(), command.getInterfaces(), command.getGenericTypes()));
+			}
             // add constructors
             CtConstructor[] constructors = ctBaseImpl.getConstructors();
             if( constructors == null ||  constructors.length == 0){

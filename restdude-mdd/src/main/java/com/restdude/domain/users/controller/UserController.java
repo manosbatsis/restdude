@@ -23,16 +23,13 @@ package com.restdude.domain.users.controller;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.mdd.annotation.controller.ModelController;
 import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
 import com.restdude.mdd.model.UserDetailsModel;
 import com.restdude.util.exception.http.NotImplementedException;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,9 +39,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-@ModelController
-@ExposesResourceFor(User.class)
-@Api(tags = "Users", description = "User management operations")
 public class UserController extends AbstractNoDeletePersistableModelController<User, String, UserService> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
