@@ -56,7 +56,6 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Identifiable;
 import org.springframework.util.Assert;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -248,11 +247,10 @@ public class ModelBasedComponentGenerator {
             createControllerCmd.addTypeAnnotation(RequestMapping.class, requestMappingMembers);
 
             // add HATEOAS links support?
-            if (Identifiable.class.isAssignableFrom(modelContext.getModelType())) {
-                Map<String, Object> exposesResourceForMembers = new HashMap<>();
-                exposesResourceForMembers.put("value", modelContext.getModelType());
-                createControllerCmd.addTypeAnnotation(ExposesResourceFor.class, exposesResourceForMembers);
-            }
+            Map<String, Object> exposesResourceForMembers = new HashMap<>();
+            exposesResourceForMembers.put("value", modelContext.getModelType());
+            createControllerCmd.addTypeAnnotation(ExposesResourceFor.class, exposesResourceForMembers);
+
 
             // set swagger Api annotation
             Map<String, Object> apiMembers = modelContext.getApiAnnotationMembers();

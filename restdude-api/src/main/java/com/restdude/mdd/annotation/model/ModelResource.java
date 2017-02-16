@@ -108,11 +108,7 @@ public @interface ModelResource {
      */
     boolean auditable() default false;
 
-    /**
-     *
-     * Hint to enable (javers auditing b
-     */
-    boolean createMissingModelController() default true;
+    boolean rootLevel() default true;
 
     
 }

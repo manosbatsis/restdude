@@ -22,6 +22,7 @@ package com.restdude.mdd.registry;
 
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
+import com.yahoo.elide.core.EntityDictionary;
 import lombok.Getter;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -112,7 +113,7 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
 
         for(Class<?> entityType : entityTypes){
-            LOGGER.debug("scanPackages finished, entity json name: {}, type: {}", this.entityDictionary.getJsonAliasFor(entityType), entityType);
+            LOGGER.debug("scanPackages finished, entity json name: {}, type: {}, relationships: {}", this.entityDictionary.getJsonAliasFor(entityType), entityType.getCanonicalName(), this.entityDictionary.getRelationships(entityType));
 
         }
     }

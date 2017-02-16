@@ -32,7 +32,6 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,10 +164,7 @@ public abstract class AbstractEmbeddableManyToManyIdentifier<L extends Persistab
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("left", EntityUtil.idOrNull(this.getLeft()))
-                .append("right", EntityUtil.idOrNull(this.getRight()))
-                .toString();
+        return this.toStringRepresentation();
     }
 
 

@@ -32,7 +32,7 @@
     </logger>
 
     <logger name="com.restdude.mdd">
-        <level value="warn"/>
+        <level value="debug"/>
     </logger>
 
     <!--logger name="com.restdude.init">

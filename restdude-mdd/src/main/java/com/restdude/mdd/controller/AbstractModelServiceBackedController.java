@@ -151,9 +151,8 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      */
     protected Resource<T> toHateoasResource(@NonNull T model) {
         Resource<T> resource = new Resource<>(model);
-        if (this.isResourceSupport && model.getPk() != null) {
-            String[] params = {"/api/rest/" + this.getModelInfo() + "/" + model.getPk()};
-            resource.add(this.entityLinks.linkFor(this.modelType, params).withSelfRel());
+        if (model.getPk() != null) {
+            resource.add(this.entityLinks.linkForSingleResource(this.modelType, model.getPk().toString()).withSelfRel());
         }
         return resource;
     }
