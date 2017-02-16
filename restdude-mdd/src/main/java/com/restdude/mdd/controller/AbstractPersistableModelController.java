@@ -163,7 +163,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             + "of the resource are supported as search criteria in the form of HTTP URL parameters.")
     @ModelDrivenPreAuth
     public PagedResources<T> plainJsonGetPage(
-            @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[1, infinity]", defaultValue = "0")
+            @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = "_pn", required = false, defaultValue = "0") Integer page,
             @ApiParam(name = "_ps", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
             @RequestParam(value = "_ps", required = false, defaultValue = "10") Integer size,
@@ -178,10 +178,10 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated JSON API Document.")
     @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetPage(
-            @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[1, infinity]", defaultValue = "0")
-            @RequestParam(value = "_pn", required = false, defaultValue = "0") Integer page,
-            @ApiParam(name = "_ps", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
-            @RequestParam(value = "_ps", required = false, defaultValue = "10") Integer size,
+            @ApiParam(name = "page[number]", value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
+            @RequestParam(value = "page[number]", required = false, defaultValue = "0") Integer page,
+            @ApiParam(name = "page[size]", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
+            @RequestParam(value = "page[size]", required = false, defaultValue = "10") Integer size,
             @ApiParam(name = "sort", value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 
