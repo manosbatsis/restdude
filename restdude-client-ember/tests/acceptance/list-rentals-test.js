@@ -39,6 +39,54 @@ test('should link to contacts page', function (assert) {
   });
 });
 
+test('should link to forgot-password page', function (assert) {
+  visit('/auth/login');
+  click('a:contains("Forgot password")');
+  andThen(function () {
+    assert.equal(currentURL(), '/forgot-password', 'should navigate to forgot-password');
+  });
+});
+
+test('should link to not-found page', function (assert) {
+  visit('/*path');
+  //click('a:contains("Forgot Password")');
+  andThen(function () {
+    assert.equal(currentURL(), '/error/404', 'should navigate to not-found');
+  });
+});
+
+test('should link to server-error page', function (assert) {
+  visit('/auth/500');
+  //click('a:contains("Forgot Password")');
+  andThen(function () {
+    assert.equal(currentURL(), '/auth/500', 'should navigate to not-found');
+  });
+});
+
+test('should link to login page', function (assert) {
+  visit('/auth/login');
+  click('a:contains("Login")');
+  andThen(function () {
+    assert.equal(currentURL(), '/auth/login', 'should navigate to not-found');
+  });
+});
+
+test('should link to register page', function (assert) {
+  visit('/auth/login');
+  click('a:contains("Register Now!")');
+  andThen(function () {
+    assert.equal(currentURL(), '/auth/register', 'should navigate to not-found');
+  });
+});
+
+test('should link to profile page', function (assert) {
+  visit('/accounts/profile');
+  //click('a:contains("Register")');
+  andThen(function () {
+    assert.equal(currentURL(), '/accounts/profile', 'should navigate to not-found');
+  });
+});
+
 test('should initially list 3 rentals', function (assert) {
   visit('/');
   andThen(function () {

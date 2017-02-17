@@ -1,4 +1,4 @@
-App.AuthManager = Ember.Object.extend(BasicAuthenticatable, FacebookAuthenticatable, {
+/*App.AuthManager = Ember.Object.extend(BasicAuthenticatable, FacebookAuthenticatable, {
   init: function() {
     this._super();
     var authToken = Cookies.get("auth_token");
@@ -54,4 +54,4 @@ App.AuthManager = Ember.Object.extend(BasicAuthenticatable, FacebookAuthenticata
       this.setCookies();
     }
   }.observes("authToken")
-});
+});*/

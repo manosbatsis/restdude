@@ -1,3 +1,4 @@
+/*import Ember from 'ember';
 FacebookAuthenticatable = Ember.Mixin.create({
   isAuthenticatedWithFacebook: function() {
     return !Ember.isEmpty(this.get("facebookToken")) && !Ember.isEmpty(this.get("facebookId"));
@@ -22,4 +23,4 @@ FacebookAuthenticatable = Ember.Mixin.create({
       facebookId: null
     });
   }
-});
+});*/

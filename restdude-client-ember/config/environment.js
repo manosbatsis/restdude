@@ -4,7 +4,7 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'super-rentals',
     environment: environment,
-    rootURL: '/',
+    rootURL: '/rentals',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -23,6 +23,24 @@ module.exports = function(environment) {
   baseURL: 'path/to/base/url'
 };
 
+/*ENV.torii = {
+  sessionServiceName: 'session',
+  providers: {
+    'twitter': {
+      requestTokenUri: '/auth/twitter'
+    }
+  }
+};
+
+ENV.torii = {
+  sessionServiceName: 'session',
+  providers: {
+    'facebook': {
+      requestTokenUri: '/auth/facebook'
+    }
+  }
+};
+*/
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;

@@ -13,12 +13,13 @@ Router.map(function() {
     this.route('show', { path: '/:rental_id' });
   });
   this.route('not-found', { path: '/*path' });
-  this.route('server-error', { path: '/error/500' });
+  this.route('server-error', { path: '/auth/500' });
   this.route('login', { path: '/auth/login' });
   this.route('register', { path: '/auth/register' });
   this.route('user');
   this.route('forgot-password');
   this.route('protected');
+  this.route('profile', { path: '/accounts/profile' });
 });
 
 export default Router;
