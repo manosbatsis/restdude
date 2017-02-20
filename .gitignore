@@ -29,8 +29,6 @@ coverage
 # bower
 bower_components
 
-# vendor
-vendor
 
 # temp
 temp
