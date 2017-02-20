@@ -20,9 +20,10 @@
  */
 package com.restdude.mdd.util;
 
-import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.mdd.annotation.model.ModelRelatedResource;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
+import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.util.ClassUtils;
@@ -42,7 +43,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Adapter-ish context class for classes with {@link ModelResource}
@@ -99,8 +103,8 @@ public final class ModelContext {
 	public List<Class<?>> getGenericTypes() {
 		List<Class<?>> genericTypes = new LinkedList<Class<?>>();
 		genericTypes.add(this.getModelType());
-		if (this.getModelIdType() != null) {
-			genericTypes.add(this.getModelIdType());
+		if (this.getModelIdField() != null) {
+			genericTypes.add(this.getModelIdField().getFieldType());
 		}
 		return genericTypes;
 	}
@@ -204,8 +208,8 @@ public final class ModelContext {
     }
 
 
-	public Class<?> getModelIdType() {
-		return this.modelInfo.getIdentifierType();
+	public FieldInfo getModelIdField() {
+		return this.modelInfo.getIdField();
 	}
 
 	public Class<?> getModelType() {

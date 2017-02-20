@@ -22,8 +22,6 @@ package com.restdude.mdd.registry;
 
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
-import com.yahoo.elide.core.EntityDictionary;
-import lombok.Getter;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import javax.persistence.Entity;
 import java.util.*;
 
 /**
@@ -72,8 +69,8 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
     private Map<Class<?>, Class<?>> handlerModelTypes = new HashMap<>();
 
-    @Getter
-    private EntityDictionary entityDictionary = new EntityDictionary();
+    //@Getter
+    //private EntityDictionary entityDictionary = new EntityDictionary(new ConcurrentHashMap());
 
     public void setApplicationContext(ApplicationContext appContext) throws BeansException {
         applicationContext = appContext;
@@ -100,21 +97,12 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
         // scan for models
         for (String basePackage : basePackages) {
-            Set<BeanDefinition> entityBeanDefs = EntityUtil.findPersistableModels(basePackage);
+            Set<BeanDefinition> entityBeanDefs = EntityUtil.findAllModels(basePackage);
             for (BeanDefinition beanDef : entityBeanDefs) {
                 Class<?> modelType = ClassUtils.getClass(beanDef.getBeanClassName());
                 LOGGER.info("Found model class {}", modelType.getCanonicalName());
                 this.addEntryFor(modelType);
             }
-        }
-
-        Set<Class<?>> entityTypes = this.entityDictionary.getBindings();
-        LOGGER.debug("scanPackages finished, bindings: {}", entityTypes);
-
-
-        for(Class<?> entityType : entityTypes){
-            LOGGER.debug("scanPackages finished, entity json name: {}, type: {}, relationships: {}", this.entityDictionary.getJsonAliasFor(entityType), entityType.getCanonicalName(), this.entityDictionary.getRelationships(entityType));
-
         }
     }
 
@@ -131,12 +119,6 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
         // add entry
         this.modelEntries.put(modelClass, entry);
-
-        // if an entity, add to dictionary
-        if(modelClass.isAnnotationPresent(Entity.class)){
-            LOGGER.debug("addEntryFor binding dictionary entity: {}", modelClass);
-            this.entityDictionary.bindEntity(modelClass);
-        }
     }
 
     @Override

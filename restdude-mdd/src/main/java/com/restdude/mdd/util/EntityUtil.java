@@ -39,6 +39,9 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -71,10 +74,23 @@ public class EntityUtil {
 		return provider.findCandidateComponents(scanPackage);
 	}
 
-	private static Set<BeanDefinition> findEntities(String scanPackage) {
+	public static Set<BeanDefinition> findEntities(String... basePackages) {
 		ClassPathScanningCandidateComponentProvider provider = createComponentScanner(Entity.class);
-		return provider.findCandidateComponents(scanPackage);
+		Set<BeanDefinition> entities = new HashSet<>();
+		for (String basePackage : basePackages) {
+			entities.addAll(provider.findCandidateComponents(basePackage));
+		}
+		return entities;
 	}
+	public static Set<BeanDefinition> findAllModels(String... basePackages) {
+		ClassPathScanningCandidateComponentProvider provider = createComponentScanner(Entity.class, ModelResource.class, ModelRelatedResource.class);
+		Set<BeanDefinition> entities = new HashSet<>();
+		for (String basePackage : basePackages) {
+			entities.addAll(provider.findCandidateComponents(basePackage));
+		}
+		return entities;
+	}
+
 
 	public static Set<String> findEntityPackageNames(String... basePackages) {
 		Set<String> pkgs = new HashSet<String>();
@@ -98,7 +114,14 @@ public class EntityUtil {
 		return provider;
     }
 
-    
+    public static BeanInfo getBeanInfo(Class<?> beanType){
+
+		try {
+			return Introspector.getBeanInfo(beanType);
+		} catch (IntrospectionException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	public static String[] getNullPropertyNames (Object source) {
 	    final BeanWrapper src = new BeanWrapperImpl(source);
 	    java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();

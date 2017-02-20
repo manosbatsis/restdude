@@ -26,8 +26,9 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindPaginated;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.annotation.model.CurrentPrincipal;
+import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -51,6 +52,7 @@ import java.time.LocalDateTime;
 @ShallowReference
 @Entity
 @ApiModel(description = "UserRegistrationCodeBatch")
+@ModelResource(pathFragment = "registrationCodeBatches", apiDescription = "User registration code batches", apiName = "Regcode batches")
 @Table(name = "registration_codes_batch")
 @Inheritance(strategy = InheritanceType.JOINED)
 

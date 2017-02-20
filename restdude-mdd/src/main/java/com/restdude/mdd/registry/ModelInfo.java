@@ -22,34 +22,39 @@ package com.restdude.mdd.registry;
 
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.specifications.IPredicateFactory;
-import com.restdude.util.ClassUtils;
+import com.restdude.mdd.util.EntityUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
+
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Contains metadata for a specific Model class.
  */
+@Slf4j
 public class ModelInfo {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModelInfo.class);
+    @Getter private final Class<?> modelType;
+    @Getter private final String packageName;
+    @Getter private final String beansBasePackage;
 
-    @Getter
-    private final Class<?> modelType;
-    @Getter
-    private final String packageName;
-    @Getter
-    private final String beansBasePackage;
-    @Getter
-    private final Class<?> identifierType;
+    @Getter private final String uriComponent;
+    @Getter private final String parentApplicationPath;
+    @Getter private final String basePath;
+    @Getter private FieldInfo idField;
+    @Getter private final Set<String> allFieldNames = new HashSet<>();
+    @Getter private final Set<String> simpleFieldNames = new HashSet<>();
+    @Getter private final Set<String> toOneFieldNames = new HashSet<>();
+    @Getter private final Set<String> toManyFieldNames = new HashSet<>();
 
-    @Getter
-    private final String uriComponent;
-    private final String parentPath;
-    private final String basePath;
+    private final ConcurrentHashMap<String, FieldInfo> fields = new ConcurrentHashMap<>();
 
     @Getter @Setter
     private IPredicateFactory predicateFactory;
@@ -57,29 +62,51 @@ public class ModelInfo {
     private Class<?> modelControllerType;
 
 
-    public ModelInfo(Class<?> modelType) {
-        Assert.notNull(modelType, "Model type is required");
+    public ModelInfo(@NonNull Class<?> modelType) {
 
         // add basic info
         this.modelType = modelType;
         this.packageName = modelType.getPackage().getName();
         this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
-        this.identifierType = ClassUtils.getBeanPropertyType(modelType, "pk", true);
 
-        LOGGER.debug("ModelInfo, domainClass: {}, identifierType: {}", modelType, identifierType);
         // add endpoint info
         ModelResource ar = modelType.getAnnotation(ModelResource.class);
-        //ModelRelatedResource anr = domainClass.getAnnotation(ModelRelatedResource.class);
-
         this.uriComponent = buildUriComponent();
         if(ar != null){
             this.basePath = ar.basePath();
-            this.parentPath = ar.parentPath();
+            this.parentApplicationPath = ar.parentPath();
         }
         else{
             this.basePath = "";
-            this.parentPath = "";
+            this.parentApplicationPath = "";
         }
+
+        // add fields info
+        BeanInfo componentBeanInfo = EntityUtil.getBeanInfo(modelType);
+        PropertyDescriptor[] properties = componentBeanInfo.getPropertyDescriptors();
+        for (int p = 0; p < properties.length; p++) {
+            log.debug("ModelInfo, property: '{}'", properties[p]);
+            if(!"class".equals(properties[p].getName())){
+                FieldInfo fieldInfo = FieldInfo.create(modelType, properties[p]);
+                if(fieldInfo != null){
+                    this.fields.put(fieldInfo.getFieldName(), fieldInfo);
+                    if(fieldInfo.getFieldMappingType().isId()){
+                        this.idField = fieldInfo;
+                    }
+                    else if(fieldInfo.getFieldMappingType().isSimple()){
+                        this.simpleFieldNames.add(fieldInfo.getFieldName());
+                    }
+                    else if(fieldInfo.getFieldMappingType().isToOne()){
+                        this.toOneFieldNames.add(fieldInfo.getFieldName());
+                    }
+                    else if(fieldInfo.getFieldMappingType().isToMany()){
+                        this.toManyFieldNames.add(fieldInfo.getFieldName());
+                    }
+                }
+            }
+        }
+
+        log.debug("ModelInfo, domainClass: {}, idField: {}", modelType, this.idField);
     }
 
     protected String buildUriComponent() {
@@ -93,10 +120,15 @@ public class ModelInfo {
     }
 
     public String getParentPath(String defaultValue) {
-        return StringUtils.isNotEmpty(this.parentPath) ? parentPath : defaultValue;
+        return StringUtils.isNotEmpty(this.parentApplicationPath) ? parentApplicationPath : defaultValue;
     }
 
     public String getBasePath(String defaultValue) {
         return StringUtils.isNotEmpty(this.basePath) ? basePath : defaultValue;
     }
+
+    public FieldInfo getField(String fieldName) {
+        return this.fields.get(fieldName);
+    }
+
 }

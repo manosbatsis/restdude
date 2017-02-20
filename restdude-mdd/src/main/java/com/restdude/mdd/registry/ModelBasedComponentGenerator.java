@@ -62,11 +62,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Named;
+import javax.persistence.Entity;
 import java.util.*;
 
 /**
- * Generates <code>Repository</code>, <code>Service</code> and
- * <code>Controller</code> mdd for classes are annotated with
+ * Generates <code>Repository</code>, <code>Service</code>,
+ * <code>Controller</code> and other components for the given {@link ModelInfo} entries
  * {@link ModelResource} or
  * {@link ModelRelatedResource}.
  */
@@ -88,6 +89,7 @@ public class ModelBasedComponentGenerator {
         this.basePackages = basePackages;
         this.basePath = basePath;
         this.defaultParentPath = defaultParentPath;
+        LOGGER.debug("Initialized with modelInfoEntries: {}", modelInfoEntries);
     }
     /**
      * Create and register missing model-based components
@@ -102,35 +104,33 @@ public class ModelBasedComponentGenerator {
             throw new FatalBeanException("Failed generating ApiResources", e);
         }
     }
+    // @Override
+    protected void createModelContexts() throws Exception {
+        Collection<ModelInfo> modelRegistryEntries = this.modelInfoEntries.values();
+        for (ModelInfo modelInfo : modelRegistryEntries) {
+            Class<?> modelType = modelInfo.getModelType();
+            LOGGER.info("Found resource model class {}", modelType.getCanonicalName());
+            entityModelContextsMap.put(modelType, new ModelContext(modelInfo));
+        }
+    }
 
     private void createMissingBeans() throws NotFoundException, CannotCompileException {
 
         for (Class<?> model : this.entityModelContextsMap.keySet()) {
-            // TODO: add related, after ensuring we have the necessary parent config set...
+            // TODO: add related, after ensuring we have the necessary parent config set
 
             ModelContext modelContext = this.entityModelContextsMap.get(model);
 
-            Class<IPredicateFactory> predicateFactoryType = createPredicateFactory(modelContext);
-            IPredicateFactory predicateFactory = ClassUtils.newInstance(predicateFactoryType);
+            // create *ToOne predicates for JPA specifications
+            createPredicateFactory(modelContext);
 
-            modelContext.setPredicateFactory(predicateFactory);
-            SpecificationUtils.addFactoryForClass(modelContext.getModelType(), predicateFactory);
-
-
+            // create repository, service, and controller components
             if (model.isAnnotationPresent(ModelResource.class) || model.isAnnotationPresent(ModelRelatedResource.class)) {
-                createMissingBeans(model, modelContext);
+                createRepository(modelContext);
+                createService(modelContext);
+                createController(modelContext);
             }
         }
-
-    }
-
-    private void createMissingBeans(Class<?> model, ModelContext modelContext)
-            throws NotFoundException, CannotCompileException {
-        Assert.notNull(modelContext, "No model context was found for model type " + model.getName());
-
-        createRepository(modelContext);
-        createService(modelContext);
-        createController(modelContext);
 
     }
 
@@ -141,30 +141,35 @@ public class ModelBasedComponentGenerator {
      * @param modelContext
      * @see SpecificationUtils#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)
      */
-    protected Class<IPredicateFactory> createPredicateFactory(ModelContext modelContext) {
-        Class<IPredicateFactory> factoryType = null;
-        // only add if not explicitly set
-        if (SpecificationUtils.getPredicateFactoryForClass(modelContext.getModelType()) == null && modelContext.getModelIdType() != null) {
-            String className = "AnyToOne" + modelContext.getGeneratedClassNamePrefix() + "PredicateFactory";
-            String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
-                    .append(".specification.")
-                    .append(className).toString();
+    protected void createPredicateFactory(ModelContext modelContext) {
+        if(modelContext.getModelType().isAnnotationPresent(Entity.class)) {
+            IPredicateFactory predicateFactory = SpecificationUtils.getPredicateFactoryForClass(modelContext.getModelType());
+            // only add if not already set
+            if (predicateFactory == null) {
+                String className = "AnyToOne" + modelContext.getGeneratedClassNamePrefix() + "PredicateFactory";
+                String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
+                        .append(".specification.")
+                        .append(className).toString();
 
-            // gfire up a create command
-            CreateClassCommand createPredicateCmd = new CreateClassCommand(fullClassName,
-                    AnyToOnePredicateFactory.class);
+                // gfire up a create command
+                CreateClassCommand createPredicateCmd = new CreateClassCommand(fullClassName,
+                        AnyToOnePredicateFactory.class);
 
-            // grab the generic types
-            List<Class<?>> genericTypes = modelContext.getGenericTypes();
-            LOGGER.debug("Creating class " + fullClassName +
-                    ", genericTypes: " + genericTypes);
-            createPredicateCmd.setGenericTypes(genericTypes);
+                // grab the generic types
+                List<Class<?>> genericTypes = modelContext.getGenericTypes();
+                LOGGER.debug("createPredicateFactory, Creating class {}, genericTypes: {}", fullClassName, genericTypes);
+                createPredicateCmd.setGenericTypes(genericTypes);
 
-            // create and return the predicate class
-            factoryType = (Class<IPredicateFactory>) JavassistUtil.createClass(createPredicateCmd);
+                // create and return the predicate class
+                Class<IPredicateFactory> factoryType = (Class<IPredicateFactory>) JavassistUtil.createClass(createPredicateCmd);
 
+                predicateFactory = ClassUtils.newInstance(factoryType);
+
+                SpecificationUtils.addFactoryForClass(modelContext.getModelType(), predicateFactory);
+            }
+            // note
+            modelContext.setPredicateFactory(predicateFactory);
         }
-        return factoryType;
     }
 
     /**
@@ -497,14 +502,5 @@ public class ModelBasedComponentGenerator {
         return false;
     }
 
-    // @Override
-    protected void createModelContexts() throws Exception {
-        Collection<ModelInfo> modelRegistryEntries = this.modelInfoEntries.values();
-        for (ModelInfo modelInfo : modelRegistryEntries) {
-            Class<?> modelType = modelInfo.getModelType();
-            LOGGER.info("Found resource model class {}", modelType.getCanonicalName());
-            entityModelContextsMap.put(modelType, new ModelContext(modelInfo));
-        }
-    }
 
 }
