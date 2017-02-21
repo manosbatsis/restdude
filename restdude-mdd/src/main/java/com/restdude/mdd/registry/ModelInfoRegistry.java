@@ -20,6 +20,7 @@
  */
 package com.restdude.mdd.registry;
 
+import com.restdude.mdd.model.Model;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
 import lombok.NonNull;
@@ -35,6 +36,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -99,14 +101,30 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
         for (String basePackage : basePackages) {
             Set<BeanDefinition> entityBeanDefs = EntityUtil.findAllModels(basePackage);
             for (BeanDefinition beanDef : entityBeanDefs) {
-                Class<?> modelType = ClassUtils.getClass(beanDef.getBeanClassName());
+                Class<? extends Model> modelType = (Class<? extends Model>) ClassUtils.getClass(beanDef.getBeanClassName());
                 LOGGER.info("Found model class {}", modelType.getCanonicalName());
                 this.addEntryFor(modelType);
             }
         }
+
+        // field > model ref
+        for(ModelInfo modelInfo : this.getEntries()){
+            Set<String> fNames = modelInfo.getToOneFieldNames();
+            for(String fieldName : fNames){
+                FieldInfo field = modelInfo.getField(fieldName);
+                ModelInfo relatedModelInfo = this.getEntryFor(field.getFieldType());
+                field.setModelInfo(relatedModelInfo);
+            }
+            /*
+            for(String fieldName : modelInfo.getToManyFieldNames()){
+                FieldInfo field = modelInfo.getField(fieldName);
+                field.setModelInfo(this.getEntryFor(field.getFieldModelType()));
+            }
+            */
+        }
     }
 
-    protected void addEntryFor(Class modelClass){
+    protected <T extends Model<PK>, PK extends Serializable> void addEntryFor(Class<T> modelClass){
         Assert.notNull(modelClass, "Parameter modelClass cannot be null");
 
         // check for existing
@@ -115,7 +133,7 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
         }
 
         // create entry
-        ModelInfo entry = new ModelInfo(modelClass);
+        ModelInfo<T, PK> entry = new ModelInfoImpl<>(modelClass);
 
         // add entry
         this.modelEntries.put(modelClass, entry);
@@ -131,7 +149,7 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
         for(ModelInfo info : this.getEntries()){
             if(!this.handlerModelTypes.containsKey(info.getModelControllerType())){
                 if(info.getModelControllerType() != null && info.getModelType() != null) {
-                    LOGGER.debug("postProcessBeanDefinitionRegistry, adding handlerModelType entry: {}:{}", info.getModelControllerType(), info.getModelType());
+                    LOGGER.debug("postProcessBeanDefinitionRegistry, adding handlerModelType entry: {}:{}, linkable: {}", info.getModelControllerType(), info.getModelType(), info.isLinkableResource());
                     this.handlerModelTypes.put(info.getModelControllerType(), info.getModelType());
                 }
             }

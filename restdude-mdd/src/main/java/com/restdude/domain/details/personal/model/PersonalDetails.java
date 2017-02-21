@@ -20,8 +20,9 @@
  */
 package com.restdude.domain.details.personal.model;
 
-import com.restdude.mdd.model.PersistableModel;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.uischema.annotation.FormSchemaEntry;
 import com.restdude.mdd.uischema.annotation.FormSchemas;
 import io.swagger.annotations.ApiModel;
@@ -35,10 +36,11 @@ import java.time.LocalDate;
 @ApiModel(description = "PersonalDetails")
 @Table(name = "details_personal")
 @Inheritance(strategy = InheritanceType.JOINED)
+@ModelResource(pathFragment = "personalDetails", apiName = "PersonalDetails", apiDescription = "Personal information operations")
 public class PersonalDetails implements PersistableModel<String> {
 
     @Id
-    private String id;
+    private String pk;
 
     @MapsId
     @OneToOne(optional = false, fetch = FetchType.LAZY)
@@ -59,7 +61,7 @@ public class PersonalDetails implements PersistableModel<String> {
      */
     @Override
     public String getPk() {
-        return id;
+        return pk;
     }
 
     /**
@@ -67,8 +69,8 @@ public class PersonalDetails implements PersistableModel<String> {
      *
      * @param id the pk to set
      */
-    public void setPk(String id) {
-        this.id = id;
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     @Override

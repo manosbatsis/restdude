@@ -23,6 +23,7 @@ package com.restdude.mdd.repository;
 import com.restdude.mdd.model.MetadatumModel;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.UploadedFileModel;
+import com.restdude.mdd.registry.FieldInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -165,6 +166,14 @@ public interface ModelRepository<T extends PersistableModel<PK>, PK extends Seri
 	 * @return
 	 */
 	Page<T> findAll(Specification<T> spec, Pageable pageable, EntityGraphType type, String... attributeGraph);
+
+	/**
+	 * Get the other end of a ToOne relationship
+	 * @param pk the id of the root model
+	 * @param fieldInfo the attribute name of the relationship
+	 * @return the single entity in the other side of the relation if any, null otherwise
+	 */
+	PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo);
 
 	enum EntityGraphType {
 

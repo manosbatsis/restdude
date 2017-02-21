@@ -67,7 +67,7 @@ import java.util.*;
 
 /**
  * Generates <code>Repository</code>, <code>Service</code>,
- * <code>Controller</code> and other components for the given {@link ModelInfo} entries
+ * <code>Controller</code> and other components for the given {@link ModelInfoImpl} entries
  * {@link ModelResource} or
  * {@link ModelRelatedResource}.
  */
@@ -200,10 +200,11 @@ public class ModelBasedComponentGenerator {
      * @param modelContext
      */
     protected void createController(ModelContext modelContext) {
-
+        ModelInfo modelInfo = this.modelInfoEntries.get(modelContext.getModelType());
         Class<?> controllerClass = null;
-        BeanDefinition beanDefinition;
-        if (modelContext.getControllerDefinition() == null) {
+        BeanDefinition beanDefinition = modelContext.getControllerDefinition();
+
+        if (beanDefinition == null) {
             String className = "RestdudeGenerated" + modelContext.getGeneratedClassNamePrefix() + "Controller";
             String beanName = StringUtils.uncapitalize(className);
             String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
@@ -230,7 +231,7 @@ public class ModelBasedComponentGenerator {
             createControllerCmd.addTypeAnnotation(RestController.class, controllerMembers);
 
             // @RequestMapping
-            ModelInfo modelInfo = this.modelInfoEntries.get(modelContext.getModelType());
+
             String modelUriComponent = modelInfo.getUriComponent();
             String modelParentPath = modelInfo.getParentPath(this.defaultParentPath);
             String modelBasePath = modelInfo.getBasePath(this.basePath);
@@ -271,12 +272,16 @@ public class ModelBasedComponentGenerator {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(controllerClass)
                     .addDependsOn(serviceDependency).setAutowireMode(Autowire.BY_NAME.value()).getBeanDefinition();
 
-            LOGGER.info("createController, Registering bean " + beanName);
+            LOGGER.debug("createController, registering bean: {}, class: {}, exposes resources: {}", beanName, controllerClass.getSimpleName(), controllerClass.getAnnotation(ExposesResourceFor.class));
             registry.registerBeanDefinition(beanName, beanDefinition);
 
-            modelContext.setControllerDefinition(beanDefinition);
-
         }
+        else{
+            controllerClass = ClassUtils.getClass(beanDefinition.getBeanClassName());
+        }
+
+        modelContext.setControllerDefinition(beanDefinition);
+        modelInfo.setModelControllerType(controllerClass);
 
     }
 

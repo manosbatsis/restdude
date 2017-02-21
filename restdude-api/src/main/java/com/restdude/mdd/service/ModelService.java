@@ -48,7 +48,6 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
      */
     Class<T> getDomainClass();
 
-
     /**
      * Create a new resource.
      *

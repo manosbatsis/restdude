@@ -24,6 +24,7 @@ package com.restdude.mdd.service;
 import com.restdude.mdd.model.MetadatumModel;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.UploadedFileModel;
+import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,12 +52,36 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
 
     String PRE_AUTHORIZATION_PREFIX = "SERVICE_";
 
+
+
+    /**
+     * Return the id of the entity.
+     * A generated id is not guaranteed to be available until after
+     * the database insert has occurred.
+     * Returns null if the entity does not yet have an id.
+     *
+     * @param entity entity instance
+     *
+     * @return id of the entity
+     *
+     * @throws IllegalArgumentException if the object is found not
+     * to be an entity
+     */
+    Object getIdentifier(Object entity);
+
     void addMetadatum(PK subjectId, MetadatumModel dto);
 
     void addMetadata(PK subjectId, Collection<MetadatumModel> dtos);
 
     void removeMetadatum(PK subjectId, String predicate);
 
+    /**
+     * Get the other end of a ToOne relationship
+     * @param pk the id of the root model
+     * @param fieldInfo the attribute name of the relationship
+     * @return the single entity in the other side of the relation if any, null otherwise
+     */
+    PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo);
 
     /**
      * @see ModelRepository#validateConstraints(PersistableModel)

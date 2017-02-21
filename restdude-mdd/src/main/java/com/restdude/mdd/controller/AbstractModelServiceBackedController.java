@@ -26,6 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import com.restdude.domain.users.model.User;
+import com.restdude.hypermedia.hateoas.ModelResource;
+import com.restdude.hypermedia.hateoas.ModelResources;
+import com.restdude.hypermedia.hateoas.PagedModelResources;
 import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
 import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
 import com.restdude.hypermedia.jsonapi.JsonApiResource;
@@ -35,6 +38,7 @@ import com.restdude.mdd.annotation.model.CurrentPrincipalField;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.registry.ModelInfoRegistry;
 import com.restdude.mdd.service.PersistableModelService;
@@ -43,6 +47,7 @@ import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
 import lombok.NonNull;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
@@ -60,10 +65,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 
 /**
@@ -149,11 +152,40 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      *
      * @param model
      */
-    protected Resource<T> toHateoasResource(@NonNull T model) {
-        Resource<T> resource = new Resource<>(model);
-        if (model.getPk() != null) {
-            resource.add(this.entityLinks.linkForSingleResource(this.modelType, model.getPk().toString()).withSelfRel());
+    protected ModelResource<T> toHateoasResource(@NonNull T model) {
+        Class<T> modelType = this.modelType;
+        return toHateoasResource(model, modelType);
+    }
+
+    protected <RT extends PersistableModel> ModelResource<RT> toHateoasResource(RT model, Class<RT> modelType) {
+        ModelResource<RT> resource = new ModelResource<>(model);
+        try {
+            if (model.getPk() != null) {
+                resource.add(this.entityLinks.linkForSingleResource(modelType, model.getPk().toString()).withSelfRel());
+                ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
+                if(modelInfo != null){
+                    Set<String> toOneFields = modelInfo.getToOneFieldNames();
+                    if(CollectionUtils.isNotEmpty(toOneFields)){
+                        LOGGER.debug("toHateoasResource, ToOne fieldse: {}", toOneFields);
+
+                        for(String fieldName : toOneFields){
+                            FieldInfo fieldInfo = modelInfo.getField(fieldName);
+                            if(fieldInfo.isGetter() && fieldInfo.isLinkableResource()){
+                                Object related = fieldInfo.getGetterMethod().invoke(model);
+                                if(related != null){
+                                    Object id =fieldInfo.isLazy() ? this.service.getIdentifier(related) : ((PersistableModel) related).getPk();
+                                    resource.add(this.entityLinks.linkForSingleResource(fieldInfo.getFieldType(), id.toString()).withRel(fieldName));
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
+
         return resource;
     }
 
@@ -162,8 +194,12 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      *
      * @param models
      */
-    protected Resources<T> toHateoasResources(@NonNull Iterable<T> models) {
-        Resources<T> resources = new Resources<>(models);
+    protected ModelResources<T> toHateoasResources(@NonNull Iterable<T> models) {
+        LinkedList<ModelResource<T>> wrapped = new LinkedList<>();
+        for(T model : models){
+            wrapped.add(new ModelResource<T>(model));
+        }
+        ModelResources<T> resources = new ModelResources<>(wrapped);
         return resources;
     }
 
@@ -172,10 +208,15 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      *
      * @param page
      */
-    protected PagedResources<T> toHateoasPagedResources(@NonNull Page<T> page) {
+    protected PagedModelResources<T> toHateoasPagedResources(@NonNull Page<T> page) {
+
+        ArrayList<ModelResource<T>> wrapped = new ArrayList<>();
+        for(T model : page.getContent()){
+            wrapped.add(new ModelResource<T>(model));
+        }
         // long size, long number, long totalElements, long totalPages
         PagedResources.PageMetadata meta = new PagedResources.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
-        PagedResources<T> pagedResources = new PagedResources<T>(page.getContent(), meta);
+        PagedModelResources<T> pagedResources = new PagedModelResources<T>(wrapped, meta);
         return pagedResources;
     }
 
@@ -185,7 +226,17 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @return
      */
     protected JsonApiModelDocument<T, PK> toDocument(T model) {
-        return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
+        return this.toDocument(model, this.modelType);
+    }
+
+    /**
+     * Wrap the given model in a JSON API Document
+     * @param model the model to wrap
+     * @return
+     */
+    protected <RT extends PersistableModel<RPK>, RPK extends Serializable> JsonApiModelDocument<RT, RPK> toDocument(RT model, Class<RT> modelType) {
+        ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
+        return new JsonApiModelBasedDocumentBuilder<RT, RPK>(modelInfo.getUriComponent())
                 .withData(model)
                 .buildModelDocument();
     }
@@ -303,7 +354,12 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     }
 
 
-    
+    protected PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo) {
+        PersistableModel resource = this.service.findRelatedEntityByOwnId(pk, fieldInfo);
+        return resource;
+    }
+
+
     protected T findById(PK pk) {
         LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
         T resource = this.service.findById(pk);

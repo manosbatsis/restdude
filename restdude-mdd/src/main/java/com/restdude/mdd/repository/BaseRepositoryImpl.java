@@ -20,14 +20,16 @@
  */
 package com.restdude.mdd.repository;
 
+import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.mdd.model.MetadataSubjectModel;
 import com.restdude.mdd.model.MetadatumModel;
 import com.restdude.mdd.model.PersistableModel;
-import com.restdude.domain.cms.model.BinaryFile;
 import com.restdude.mdd.model.UploadedFileModel;
+import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BeanValidationException;
+import lombok.NonNull;
 import org.apache.commons.configuration.Configuration;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.slf4j.Logger;
@@ -156,7 +158,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
     public Optional<T> findOptional(PK id) {
         return Optional.ofNullable(this.findOne(id));
 	}
-	
+
 	
 	
 	@Override
@@ -377,6 +379,25 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 
 	}
 
+	@Override
+	public PersistableModel findRelatedEntityByOwnId(@NonNull PK pk, @NonNull FieldInfo fieldInfo) {
+		if(!fieldInfo.getFieldMappingType().isToOne()){
+			throw new IllegalArgumentException("Field " + fieldInfo.getFieldName() + " is not a relation to a single entity");
+		}
+
+		CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery query = cb.createQuery(fieldInfo.getFieldType());
+
+		Root<T> root = query.from(this.domainClass);
+		query.where(cb.equal(root.get("pk"), pk));
+
+		// or maybe:
+		//CompoundSelection<Integer> selection = cb.construct(fieldInfo.getFieldType(), fieldInfo.getFieldName());
+		Selection selection = root.join(fieldInfo.getFieldName(),JoinType.INNER);
+
+		query.select(selection);
+		return (PersistableModel) this.entityManager.createQuery(query).getSingleResult();
+	}
 
 	@Override
 	public List<T> findAll(Specification<T> spec, EntityGraphType type, String... attributeGraph) {

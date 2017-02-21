@@ -40,19 +40,6 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <constructor-arg value="foobar"/>
     </bean>
 
-    <!-- choose the default user controller
-    <bean identifier="userController"
-          class="com.restdude.domain.users.controller.UserController"/>
-          -->
-    <!-- choose the default userDetails controller
-    <bean identifier="userDetailsController"
-          class="com.restdude.auth.userdetails.controller.UserDetailsController"/>
-           -->
-    <!-- Calipso UserDetailsService implementation
-    <bean identifier="userDetailsService"
-          class="com.restdude.auth.userdetails.service.impl.UserDetailsServiceImpl"
-          autowire="byType"/>-->
-    <!-- and an alias for the LovalUser service -->
 
     <!-- Do not create sessions -->
     <bean id="securityContextPersistenceFilter"

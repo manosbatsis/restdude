@@ -22,6 +22,9 @@ package com.restdude.mdd.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.restdude.hypermedia.hateoas.ModelResource;
+import com.restdude.hypermedia.hateoas.ModelResources;
+import com.restdude.hypermedia.hateoas.PagedModelResources;
 import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
 import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
 import com.restdude.hypermedia.jsonapi.util.JsonApiUtils;
@@ -29,6 +32,7 @@ import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.model.Model;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
+import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.util.exception.http.NotFoundException;
@@ -38,9 +42,7 @@ import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
@@ -141,7 +143,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @RequestMapping(method = RequestMethod.GET, params = "page=no")
     @ApiOperation(value = "Get the full collection of resources (no paging or criteria)", notes = "Find all resources, and return the full collection (i.e. VS a page of the total results)")
     @ModelDrivenPreAuth
-    public Resources<T> plainJsonGetAll() {
+    public ModelResources<T> plainJsonGetAll() {
         return toHateoasResources(super.findAll());
     }
 
@@ -162,7 +164,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             + "Predefined paging properties are _pn (page number), _ps (page size) and sort. All serialized member names "
             + "of the resource are supported as search criteria in the form of HTTP URL parameters.")
     @ModelDrivenPreAuth
-    public PagedResources<T> plainJsonGetPage(
+    public PagedModelResources<T> plainJsonGetPage(
             @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = "_pn", required = false, defaultValue = "0") Integer page,
             @ApiParam(name = "_ps", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
@@ -193,7 +195,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
-    public Resource<T> plainJsonGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
+    public ModelResource<T> plainJsonGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
         LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
         T model = super.findById(pk);
         if (model == null) {
@@ -201,6 +203,34 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         }
         return toHateoasResource(model);
     }
+
+    @RequestMapping(value = "{pk}/{relationName}", method = RequestMethod.GET)
+    @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
+    @JsonView(Model.ItemView.class)
+    public Resource<PersistableModel> plainJsonGetRelatedEntityByOwnId(
+            @ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk,
+            @ApiParam(name = "relationName", required = true, value = "string") @PathVariable String relationName) {
+
+        FieldInfo fieldInfo = this.getModelInfo().getField(relationName);
+        PersistableModel related = super.findRelatedEntityByOwnId(pk, fieldInfo);
+
+        return toHateoasResource(related, (Class<PersistableModel>)fieldInfo.getFieldType());
+    }
+
+
+    @RequestMapping(value = "{pk}/{relationName}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
+    @JsonView(Model.ItemView.class)
+    public JsonApiModelDocument jsonApiGetRelatedEntityByOwnId(
+            @ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk,
+            @ApiParam(name = "relationName", required = true, value = "string") @PathVariable String relationName) {
+
+        FieldInfo fieldInfo = this.getModelInfo().getField(relationName);
+        PersistableModel related = super.findRelatedEntityByOwnId(pk, fieldInfo);
+
+        return toDocument(related, (Class<PersistableModel>)fieldInfo.getFieldType());
+    }
+
 
     @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
@@ -214,7 +244,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @RequestMapping(params = "pks", method = RequestMethod.GET)
     @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public Resources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
+    public ModelResources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
         return this.toHateoasResources(super.findByIds(pks));
     }
 

@@ -21,6 +21,7 @@
 package com.restdude.mdd.registry;
 
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.Model;
 import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.mdd.util.EntityUtil;
 import lombok.Getter;
@@ -28,9 +29,12 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.hateoas.ExposesResourceFor;
 
+import javax.persistence.Entity;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,15 +43,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * Contains metadata for a specific Model class.
  */
 @Slf4j
-public class ModelInfo {
+public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> implements ModelInfo<T, PK> {
 
-    @Getter private final Class<?> modelType;
+    @Getter private final Class<T> modelType;
     @Getter private final String packageName;
     @Getter private final String beansBasePackage;
 
     @Getter private final String uriComponent;
     @Getter private final String parentApplicationPath;
     @Getter private final String basePath;
+    @Getter private final boolean jpaEntity;
     @Getter private FieldInfo idField;
     @Getter private final Set<String> allFieldNames = new HashSet<>();
     @Getter private final Set<String> simpleFieldNames = new HashSet<>();
@@ -60,14 +65,16 @@ public class ModelInfo {
     private IPredicateFactory predicateFactory;
     @Getter @Setter
     private Class<?> modelControllerType;
+    private Boolean linkableResource;
 
 
-    public ModelInfo(@NonNull Class<?> modelType) {
+    public ModelInfoImpl(@NonNull Class<T> modelType) {
 
         // add basic info
         this.modelType = modelType;
         this.packageName = modelType.getPackage().getName();
         this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
+        this.jpaEntity = modelType.isAnnotationPresent(Entity.class);
 
         // add endpoint info
         ModelResource ar = modelType.getAnnotation(ModelResource.class);
@@ -87,7 +94,7 @@ public class ModelInfo {
         for (int p = 0; p < properties.length; p++) {
             log.debug("ModelInfo, property: '{}'", properties[p]);
             if(!"class".equals(properties[p].getName())){
-                FieldInfo fieldInfo = FieldInfo.create(modelType, properties[p]);
+                FieldInfo fieldInfo = FieldInfoImpl.create(modelType, properties[p]);
                 if(fieldInfo != null){
                     this.fields.put(fieldInfo.getFieldName(), fieldInfo);
                     if(fieldInfo.getFieldMappingType().isId()){
@@ -119,16 +126,35 @@ public class ModelInfo {
         return endpointPathName;
     }
 
+    @Override
     public String getParentPath(String defaultValue) {
         return StringUtils.isNotEmpty(this.parentApplicationPath) ? parentApplicationPath : defaultValue;
     }
 
+    @Override
     public String getBasePath(String defaultValue) {
         return StringUtils.isNotEmpty(this.basePath) ? basePath : defaultValue;
     }
 
+    @Override
     public FieldInfo getField(String fieldName) {
         return this.fields.get(fieldName);
+    }
+
+    @Override
+    public Boolean isLinkableResource(){
+        if(this.linkableResource == null){
+            boolean hasController = this.modelControllerType != null;
+            ExposesResourceFor exposesResourceFor = hasController ? this.modelControllerType.getAnnotation(ExposesResourceFor.class) : null;
+            log.debug("isLinkableResource, name: {}, modelControllerType: {}, exposes resources: {}", this.getModelType(), modelControllerType, exposesResourceFor);
+            if(exposesResourceFor != null){
+                this.linkableResource = Boolean.TRUE;
+            }
+            else{
+                this.linkableResource = Boolean.FALSE;
+            }
+        }
+        return this.linkableResource;
     }
 
 }

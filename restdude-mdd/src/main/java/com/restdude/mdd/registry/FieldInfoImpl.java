@@ -20,10 +20,13 @@
  */
 package com.restdude.mdd.registry;
 
+import com.restdude.mdd.model.Model;
 import com.yahoo.elide.annotation.ComputedRelationship;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.annotations.Formula;
 
@@ -36,13 +39,13 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Contains metadata for a specific model field
+ * Simple implementation of {@link FieldInfo}
  */
 @Slf4j
-public class FieldInfo {
+public class FieldInfoImpl implements FieldInfo {
 
 
-    public static FieldInfo create(@NonNull Class<?> modelType,  PropertyDescriptor property) {
+    public static FieldInfo create(@NonNull Class<? extends Model> modelType,  PropertyDescriptor property) {
         FieldInfo fieldInfo = null;
         Field field = FieldUtils.getField(modelType, property.getName(), true);
 
@@ -51,7 +54,7 @@ public class FieldInfo {
         Method setter = property.getWriteMethod();
         if(field != null && getter != null && setter != null) {
             log.debug("create, modelType: {}, property: {}", modelType, property);
-            fieldInfo = new FieldInfo(modelType, property, field, getter, setter);
+            fieldInfo = new FieldInfoImpl(modelType, property, field, getter, setter);
         }
         else{
             log.debug("create, ignoring modelType: {}, property: {}", modelType, property);
@@ -61,19 +64,27 @@ public class FieldInfo {
     }
 
     @Getter private final String fieldName;
-    @Getter private final Class<?> fieldType;
+    @Getter private final Class<? extends Model> fieldType;
     @Getter private FieldMappingType fieldMappingType;
     @Getter private Class<?> fieldModelType;
     @Getter private String mappedBy;
     @Getter private CascadeType[] cascadeTypes;
+    @Getter private Method getterMethod;
+    @Getter private Method setterMethod;
     @Getter private boolean getter;
     @Getter private boolean setter;
+    @Getter private boolean lazy = false;
+    //@Getter @Setter private Boolean linkableResource;
+    @Getter @Setter private ModelInfo modelInfo;
 
-    private FieldInfo(@NonNull Class<?> modelType, @NonNull PropertyDescriptor property, @NonNull Field field, @NonNull Method getter, @NonNull Method setter) {
+
+    private FieldInfoImpl(@NonNull Class<? extends Model> modelType, @NonNull PropertyDescriptor property, @NonNull Field field, @NonNull Method getter, @NonNull Method setter) {
         // add basic info
-        this.fieldType = property.getPropertyType();
+        this.fieldType = (Class<? extends Model>) property.getPropertyType();
         this.fieldName = property.getName();
 
+        this.getterMethod = getter;
+        this.setterMethod = setter;
 
         this.getter = getter != null;
         this.setter = setter != null;
@@ -82,6 +93,21 @@ public class FieldInfo {
     }
 
 
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("fieldName", this.fieldName)
+                .append("fieldType", this.fieldType)
+                .append("fieldMappingType", this.fieldMappingType)
+                .append("fieldModelType", this.fieldModelType)
+                .append("mappedBy", this.mappedBy)
+                .append("getter", this.getter)
+                .append("setter", this.setter)
+                .append("lazy", this.lazy)
+                .append("linkableResource", this.isLinkableResource())
+                .toString();
+    }
 
     private void scanMappings(@NonNull AccessibleObject... fieldsOrMethods){
 
@@ -103,26 +129,30 @@ public class FieldInfo {
                 id = Optional.ofNullable(field.getAnnotation(Id.class));
                 log.debug("scanMappings, found Id field: {}", field);
             }
-            if (field.isAnnotationPresent(EmbeddedId.class)) {
+            else if (field.isAnnotationPresent(EmbeddedId.class)) {
                 embeddedId = Optional.ofNullable(field.getAnnotation(EmbeddedId.class));
                 log.debug("scanMappings, found Id field: {}", field);
             }
-            if (field.isAnnotationPresent(ManyToMany.class)) {
+            else if (field.isAnnotationPresent(ManyToMany.class)) {
                 manyToMany = Optional.ofNullable(field.getAnnotation(ManyToMany.class));
+                this.lazy = manyToMany.get().fetch().equals(FetchType.LAZY);
             }
-            if (field.isAnnotationPresent(ManyToOne.class)) {
+            else if (field.isAnnotationPresent(ManyToOne.class)) {
                 manyToOne = Optional.ofNullable(field.getAnnotation(ManyToOne.class));
+                this.lazy = manyToOne.get().fetch().equals(FetchType.LAZY);
             }
-            if (field.isAnnotationPresent(OneToMany.class)) {
+            else if (field.isAnnotationPresent(OneToMany.class)) {
                 oneToMany = Optional.ofNullable(field.getAnnotation(OneToMany.class));
+                this.lazy = oneToMany.get().fetch().equals(FetchType.LAZY);
             }
-            if (field.isAnnotationPresent(OneToOne.class)) {
+            else if (field.isAnnotationPresent(OneToOne.class)) {
                 oneToOne = Optional.ofNullable(field.getAnnotation(OneToOne.class));
+                this.lazy = oneToOne.get().fetch().equals(FetchType.LAZY);
             }
-            if (field.isAnnotationPresent(ComputedRelationship.class)) {
+            else if (field.isAnnotationPresent(ComputedRelationship.class)) {
                 computedRelationship = Optional.ofNullable(field.getAnnotation(ComputedRelationship.class));
             }
-            if (field.isAnnotationPresent(Transient.class)) {
+            else if (field.isAnnotationPresent(Transient.class)) {
                 tranzient = Optional.ofNullable(field.getAnnotation(Transient.class));
             }
         }
@@ -173,4 +203,8 @@ public class FieldInfo {
 
     }
 
+    @Override
+    public boolean isLinkableResource() {
+        return this.modelInfo != null ? this.modelInfo.isLinkableResource() : false;
+    }
 }

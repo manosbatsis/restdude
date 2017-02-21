@@ -45,7 +45,7 @@
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.2.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.hateoas:spring-hateoas:0.23.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.imgscalr:imgscalr-lib:4.2" level="project" />

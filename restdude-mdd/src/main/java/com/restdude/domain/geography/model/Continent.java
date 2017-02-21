@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.geography.model;
 
+import com.restdude.mdd.annotation.model.ModelResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import javax.persistence.*;
 @AttributeOverrides({
         @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
 })
+@ModelResource(pathFragment = "continents", apiName = "Continents", apiDescription = "Operations about continent")
 public class Continent extends AbstractFormalRegionModel<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);

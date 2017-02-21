@@ -21,8 +21,9 @@
 package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.model.PersistableModel;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.PersistableModel;
 import io.swagger.annotations.ApiModel;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
@@ -34,10 +35,11 @@ import java.util.List;
 @ApiModel(description = "ContactDetails")
 @Table(name = "details_contact")
 @Inheritance(strategy = InheritanceType.JOINED)
+@ModelResource(pathFragment = "contactDetails", apiDescription = "Contact details", apiName = "ContactDetails")
 public class ContactDetails implements PersistableModel<String> {
 
     @Id
-    private String id;
+    private String pk;
 
     @MapsId
     @OneToOne(optional = false, fetch = FetchType.LAZY)
@@ -82,7 +84,7 @@ public class ContactDetails implements PersistableModel<String> {
      */
     @Override
     public String getPk() {
-        return id;
+        return pk;
     }
 
     /**
@@ -91,7 +93,7 @@ public class ContactDetails implements PersistableModel<String> {
      * @param id the pk to set
      */
     public void setPk(String id) {
-        this.id = id;
+        this.pk = id;
     }
 
     @Override
@@ -201,7 +203,7 @@ public class ContactDetails implements PersistableModel<String> {
     }
 
     private ContactDetails(Builder builder) {
-        this.id = builder.id;
+        this.pk = builder.id;
         this.user = builder.user;
         this.primaryEmail = builder.primaryEmail;
         this.primaryCellphone = builder.primaryCellphone;
