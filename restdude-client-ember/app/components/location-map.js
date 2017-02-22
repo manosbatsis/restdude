@@ -10,3 +10,6 @@ export default Ember.Component.extend({
     this.$('.map-container').append(mapElement);
   }
 });
+
+ 
+       

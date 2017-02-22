@@ -1,5 +1,4 @@
-
-
+{{login-js-inject}}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,8 +11,8 @@
         <link href="/assets/simple-line-icons.css" rel="stylesheet">
         <!-- Main styles for this application -->
         <link href="/assets/style.css" rel="stylesheet">
-    <head></head>
-    <body>
+    
+    
         <div class="container">
             <div class="row">
                 <div class="col-md-8 m-x-auto pull-xs-none vamiddle">
@@ -26,17 +25,17 @@
                                 <p class="text-muted">Sign In to your account</p>
                                 <div class="input-group m-b-1">
                                     <span class="input-group-addon"><i class="icon-user"></i></span>
-                                    <label for="identification">Username</label>
+                                    <label for="identification">Username  </label>
                                     {{input value=identification placeholder='Username' class='form-control'}}
                                 </div>
                                 <div class="input-group m-b-2">
                                     <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                    <label for="password">Password</label>
+                                    <label for="password">Password  </label>
                                      {{input value=password placeholder='Password' class='form-control' type='password'}}
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <button type="submit" class="btn btn-primary p-x-2">Login</button>
+                                        <button type="submit" class="btn btn-primary p-x-2">Login  </button>
                                        <!-- {{input value=identification placeholder='Enter Login' class='form-control'}} -->
                                     </div>
                                     <div class="col-xs-6 text-xs-right">
@@ -69,25 +68,5 @@
                 </div>
             </div>
         </div>
-        <!-- Bootstrap and necessary plugins -->
-       <!-- <scr{{!}}ipt src="../../assets/js/libs/jquery.min.js"></scr{{!}}ipt> -->
-        <!-- <scr{{!}}ipt src="../../assets/js/libs/tether.min.js"></scr{{!}}ipt>-->
-        <!-- <scr{{!}}ipt src="../../assets/js/libs/bootstrap.min.js"></scr{{!}}ipt>-->
-        
-        function verticalAlignMiddle()
-        {
-            var bodyHeight = $(window).height();
-            var formHeight = $('.vamiddle').height();
-            var marginTop = (bodyHeight / 2) - (formHeight / 2);
-            if (marginTop > 0)
-            {
-                $('.vamiddle').css('margin-top', marginTop);
-            }
-        }
-        $(document).ready(function()
-        {
-            verticalAlignMiddle();
-        });
-        $(window).bind('resize', verticalAlignMiddle);
-       <!--  </scr{{!}}ipt> -->
-    </body>
+    
+    
