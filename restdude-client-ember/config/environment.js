@@ -19,28 +19,6 @@ module.exports = function(environment) {
     }
   };
 
-  ENV['ember-simple-auth'] = {
-  baseURL: 'path/to/base/url'
-};
-
-/*ENV.torii = {
-  sessionServiceName: 'session',
-  providers: {
-    'twitter': {
-      requestTokenUri: '/auth/twitter'
-    }
-  }
-};
-
-ENV.torii = {
-  sessionServiceName: 'session',
-  providers: {
-    'facebook': {
-      requestTokenUri: '/auth/facebook'
-    }
-  }
-};*/
-
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;

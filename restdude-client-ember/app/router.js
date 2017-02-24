@@ -12,7 +12,7 @@ Router.map(function() {
   this.route('rentals', function() {
     this.route('show', { path: '/:rental_id' });
   });
-  this.route('not-found', { path: '/*path' });
+   this.route('not-found', { path: '/*path' });
   this.route('server-error', { path: '/auth/500' });
   this.route('login', { path: '/auth/login' });
   this.route('register', { path: '/auth/register' });
@@ -20,6 +20,7 @@ Router.map(function() {
   this.route('forgot-password');
   this.route('protected');
   this.route('profile', { path: '/accounts/profile' });
+  
 });
 
 export default Router;

@@ -63,8 +63,9 @@ test('should link to server-error page', function (assert) {
   });
 });
 
+
 test('should link to login page', function (assert) {
-  visit('/auth/login');
+  visit('/auth/register');
   click('a:contains("Login")');
   andThen(function () {
     assert.equal(currentURL(), '/auth/login', 'should navigate to not-found');
