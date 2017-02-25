@@ -15,46 +15,38 @@
         <link href="../../assets/style.css" rel="stylesheet">
    
     
+
+       
+     
         <div class="container">
             <div class="row">
                 <div class="col-md-5 m-x-auto pull-xs-none vamiddle">
                     <div class="card">
                         <div class="card-block p-a-2">
-                           <form {{action "submit" on="submit"}}>
                             <h1>Register</h1>
                             <p class="text-muted">Create your account</p>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
-                                <label for="username">Username </label>
-
-                                {{input value=user.name placeholder="Username"}}
                                 
-                               
+                                 {{input value=user.name type="text" class="form-control" placeholder="Username"}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon">@<i></i>
                                 </span>
-                                 <label for="email">Email </label>
-                                {{input value=user.email placeholder="Email"}}
-                                 
-                                
+                                <input type="text" class="form-control" placeholder="Email">
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                <label for="password">Password </label>
-                                  {{input value=user.password type="password" placeholder="Password"}}
+                                {{ input value=user.password type="password" class="form-control" placeholder="Password"}}
                             </div>
                             <div class="input-group m-b-2">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                <label for="passwordConfirmation">Repeat password </label>
-                               {{input value=user.passwordConfirmation type="password" placeholder="Enter password again"}}
-
+                                {{input value=user.passwordConfirmation type="password" class="form-control" placeholder="Repeat password"}}
+                                                                
                             </div>
-                           
-                            <button type="submit" class="btn btn-block btn-success">Create Account</button>
-                            </form>
+                            <button type="button" class="btn btn-block btn-success">Create Account</button>
                         </div>
-                        {{#if errorMessage}}
+                         {{#if errorMessage}}
                            {{errorMessage}}
                         {{/if}}
                         <div class="card-footer p-a-2">
@@ -69,9 +61,11 @@
                                         <span>twitter</span>
                                     </button>
                                 </div>
-                                <div class="col-xs-5">
-                                 {{#link-to 'login'}}
-                                    <button type="button" class="btn btn-primary active m-t-2">Login </button>
+                                <div class="col-xs-6">
+                                     {{#link-to 'login'}}
+                                    <button class="btn btn-primary active m-t-1" type="button">
+                                        <span>Login</span>
+                                    </button>
                                     {{/link-to}}
                                 </div>
                             </div>
@@ -80,6 +74,4 @@
                 </div>
             </div>
         </div>
-    
-       <!-- {{signup-form user=model triggerSave=(action "save") errorMessage=errorMessage}}-->
-    
+        <!-- {{signup-form user=model triggerSave=(action "save") errorMessage=errorMessage}}-->
