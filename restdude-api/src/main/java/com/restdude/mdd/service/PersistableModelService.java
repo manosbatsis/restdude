@@ -97,6 +97,17 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
      */
     List<UploadedFileModel> getUploadsForProperty(PK subjectId, String propertyName);
 
+
+    /**
+     * Delete all existing resource. Do not use cascade remove (not a choice -> JPA specs)
+     */
+    void deleteAll();
+
+    /**
+     * Delete all existing resource, including linked entities with cascade delete
+     */
+    void deleteAllWithCascade();
+
     /**
      * Utility method to be called by implementations
      *

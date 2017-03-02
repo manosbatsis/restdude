@@ -53,6 +53,7 @@ Some of the resulting services:
 HTTP Method | Path   | Description
 ------------ | ------ | -------------------
 GET  | /api/rest/hosts/{id} | Fetch the host matching the id
+GET  | /api/rest/hosts/{id}/country | Fetch the country of the host matching the id
 GET  | /api/rest/hosts?country.code=GR&name=%25startsWith | Search based on model properties (paged)
 POST | /api/rest/hosts | Create a new host
 PUT  | /api/rest/hosts/{id} | Update the host matching the id

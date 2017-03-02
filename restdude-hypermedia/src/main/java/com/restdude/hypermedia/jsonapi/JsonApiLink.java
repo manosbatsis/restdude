@@ -18,32 +18,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.service;
+package com.restdude.hypermedia.jsonapi;
 
-
-import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
-import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
 /**
- * Provides SCRUD and utility operations for {@link T} entities
- * @author manos
- *
- * @param <T> the entity type
- * @param <PK> the entity PK type
+ * Created by manos on 21/2/2017.
  */
-@Deprecated
-@Service
-public interface AbstractAssignedIdModelService<T extends AbstractAssignedIdPersistableModel<PK>, PK extends Serializable>
-        extends PersistableModelService<T, PK> {
-
-    /**
-     * Return the entity matching the PK of the given resource if any, or the newly persisted instance otherwise
-     * @param resource
-     * @return
-     */
-    public T findOrCreate(@P("resource") T resource);
-
+public interface JsonApiLink extends Serializable {
+    @JsonIgnore
+    String getRel();
+    @JsonProperty
+    void setRel(String rel);
+    String getHref();
+    void setHref(String href);
 }
+
+
+    

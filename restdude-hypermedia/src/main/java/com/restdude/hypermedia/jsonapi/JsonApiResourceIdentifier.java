@@ -20,14 +20,13 @@
  */
 package com.restdude.hypermedia.jsonapi;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
 import com.restdude.mdd.model.Model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * A Resource as defined in JSON API 1.1. Deserialized as a @link SimpleModelResource} by default
@@ -36,12 +35,23 @@ import java.io.Serializable;
  * @param <PK> the JSON API Resource model key type
  */
 @JsonDeserialize(as=SimpleModelResource.class)
-public interface JsonApiResource<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceIdentifier<T, PK>, LinksModel {
+public interface JsonApiResourceIdentifier<T extends Model<PK>, PK extends Serializable> extends Serializable {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(value = { "pk", "links" })
-    T getAttributes();
+    @JsonGetter("id")
+    PK getIdentifier();
 
-    @JsonProperty
-    void setAttributes(T attributes);
+    @JsonGetter("type")
+    String getType();
+
+    /**
+     * Get the associated metadata
+     * @return
+     */
+    Map<String, Serializable> getMeta();
+
+    /**
+     * Set the associated metadata
+     * @return
+     */
+    void setMeta(Map<String, Serializable> meta);
 }

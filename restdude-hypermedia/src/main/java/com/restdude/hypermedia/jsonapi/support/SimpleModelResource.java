@@ -24,41 +24,38 @@ import com.fasterxml.jackson.annotation.*;
 import com.restdude.hypermedia.jsonapi.JsonApiResource;
 import com.restdude.mdd.model.Model;
 import lombok.NonNull;
-import org.springframework.hateoas.ResourceSupport;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * A model wrapper that allows serializing as a Resource according to JSON API  1.1
  *
  * @see <a href="http://jsonapi.org/format/#document-resource-objects">JSON API Resources</a>
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({ "id", "type", "attributes", "relationships", "links", "meta" })
-public class SimpleModelResource<T extends Model<PK>, PK extends Serializable> extends ResourceSupport implements Serializable, JsonApiResource<T, PK> {
+public class SimpleModelResource<T extends Model<PK>, PK extends Serializable> extends SimpleModelResourceIdentifier<T, PK> implements JsonApiResource<T, PK> {
 
-    @JsonProperty("id")
-    private PK identifier;
-    private String type;
     private T attributes;
 
-    private SimpleModelResource(){
+    protected SimpleModelResource(){
+        super();
     }
 
     public SimpleModelResource(@NonNull T attributesModel, @NonNull String type){
+        super(attributesModel, type);
         this.attributes = attributesModel;
-        this.identifier = attributesModel.getPk();
-        this.type = type;
     }
 
     @JsonCreator
     public SimpleModelResource(
             @JsonProperty("id") PK identifier,
-            @NonNull @JsonProperty("attributes") T attributes,
-            @NonNull @JsonProperty("type") String type){
-        this.identifier = identifier;
+            @NonNull @JsonProperty("type") String type,
+            @JsonProperty("meta") Map<String, Serializable> meta,
+            @JsonProperty("attributes") T attributes){
+        super(identifier, type, meta);
         this.attributes = attributes;
-        this.type = type;
     }
 
     @Override
@@ -74,21 +71,4 @@ public class SimpleModelResource<T extends Model<PK>, PK extends Serializable> e
         this.attributes = attributes;
     }
 
-    @Override
-    public PK getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(PK identifier) {
-        this.identifier = identifier;
-    }
-
-    @Override
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

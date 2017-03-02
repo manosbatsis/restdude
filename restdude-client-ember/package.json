@@ -41,7 +41,7 @@
     "ember-source": "~2.11.1",
     "loader.js": "^4.0.10",
     "ember-simple-auth": "1.2.0"
-    
+
   },
   "engines": {
     "node": ">= 0.12.0"

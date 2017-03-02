@@ -186,7 +186,20 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @RequestParam(value = "page[size]", required = false, defaultValue = "10") Integer size,
             @ApiParam(name = "sort", value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
-
+// TODO: add support for query dialects: RequestParam MultiValueMap<String, String> httpParams
+        /*
+        MultivaluedHashMap<String, String> queryParams = new MultivaluedHashMap<>();
+        for(String key : httpParams.keySet()){
+            queryParams.put(key, httpParams.get(key));
+        }
+        SearchRequest searchRequest = new SearchRequest(
+                request.getServletPath(),
+                this.mmdelInfoRegistry.getEntityDictionary(),
+                queryParams,
+                true
+        );
+        LOGGER.debug("findResourcesPaginated, searchRequest: {}", searchRequest);
+         */
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
         return toDocument(super.findPaginated(pageable));
     }

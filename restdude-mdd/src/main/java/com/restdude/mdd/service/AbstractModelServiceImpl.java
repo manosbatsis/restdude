@@ -21,6 +21,9 @@
 package com.restdude.mdd.service;
 
 import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.repository.ModelRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,23 +33,26 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * CRUD Service interface.
- *
+ * TODO:
  * @param <T>
- *            Your resource POJO to manage, maybe an entity or DTO class
  * @param <PK>
- *            Resource pk type, usually Long or String
+ * @param <R>
  */
-public interface ModelService<T extends PersistableModel<PK>, PK extends Serializable> extends BaseService {
+public abstract class AbstractModelServiceImpl<T extends PersistableModel<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+        extends AbstractBaseServiceImpl
+        implements ModelService<T, PK>{
 
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceImpl.class);
 
     /**
      * Get the entity Class corresponding to the generic T
      *
      * @return the corresponding entity Class
      */
-    Class<T> getDomainClass();
+    @Override
+    public Class<T> getDomainClass() {
+        return null;
+    }
 
     /**
      * Create a new resource.
@@ -54,14 +60,20 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
      * @param resource Resource to create
      * @return new resource
      */
-    T create(T resource);
+    @Override
+    public T create(T resource) {
+        return null;
+    }
 
     /**
      * Override to handle post-create
      *
      * @param resource The created resource
      */
-    void postCreate(T resource);
+    @Override
+    public void postCreate(T resource) {
+
+    }
 
     /**
      * Update an existing resource.
@@ -69,8 +81,10 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
      * @param resource Resource to update
      * @return resource updated
      */
-    T update(T resource);
-
+    @Override
+    public T update(T resource) {
+        return null;
+    }
 
     /**
      * Partially update an existing resource.
@@ -78,21 +92,30 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
      * @param resource Resource to update
      * @return resource updated
      */
-    T patch(T resource);
+    @Override
+    public T patch(T resource) {
+        return null;
+    }
 
     /**
      * Delete an existing resource.
      *
      * @param resource Resource to delete
      */
-    void delete(T resource);
+    @Override
+    public void delete(T resource) {
+
+    }
 
     /**
      * Delete an existing resource.
      *
      * @param id Resource pk
      */
-    void delete(PK id);
+    @Override
+    public void delete(PK id) {
+
+    }
 
     /**
      * Find resource by pk.
@@ -100,7 +123,10 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
      * @param id Resource pk
      * @return resource
      */
-    T findById(PK id);
+    @Override
+    public T findById(PK id) {
+        return null;
+    }
 
     /**
      * Find resources by their ids.
@@ -108,29 +134,40 @@ public interface ModelService<T extends PersistableModel<PK>, PK extends Seriali
      * @param ids Resource ids
      * @return a list of retrieved resources, empty if no resource found
      */
-    List<T> findByIds(Set<PK> ids);
+    @Override
+    public List<T> findByIds(Set<PK> ids) {
+        return null;
+    }
 
     /**
      * Find all resources.
      *
      * @return a list of all resources.
      */
-    List<T> findAll();
+    @Override
+    public List<T> findAll() {
+        return null;
+    }
 
     /**
      * Find resources page-by-page
      *
-     * @param spec the query specification
+     * @param spec        the query specification
      * @param pageRequest page request
      * @return resources
      */
-    Page<T> findPaginated(Specification<T> spec, Pageable pageRequest);
+    @Override
+    public Page<T> findPaginated(Specification<T> spec, Pageable pageRequest) {
+        return null;
+    }
 
     /**
      * Count all resources.
      *
      * @return number of resources
      */
-    Long count();
-
+    @Override
+    public Long count() {
+        return null;
+    }
 }
