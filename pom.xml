@@ -40,6 +40,8 @@
     <modules>
         <module>restdude-api</module>
         <module>restdude-hypermedia</module>
+        <module>restdude-specification</module>
+        <module>restdude-rsql</module>
         <module>restdude-resources</module>
         <module>restdude-util</module>
         <module>restdude-mdd</module>

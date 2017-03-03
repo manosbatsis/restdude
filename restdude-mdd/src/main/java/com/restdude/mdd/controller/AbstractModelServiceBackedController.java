@@ -42,13 +42,18 @@ import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.registry.ModelInfoRegistry;
 import com.restdude.mdd.service.PersistableModelService;
-import com.restdude.mdd.specifications.SpecificationsBuilder;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
+import com.restdude.rsql.RsqlSpecVisitor;
+import com.restdude.rsql.RsqlUtils;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import lombok.NonNull;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +105,6 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceBackedController.class);
 
     private ModelInfo modelInfo;
-    private SpecificationsBuilder<T, PK> specificationsBuilder;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -132,7 +136,6 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     public void afterPropertiesSet() throws Exception {
         this.modelType = this.service.getDomainClass();
         this.isResourceSupport = ResourceSupport.class.isAssignableFrom(this.modelType);
-        this.specificationsBuilder = new SpecificationsBuilder<T, PK>(this.modelType, this.service.getConversionService());
     }
 
     /**
@@ -348,7 +351,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
             }
         }
         Map<String, String[]> params = request.getParameterMap();
-        Page<T> tmp = buildPage(pageable, params, applyCurrentPrincipalIdPredicate);
+        Page<T> tmp = findPaginated(pageable, params, applyCurrentPrincipalIdPredicate);
 
         return new ParamsAwarePageImpl<T>(params, tmp.getContent(), pageable, tmp.getTotalElements());
     }
@@ -398,7 +401,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return schema;
     }
 
-    protected Page<T> buildPage(Pageable pageable, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
+    protected Page<T> findPaginated(Pageable pageable, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
 
         // add implicit criteria?
         Map<String, String[]> parameters = null;
@@ -425,7 +428,16 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
             parameters = paramsMap;
         }
 
-        Specification<T> spec = this.specificationsBuilder.<T>build(parameters);
+        // optionally create a query specification
+        Specification<T> spec = null;
+
+        // check for RSQL in JSON API "filter" parameter,
+        // convert simple URL params to RSQL if missing
+        String rsql = ArrayUtils.isNotEmpty(parameters.get("filter")) ? parameters.get("filter")[0] : RsqlUtils.toRsql(parameters);
+        if(StringUtils.isNotBlank(rsql)){
+            Node rootNode = new RSQLParser().parse(rsql);
+            spec = rootNode.accept(new RsqlSpecVisitor<T>(this.getModelInfo(), this.service.getConversionService()));
+        }
 
         return this.service.findPaginated(spec, pageable);
 

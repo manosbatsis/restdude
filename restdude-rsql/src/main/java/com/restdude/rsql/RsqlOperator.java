@@ -18,20 +18,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.specifications;
+package com.restdude.rsql;
 
-import org.springframework.core.convert.ConversionService;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.io.Serializable;
+import com.restdude.specification.PredicateOperator;
+import lombok.Getter;
 
 /**
- * Builds a predicate for the type T
- *
- * @param <T>
+ * Enum of RSQL parser operators
  */
-public interface IPredicateFactory<T extends Serializable> {
-    public abstract Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues);
+public enum RsqlOperator {
+    EQUAL(PredicateOperator.EQUAL),
+    NOT_EQUAL(PredicateOperator.NOT_EQUAL),
+    GREATER_THAN(PredicateOperator.GREATER_THAN),
+    GREATER_THAN_OR_EQUAL(PredicateOperator.GREATER_THAN_OR_EQUAL),
+    LESS_THAN(PredicateOperator.LESS_THAN),
+    LESS_THAN_OR_EQUAL(PredicateOperator.LESS_THAN_OR_EQUAL),
+    IN(PredicateOperator.IN),
+    NOT_IN(PredicateOperator.NOT_IN);
+
+    @Getter private final PredicateOperator predicateOperator;
+
+    private RsqlOperator(PredicateOperator operator) {
+        this.predicateOperator = operator;
+    }
+
 }

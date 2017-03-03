@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.specifications;
+package com.restdude.specification.factory;
 
+import com.restdude.specification.IPredicateFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
@@ -28,45 +29,42 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LocalDatePredicateFactory extends AbstractPredicateFactory<LocalDate> {
+public class EnumStringPredicateFactory extends AbstractPredicateFactory<Enum> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalDatePredicateFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EnumStringPredicateFactory.class);
 
-    public LocalDatePredicateFactory() {
-    }
+	private Class<Enum> type;
+
+	private EnumStringPredicateFactory() {
+	}
+
+	public EnumStringPredicateFactory(Class<Enum> clazz) {
+		this.type = clazz;
+	}
+
 
     /**
      * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
      */
     @Override
-    public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<LocalDate> fieldType, ConversionService conversionService, String[] propertyValues) {
+    public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Enum> fieldType, ConversionService conversionService, String[] propertyValues) {
         Predicate predicate = null;
-
         try {
             LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
+            Path path = this.<Enum>getPath(root, propertyName, fieldType);
 
-            Path path = this.<LocalDate>getPath(root, propertyName, fieldType);
-            if (propertyValues.length == 0) {
-                predicate = path.isNull();
-            }
             if (propertyValues.length == 1) {
-                LocalDate date = conversionService.convert(propertyValues[0], LocalDate.class);
-                predicate = date != null ? cb.equal(path, date) : path.isNull();
-            } else if (propertyValues.length == 2) {
-                LocalDate from = conversionService.convert(propertyValues[0], LocalDate.class);
-                LocalDate to = conversionService.convert(propertyValues[1], LocalDate.class);
-                predicate = cb.between(path, from, to);
+                predicate = cb.equal(path, conversionService.convert(propertyValues[0], fieldType));
             } else {
-                Set<LocalDate> values = new HashSet<>();
+                Set choices = new HashSet(propertyValues.length);
                 for (int i = 0; i < propertyValues.length; i++) {
-                    LocalDate d = conversionService.convert(propertyValues[i], LocalDate.class);
-                    values.add(d);
+                    choices.add(conversionService.convert(propertyValues[i], fieldType));
                 }
-                predicate = path.in(values);
+
+                predicate = path.in(choices);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

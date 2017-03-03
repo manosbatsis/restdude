@@ -165,6 +165,8 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             + "of the resource are supported as search criteria in the form of HTTP URL parameters.")
     @ModelDrivenPreAuth
     public PagedModelResources<T> plainJsonGetPage(
+            @ApiParam(name = "filter", value = "The RSQL/FIQL query to use. Simply URL param based search will be used if missing.")
+            @RequestParam(value = "filter", required = false) String filter,
             @ApiParam(name = "_pn", value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = "_pn", required = false, defaultValue = "0") Integer page,
             @ApiParam(name = "_ps", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
@@ -180,6 +182,8 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @ApiOperation(value = "Search for resources (paginated).", notes = "Find all resources matching the given criteria and return a paginated JSON API Document.")
     @ModelDrivenPreAuth
     public JsonApiModelCollectionDocument<T, PK> jsonApiGetPage(
+            @ApiParam(name = "filter", value = "The RSQL/FIQL query to use. Simply URL param based search will be used if missing.")
+            @RequestParam(value = "filter", required = false) String filter,
             @ApiParam(name = "page[number]", value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = "page[number]", required = false, defaultValue = "0") Integer page,
             @ApiParam(name = "page[size]", value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")

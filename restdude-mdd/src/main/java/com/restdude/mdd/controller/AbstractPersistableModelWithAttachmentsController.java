@@ -20,12 +20,12 @@
  */
 package com.restdude.mdd.controller;
 
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.cms.model.BinaryFile;
-import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.domain.cms.service.BinaryFileService;
-import com.restdude.mdd.specifications.SpecificationUtils;
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.model.UploadedFileModel;
+import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.specification.SpecificationUtils;
 import com.restdude.util.ConfigurationFactory;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;

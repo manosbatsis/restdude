@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.specifications;
+package com.restdude.specification;
 
 import com.restdude.mdd.model.PersistableModel;
 import org.apache.commons.collections4.MapUtils;
@@ -35,7 +35,7 @@ import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.*;
 
-
+@Deprecated
 public class SpecificationsBuilder<T extends PersistableModel<PK>, PK extends Serializable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpecificationsBuilder.class);

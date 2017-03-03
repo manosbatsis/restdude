@@ -21,7 +21,7 @@
 package com.restdude.mdd.registry;
 
 import com.restdude.mdd.model.Model;
-import com.restdude.mdd.specifications.IPredicateFactory;
+import com.restdude.specification.IPredicateFactory;
 
 import java.io.Serializable;
 import java.util.Set;

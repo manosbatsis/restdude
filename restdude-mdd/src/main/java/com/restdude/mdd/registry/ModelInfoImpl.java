@@ -22,8 +22,8 @@ package com.restdude.mdd.registry;
 
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.model.Model;
-import com.restdude.mdd.specifications.IPredicateFactory;
 import com.restdude.mdd.util.EntityUtil;
+import com.restdude.specification.IPredicateFactory;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

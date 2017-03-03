@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.specifications;
+package com.restdude.specification.factory;
 
+import com.restdude.specification.IPredicateFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
@@ -41,7 +42,7 @@ public class BooleanPredicateFactory extends AbstractPredicateFactory<Boolean> {
 	}
 
 	/**
-	 * @see com.restdude.mdd.specifications.IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
+	 * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
 	 */
     @Override
 	public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, ConversionService conversionService, String[] propertyValues) {

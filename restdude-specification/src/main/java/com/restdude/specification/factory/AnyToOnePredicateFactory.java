@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.specifications;
+package com.restdude.specification.factory;
 
 import com.restdude.mdd.model.PersistableModel;
+import com.restdude.specification.IPredicateFactory;
 import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class AnyToOnePredicateFactory<T extends PersistableModel<PK>, PK extends
 
 
 	/**
-	 * @see com.restdude.mdd.specifications.IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
+	 * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
 	 */
 	@Override
 	public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues) {

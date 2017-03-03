@@ -27,7 +27,7 @@ import com.restdude.domain.friends.service.FriendshipService;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.mdd.controller.PageableUtil;
-import com.restdude.mdd.specifications.SpecificationsBuilder;
+import com.restdude.specification.SpecificationsBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

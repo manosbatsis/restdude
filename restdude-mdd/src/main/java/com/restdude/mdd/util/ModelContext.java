@@ -25,7 +25,7 @@ import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
-import com.restdude.mdd.specifications.IPredicateFactory;
+import com.restdude.specification.IPredicateFactory;
 import com.restdude.util.ClassUtils;
 import lombok.Getter;
 import lombok.NonNull;

@@ -28,12 +28,12 @@ import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.mdd.service.PersistableModelService;
-import com.restdude.mdd.specifications.AnyToOnePredicateFactory;
-import com.restdude.mdd.specifications.IPredicateFactory;
-import com.restdude.mdd.specifications.SpecificationUtils;
 import com.restdude.mdd.util.CreateClassCommand;
 import com.restdude.mdd.util.JavassistUtil;
 import com.restdude.mdd.util.ModelContext;
+import com.restdude.specification.IPredicateFactory;
+import com.restdude.specification.SpecificationUtils;
+import com.restdude.specification.factory.AnyToOnePredicateFactory;
 import com.restdude.util.ClassUtils;
 import com.restdude.util.Mimes;
 import io.swagger.annotations.Api;
@@ -136,10 +136,10 @@ public class ModelBasedComponentGenerator {
 
     /**
      * Creates an {@link IPredicateFactory} instance that is parameterized for a specific entity model. The
-     * predicate factory is registered using {@link SpecificationUtils#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)}
+     * predicate factory is registered using {@link SpecificationUtils#addFactoryForClass(java.lang.Class, IPredicateFactory)}
      *
      * @param modelContext
-     * @see SpecificationUtils#addFactoryForClass(java.lang.Class, com.restdude.mdd.specifications.IPredicateFactory)
+     * @see SpecificationUtils#addFactoryForClass(java.lang.Class, IPredicateFactory)
      */
     protected void createPredicateFactory(ModelContext modelContext) {
         if(modelContext.getModelType().isAnnotationPresent(Entity.class)) {

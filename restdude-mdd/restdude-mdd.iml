@@ -33,6 +33,9 @@
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.2.1.Final" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.hateoas:spring-hateoas:0.23.0.RELEASE" level="project" />
+    <orderEntry type="module" module-name="restdude-rsql" />
+    <orderEntry type="module" module-name="restdude-specification" />
+    <orderEntry type="library" name="Maven: cz.jirutka.rsql:rsql-parser:2.1.0" level="project" />
     <orderEntry type="module" module-name="restdude-hypermedia" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.5" level="project" />
     <orderEntry type="module" module-name="restdude-util" />
@@ -113,7 +116,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.12" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.5.1-1" level="project" />
     <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" level="project" />
-    <orderEntry type="library" name="Maven: cz.jirutka.rsql:rsql-parser:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: de.odysseus.juel:juel-impl:2.2.7" level="project" />
     <orderEntry type="library" name="Maven: de.odysseus.juel:juel-api:2.2.7" level="project" />
     <orderEntry type="library" name="Maven: org.fusesource.jansi:jansi:1.12" level="project" />

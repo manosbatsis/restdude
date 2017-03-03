@@ -27,7 +27,7 @@ import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.repository.ModelRepository;
-import com.restdude.mdd.specifications.SpecificationUtils;
+import com.restdude.specification.SpecificationUtils;
 import lombok.NonNull;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;

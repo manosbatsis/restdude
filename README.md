@@ -12,6 +12,7 @@ Full stack, high level framework for horizontal, model-driven application hacker
 - Choose between Spring MVC or Spring Boot
 - Support a [3rd level](https://martinfowler.com/articles/richardsonMaturityModel.html#level3) RESTful API out of the box with [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)
 - Allow clients to use plain model-based REST or [JSON API 1.x](http://jsonapi.org/format) 
+- Enjoy effortless, model-driven search endpoints with sorting, paging and dynamic criteria support for simple URL params or RSQL/FIQL
 - Use a 3-tier architecture without the boilerplate with [restdude-mdd](restdude-mdd)
 - Annotate your models to configure API documentation, authorization, validation and auditing
 - Sleep better with built-in [error-management](restdude-error)
@@ -54,7 +55,8 @@ HTTP Method | Path   | Description
 ------------ | ------ | -------------------
 GET  | /api/rest/hosts/{id} | Fetch the host matching the id
 GET  | /api/rest/hosts/{id}/country | Fetch the country of the host matching the id
-GET  | /api/rest/hosts?country.code=GR&name=%25startsWith | Search based on model properties (paged)
+GET  | /api/rest/hosts?country.code=GR&name=%25startsWith | Search based on model properties using simple URL params (paged)
+GET  | /api/rest/hosts?filter=country.code=in=(GR,UK);name=%25startsWith | Search based on model properties using RSQL or FIQL (paged)
 POST | /api/rest/hosts | Create a new host
 PUT  | /api/rest/hosts/{id} | Update the host matching the id
 PATCH  | /api/rest/hosts/{id} | Partially update the host matching the id

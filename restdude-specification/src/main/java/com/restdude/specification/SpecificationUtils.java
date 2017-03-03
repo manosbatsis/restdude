@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.specifications;
+package com.restdude.specification;
 
 import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.registry.ModelBasedComponentGenerator;
-import com.restdude.mdd.util.ModelContext;
+import com.restdude.specification.factory.*;
 import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +109,6 @@ public class SpecificationUtils<T extends PersistableModel<PK>, PK extends Seria
      *
      * @param clazz
      * @param factory
-     * @see ModelBasedComponentGenerator#createPredicateFactory(ModelContext)
      */
     public static void addFactoryForClass(Class clazz, IPredicateFactory factory) {
         Assert.notNull(clazz, "clazz cannot be null");
