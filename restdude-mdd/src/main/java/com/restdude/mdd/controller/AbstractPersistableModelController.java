@@ -191,7 +191,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = "sort", value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
 // TODO: add support for query dialects: RequestParam MultiValueMap<String, String> httpParams
-        /*
+        /* TODO: refactor SearchRequest for  using as the context
         MultivaluedHashMap<String, String> queryParams = new MultivaluedHashMap<>();
         for(String key : httpParams.keySet()){
             queryParams.put(key, httpParams.get(key));
@@ -221,7 +221,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}/{relationName}", method = RequestMethod.GET)
+    @RequestMapping(value = "{pk}/relationships/{relationName}", method = RequestMethod.GET)
     @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
     @JsonView(Model.ItemView.class)
     public Resource<PersistableModel> plainJsonGetRelatedEntityByOwnId(
@@ -231,11 +231,11 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         FieldInfo fieldInfo = this.getModelInfo().getField(relationName);
         PersistableModel related = super.findRelatedEntityByOwnId(pk, fieldInfo);
 
-        return toHateoasResource(related, (Class<PersistableModel>)fieldInfo.getFieldType());
+        return toHateoasResource(related, (Class<PersistableModel>)fieldInfo.getFieldModelType());
     }
 
 
-    @RequestMapping(value = "{pk}/{relationName}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @RequestMapping(value = "{pk}/relationships/{relationName}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
     @JsonView(Model.ItemView.class)
     public JsonApiModelDocument jsonApiGetRelatedEntityByOwnId(
@@ -245,7 +245,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         FieldInfo fieldInfo = this.getModelInfo().getField(relationName);
         PersistableModel related = super.findRelatedEntityByOwnId(pk, fieldInfo);
 
-        return toDocument(related, (Class<PersistableModel>)fieldInfo.getFieldType());
+        return toDocument(related, (Class<PersistableModel>)fieldInfo.getFieldModelType());
     }
 
 

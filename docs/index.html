@@ -74,6 +74,10 @@ isHome: true
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
 
+    @OneToMany(mappedBy = "host")
+    private List&lt;Site&gt; sites;
+
+
     // other properties, getters/setters etc.
     }
     {% endhighlight %}
@@ -95,8 +99,13 @@ isHome: true
         </tr>
         <tr>
             <td>GET</td>
-            <td>/api/rest/hosts/{id}/country</td>
+            <td>/api/rest/hosts/{id}/relationships/country</td>
             <td>Fetch the country of the host matching the id</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/api/rest/hosts/{id}/relationships/sites</td>
+            <td>Search the sites of the host matching the id, see search endpoints bellow for filtering and other options (paged)</td>
         </tr>
         <tr>
             <td>GET</td>

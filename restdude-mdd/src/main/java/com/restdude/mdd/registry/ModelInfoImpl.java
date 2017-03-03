@@ -29,7 +29,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.hateoas.ExposesResourceFor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Entity;
 import java.beans.BeanInfo;
@@ -58,6 +58,7 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
     @Getter private final Set<String> simpleFieldNames = new HashSet<>();
     @Getter private final Set<String> toOneFieldNames = new HashSet<>();
     @Getter private final Set<String> toManyFieldNames = new HashSet<>();
+    @Getter private final Set<String> inverseFieldNames = new HashSet<>();
 
     private final ConcurrentHashMap<String, FieldInfo> fields = new ConcurrentHashMap<>();
 
@@ -65,7 +66,8 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
     private IPredicateFactory predicateFactory;
     @Getter @Setter
     private Class<?> modelControllerType;
-    private Boolean linkableResource;
+    private Boolean linkableResource = false;
+    @Getter private String requestMapping;
 
 
     public ModelInfoImpl(@NonNull Class<T> modelType) {
@@ -80,6 +82,8 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
         ModelResource ar = modelType.getAnnotation(ModelResource.class);
         this.uriComponent = buildUriComponent();
         if(ar != null){
+
+            this.linkableResource = ar.linkable();
             this.basePath = ar.basePath();
             this.parentApplicationPath = ar.parentPath();
         }
@@ -87,6 +91,13 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
             this.basePath = "";
             this.parentApplicationPath = "";
         }
+
+        this.requestMapping = new StringBuffer("/")
+                .append(this.getBasePath(this.basePath))
+                .append("/")
+                .append(this.parentApplicationPath)
+                .append("/")
+                .append(this.uriComponent).toString().replaceAll("/{2,}", "/");
 
         // add fields info
         BeanInfo componentBeanInfo = EntityUtil.getBeanInfo(modelType);
@@ -109,6 +120,11 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
                     else if(fieldInfo.getFieldMappingType().isToMany()){
                         this.toManyFieldNames.add(fieldInfo.getFieldName());
                     }
+
+                    // note inverse fields
+                    if(fieldInfo.isInverse()){
+                        this.inverseFieldNames.add(fieldInfo.getFieldName());
+                    }
                 }
             }
         }
@@ -125,6 +141,7 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
         }
         return endpointPathName;
     }
+
 
     @Override
     public String getParentPath(String defaultValue) {
@@ -143,18 +160,12 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
 
     @Override
     public Boolean isLinkableResource(){
-        if(this.linkableResource == null){
-            boolean hasController = this.modelControllerType != null;
-            ExposesResourceFor exposesResourceFor = hasController ? this.modelControllerType.getAnnotation(ExposesResourceFor.class) : null;
-            log.debug("isLinkableResource, name: {}, modelControllerType: {}, exposes resources: {}", this.getModelType(), modelControllerType, exposesResourceFor);
-            if(exposesResourceFor != null){
-                this.linkableResource = Boolean.TRUE;
-            }
-            else{
-                this.linkableResource = Boolean.FALSE;
-            }
-        }
-        return this.linkableResource;
+        return this.linkableResource && this.modelControllerType != null;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("uriComponent", this.getUriComponent()).append("modelType", this.getModelType()).append("linkable", this.isLinkableResource()).toString();
     }
 
 }

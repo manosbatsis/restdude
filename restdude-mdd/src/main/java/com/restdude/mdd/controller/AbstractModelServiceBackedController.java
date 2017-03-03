@@ -49,7 +49,6 @@ import com.restdude.rsql.RsqlUtils;
 import cz.jirutka.rsql.parser.ast.Node;
 import lombok.NonNull;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +61,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.*;
+import org.springframework.hateoas.mvc.BasicLinkBuilder;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -69,7 +69,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
@@ -161,31 +160,31 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
 
     protected <RT extends PersistableModel> ModelResource<RT> toHateoasResource(RT model, Class<RT> modelType) {
         ModelResource<RT> resource = new ModelResource<>(model);
-        try {
-            if (model.getPk() != null) {
-                resource.add(this.entityLinks.linkForSingleResource(modelType, model.getPk().toString()).withSelfRel());
-                ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
-                if(modelInfo != null){
-                    Set<String> toOneFields = modelInfo.getToOneFieldNames();
-                    if(CollectionUtils.isNotEmpty(toOneFields)){
-                        LOGGER.debug("toHateoasResource, ToOne fieldse: {}", toOneFields);
+        ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
+        LOGGER.debug("toHateoasResource, model: {}, modelType: {}, modelInfo: {}", model, modelType, modelInfo);
+        if (model.getPk() != null && modelInfo != null) {
 
-                        for(String fieldName : toOneFields){
-                            FieldInfo fieldInfo = modelInfo.getField(fieldName);
-                            if(fieldInfo.isGetter() && fieldInfo.isLinkableResource()){
-                                Object related = fieldInfo.getGetterMethod().invoke(model);
-                                if(related != null){
-                                    Object id =fieldInfo.isLazy() ? this.service.getIdentifier(related) : ((PersistableModel) related).getPk();
-                                    resource.add(this.entityLinks.linkForSingleResource(fieldInfo.getFieldType(), id.toString()).withRel(fieldName));
-                                }
-                            }
-                        }
-                    }
+            // add link to self
+            resource.add(BasicLinkBuilder.linkToCurrentMapping()
+                    .slash(modelInfo.getRequestMapping())
+                    .slash(model.getPk()).withSelfRel());
+
+            // add links to linkable relationships
+            Set<String> relationshipFields = new HashSet<>();
+            relationshipFields.addAll(modelInfo.getToOneFieldNames());
+            relationshipFields.addAll(modelInfo.getToManyFieldNames());
+            for(String fieldName : relationshipFields){
+                FieldInfo fieldInfo = modelInfo.getField(fieldName);
+                LOGGER.debug("toHateoasResource, fieldName: {}, relatedModelInfo: {}", fieldName, fieldInfo.getRelatedModelInfo());
+                if(fieldInfo.isLinkableResource()){
+                    resource.add(BasicLinkBuilder.linkToCurrentMapping()
+                            .slash(modelInfo.getRequestMapping())
+                            .slash(model.getPk())
+                            .slash("relationships")
+                            .slash(fieldName).withRel(fieldName));
                 }
-
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+
         }
 
         return resource;
@@ -305,7 +304,6 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         resource.setPk(pk);
         applyCurrentPrincipal(resource);
         resource = this.service.update(resource);
-        toHateoasResource(resource);
         return resource;
     }
 
@@ -314,7 +312,6 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         applyCurrentPrincipal(resource);
         resource.setPk(pk);
         resource = this.service.patch(resource);
-        toHateoasResource(resource);
         return resource;
     }
 

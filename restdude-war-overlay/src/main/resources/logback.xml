@@ -30,6 +30,12 @@
     <logger name="com.restdude.test">
         <level value="warn"/>
     </logger>
+    <logger name="com.restdude.mdd.registry">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.mdd.controller.AbstractModelServiceBackedController">
+        <level value="debug"/>
+    </logger>
 
     <!--logger name="com.restdude.rsql">
         <level value="debug"/>

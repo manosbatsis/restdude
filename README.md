@@ -44,6 +44,9 @@ public class Host extends AbstractSystemUuidPersistable {
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
     
+	@OneToMany(mappedBy = "host")
+    private List&lt;Site&gt; sites;
+    
     // other properties, getters/setters etc.
 }
 ```
@@ -54,7 +57,8 @@ Some of the resulting services:
 HTTP Method | Path   | Description
 ------------ | ------ | -------------------
 GET  | /api/rest/hosts/{id} | Fetch the host matching the id
-GET  | /api/rest/hosts/{id}/country | Fetch the country of the host matching the id
+GET  | /api/rest/hosts/{id}/relationships/country | Fetch the country of the host matching the id
+GET  | /api/rest/hosts/{id}/relationships/sites | Search the sites of the host matching the id, see search endpoints bellow for filtering etc (paged)
 GET  | /api/rest/hosts?country.code=GR&name=%25startsWith | Search based on model properties using simple URL params (paged)
 GET  | /api/rest/hosts?filter=country.code=in=(GR,UK);name==%25startsWith | Search based on model properties using [RSQL or FIQL](https://manosbatsis.github.io/restdude/rsql.html) (paged)
 POST | /api/rest/hosts | Create a new host

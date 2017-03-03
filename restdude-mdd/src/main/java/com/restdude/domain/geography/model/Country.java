@@ -29,6 +29,8 @@ import com.restdude.domain.geography.controller.CountryController;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.yahoo.elide.annotation.Include;
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -59,18 +61,23 @@ public class Country extends AbstractFormalRegionModel<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
 
+	@Getter @Setter
     @Column(name = "native_name", unique = true, nullable = true, length = 50)
     private String nativeName;
 
+	@Getter @Setter
     @Column(name = "calling_code", unique = false, nullable = true, length = 15)
     private String callingCode;
 
+	@Getter @Setter
 	@Column(unique = false, nullable = true, length = 50)
 	private String capital;
 
+	@Getter @Setter
 	@Column(unique = false, nullable = true, length = 30)
 	private String currency;
 
+	@Getter @Setter
 	@Column(unique = false, nullable = true, length = 30)
 	private String languages;
 
@@ -91,46 +98,6 @@ public class Country extends AbstractFormalRegionModel<Continent, String> {
 		this.currency = currency;
 		this.languages = languages;
 	}
-
-	public String getNativeName() {
-		return nativeName;
-	}
-
-	public void setNativeName(String nativeName) {
-		this.nativeName = nativeName;
-	}
-
-	public String getCallingCode() {
-		return callingCode;
-	}
-
-	public void setCallingCode(String callingCode) {
-		this.callingCode = callingCode;
-	}
-
-	public String getCapital() {
-		return capital;
-	}
-
-	public void setCapital(String capital) {
-		this.capital = capital;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public String getLanguages() {
-		return languages;
-	}
-
-	public void setLanguages(String languages) {
-		this.languages = languages;
-    }
 
 	@Override
 	public boolean equals(final Object obj) {

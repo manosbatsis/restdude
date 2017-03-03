@@ -231,17 +231,8 @@ public class ModelBasedComponentGenerator {
             createControllerCmd.addTypeAnnotation(RestController.class, controllerMembers);
 
             // @RequestMapping
-
-            String modelUriComponent = modelInfo.getUriComponent();
-            String modelParentPath = modelInfo.getParentPath(this.defaultParentPath);
-            String modelBasePath = modelInfo.getBasePath(this.basePath);
-            String pattern = new StringBuffer("/")
-                    .append(modelBasePath)
-                    .append("/")
-                    .append(modelParentPath)
-                    .append("/")
-                    .append(modelUriComponent).toString();
-            pattern = pattern.replaceAll("/{2,}", "/");
+            String pattern = null;
+            pattern = getRequestMapping(modelInfo);
             LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
 
             Map<String, Object> requestMappingMembers = new HashMap<>();
@@ -283,6 +274,21 @@ public class ModelBasedComponentGenerator {
         modelContext.setControllerDefinition(beanDefinition);
         modelInfo.setModelControllerType(controllerClass);
 
+    }
+
+    private String getRequestMapping(ModelInfo modelInfo) {
+        String pattern;
+        String modelUriComponent = modelInfo.getUriComponent();
+        String modelParentPath = modelInfo.getParentPath(this.defaultParentPath);
+        String modelBasePath = modelInfo.getBasePath(this.basePath);
+        pattern = new StringBuffer("/")
+                .append(modelBasePath)
+                .append("/")
+                .append(modelParentPath)
+                .append("/")
+                .append(modelUriComponent).toString();
+        pattern = pattern.replaceAll("/{2,}", "/");
+        return pattern;
     }
 
 

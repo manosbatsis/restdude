@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.registry;
 
-import com.restdude.mdd.model.Model;
+import java.util.Optional;
 
 /**
  * Contains metadata for a specific model field
@@ -29,13 +29,14 @@ public interface FieldInfo {
 
     String getFieldName();
 
-    Class<? extends Model> getFieldType();
+    Class<?> getFieldType();
 
     FieldMappingType getFieldMappingType();
 
     Class<?> getFieldModelType();
 
-    String getMappedBy();
+    Optional<String> getReverseFieldName();
+    void setReverseFieldName(String reverseFieldName);
 
     javax.persistence.CascadeType[] getCascadeTypes();
 
@@ -49,8 +50,10 @@ public interface FieldInfo {
 
     boolean isLazy();
 
-    ModelInfo getModelInfo();
-    void setModelInfo(ModelInfo modelInfo);
+    ModelInfo getRelatedModelInfo();
+    void setRelatedModelInfo(ModelInfo related);
 
     boolean isLinkableResource();
+
+    boolean isInverse();
 }

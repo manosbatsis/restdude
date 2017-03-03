@@ -109,18 +109,26 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
         // field > model ref
         for(ModelInfo modelInfo : this.getEntries()){
-            Set<String> fNames = modelInfo.getToOneFieldNames();
-            for(String fieldName : fNames){
-                FieldInfo field = modelInfo.getField(fieldName);
-                ModelInfo relatedModelInfo = this.getEntryFor(field.getFieldType());
-                field.setModelInfo(relatedModelInfo);
+            setRelatedFieldsModelInfo(modelInfo, modelInfo.getToOneFieldNames());
+            setRelatedFieldsModelInfo(modelInfo, modelInfo.getToManyFieldNames());
+        }
+    }
+
+    /**
+     * Set the reverse entity ModelInfo for each relationship field
+     * @param modelInfo
+     * @param fNames
+     */
+    private void setRelatedFieldsModelInfo(ModelInfo modelInfo, Set<String> fNames) {
+        for(String fieldName : fNames){
+            FieldInfo field = modelInfo.getField(fieldName);
+            LOGGER.debug("setRelatedFieldModelInfo, model: {}, fieldName: {}, field: {}", modelInfo.getModelType(), fieldName, field);
+            Class<?> fieldModelType = field.getFieldModelType();
+
+            ModelInfo relatedModelInfo = fieldModelType != null ? this.getEntryFor(field.getFieldModelType()) : null;
+            if(relatedModelInfo != null){
+                field.setRelatedModelInfo(relatedModelInfo);
             }
-            /*
-            for(String fieldName : modelInfo.getToManyFieldNames()){
-                FieldInfo field = modelInfo.getField(fieldName);
-                field.setModelInfo(this.getEntryFor(field.getFieldModelType()));
-            }
-            */
         }
     }
 
@@ -147,6 +155,7 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
         generator.createComponentsFor();
 
         for(ModelInfo info : this.getEntries()){
+            this.resolveInverseFields(info);
             if(!this.handlerModelTypes.containsKey(info.getModelControllerType())){
                 if(info.getModelControllerType() != null && info.getModelType() != null) {
                     LOGGER.debug("postProcessBeanDefinitionRegistry, adding handlerModelType entry: {}:{}, linkable: {}", info.getModelControllerType(), info.getModelType(), info.isLinkableResource());
@@ -155,6 +164,38 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
             }
         }
 
+    }
+
+    protected void resolveInverseFields(ModelInfo modelInfo) {
+        resolveInverseFields(modelInfo, modelInfo.getToOneFieldNames());
+        resolveInverseFields(modelInfo, modelInfo.getToManyFieldNames());
+    }
+
+    protected void resolveInverseFields(ModelInfo modelInfo, Set<String> fieldNames) {
+        for(String fieldName : fieldNames){
+            FieldInfo field = modelInfo.getField(fieldName);
+            if(!field.isInverse()){
+                // scan ModelInfo on the other side to find an inverse JPA mapping, if any
+                ModelInfo inverseModelInfo = this.getEntryFor(field.getFieldModelType());
+                Set<String> inversePropertyNames = inverseModelInfo.getInverseFieldNames();
+
+                // go over inverse fields to find a match, if any
+                for(String inversePropertyName: inversePropertyNames){
+                    FieldInfo inverseField = inverseModelInfo.getField(inversePropertyName);
+                    if(fieldName.equals(inverseField.getReverseFieldName())){
+                        field.setReverseFieldName(inverseField.getFieldName());
+                        break;
+                    }
+                }
+
+            }
+            // break if found
+            Optional<String> reverseFieldName = field.getReverseFieldName();
+            if(reverseFieldName.isPresent()){
+                LOGGER.debug("resolveInverseFields, resolved field: {}, reverse: {}", field.getFieldName(), reverseFieldName.get());
+                break;
+            }
+        }
     }
 
     @Override

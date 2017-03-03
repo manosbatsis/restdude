@@ -30,6 +30,8 @@ import java.util.Set;
  * Contains metadata for a specific Model class.
  */
 public interface ModelInfo<T extends Model<PK>, PK extends Serializable> {
+    String getRequestMapping();
+
     String getParentPath(String defaultValue);
 
     String getBasePath(String defaultValue);
@@ -61,6 +63,7 @@ public interface ModelInfo<T extends Model<PK>, PK extends Serializable> {
     Set<String> getToOneFieldNames();
 
     Set<String> getToManyFieldNames();
+    Set<String> getInverseFieldNames();
 
     IPredicateFactory getPredicateFactory();
 
@@ -68,4 +71,5 @@ public interface ModelInfo<T extends Model<PK>, PK extends Serializable> {
 
     void setPredicateFactory(IPredicateFactory predicateFactory);
     void setModelControllerType(Class<?> modelControllerType);
+
 }

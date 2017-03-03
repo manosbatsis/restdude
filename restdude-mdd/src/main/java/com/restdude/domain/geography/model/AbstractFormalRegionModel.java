@@ -22,6 +22,8 @@ package com.restdude.domain.geography.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -40,16 +42,19 @@ public abstract class AbstractFormalRegionModel<P extends AbstractFormalRegionMo
 	private static final String PATH_SEPARATOR = ": ";
 
 
-	@NotNull
+	@NotNull @Getter @Setter
 	@Column(name = "name", nullable = false)
 	private String name;
-	@NotNull
+
+	@NotNull @Getter @Setter
 	@Column(name = "pathFragment", nullable = false)
 	private String path;
-	@NotNull
+
+	@NotNull @Getter @Setter
 	@Column(name = "path_level", nullable = false)
 	private Short pathLevel;
-	
+
+	@Getter @Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="parent")
 	private P parent;
@@ -92,37 +97,8 @@ public abstract class AbstractFormalRegionModel<P extends AbstractFormalRegionMo
 		
 	}
 
-    public String getName() {
-		return name;
-	}
 
-    public void setName(String name) {
-		this.name = name;
-	}
 
-    public String getPath() {
-		return path;
-	}
-
-    public void setPath(String path) {
-		this.path = path;
-	}
-
-    public Short getPathLevel() {
-		return pathLevel;
-	}
-
-    public void setPathLevel(Short pathLevel) {
-		this.pathLevel = pathLevel;
-	}
-
-    public P getParent() {
-        return parent;
-    }
-
-    public void setParent(P parent) {
-        this.parent = parent;
-    }
 
 	@Override
 	public int hashCode() {

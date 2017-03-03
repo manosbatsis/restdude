@@ -21,20 +21,24 @@
 package com.restdude.mdd.registry;
 
 import com.restdude.mdd.model.Model;
+import com.restdude.util.ClassUtils;
 import com.yahoo.elide.annotation.ComputedRelationship;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.hibernate.annotations.Formula;
+import org.springframework.core.GenericTypeResolver;
 
 import javax.persistence.*;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -45,7 +49,8 @@ import java.util.stream.Stream;
 public class FieldInfoImpl implements FieldInfo {
 
 
-    public static FieldInfo create(@NonNull Class<? extends Model> modelType,  PropertyDescriptor property) {
+
+    public static FieldInfo create(@NonNull Class<? extends Model> modelType, PropertyDescriptor property) {
         FieldInfo fieldInfo = null;
         Field field = FieldUtils.getField(modelType, property.getName(), true);
 
@@ -63,24 +68,25 @@ public class FieldInfoImpl implements FieldInfo {
 
     }
 
-    @Getter private final String fieldName;
-    @Getter private final Class<? extends Model> fieldType;
+    @Getter private boolean relationship;
+    @Getter private String fieldName;
+    @Getter private Class<?> fieldType;
     @Getter private FieldMappingType fieldMappingType;
     @Getter private Class<?> fieldModelType;
-    @Getter private String mappedBy;
+    @Setter private String reverseFieldName;
+    @Getter private boolean inverse = false;
     @Getter private CascadeType[] cascadeTypes;
     @Getter private Method getterMethod;
     @Getter private Method setterMethod;
     @Getter private boolean getter;
     @Getter private boolean setter;
     @Getter private boolean lazy = false;
-    //@Getter @Setter private Boolean linkableResource;
-    @Getter @Setter private ModelInfo modelInfo;
+    @Getter private ModelInfo relatedModelInfo;
 
 
     private FieldInfoImpl(@NonNull Class<? extends Model> modelType, @NonNull PropertyDescriptor property, @NonNull Field field, @NonNull Method getter, @NonNull Method setter) {
         // add basic info
-        this.fieldType = (Class<? extends Model>) property.getPropertyType();
+        this.fieldType = property.getPropertyType();
         this.fieldName = property.getName();
 
         this.getterMethod = getter;
@@ -90,8 +96,87 @@ public class FieldInfoImpl implements FieldInfo {
         this.setter = setter != null;
 
         scanMappings(field, getter, setter);
+
+        // set the Modelnfo for if a relationship
+        if(this.isRelationship()){
+            if(Model.class.isAssignableFrom(this.fieldType)){
+                this.fieldModelType = (Class<? extends Model>) this.fieldType;
+            }
+            // if collection but not a Map
+            else if(Collection.class.isAssignableFrom(this.fieldType) && !Map.class.isAssignableFrom(this.fieldType)){
+                ParameterizedType pType = (ParameterizedType) field.getGenericType();
+                log.debug("FieldInfoImpl, fieldType: {}, pType: {}", fieldType, pType);
+                Map<TypeVariable<?>,Type> types = TypeUtils.getTypeArguments(pType);
+                for(TypeVariable<?> var : types.keySet()){
+
+                    Type t = types.get(var);
+                    String tName = t.getTypeName();
+                    log.debug("FieldInfoImpl, var: {}, t.getTypeName: '{}', tName: '{}'", var, t.getTypeName(), tName);
+                    if(tName.contains(".")){
+                        this.fieldModelType = ClassUtils.getClass(tName);
+                    }
+                }
+                if(this.fieldModelType == null){
+                    String tName = ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName();
+                    log.debug("FieldInfoImpl, tName: '{}'", tName);
+                    if(tName.contains(".")){
+                        this.fieldModelType = ClassUtils.getClass(tName);
+                    }
+                }
+                Class<?> resolved = GenericTypeResolver.resolveTypeArgument(fieldType, pType.getClass());
+                log.debug("FieldInfoImpl, resolved: {}", this.fieldModelType);
+                /*
+                log.debug("FieldInfoImpl, type: {}", type);
+                if (type instanceof ParameterizedType) {
+                    Type actualType = ((ParameterizedType) type).getActualTypeArguments()[0];
+                    log.debug("FieldInfoImpl, actualType: {}, name: {}", actualType, actualType.getTypeName());
+                    this.fieldModelType = GenericTypeResolver.resolveTypeArgument(field.getType(), Iterable.class);
+                }
+
+                if(field != null){
+                    Type type = field.getGenericType();
+
+                    if (type instanceof ParameterizedType) {
+                        ParameterizedType paramType = (ParameterizedType)type;
+                        TypeVariable arr = (TypeVariable) paramType.getActualTypeArguments()[0];
+                        this.fieldModelType = (Class<? extends Model>) arr.;
+                    }
+                }
+
+                if(this.fieldModelType == null && getter != null){
+                    Class<Collection> genericInterface = this.fieldType.
+                    if (type instanceof ParameterizedType) {
+                        ParameterizedType paramType = (ParameterizedType) type;
+                        this.fieldModelType = (Class<? extends Model>) GenericTypeResolver.resolveReturnTypeArgument(getter, type..);
+
+                        //ParameterizedType paramType = (ParameterizedType) type;
+                        //Type[] arr = paramType.getActualTypeArguments();
+                       // this.fieldModelType = (Class<? extends Model>) arr[0];
+
+                    }
+
+                }
+
+                if(this.fieldModelType == null && setter != null){
+                    Type type = setter.getGenericParameterTypes()[0];
+                    if (type instanceof ParameterizedType) {
+                        ParameterizedType paramType = (ParameterizedType) type;
+                        Type[] arr = paramType.getActualTypeArguments();
+                        this.fieldModelType = (Class<? extends Model>) arr[0];
+                    }
+                }*/
+
+            }
+            log.debug("FieldInfoImpl, resolved fieldName: {}, fieldType: {}, fieldModelType: {}", this.fieldName, this.fieldType, this.fieldModelType);
+        }
+
     }
 
+    @Override
+    public void setRelatedModelInfo(ModelInfo modelInfo) {
+        this.relatedModelInfo = modelInfo;
+
+    }
 
 
     @Override
@@ -101,7 +186,8 @@ public class FieldInfoImpl implements FieldInfo {
                 .append("fieldType", this.fieldType)
                 .append("fieldMappingType", this.fieldMappingType)
                 .append("fieldModelType", this.fieldModelType)
-                .append("mappedBy", this.mappedBy)
+                .append("reverseFieldName", this.reverseFieldName)
+                .append("inverse", this.inverse)
                 .append("getter", this.getter)
                 .append("setter", this.setter)
                 .append("lazy", this.lazy)
@@ -135,19 +221,15 @@ public class FieldInfoImpl implements FieldInfo {
             }
             else if (field.isAnnotationPresent(ManyToMany.class)) {
                 manyToMany = Optional.ofNullable(field.getAnnotation(ManyToMany.class));
-                this.lazy = manyToMany.get().fetch().equals(FetchType.LAZY);
             }
             else if (field.isAnnotationPresent(ManyToOne.class)) {
                 manyToOne = Optional.ofNullable(field.getAnnotation(ManyToOne.class));
-                this.lazy = manyToOne.get().fetch().equals(FetchType.LAZY);
             }
             else if (field.isAnnotationPresent(OneToMany.class)) {
                 oneToMany = Optional.ofNullable(field.getAnnotation(OneToMany.class));
-                this.lazy = oneToMany.get().fetch().equals(FetchType.LAZY);
             }
             else if (field.isAnnotationPresent(OneToOne.class)) {
                 oneToOne = Optional.ofNullable(field.getAnnotation(OneToOne.class));
-                this.lazy = oneToOne.get().fetch().equals(FetchType.LAZY);
             }
             else if (field.isAnnotationPresent(ComputedRelationship.class)) {
                 computedRelationship = Optional.ofNullable(field.getAnnotation(ComputedRelationship.class));
@@ -158,7 +240,7 @@ public class FieldInfoImpl implements FieldInfo {
         }
 
         // process field
-        boolean isRelation = Stream.of(manyToMany, manyToOne, oneToMany, oneToOne, computedRelationship).anyMatch(x -> x.isPresent());
+        this.relationship = Stream.of(manyToMany, manyToOne, oneToMany, oneToOne, computedRelationship).anyMatch(x -> x.isPresent());
         if(this.fieldName != null && !this.fieldName.equals("class")) {
 
             if(id.isPresent() || embeddedId.isPresent()){
@@ -167,28 +249,33 @@ public class FieldInfoImpl implements FieldInfo {
             else if(tranzient.isPresent()){
                 fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_NONE : FieldMappingType.NONE;
             }
-            else if(isRelation) {
+            else if(this.relationship) {
                 if(oneToMany.isPresent()) {
-                    fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_ONE_TO_MANY : FieldMappingType.ONE_TO_MANY;
-                    mappedBy = oneToMany.get().mappedBy();
-                    cascadeTypes = oneToMany.get().cascade();
+                    this.fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_ONE_TO_MANY : FieldMappingType.ONE_TO_MANY;
+                    this.reverseFieldName = oneToMany.get().mappedBy();
+                    this.cascadeTypes = oneToMany.get().cascade();
+                    this.lazy = oneToMany.get().fetch().equals(FetchType.LAZY);
                 } else if(oneToOne.isPresent()) {
-                    fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_ONE_TO_ONE : FieldMappingType.ONE_TO_ONE;
-                    mappedBy = oneToOne.get().mappedBy();
-                    cascadeTypes = oneToOne.get().cascade();
+                    this.fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_ONE_TO_ONE : FieldMappingType.ONE_TO_ONE;
+                    this.reverseFieldName = oneToOne.get().mappedBy();
+                    this.cascadeTypes = oneToOne.get().cascade();
+                    this.lazy = oneToOne.get().fetch().equals(FetchType.LAZY);
                 } else if(manyToMany.isPresent()) {
-                    fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_MANY_TO_MANY : FieldMappingType.MANY_TO_MANY;
-                    mappedBy = manyToMany.get().mappedBy();
-                    cascadeTypes = manyToMany.get().cascade();
+                    this.fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_MANY_TO_MANY : FieldMappingType.MANY_TO_MANY;
+                    this.reverseFieldName = manyToMany.get().mappedBy();
+                    this.cascadeTypes = manyToMany.get().cascade();
+                    this.lazy = manyToMany.get().fetch().equals(FetchType.LAZY);
                 } else if(manyToOne.isPresent()) {
-                    fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_MANY_TO_ONE : FieldMappingType.MANY_TO_ONE;
-                    mappedBy = "";
-                    cascadeTypes = manyToOne.get().cascade();
+                    this.fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_MANY_TO_ONE : FieldMappingType.MANY_TO_ONE;
+                    this.reverseFieldName = "";
+                    this.cascadeTypes = manyToOne.get().cascade();
+                    this.lazy = manyToOne.get().fetch().equals(FetchType.LAZY);
                 } else {
-                    fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_NONE :FieldMappingType.NONE;
-                    mappedBy = "";
-                    cascadeTypes = new CascadeType[0];
+                    this.fieldMappingType = computedRelationship.isPresent() ? FieldMappingType.CALCULATED_NONE :FieldMappingType.NONE;
+                    this.reverseFieldName = "";
+                    this.cascadeTypes = new CascadeType[0];
                 }
+                this.inverse = StringUtils.isNotEmpty(this.reverseFieldName);
             }
             else if(formula.isPresent()){
                 fieldMappingType = FieldMappingType.CALCULATED_SIMPLE;
@@ -205,6 +292,12 @@ public class FieldInfoImpl implements FieldInfo {
 
     @Override
     public boolean isLinkableResource() {
-        return this.modelInfo != null ? this.modelInfo.isLinkableResource() : false;
+        return this.relatedModelInfo != null && this.relatedModelInfo.isLinkableResource();
     }
+
+    @Override
+    public Optional<String> getReverseFieldName(){
+        return Optional.ofNullable(this.reverseFieldName);
+    }
+
 }

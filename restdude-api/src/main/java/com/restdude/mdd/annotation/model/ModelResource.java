@@ -110,5 +110,7 @@ public @interface ModelResource {
 
     boolean rootLevel() default true;
 
+    boolean linkable() default true;
+
     
 }

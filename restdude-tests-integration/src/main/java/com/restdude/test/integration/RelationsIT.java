@@ -72,7 +72,7 @@ public class RelationsIT extends AbstractControllerIT {
         LOGGER.debug("testSimpleTypeProperty");
         return given().spec(requestSpec)
                 .log().all()
-                .get(WEBCONTEXT_PATH + "/api/rest/countries/GR/parent")
+                .get(WEBCONTEXT_PATH + "/api/rest/countries/GR/relationships/parent")
                 .then()
                 .log().all()
                 .assertThat()

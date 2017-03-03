@@ -20,13 +20,17 @@
  */
 package com.restdude.domain.geography.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.annotation.model.ModelResource;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "continent")
@@ -38,7 +42,9 @@ public class Continent extends AbstractFormalRegionModel<Continent, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Continent.class);
 
-
+	@JsonIgnore @Getter @Setter
+	@OneToMany(mappedBy = "parent", orphanRemoval = true)
+	private List<Country> countries;
 
 	public Continent() {
 		super();
