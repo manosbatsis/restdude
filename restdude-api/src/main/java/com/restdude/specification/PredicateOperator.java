@@ -18,28 +18,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.rsql;
-
-import com.restdude.specification.PredicateOperator;
-import lombok.Getter;
+package com.restdude.specification;
 
 /**
- * Enum of RSQL parser operators
+ * Operators used by implementations of {@link IPredicateFactory}
  */
-public enum RsqlOperator {
-    EQUAL(PredicateOperator.EQUAL),
-    NOT_EQUAL(PredicateOperator.NOT_EQUAL),
-    GREATER_THAN(PredicateOperator.GREATER_THAN),
-    GREATER_THAN_OR_EQUAL(PredicateOperator.GREATER_THAN_OR_EQUAL),
-    LESS_THAN(PredicateOperator.LESS_THAN),
-    LESS_THAN_OR_EQUAL(PredicateOperator.LESS_THAN_OR_EQUAL),
-    IN(PredicateOperator.IN),
-    NOT_IN(PredicateOperator.NOT_IN);
-
-    @Getter private final PredicateOperator predicateOperator;
-
-    private RsqlOperator(PredicateOperator operator) {
-        this.predicateOperator = operator;
-    }
-
+public enum PredicateOperator {
+    EQUAL,
+    NOT_EQUAL,
+    GREATER_THAN,
+    GREATER_THAN_OR_EQUAL,
+    LESS_THAN,
+    LESS_THAN_OR_EQUAL,
+    IN,
+    NOT_IN,
+    AUTO;
 }

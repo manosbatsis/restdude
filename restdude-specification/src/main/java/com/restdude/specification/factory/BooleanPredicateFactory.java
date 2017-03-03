@@ -20,18 +20,8 @@
  */
 package com.restdude.specification.factory;
 
-import com.restdude.specification.IPredicateFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.ConversionService;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class BooleanPredicateFactory extends AbstractPredicateFactory<Boolean> {
 
@@ -41,36 +31,9 @@ public class BooleanPredicateFactory extends AbstractPredicateFactory<Boolean> {
 	public BooleanPredicateFactory() {
 	}
 
-	/**
-	 * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
-	 */
-    @Override
-	public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Boolean> fieldType, ConversionService conversionService, String[] propertyValues) {
-		Predicate predicate = null;
 
-		try {
-			LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
-
-			Path path = this.<Boolean>getPath(root, propertyName, fieldType);
-			if (propertyValues.length == 1) {
-                Boolean b = conversionService.convert(propertyValues[0], Boolean.class);
-                predicate = b != null ? cb.equal(path, propertyValues[0]) : path.isNull();
-			} else if (propertyValues.length > 1) {
-				List<Boolean> values = new LinkedList<>();
-				for (int i = 0; i < propertyValues.length; i++) {
-                    Boolean b = conversionService.convert(propertyValues[i], Boolean.class);
-                    if (!values.contains(b)) {
-						values.add(b);
-					}
-				}
-				predicate = path.in(Arrays.asList(propertyValues));
-			} else {
-				predicate = path.isNull();
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		return predicate;
+	@Override
+	public Class<?> getValueType() {
+		return Boolean.class;
 	}
 }

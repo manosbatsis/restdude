@@ -22,6 +22,7 @@ package com.restdude.specification;
 
 import com.restdude.mdd.model.PersistableModel;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
@@ -171,7 +172,8 @@ public class SpecificationsBuilder<T extends PersistableModel<PK>, PK extends Se
             predicateFactory = SpecificationUtils.getPredicateFactoryForClass(fieldType);
             if (predicateFactory != null) {
                 LOGGER.debug("addPredicate3, found predicate factory: {}", predicateFactory);
-                predicates.add(predicateFactory.buildPredicate(root, cb, propertyName, fieldType, conversionService, propertyValues));
+                PredicateOperator operator = ArrayUtils.isNotEmpty(propertyValues) && propertyValues.length > 1 ? PredicateOperator.IN : PredicateOperator.EQUAL;
+                predicates.add(predicateFactory.buildPredicate(root, cb, propertyName, fieldType, conversionService, operator, Arrays.asList(propertyValues)));
             } else {
                 LOGGER.debug("addPredicate3, could not find predicate factory");
             }

@@ -20,17 +20,8 @@
  */
 package com.restdude.specification.factory;
 
-import com.restdude.specification.IPredicateFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.ConversionService;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.HashSet;
-import java.util.Set;
 
 public class EnumStringPredicateFactory extends AbstractPredicateFactory<Enum> {
 
@@ -46,30 +37,8 @@ public class EnumStringPredicateFactory extends AbstractPredicateFactory<Enum> {
 	}
 
 
-    /**
-     * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
-     */
     @Override
-    public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<Enum> fieldType, ConversionService conversionService, String[] propertyValues) {
-        Predicate predicate = null;
-        try {
-            LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
-            Path path = this.<Enum>getPath(root, propertyName, fieldType);
-
-            if (propertyValues.length == 1) {
-                predicate = cb.equal(path, conversionService.convert(propertyValues[0], fieldType));
-            } else {
-                Set choices = new HashSet(propertyValues.length);
-                for (int i = 0; i < propertyValues.length; i++) {
-                    choices.add(conversionService.convert(propertyValues[i], fieldType));
-                }
-
-                predicate = path.in(choices);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return predicate;
+    public Class<?> getValueType() {
+        return this.type;
     }
 }

@@ -20,8 +20,7 @@
  */
 package com.restdude.specification.factory;
 
-import com.restdude.specification.IPredicateFactory;
-import org.apache.commons.lang3.StringUtils;
+import com.restdude.specification.PredicateOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
@@ -30,58 +29,107 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StringPredicateFactory extends AbstractPredicateFactory<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringPredicateFactory.class);
-    private static final String WILDCARD = "%";
+    private static final String WILDCARD = "*";
+    private static final String WILDCARD_JPA = "%";
 
 	public StringPredicateFactory() {
 	}
 
-
-    /**
-     * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
-     */
     @Override
-    public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<String> fieldType, ConversionService conversionService, String[] propertyValues) {
+    public Class<?> getValueType() {
+        return String.class;
+    }
+
+    public List<Object> convertValues(List<String> propertyValues, ConversionService conversionService){
+        List<Object> converted = null;
+        if(propertyValues != null){
+            converted = new ArrayList<>(propertyValues);
+        }
+        return converted;
+    }
+
+    @Override
+    protected <AV extends Serializable> Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, Path path, PredicateOperator operator, List<AV> propertyValues) {
         Predicate predicate = null;
 
-        LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
 
-        Path path = this.<Date>getPath(root, propertyName, fieldType);
-        // no pathFragment i.e. match NULL
-        if (propertyValues.length == 0) {
-            predicate = path.isNull();
-        }
-        // single pathFragment, equals, like or IS NULL
-        else if (propertyValues.length == 1) {
-            String value = propertyValues[0];
-            if (value.startsWith(WILDCARD) || value.endsWith(WILDCARD)) {
-                predicate = StringUtils.isNotBlank(value) ? cb.like(path, value) : path.isNull();
-            } else {
-                predicate = StringUtils.isNotBlank(value) ? cb.equal(path, value) : path.isNull();
-            }
-        }
-        // two values, region
-        else if (propertyValues.length == 2) {
-            predicate = cb.between(path, propertyValues[0], propertyValues[1]);
-        }
-        // more than two values, any of
-        else {
-            Set<String> values = new HashSet<>();
-            for (int i = 0; i < propertyValues.length; i++) {
-                String value = propertyValues[i];
-                if (StringUtils.isNotBlank(value)) {
-                    values.add(value);
+        String argument = (String) propertyValues.get(0);
+        switch (operator) {
+            case NOT_EQUAL: {
+                if (argument == null) {
+                    predicate = path.isNotNull();
                 }
+                else {
+                    if(argument.startsWith(WILDCARD)){
+                        argument = WILDCARD_JPA + argument.substring(1);
+                    }
+                    if(argument.endsWith(WILDCARD)){
+                        argument = argument.substring(0, argument.length() - 1) + WILDCARD_JPA;
+                    }
+                    if(argument.startsWith(WILDCARD_JPA) || argument.endsWith(WILDCARD_JPA)){
+                        predicate = cb.notLike(path, argument);
+                    }
+                    else{
+                        predicate = cb.notEqual(path, argument);
+                    }
+                }
+                break;
             }
-            predicate = path.in(values);
+            case EQUAL: {
+                if (argument == null) {
+                    predicate = path.isNull();
+                }
+                else {
+                    if(argument.startsWith(WILDCARD)){
+                        argument = WILDCARD_JPA + argument.substring(1);
+                    }
+                    if(argument.endsWith(WILDCARD)){
+                        argument = argument.substring(0, argument.length() - 1) + WILDCARD_JPA;
+                    }
+                    if(argument.startsWith(WILDCARD_JPA) || argument.endsWith(WILDCARD_JPA)){
+                        predicate = cb.like(path, argument);
+                    }
+                    else{
+                        predicate = cb.equal(path, argument);
+                    }
+                }
+                break;
+            }
+            case GREATER_THAN: {
+                predicate = cb.greaterThan(path, argument);
+                break;
+            }
+            case GREATER_THAN_OR_EQUAL: {
+                predicate = cb.greaterThanOrEqualTo(path, argument);
+                break;
+            }
+            case LESS_THAN: {
+                predicate = cb.lessThan(path, argument);
+                break;
+            }
+            case LESS_THAN_OR_EQUAL: {
+                predicate = cb.lessThanOrEqualTo(path, argument);
+                break;
+            }
+            case IN: {
+                predicate = path.in(propertyValues);
+                break;
+            }
+            case NOT_IN: {
+                predicate = cb.not(path.in(propertyValues));
+                break;
+            }
         }
+
 
         return predicate;
     }
+
 }

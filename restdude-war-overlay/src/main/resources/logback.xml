@@ -31,13 +31,16 @@
         <level value="warn"/>
     </logger>
 
-    <logger name="com.restdude.mdd.registry">
+    <!--logger name="com.restdude.rsql">
         <level value="debug"/>
     </logger>
+    <logger name="com.restdude.specification">
+        <level value="debug"/>
+    </logger-->
 
-    <logger name="com.restdude.mdd.controller">
+    <!--logger name="com.restdude.mdd.controller">
         <level pathFragment="debug"/>
-    </logger>
+    </logger-->
     <!--logger name="com.restdude.util.ClassUtils">
         <level pathFragment="debug"/>
     </logger-->

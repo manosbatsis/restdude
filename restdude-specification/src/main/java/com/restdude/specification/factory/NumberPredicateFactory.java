@@ -20,18 +20,8 @@
  */
 package com.restdude.specification.factory;
 
-import com.restdude.specification.IPredicateFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.ConversionService;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.HashSet;
-import java.util.Set;
 
 public class NumberPredicateFactory<T extends Number> extends AbstractPredicateFactory<T> {
 
@@ -49,35 +39,9 @@ public class NumberPredicateFactory<T extends Number> extends AbstractPredicateF
         this.type = type;
 	}
 
-    /**
-     * @see IPredicateFactory#buildPredicate(Root, CriteriaBuilder, String, Class, ConversionService, String[])
-     */
+
     @Override
-    public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues) {
-        Predicate predicate = null;
-
-        LOGGER.debug("buildPredicate, propertyName: {}, fieldType: {}, root: {}", propertyName, fieldType, root);
-        Path path = this.<T>getPath(root, propertyName, fieldType);
-
-        if (propertyValues.length == 0) {
-            predicate = path.isNull();
-        } else if (propertyValues.length == 1) {
-            String value = propertyValues[0];
-            predicate = StringUtils.isNotBlank(value) ? cb.equal(path, conversionService.convert(value, fieldType)) : path.isNull();
-        } else if (propertyValues.length == 2) {
-            T from = conversionService.convert(propertyValues[0], fieldType);
-            T to = conversionService.convert(propertyValues[1], fieldType);
-            Predicate predicate1 = cb.ge(path, from);
-            Predicate predicate2 = cb.le(path, to);
-            predicate = cb.and(predicate1, predicate2);
-        } else if (propertyValues.length > 2) {
-            Set<T> values = new HashSet<>();
-            for (int i = 0; i < propertyValues.length; i++) {
-                values.add(conversionService.convert(propertyValues[i], fieldType));
-            }
-            predicate = path.in(values);
-        }
-        return predicate;
-
-	}
+    public Class<?> getValueType() {
+        return this.type;
+    }
 }

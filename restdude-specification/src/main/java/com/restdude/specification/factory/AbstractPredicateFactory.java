@@ -21,48 +21,122 @@
 package com.restdude.specification.factory;
 
 import com.restdude.specification.IPredicateFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.restdude.specification.PredicateOperator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 public abstract class AbstractPredicateFactory<T extends Serializable> implements IPredicateFactory<T> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPredicateFactory.class);
 
 	public AbstractPredicateFactory() {
 	}
 
-    public Path<T> getPath(Root<?> root, String propertyName, Class<T> fieldType) {
-        Path<?> path = null;
+	@Override
+	public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, PredicateOperator operator, List<String> propertyValues) {
+		List<T> converted = this.convertValues(propertyValues, conversionService, fieldType);
+		Path<T> path = this.getPath(root, propertyName, fieldType);
+		return this.buildPredicate(root, cb, path, operator, converted);
+	}
+
+	protected <AV extends Serializable> Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, Path path, PredicateOperator operator, List<AV> propertyValues) {
+		Predicate predicate = null;
+
+
+		AV argument = propertyValues.get(0);
+		switch (operator) {
+			case NOT_EQUAL: {
+				if (argument == null) {
+					predicate = path.isNotNull();
+				}
+				else {
+					predicate = cb.notEqual(path, argument);
+				}
+				break;
+			}
+			case EQUAL: {
+				if (argument == null) {
+					predicate = cb.isNull(path);
+				}
+				else {
+					predicate = cb.equal(path, argument);
+				}
+				break;
+			}
+			case GREATER_THAN: {
+				predicate = cb.greaterThan(path, (Comparable) argument);
+				break;
+			}
+			case GREATER_THAN_OR_EQUAL: {
+				predicate = cb.greaterThanOrEqualTo(path, (Comparable) argument);
+				break;
+			}
+			case LESS_THAN: {
+				predicate = cb.lessThan(path, (Comparable) argument);
+				break;
+			}
+			case LESS_THAN_OR_EQUAL: {
+				predicate = cb.lessThanOrEqualTo(path, (Comparable) argument);
+				break;
+			}
+			case IN: {
+				predicate = path.in(propertyValues);
+				break;
+			}
+			case NOT_IN: {
+				predicate = cb.not(path.in(propertyValues));
+				break;
+			}
+			default: {
+				throw new IllegalArgumentException("Unknown predicate operator: " + operator);
+			}
+		}
+
+
+		return predicate;
+	}
+
+	public <AV extends Serializable> List<AV> convertValues(List<String> propertyValues, ConversionService conversionService, Class<AV> valueType){
+		List<AV> converted = null;
+		if(propertyValues != null){
+			converted = new ArrayList<>(propertyValues.size());
+			for(String value : propertyValues){
+				converted.add(value != null ? conversionService.convert(value, valueType) : null);
+			}
+		}
+		return converted;
+	}
+
+    public <AV extends Serializable> Path<AV> getPath(Root<?> root, String propertyName, Class<AV> fieldType) {
+        Path<AV> path = null;
 		if (propertyName.contains(".")) {
 			String[] pathSteps = propertyName.split("\\.");
 
 			String step = pathSteps[0];
-			LOGGER.debug("getPath, step: {}", step);
 			path = pathSteps.length == 1
-					? root.<T>get(step)
+					? root.<AV>get(step)
                     : root.get(step);
-            LOGGER.debug("getPath0, added pathFragment step: {}, result pathFragment: {}", step, path);
 
             for (int i = 1; i < pathSteps.length - 1; i++) {
                 step = pathSteps[i];
                 path = path.get(step);
-                LOGGER.debug("getPath{}, added pathFragment step: {}, result pathFragment: {}", i, step, path);
 			}
 
             step = pathSteps[pathSteps.length - 1];
-            path = path.<T>get(step);
-            LOGGER.debug("getPath{}, added pathFragment step: {}, result pathFragment: {}", (pathSteps.length - 1), step, path);
+            path = path.<AV>get(step);
 
 
 		} else {
-			LOGGER.debug("getPath, single-step propertyName: {}", propertyName);
-			path = root.<T>get(propertyName);
-			LOGGER.debug("getPath, single-step propertyName: {}, result pathFragment: {}", propertyName, path);
+			path = root.<AV>get(propertyName);
 		}
-		return (Path<T>) path;
+		return path;
 	}
 }

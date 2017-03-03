@@ -56,8 +56,21 @@ public class PredicateFactorySpecification<T extends Model> implements Specifica
             propertyPath = propertyPath.substring(0, propertyPath.length() - 3);
         }
         this.propertyPath = propertyPath;
+        if(operator.equals(PredicateOperator.AUTO)){
+            operator = this.getDefaultOperator(propertyValues);
+        }
         this.operator = operator;
         this.propertyValues = propertyValues;
+    }
+
+    protected PredicateOperator getDefaultOperator(List<String> propertyValues){
+        PredicateOperator op = PredicateOperator.EQUAL;
+        if(propertyValues != null){
+            if(propertyValues.size() > 1){
+                op = PredicateOperator.IN;
+            }
+        }
+        return op;
     }
 
     @Override
@@ -67,57 +80,16 @@ public class PredicateFactorySpecification<T extends Model> implements Specifica
         IPredicateFactory predicateFactory = null;
         Class fieldType = SpecificationUtils.getMemberType(this.modelInfo.getModelType(), this.propertyPath);
         if (fieldType != null) {
-             predicateFactory = SpecificationUtils.getPredicateFactoryForClass(fieldType);
+            predicateFactory = SpecificationUtils.getPredicateFactoryForClass(fieldType);
+            log.debug("toPredicate, predicateFactory: {}", predicateFactory);
             if (predicateFactory != null) {
                 // TODO: add operator support to factories
-                predicate = predicateFactory.buildPredicate(root, builder, this.propertyPath, fieldType, conversionService, this.propertyValues.toArray(new String[this.propertyValues.size()]));
+                predicate = predicateFactory.buildPredicate(root, builder, this.propertyPath, fieldType, conversionService, this.operator, this.propertyValues);
             }
         }
-/*
-        List<Object> args = castArguments(root);
-        Object argument = args.get(0);
-        switch (RsqlSpecOperation.getSimpleOperator(operator)) {
-
-            case EQUAL: {
-                if (argument instanceof String) {
-                    return builder.like(
-                            root.<String> get(property), argument.toString().replace('*', '%'));
-                } else if (argument == null) {
-                    return builder.isNull(root.get(property));
-                } else {
-                    return builder.equal(root.get(property), argument);
-                }
-            }
-            case NOT_EQUAL: {
-                if (argument instanceof String) {
-                    return builder.notLike(
-                            root.<String> get(property), argument.toString().replace('*', '%'));
-                } else if (argument == null) {
-                    return builder.isNotNull(root.get(property));
-                } else {
-                    return builder.notEqual(root.get(property), argument);
-                }
-            }
-            case GREATER_THAN: {
-                return builder.greaterThan(root.<String> get(property), argument.toString());
-            }
-            case GREATER_THAN_OR_EQUAL: {
-                return builder.greaterThanOrEqualTo(
-                        root.<String> get(property), argument.toString());
-            }
-            case LESS_THAN: {
-                return builder.lessThan(root.<String> get(property), argument.toString());
-            }
-            case LESS_THAN_OR_EQUAL: {
-                return builder.lessThanOrEqualTo(
-                        root.<String> get(property), argument.toString());
-            }
-            case IN:
-                return root.get(property).in(args);
-            case NOT_IN:
-                return builder.not(root.get(property).in(args));
+        if(predicate == null){
+            log.warn("toPredicate, failed constructing predicate for fieldType: {}, predicateFactory: {}", fieldType, predicateFactory);
         }
-*/
         return predicate;
     }
 

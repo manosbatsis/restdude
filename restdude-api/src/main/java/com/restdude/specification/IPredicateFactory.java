@@ -26,6 +26,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Builds a predicate for the type T
@@ -33,5 +34,6 @@ import java.io.Serializable;
  * @param <T>
  */
 public interface IPredicateFactory<T extends Serializable> {
-    public abstract Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, String[] propertyValues);
+    Class<?> getValueType();
+    Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, PredicateOperator operator, List<String> propertyValues);
 }

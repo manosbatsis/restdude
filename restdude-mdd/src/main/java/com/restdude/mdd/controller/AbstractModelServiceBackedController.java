@@ -46,7 +46,6 @@ import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
 import com.restdude.rsql.RsqlSpecVisitor;
 import com.restdude.rsql.RsqlUtils;
-import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import lombok.NonNull;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -435,7 +434,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         // convert simple URL params to RSQL if missing
         String rsql = ArrayUtils.isNotEmpty(parameters.get("filter")) ? parameters.get("filter")[0] : RsqlUtils.toRsql(parameters);
         if(StringUtils.isNotBlank(rsql)){
-            Node rootNode = new RSQLParser().parse(rsql);
+            Node rootNode = RsqlUtils.parse(rsql);
             spec = rootNode.accept(new RsqlSpecVisitor<T>(this.getModelInfo(), this.service.getConversionService()));
         }
 
