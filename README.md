@@ -12,7 +12,7 @@ Full stack, high level framework for horizontal, model-driven application hacker
 - Choose between Spring MVC or Spring Boot
 - Support a [3rd level](https://martinfowler.com/articles/richardsonMaturityModel.html#level3) RESTful API out of the box with [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)
 - Allow clients to use plain model-based REST or [JSON API 1.x](http://jsonapi.org/format) 
-- Enjoy effortless, model-driven search endpoints with sorting, paging and dynamic criteria support for simple URL params or RSQL/FIQL
+- Enjoy effortless, model-driven search endpoints with sorting, paging and dynamic criteria support for simple URL params or [RSQL/FIQL](https://manosbatsis.github.io/restdude/rsql.html)
 - Use a 3-tier architecture without the boilerplate with [restdude-mdd](restdude-mdd)
 - Annotate your models to configure API documentation, authorization, validation and auditing
 - Sleep better with built-in [error-management](restdude-error)
