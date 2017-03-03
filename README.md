@@ -56,7 +56,7 @@ HTTP Method | Path   | Description
 GET  | /api/rest/hosts/{id} | Fetch the host matching the id
 GET  | /api/rest/hosts/{id}/country | Fetch the country of the host matching the id
 GET  | /api/rest/hosts?country.code=GR&name=%25startsWith | Search based on model properties using simple URL params (paged)
-GET  | /api/rest/hosts?filter=country.code=in=(GR,UK);name==%25startsWith | Search based on model properties using RSQL or FIQL (paged)
+GET  | /api/rest/hosts?filter=country.code=in=(GR,UK);name==%25startsWith | Search based on model properties using [RSQL or FIQL](https://manosbatsis.github.io/restdude/rsql.html) (paged)
 POST | /api/rest/hosts | Create a new host
 PUT  | /api/rest/hosts/{id} | Update the host matching the id
 PATCH  | /api/rest/hosts/{id} | Partially update the host matching the id
