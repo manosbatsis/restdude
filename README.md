@@ -45,7 +45,7 @@ public class Host extends AbstractSystemUuidPersistable {
     private Country country;
     
 	@OneToMany(mappedBy = "host")
-    private List&lt;Site&gt; sites;
+    private List<Site> sites;
     
     // other properties, getters/setters etc.
 }
