@@ -56,10 +56,10 @@ isHome: true
     {% highlight java %}
     @Entity
     @Table(name = "host")
-    @ModelResource(path = "hosts", c
-    ontrollerSuperClass = AbstractModelController.class,
-    apiName = "Hosts",
-    apiDescription = "Operations about hosts")
+    @ModelResource(
+        path = "hosts",
+        apiName = "Hosts",
+        apiDescription = "Operations about hosts")
     public class Host extends AbstractSystemUuidPersistable {
 
     @NotNull

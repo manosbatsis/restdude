@@ -29,7 +29,10 @@ Full stack, high level framework for horizontal, model-driven application hacker
 ```java
 @Entity
 @Table(name = "host")
-@ModelResource(path = "hosts", controllerSuperClass = AbstractModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
+@ModelResource(
+        path = "hosts", 
+        apiName = "Hosts", 
+        apiDescription = "Operations about hosts")
 public class Host extends AbstractSystemUuidPersistable {
 
     @NotNull
