@@ -31,7 +31,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * Created by manos on 3/3/2017.
+ * Used to generate a {@link Specification}-based query from a root RSQL {@link cz.jirutka.rsql.parser.ast.Node}
  */
 public class RsqlSpecVisitor<T extends Model> implements RSQLVisitor<Specification<T>, Void> {
 

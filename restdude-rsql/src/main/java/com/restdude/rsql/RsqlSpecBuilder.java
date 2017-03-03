@@ -30,13 +30,14 @@ import cz.jirutka.rsql.parser.ast.Node;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by manos on 3/3/2017.
+ * Used by {@link RsqlSpecVisitor} to generate {@link Specification}-based predicates from individual RSQL {@link cz.jirutka.rsql.parser.ast.Node}s
  */
 @Slf4j
 public class RsqlSpecBuilder<T extends Model> {
