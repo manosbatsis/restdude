@@ -221,7 +221,10 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}/relationships/{relationName}", method = RequestMethod.GET)
+    /**
+     * GET has the same effect to both member and relationship endpoints
+     */
+    @RequestMapping(value = {"{pk}/{relationName}", "{pk}/relationships/{relationName}"}, method = RequestMethod.GET)
     @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
     @JsonView(Model.ItemView.class)
     public Resource<PersistableModel> plainJsonGetRelatedEntityByOwnId(
@@ -234,8 +237,10 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toHateoasResource(related, (Class<PersistableModel>)fieldInfo.getFieldModelType());
     }
 
-
-    @RequestMapping(value = "{pk}/relationships/{relationName}", method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    /**
+     * GET has the same effect to both member and relationship endpoints
+     */
+    @RequestMapping(value = {"{pk}/{relationName}", "{pk}/relationships/{relationName}"}, method = RequestMethod.GET, consumes = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = JsonApiUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
     @JsonView(Model.ItemView.class)
     public JsonApiModelDocument jsonApiGetRelatedEntityByOwnId(
