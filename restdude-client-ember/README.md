@@ -10,7 +10,7 @@ You will need the following things properly installed on your computer.
 * [Node.js](http://nodejs.org/) (with npm)
 * [Bower](http://bower.io/)
 * [Ember CLI](http://www.ember-cli.com/)
-* [PhantomJS](http://phantomjs.org/)
+
 
 ## Installation
 
@@ -18,7 +18,7 @@ You will need the following things properly installed on your computer.
 * change into the new directory
 * `npm install`
 * `bower install`
-* `npm install phantomjs@latest`
+
 
 ## Running / Development
 
@@ -106,5 +106,5 @@ Specify what it takes to deploy your app.
 
 ## Creating new Data 
  * To add a new route, write on terminal : ember g route nameofroute
-   To add a new model : ember g model nameofmodel 
-   To add a new component : ember g component nameof-component 
+ * To add a new model : ember g model nameofmodel 
+ *  To add a new component : ember g component nameof-component 
