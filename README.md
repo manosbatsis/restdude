@@ -56,7 +56,7 @@ public class Host extends AbstractSystemUuidPersistable {
 
                                                                                           -                               
 
-## Generated Components
+### Generated Components
 
 Based on the above model, restdude will generate any missing components like a `Controller`, `Service` and `Repository` 
 to give you the following architecture without the need for boilerplate code. You can replace or extend those with your 
@@ -92,9 +92,9 @@ custom components at any time.
 </pre>
                                
 
-## Generated Services
+### Generated Services
 
-Some of the services provided out of the box:
+Some of the services provided out of the box for the above model:
 
 
 HTTP Method  | Path    | Description
@@ -115,7 +115,7 @@ The endpoints support the following content types:
  - `application/json` and `application/hal+json` for HATEOAS Resource response and plain JSON request bodies, with both being based on model structure
  - `application/vnd.api+json` for [JSON-API](http://jsonapi.org/format)-compliant request/response bodies
 
-## Behind the Schenes
+## Why?
 
 Contrary to other frameworks like spring-data-rest and jhipster, restdude provides effortless SCRUD services by generating controller, service and repository classes during application startup. 
 

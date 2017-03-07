@@ -6,7 +6,7 @@ isHome: true
 ---
 
 <section class="bs-docs-section">
-    <h1 id="stack" class="page-header">Technology Stack</h1>
+    <h2 id="stack" class="page-header">Technology Stack</h2>
     <ul>
 
         <li>Choose between Spring MVC or Spring Boot</li>
@@ -27,7 +27,7 @@ isHome: true
 </section>
 
 <section class="bs-docs-section">
-    <h1 id="about" class="page-header">Model Driven</h1>
+    <h2 id="about" class="page-header">Model Driven</h2>
     <p>Usecases in Restdude are typically modeled while broken down to four major tiers: </p>
 
     <ul>
@@ -51,7 +51,7 @@ isHome: true
 
 
 <section class="bs-docs-section">
-    <h1 id="ten_second_example" class="page-header">Ten Second Example</h1>
+    <h2 id="ten_second_example" class="page-header">Ten Second Example</h2>
     <p>Consider the following sample model</p>
     {% highlight java %}
     @Entity
@@ -82,7 +82,42 @@ isHome: true
     }
     {% endhighlight %}
 
-    <p>The following table lists some core services Restdude will dynamically implementfor the above model:</p>
+    <h3>Generated Componenets</h3>
+    <p>Based on the above model, restdude will generate any missing components like a `Controller`, `Service` and `Repository`
+    to give you the following architecture without the need for boilerplate code. You can replace or extend those with your
+        custom components at any time.</p>
+
+
+<pre>
+                    +---------------------------+ +---------------------+   +------------------+
+ Browser, App,      | RESTful SCRUD             | | Content negotiation |   | Websockets       |
+ or other Client    +-------------+-------------+ +-----------+---------+   +-------+----------+
+                                  |                           |                     |
+----------------------------------|---------------------------|---------------------|------------
+                                  |                           |                     |
+                      JSON+HATEOAS or JSON-API 1.x            |                     |
+ Network              with RSQL/FIQL or URL params            |                   STOMP
+                                  |                           |                     |
+                                  |                           |                     |
+----------------------------------|---------------------------|---------------------|------------
+                                  |                           |                     |
+                    +-------------+--------------------------+-----------+  +------------------+
+                    | <strong>HostController</strong>                                     +--+ Message Broker   |
+                    +--------------------------+-------------------------+  +------+-----------+
+                                               |                                   |
+ Restdude                                      |                                   |
+                    +--------------------------+-----------------------------------+-----------+
+                    |                                <strong>HostService</strong>                               |
+                    +--------+--------------------+---------------------+----------------+-----+
+                             |                    |                     |                |
+                             |                    |                     |                |
+                    +--------|-------+ +----------|-----------+ +-------|-------+ +------|-----+
+                    | <strong>HostRepository</strong> | | FileService (FS, S3) | | EmailService  | | Misc Util  |
+                    +----------------+ +----------------------+ +---------------+ +------------+
+</pre>
+
+    <h3>Generated Services</h3>
+    <p>Some of the services provided out of the box for the above model:</p>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -154,7 +189,7 @@ isHome: true
 </section>
 
 <section class="bs-docs-section">
-    <h1 id="overview" class="page-header">Overview</h1>
+    <h2 id="overview" class="page-header">Overview</h2>
     <h2>Working with Models</h2>
     <h3>Entity Models</h3>
     <h3>Graph Models</h3>
@@ -235,7 +270,7 @@ isHome: true
     <h3>I18n</h3>
 </section>
 <section class="bs-docs-section">
-    <h1 id="api-reference" class="page-header">Swagger API Reference</h1>
+    <h2 id="api-reference" class="page-header">Swagger API Reference</h2>
     <p>
         The webapp provides automatically-generated API documentation based on
         <a href="http://swagger.io/">Swagger</a> and created by <a href="http://springfox.github.io/springfox/">Springfox</a>.
@@ -245,7 +280,7 @@ isHome: true
     <img src="{{ site.baseurl }}/assets/images/swagger-ui.png" class="img-responsive" alt="Responsive image">
 </section>
 <section class="bs-docs-section">
-    <h1 id="license" class="page-header">License</h1>
+    <h2 id="license" class="page-header">License</h2>
     <p>
         <img src="{{ site.baseurl }}/assets/images/agplv3-155x51.png" style="float: right"/>Restdude Hub DVD Rental is
         distributed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU
