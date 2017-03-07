@@ -24,6 +24,18 @@ Full stack, high level framework for horizontal, model-driven application hacker
 - Publish REST API documentation effortlesly thanks to <a href="http://springfox.github.io/springfox">Springfox</a> and <a href="http://swagger.io/swagger-ui">Swagger UI</a>
 - Optional web UI and admin panel provided out-of the-box based on bootstrap 4, backbone.marionette, core-UI, requirejs and more.
 
+## Why?
+
+Contrary to other frameworks that squeeze everything within two (i.e. Controller, Repository) or even a single tier, restdude provides effortless SCRUD services by generating controller, service and repository components  
+for you classes during application startup. 
+
+This provides an extensible 3-tier architecture without any need for boilerplate code and allows to replace and extend the generated components with your own at any time when custom or 
+otherwise additional functionality is needed. 
+
+Besides automating SCRUD, restdude provides other conveniences with a focus on hypermedia, like dynamic generation of HATEOAS/JSON-API links and controller request mappings 
+based on entity model relationships. 
+
+
 ## Example Model
 
 ```java
@@ -94,10 +106,10 @@ custom components at any time.
 
 ### Generated Services
 
-Some of the services provided out of the box for the above model:
+Some of the RESTful services provided out of the box for the above model:
 
 
-HTTP Method  | Path    | Description
+Method  | Path    | Description
 ------------ | ------- | -------------------
 GET  | /api/rest/hosts/{id} | Fetch the host matching the id
 GET  | /api/rest/hosts/{id}/relationships/country | Fetch the country of the host matching the id
@@ -114,14 +126,6 @@ The endpoints support the following content types:
 
  - `application/json` and `application/hal+json` for HATEOAS Resource response and plain JSON request bodies, with both being based on model structure
  - `application/vnd.api+json` for [JSON-API](http://jsonapi.org/format)-compliant request/response bodies
-
-## Why?
-
-Contrary to other frameworks like spring-data-rest and jhipster, restdude provides effortless SCRUD services by generating controller, service and repository classes during application startup. 
-
-This provides an extensible 3-tier architecture without any need for boilerplate code and allows to replace and extend the generated components with your own at any time when custom or 
-otherwise additional functionality is needed. Restdude will simply not generate components that overlap with those already available.
-
 
 ## Documentation
 

@@ -27,7 +27,16 @@ isHome: true
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="about" class="page-header">Model Driven</h2>
+    <h2 id="why" class="page-header">Why?</h2>
+    <p>Contrary to other frameworks that squeeze everything within two (i.e. Controller, Repository) or even a single tier, restdude provides effortless SCRUD services by generating controller, service and repository components
+        for you classes during application startup.</p>
+    <p>This provides an extensible 3-tier architecture without any need for boilerplate code and allows to replace and extend the generated components with your own at any time when custom or
+        otherwise additional functionality is needed.</p>
+    <p> Besides automating SCRUD, restdude provides other conveniences with a focus on hypermedia, like dynamic generation of HATEOAS/JSON-API links and controller request mappings
+        based on entity model relationships.</p>
+</section>
+<section class="bs-docs-section">
+    <h2 id="mdd" class="page-header">Model Driven</h2>
     <p>Usecases in Restdude are typically modeled while broken down to four major tiers: </p>
 
     <ul>
@@ -82,7 +91,7 @@ isHome: true
     }
     {% endhighlight %}
 
-    <h3>Generated Componenets</h3>
+    <h3 id="generated_components" class="page-header">Generated Components</h3>
     <p>Based on the above model, restdude will generate any missing components like a `Controller`, `Service` and `Repository`
     to give you the following architecture without the need for boilerplate code. You can replace or extend those with your
         custom components at any time.</p>
@@ -116,8 +125,8 @@ isHome: true
                     +----------------+ +----------------------+ +---------------+ +------------+
 </pre>
 
-    <h3>Generated Services</h3>
-    <p>Some of the services provided out of the box for the above model:</p>
+    <h3 id="generated_services" class="page-header">Generated Services</h3>
+    <p>Some of the RESTful services provided out of the box for the above model:</p>
     <table class="table table-striped">
         <thead>
         <tr>
