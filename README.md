@@ -133,4 +133,4 @@ See https://manosbatsis.github.io/restdude/
 
 ## License
     
-Restdude is distributed under the <a href="https://www.gnu.org/licenses/lgpl-3.0-standalone.html">GNU Lesser General Public License</a> <img src="/home/manos/git/restdude/docs/assets/images/agplv3-155x51.png" alt="LGPL Logo" />?
+Restdude is distributed under the <a href="https://www.gnu.org/licenses/lgpl-3.0-standalone.html">GNU Lesser General Public License</a> <img src="docs/assets/images/agplv3-155x51.png" alt="LGPL Logo" />?
