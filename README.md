@@ -63,7 +63,7 @@ to give you the following architecture without the need for boilerplate code. Yo
 custom components at any time. 
 
 
-```
+<pre>
                     +---------------------------+ +---------------------+   +------------------+
  Browser, App,      | RESTful SCRUD             | | Content negotiation |   | Websockets       | 
  or other Client    +-------------+-------------+ +-----------+---------+   +-------+----------+
@@ -89,7 +89,7 @@ custom components at any time.
                     +--------|-------+ +----------|-----------+ +-------|-------+ +------|-----+
                     | HostRepository | | FileService (FS, S3) | | EmailService  | | Misc Util  |
                     +----------------+ +----------------------+ +---------------+ +------------+
-```
+</pre>
                                
 
 ## Generated Services
