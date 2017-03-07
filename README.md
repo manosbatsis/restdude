@@ -53,12 +53,53 @@ public class Host extends AbstractSystemUuidPersistable {
     // other properties, getters/setters etc.
 }
 ```
+
+                                                                                          -                               
+
+## Generated Components
+
+Based on the above model, restdude will generate any missing components like a `Controller`, `Service` and `Repository` 
+to give you the following architecture without the need for boilerplate code. You can replace or extend those with your 
+custom components at any time. 
+
+
+```
+                           +---------------------------+ +---------------------+   +------------------+
+    Browser, App,          | RESTful SCRUD             | | Content negotiation |   | Websockets       |                                                   
+    or other Client        +------------+--------------+ +----------+----------+   +------+-----------+
+                                        |                           |                     |                                                                   
+ ---------------------------------------|---------------------------|---------------------|---------------
+                                        |                           |                     |                
+                            JSON + HATEOAS + RSQL/FIQL,             |                     |                
+    Network                 JSON-API 1.x + RSQL/FIQL                |                   STOMP              
+                                        |                           |                     |                
+                                        |                           |                     |                
+ ---------------------------------------|---------------------------|---------------------|---------------
+                                        |                           |                     |                
+                           +-------------+--------------------------+-----------+  +------------------+    
+                           | <strong>HostController</strong>                    +--+ Message Broker   |    
+                           +--------------------------+-------------------------+  +------+-----------+    
+                                                      |                                   |                
+    Restdude                                          |                                   |                
+                           +--------------------------+-----------------------------------+-----------+    
+                           |                                 HostService                              |    
+                           +--------+--------------------+---------------------+----------------+-----+    
+                                    |                    |                     |                |          
+                                    |                    |                     |                |          
+                           +--------|-------+ +----------|-----------+ +-------|-------+ +------|-----+    
+                           | HostRepository | | FileService (FS, S3) | | EmailService  | | Misc Util  |    
+                           +----------------+ +----------------------+ +---------------+ +------------+    
+
+```
+                               
+
 ## Generated Services
 
-Some of the resulting services:
+Some of the services provided out of the box:
 
-HTTP Method | Path   | Description
------------- | ------ | -------------------
+
+HTTP Method  | Path    | Description
+------------ | ------- | -------------------
 GET  | /api/rest/hosts/{id} | Fetch the host matching the id
 GET  | /api/rest/hosts/{id}/relationships/country | Fetch the country of the host matching the id
 GET  | /api/rest/hosts/{id}/relationships/sites | Search the sites of the host matching the id, see search endpoints bellow for filtering etc (paged)
