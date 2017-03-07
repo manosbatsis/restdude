@@ -31,6 +31,7 @@ import java.util.Set;
  */
 public interface ModelInfo<T extends Model<PK>, PK extends Serializable> {
     String getRequestMapping();
+    void setRequestMapping(String pattern);
 
     String getParentPath(String defaultValue);
 

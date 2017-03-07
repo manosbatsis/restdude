@@ -29,12 +29,12 @@ import com.restdude.domain.users.model.User;
 import com.restdude.hypermedia.hateoas.ModelResource;
 import com.restdude.hypermedia.hateoas.ModelResources;
 import com.restdude.hypermedia.hateoas.PagedModelResources;
-import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiResource;
-import com.restdude.hypermedia.jsonapi.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceCollectionDocument;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
+import com.restdude.hypermedia.util.HypermediaUtils;
+import com.restdude.hypermedia.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.mdd.annotation.model.CurrentPrincipal;
-import com.restdude.mdd.annotation.model.CurrentPrincipalField;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.model.UserDetailsModel;
@@ -44,14 +44,11 @@ import com.restdude.mdd.registry.ModelInfoRegistry;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
-import com.restdude.rsql.RsqlSpecVisitor;
 import com.restdude.rsql.RsqlUtils;
-import cz.jirutka.rsql.parser.ast.Node;
+import com.restdude.util.ParamsAwarePage;
 import lombok.NonNull;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +58,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.*;
-import org.springframework.hateoas.mvc.BasicLinkBuilder;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -101,6 +97,16 @@ import java.util.*;
 public class AbstractModelServiceBackedController<T extends PersistableModel<PK>, PK extends Serializable, S extends PersistableModelService<T, PK>> implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceBackedController.class);
+
+    protected static final String PARAM_RELATION_NAME = "relationName";
+    protected static final String PARAM_FILTER = "filter";
+    protected static final String PARAM_JSONAPI_PAGE_NUMBER = "page[number]";
+    protected static final String PARAM_JSONAPI_PAGE_SIZE = "page[size]";
+    protected static final String PARAM_SORT = "sort";
+    protected static final String PARAM_PK = "pk";
+    protected static final String PARAM_PAGE_NUMBER = "_pn";
+    protected static final String PARAM_PAGE_SIZE = "_ps";
+    protected static final String[] PARAMS_IGNORE_FOR_CRITERIA = {PARAM_RELATION_NAME, PARAM_FILTER, PARAM_JSONAPI_PAGE_NUMBER, PARAM_JSONAPI_PAGE_SIZE, PARAM_SORT, PARAM_PK, PARAM_PAGE_NUMBER, PARAM_PAGE_SIZE};
 
     private ModelInfo modelInfo;
 
@@ -161,34 +167,13 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     protected <RT extends PersistableModel> ModelResource<RT> toHateoasResource(RT model, Class<RT> modelType) {
         ModelResource<RT> resource = new ModelResource<>(model);
         ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
+        List<Link> links = HypermediaUtils.buileHateoasLinks(model, modelInfo);
         LOGGER.debug("toHateoasResource, model: {}, modelType: {}, modelInfo: {}", model, modelType, modelInfo);
-        if (model.getPk() != null && modelInfo != null) {
-
-            // add link to self
-            resource.add(BasicLinkBuilder.linkToCurrentMapping()
-                    .slash(modelInfo.getRequestMapping())
-                    .slash(model.getPk()).withSelfRel());
-
-            // add links to linkable relationships
-            Set<String> relationshipFields = new HashSet<>();
-            relationshipFields.addAll(modelInfo.getToOneFieldNames());
-            relationshipFields.addAll(modelInfo.getToManyFieldNames());
-            for(String fieldName : relationshipFields){
-                FieldInfo fieldInfo = modelInfo.getField(fieldName);
-                LOGGER.debug("toHateoasResource, fieldName: {}, relatedModelInfo: {}", fieldName, fieldInfo.getRelatedModelInfo());
-                if(fieldInfo.isLinkableResource()){
-                    resource.add(BasicLinkBuilder.linkToCurrentMapping()
-                            .slash(modelInfo.getRequestMapping())
-                            .slash(model.getPk())
-                            .slash("relationships")
-                            .slash(fieldName).withRel(fieldName));
-                }
-            }
-
-        }
+        resource.add(links);
 
         return resource;
     }
+
 
     /**
      * Wrap the given models in a {@link Resources} and add {@link org.springframework.hateoas.Link}s
@@ -196,11 +181,21 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param models
      */
     protected ModelResources<T> toHateoasResources(@NonNull Iterable<T> models) {
-        LinkedList<ModelResource<T>> wrapped = new LinkedList<>();
-        for(T model : models){
-            wrapped.add(new ModelResource<T>(model));
+        Class<T> modelType = this.modelType;
+        return toHateoasResources(models, modelType);
+    }
+
+    /**
+     * Wrap the given models in a {@link Resources} and add {@link org.springframework.hateoas.Link}s
+     *
+     * @param models
+     */
+    protected <RT extends PersistableModel> ModelResources<RT> toHateoasResources(@NonNull Iterable<RT> models, Class<RT> modelType) {
+        LinkedList<ModelResource<RT>> wrapped = new LinkedList<>();
+        for(RT model : models){
+            wrapped.add(new ModelResource<RT>(model));
         }
-        ModelResources<T> resources = new ModelResources<>(wrapped);
+        ModelResources<RT> resources = new ModelResources<>(wrapped);
         return resources;
     }
 
@@ -209,15 +204,23 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      *
      * @param page
      */
-    protected PagedModelResources<T> toHateoasPagedResources(@NonNull Page<T> page) {
+    protected PagedModelResources<T> toHateoasPagedResources(@NonNull ParamsAwarePageImpl<T> page, @NonNull String pageNumberParamName) {
+        Class<T> modelType = this.modelType;
+        return toHateoasPagedResources(page, modelType, pageNumberParamName);
+    }
 
-        ArrayList<ModelResource<T>> wrapped = new ArrayList<>();
-        for(T model : page.getContent()){
-            wrapped.add(new ModelResource<T>(model));
-        }
+    /**
+     * Convert the given {@link Page} to a {@link PagedResources} object and add {@link org.springframework.hateoas.Link}s
+     *
+     * @param page
+     */
+    protected <RT extends PersistableModel> PagedModelResources<RT> toHateoasPagedResources(@NonNull ParamsAwarePage<RT> page, @NonNull Class<RT> modelType, @NonNull String pageNumberParamName) {
+        ModelInfo rootModelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
+
         // long size, long number, long totalElements, long totalPages
-        PagedResources.PageMetadata meta = new PagedResources.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
-        PagedModelResources<T> pagedResources = new PagedModelResources<T>(wrapped, meta);
+        PagedModelResources<RT> pagedResources = PagedModelResources.create(page, request, pageNumberParamName);
+
+
         return pagedResources;
     }
 
@@ -226,7 +229,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param model the model to wrap
      * @return
      */
-    protected JsonApiModelDocument<T, PK> toDocument(T model) {
+    protected JsonApiModelResourceDocument<T, PK> toDocument(T model) {
         return this.toDocument(model, this.modelType);
     }
 
@@ -235,11 +238,18 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param model the model to wrap
      * @return
      */
-    protected <RT extends PersistableModel<RPK>, RPK extends Serializable> JsonApiModelDocument<RT, RPK> toDocument(RT model, Class<RT> modelType) {
+    protected <RT extends PersistableModel<RPK>, RPK extends Serializable> JsonApiModelResourceDocument<RT, RPK> toDocument(RT model, Class<RT> modelType) {
         ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
-        return new JsonApiModelBasedDocumentBuilder<RT, RPK>(modelInfo.getUriComponent())
+        JsonApiModelResourceDocument<RT, RPK> doc = new JsonApiModelBasedDocumentBuilder<RT, RPK>(modelInfo.getUriComponent())
                 .withData(model)
                 .buildModelDocument();
+        List<Link> tmp = HypermediaUtils.buileHateoasLinks(model, modelInfo);
+        if(CollectionUtils.isNotEmpty(tmp)){
+            for(Link l : tmp){
+                doc.add(l.getRel(), l.getHref());
+            }
+        }
+        return doc;
     }
 
     /**
@@ -247,7 +257,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param models the models to wrap
      * @return
      */
-    protected JsonApiModelCollectionDocument<T, PK> toDocument(Collection<T> models) {
+    protected JsonApiModelResourceCollectionDocument<T, PK> toDocument(Collection<T> models) {
         return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
                 .withData(models)
                 .buildModelCollectionDocument();
@@ -258,7 +268,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param models the models to wrap
      * @return
      */
-    protected JsonApiModelCollectionDocument<T, PK> toDocument(Iterable<T> models) {
+    protected JsonApiModelResourceCollectionDocument<T, PK> toDocument(Iterable<T> models) {
         return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
                 .withData(models)
                 .buildModelCollectionDocument();
@@ -269,10 +279,32 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param page the page to wrap
      * @return
      */
-    protected JsonApiModelCollectionDocument<T, PK> toDocument(Page<T> page) {
-        return new JsonApiModelBasedDocumentBuilder<T, PK>(this.getModelInfo().getUriComponent())
+    protected JsonApiModelResourceCollectionDocument<T, PK> toPageDocument(ParamsAwarePage<T> page) {
+
+        Class<T> modelType = this.modelType;
+        return toPageDocument(page, this.getModelInfo(), "page[number]");
+    }
+
+    /*
+     * Wrap the given {@link Page} of models in a JSON API Document
+     * @param page the page to wrap
+     * @param modelInfo
+     * @param pageNumberParamName
+     * @param <RT>
+     * @param <RPK>
+     * @return
+     */
+    protected <RT extends PersistableModel<RPK>, RPK extends Serializable> JsonApiModelResourceCollectionDocument<RT, RPK> toPageDocument(@NonNull ParamsAwarePage<RT> page, @NonNull ModelInfo<RT, RPK> modelInfo, @NonNull String pageNumberParamName) {
+        JsonApiModelResourceCollectionDocument<RT, RPK> doc = new JsonApiModelBasedDocumentBuilder<RT, RPK>(this.getModelInfo().getUriComponent())
                 .withData(page)
                 .buildModelCollectionDocument();
+        List<Link> tmp = HypermediaUtils.buileHateoasLinks(page, request, pageNumberParamName);
+        if(CollectionUtils.isNotEmpty(tmp)){
+            for(Link l : tmp){
+                doc.add(l.getRel(), l.getHref());
+            }
+        }
+        return doc;
     }
 
     /**
@@ -280,9 +312,9 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param document
      * @return
      */
-    protected T toModel(@NonNull @RequestBody JsonApiModelDocument<T, PK> document) {
+    protected T toModel(@NonNull @RequestBody JsonApiModelResourceDocument<T, PK> document) {
         T entity = null;
-        JsonApiResource<T, PK> resource = document.getData();
+        JsonApiModelResource<T, PK> resource = document.getData();
         if(resource != null ){
             entity = resource.getAttributes();
             entity.setPk(resource.getIdentifier());
@@ -319,45 +351,6 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     protected Iterable<T> findAll() {
         return service.findAll();
     }
-
-
-    
-    protected ParamsAwarePageImpl<T> findPaginated(Pageable pageable) {
-        // TODO: add support for query dialects: RequestParam MultiValueMap<String, String> httpParams
-        /*
-        MultivaluedHashMap<String, String> queryParams = new MultivaluedHashMap<>();
-        for(String key : httpParams.keySet()){
-            queryParams.put(key, httpParams.get(key));
-        }
-        SearchRequest searchRequest = new SearchRequest(
-                request.getServletPath(),
-                this.mmdelInfoRegistry.getEntityDictionary(),
-                queryParams,
-                true
-        );
-        LOGGER.debug("findResourcesPaginated, searchRequest: {}", searchRequest);
-         */
-
-        boolean applyCurrentPrincipalIdPredicate = true;
-
-        if (BooleanUtils.toBoolean(request.getParameter("skipCurrentPrincipalIdPredicate"))) {
-            applyCurrentPrincipalIdPredicate = false;
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Skipping CurrentPrincipalField");
-            }
-        }
-        Map<String, String[]> params = request.getParameterMap();
-        Page<T> tmp = findPaginated(pageable, params, applyCurrentPrincipalIdPredicate);
-
-        return new ParamsAwarePageImpl<T>(params, tmp.getContent(), pageable, tmp.getTotalElements());
-    }
-
-
-    protected PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo) {
-        PersistableModel resource = this.service.findRelatedEntityByOwnId(pk, fieldInfo);
-        return resource;
-    }
-
 
     protected T findById(PK pk) {
         LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
@@ -397,7 +390,66 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return schema;
     }
 
-    protected Page<T> findPaginated(Pageable pageable, Map<String, String[]> paramsMap, boolean applyImplicitPredicates) {
+    /**
+     * Find the other end of a ToOne relationship
+     * @param pk the root entity ID
+     * @param fieldInfo the member/relation name
+     * @return the single related entity, if any
+     * @see PersistableModelService#findRelatedSingle(java.io.Serializable, com.restdude.mdd.registry.FieldInfo)
+     */
+    protected PersistableModel findRelatedSingle(PK pk, FieldInfo fieldInfo) {
+        PersistableModel resource = this.service.findRelatedSingle(pk, fieldInfo);
+        return resource;
+    }
+
+    /**
+     * Find a page of results matching the other end of a ToMany relationship
+     * @param pk the root entity ID
+     * @param pageable the page config
+     * @param fieldInfo the member/relation name
+     * @return the page of results, may be <code>null</code>
+     * @see PersistableModelService#findRelatedPaginated(java.lang.Class, org.springframework.data.jpa.domain.Specification, org.springframework.data.domain.Pageable)
+     */
+    protected <M extends PersistableModel> ParamsAwarePageImpl<M> findRelatedPaginated(PK pk, Pageable pageable, FieldInfo fieldInfo) {
+        ParamsAwarePageImpl<M> page = null;
+        Optional<String> reverseFieldName = fieldInfo.getReverseFieldName();
+        if(reverseFieldName.isPresent()) {
+            Map<String, String[]> params = request.getParameterMap();
+            Map<String, String[]> implicitCriteria = new HashMap<>();
+            implicitCriteria.put(reverseFieldName.get(), new String[]{pk.toString()});
+
+            ModelInfo relatedModelInfo = fieldInfo.getRelatedModelInfo();
+            // optionally create a query specification
+            Specification<M> spec = RsqlUtils.buildtSpecification(relatedModelInfo, this.service.getConversionService(), params, implicitCriteria, PARAMS_IGNORE_FOR_CRITERIA);
+            // get the page of related children
+            Page<M> tmp = this.service.findRelatedPaginated(relatedModelInfo.getModelType(), spec, pageable);
+            page = new ParamsAwarePageImpl<M>(params, tmp.getContent(), pageable, tmp.getTotalElements());
+        }
+        else{
+            throw new IllegalArgumentException("Related field info has no reverse field name");
+        }
+        return page;
+    }
+
+    protected ParamsAwarePageImpl<T> findPaginated(Pageable pageable, Map<String, String[]> implicitCriteria) {
+        // TODO: add support for query dialects: RequestParam MultiValueMap<String, String> httpParams
+        /*
+        SearchRequest searchRequest = new SearchRequest(
+                //...
+        );
+        LOGGER.debug("findResourcesPaginated, searchRequest: {}", searchRequest);
+         */
+
+        Map<String, String[]> params = request.getParameterMap();
+        // optionally create a query specification
+        Specification<T> spec = RsqlUtils.buildtSpecification(this.getModelInfo(), this.service.getConversionService(), params, implicitCriteria, PARAMS_IGNORE_FOR_CRITERIA);
+        Page<T> tmp = this.service.findPaginated(spec, pageable);
+
+        return new ParamsAwarePageImpl<T>(params, tmp.getContent(), pageable, tmp.getTotalElements());
+    }
+
+        /*
+    protected Page<T> getPage(Pageable pageable, Map<String, String[]> paramsMap, Map<String, String> implicitCriteria) {
 
         // add implicit criteria?
         Map<String, String[]> parameters = null;
@@ -424,20 +476,12 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
             parameters = paramsMap;
         }
 
-        // optionally create a query specification
-        Specification<T> spec = null;
 
-        // check for RSQL in JSON API "filter" parameter,
-        // convert simple URL params to RSQL if missing
-        String rsql = ArrayUtils.isNotEmpty(parameters.get("filter")) ? parameters.get("filter")[0] : RsqlUtils.toRsql(parameters);
-        if(StringUtils.isNotBlank(rsql)){
-            Node rootNode = RsqlUtils.parse(rsql);
-            spec = rootNode.accept(new RsqlSpecVisitor<T>(this.getModelInfo(), this.service.getConversionService()));
-        }
-
-        return this.service.findPaginated(spec, pageable);
+        return this.service.findPaginated(null, pageable);
 
     }
+        */
+
 
 
     protected boolean hasAnyRole(String... roles) {

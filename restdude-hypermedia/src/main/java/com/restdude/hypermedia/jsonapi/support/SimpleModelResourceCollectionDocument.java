@@ -22,8 +22,8 @@ package com.restdude.hypermedia.jsonapi.support;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceCollectionDocument;
 import com.restdude.mdd.model.Model;
 import io.swagger.annotations.ApiModel;
 
@@ -33,24 +33,24 @@ import java.util.Collection;
 /**
  * {@value #CLASS_DESCRIPTION}
  *
- * @see SimpleModelDocument
+ * @see SimpleModelResourceDocument
  * @see <a href="http://jsonapi.org/format/upcoming/#document-structure">JSON API Documents</a>
  * @param <T> the JSON API Resource model type
  * @param <PK> the JSON API Resource model key type
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "Collection Document (JSON-API)", description = SimpleModelDocument.CLASS_DESCRIPTION)
-public class SimpleModelCollectionDocument<T extends Model<PK>, PK extends Serializable>
-        extends AbstractJsonApiDocument<Collection<JsonApiResource<T, PK>>, T, PK>
-        implements JsonApiModelCollectionDocument<T, PK> {
+@ApiModel(value = "Collection Document (JSON-API)", description = SimpleModelResourceDocument.CLASS_DESCRIPTION)
+public class SimpleModelResourceCollectionDocument<T extends Model<PK>, PK extends Serializable>
+        extends AbstractJsonApiDocument<Collection<JsonApiModelResource<T, PK>>>
+        implements JsonApiModelResourceCollectionDocument<T, PK> {
 
     public static final String CLASS_DESCRIPTION = "A JSON API Document that may contain multiple model-based Resources";
 
-    private Collection<JsonApiResource<T,PK>> data;
+    private Collection<JsonApiModelResource<T,PK>> data;
 
-    public SimpleModelCollectionDocument(){super();}
+    public SimpleModelResourceCollectionDocument(){super();}
 
-    public SimpleModelCollectionDocument(Collection<JsonApiResource<T, PK>> data) {
+    public SimpleModelResourceCollectionDocument(Collection<JsonApiModelResource<T, PK>> data) {
         super(data);
     }
 

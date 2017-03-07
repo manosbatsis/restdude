@@ -23,7 +23,6 @@ package com.restdude.hypermedia.jsonapi;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
-import com.restdude.mdd.model.Model;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -31,14 +30,13 @@ import java.util.Map;
 /**
  * A Resource as defined in JSON API 1.1. Deserialized as a @link SimpleModelResource} by default
  *
- * @param <T> the JSON API Resource model type
- * @param <PK> the JSON API Resource model key type
+ * @param <RID> the JSON API Resource model key type
  */
 @JsonDeserialize(as=SimpleModelResource.class)
-public interface JsonApiResourceIdentifier<T extends Model<PK>, PK extends Serializable> extends Serializable {
+public interface JsonApiResourceIdentifier<RID extends Serializable> extends JsonApiLinksContainer {
 
     @JsonGetter("id")
-    PK getIdentifier();
+    RID getIdentifier();
 
     @JsonGetter("type")
     String getType();

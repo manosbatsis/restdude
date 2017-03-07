@@ -72,7 +72,7 @@ public class FieldInfoImpl implements FieldInfo {
     @Getter private String fieldName;
     @Getter private Class<?> fieldType;
     @Getter private FieldMappingType fieldMappingType;
-    @Getter private Class<?> fieldModelType;
+    @Getter private Class<? extends Model> fieldModelType;
     @Setter private String reverseFieldName;
     @Getter private boolean inverse = false;
     @Getter private CascadeType[] cascadeTypes;
@@ -113,58 +113,18 @@ public class FieldInfoImpl implements FieldInfo {
                     String tName = t.getTypeName();
                     log.debug("FieldInfoImpl, var: {}, t.getTypeName: '{}', tName: '{}'", var, t.getTypeName(), tName);
                     if(tName.contains(".")){
-                        this.fieldModelType = ClassUtils.getClass(tName);
+                        this.fieldModelType = (Class<? extends Model>) ClassUtils.getClass(tName);
                     }
                 }
                 if(this.fieldModelType == null){
                     String tName = ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName();
                     log.debug("FieldInfoImpl, tName: '{}'", tName);
                     if(tName.contains(".")){
-                        this.fieldModelType = ClassUtils.getClass(tName);
+                        this.fieldModelType = (Class<? extends Model>) ClassUtils.getClass(tName);
                     }
                 }
                 Class<?> resolved = GenericTypeResolver.resolveTypeArgument(fieldType, pType.getClass());
                 log.debug("FieldInfoImpl, resolved: {}", this.fieldModelType);
-                /*
-                log.debug("FieldInfoImpl, type: {}", type);
-                if (type instanceof ParameterizedType) {
-                    Type actualType = ((ParameterizedType) type).getActualTypeArguments()[0];
-                    log.debug("FieldInfoImpl, actualType: {}, name: {}", actualType, actualType.getTypeName());
-                    this.fieldModelType = GenericTypeResolver.resolveTypeArgument(field.getType(), Iterable.class);
-                }
-
-                if(field != null){
-                    Type type = field.getGenericType();
-
-                    if (type instanceof ParameterizedType) {
-                        ParameterizedType paramType = (ParameterizedType)type;
-                        TypeVariable arr = (TypeVariable) paramType.getActualTypeArguments()[0];
-                        this.fieldModelType = (Class<? extends Model>) arr.;
-                    }
-                }
-
-                if(this.fieldModelType == null && getter != null){
-                    Class<Collection> genericInterface = this.fieldType.
-                    if (type instanceof ParameterizedType) {
-                        ParameterizedType paramType = (ParameterizedType) type;
-                        this.fieldModelType = (Class<? extends Model>) GenericTypeResolver.resolveReturnTypeArgument(getter, type..);
-
-                        //ParameterizedType paramType = (ParameterizedType) type;
-                        //Type[] arr = paramType.getActualTypeArguments();
-                       // this.fieldModelType = (Class<? extends Model>) arr[0];
-
-                    }
-
-                }
-
-                if(this.fieldModelType == null && setter != null){
-                    Type type = setter.getGenericParameterTypes()[0];
-                    if (type instanceof ParameterizedType) {
-                        ParameterizedType paramType = (ParameterizedType) type;
-                        Type[] arr = paramType.getActualTypeArguments();
-                        this.fieldModelType = (Class<? extends Model>) arr[0];
-                    }
-                }*/
 
             }
             log.debug("FieldInfoImpl, resolved fieldName: {}, fieldType: {}, fieldModelType: {}", this.fieldName, this.fieldType, this.fieldModelType);
@@ -172,13 +132,18 @@ public class FieldInfoImpl implements FieldInfo {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setRelatedModelInfo(ModelInfo modelInfo) {
         this.relatedModelInfo = modelInfo;
 
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -195,7 +160,7 @@ public class FieldInfoImpl implements FieldInfo {
                 .toString();
     }
 
-    private void scanMappings(@NonNull AccessibleObject... fieldsOrMethods){
+    protected void scanMappings(@NonNull AccessibleObject... fieldsOrMethods){
 
         // scan for JPA annotations
         //
@@ -290,14 +255,14 @@ public class FieldInfoImpl implements FieldInfo {
 
     }
 
-    @Override
-    public boolean isLinkableResource() {
-        return this.relatedModelInfo != null && this.relatedModelInfo.isLinkableResource();
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getReverseFieldName(){
         return Optional.ofNullable(this.reverseFieldName);
     }
+
+
 
 }

@@ -22,8 +22,8 @@ package com.restdude.hypermedia.jsonapi.support;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
 import com.restdude.mdd.model.Model;
 import io.swagger.annotations.ApiModel;
 
@@ -32,25 +32,25 @@ import java.io.Serializable;
 /**
  * {@value #CLASS_DESCRIPTION}
  *
- * @see SimpleModelCollectionDocument
+ * @see SimpleModelResourceCollectionDocument
  * @see <a href="http://jsonapi.org/format/upcoming/#document-structure">JSON API Documents</a>
  *
  * @param <T> the JSON API Resource model type
  * @param <PK> the JSON API Resource model key type
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@ApiModel(value = "Document (JSON-API)", description = SimpleModelDocument.CLASS_DESCRIPTION)
-public class SimpleModelDocument<T extends Model<PK>, PK extends Serializable> extends AbstractJsonApiDocument <JsonApiResource<T,PK>, T, PK> implements JsonApiModelDocument<T, PK> {
+@ApiModel(value = "Document (JSON-API)", description = SimpleModelResourceDocument.CLASS_DESCRIPTION)
+public class SimpleModelResourceDocument<T extends Model<PK>, PK extends Serializable> extends AbstractJsonApiDocument <JsonApiModelResource<T, PK>> implements JsonApiModelResourceDocument<T, PK> {
 
     public static final String CLASS_DESCRIPTION = "A Document that may contain up to a single Resource model (as defined by JSON API 1.1)";
 
     private SimpleModelResource<T,PK> data;
 
-    public SimpleModelDocument() {
+    public SimpleModelResourceDocument() {
         super();
     }
 
-    public SimpleModelDocument(SimpleModelResource data) {
+    public SimpleModelResourceDocument(SimpleModelResource data) {
         super(data);
     }
 

@@ -20,15 +20,21 @@
  */
 package com.restdude.rsql;
 
+import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.specification.PredicateOperator;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import cz.jirutka.rsql.parser.ast.Node;
 import cz.jirutka.rsql.parser.ast.RSQLOperators;
 import lombok.NonNull;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.jpa.domain.Specification;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -54,6 +60,56 @@ public class RsqlUtils {
         operatorMappings.put(auto, PredicateOperator.AUTO);
     }
 
+    /**
+     * Parse  the given (request URL) parameters map into RSQL (NOTE that if RSQL is present under the "filter" key, all other <code>paramsMap</code> entries will be ignored
+     * @param modelInfo the root model info
+     * @param conversionService the conversion service to use for values
+     * @param paramsMap the (request URL) parameters map
+     * @param implicitCriteria
+     * @param <M>
+     * @param <MID>
+     * @param ignoreNamesForSpecification the URL parameter names to ignore if no <code>filter</code>> param is present
+     * @return
+     */
+    public static <M extends PersistableModel<MID>, MID extends Serializable> Specification<M> buildtSpecification(
+            ModelInfo<M, MID> modelInfo,
+            ConversionService conversionService,
+            Map<String, String[]> paramsMap,
+            Map<String, String[]> implicitCriteria,
+            String[] ignoreNamesForSpecification) {
+
+        Specification<M> spec = null;
+
+        // check for RSQL in JSON API "filter" parameter,
+        // convert simple URL params to RSQL if missing
+        String rsql = ArrayUtils.isNotEmpty(paramsMap.get("filter")) ? paramsMap.get("filter")[0] : RsqlUtils.toRsql(paramsMap, ignoreNamesForSpecification);
+
+        // if any, append implicit params as mandatory
+        if(MapUtils.isNotEmpty(implicitCriteria)){
+            StringBuffer b = new StringBuffer();
+
+            // if we have a "base" RSQL string
+            if(StringUtils.isNotBlank(rsql)){
+                // (baseRsql) and ...
+                b.append("(").append(rsql).append(");");
+            }
+
+            // add implicit RSQL
+            b.append("(").append(RsqlUtils.toRsql(implicitCriteria)).append(")");
+
+            // replace
+            rsql = b.toString();
+        }
+
+        // if resulting string is not empty,
+        // build specification
+        if(StringUtils.isNotBlank(rsql)){
+            Node rootNode = RsqlUtils.parse(rsql);
+            spec = rootNode.accept(new RsqlSpecVisitor<M>(modelInfo, conversionService));
+        }
+        return spec;
+    }
+
     public static PredicateOperator toPredicateOperator(@NonNull ComparisonOperator comparisonOperator){
         return operatorMappings.get(comparisonOperator);
     }
@@ -66,7 +122,12 @@ public class RsqlUtils {
         return node;
     }
 
-
+    /**
+     *
+     * @param urlParams
+     * @param ignoredNames the URL parameter names to ignore if no <code>filter</code>> param is present
+     * @return
+     */
     public static String toRsql(Map<String, String[]> urlParams, String... ignoredNames){
         Set<String> uniqueNames;
         if(ignoredNames != null){

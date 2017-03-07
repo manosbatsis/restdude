@@ -18,15 +18,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.hypermedia.jsonapi.util;
+package com.restdude.hypermedia.jsonapi;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelResourceDocument;
+import com.restdude.mdd.model.Model;
+
+import java.io.Serializable;
 
 /**
- * Provides utilities for working with JSON API
+ * A Document that may contain up to a single model-based Resource according to JSON API 1.1.
+ * Configured for deserialization as a {@link SimpleModelResourceDocument}
+ *
+ *
+ * @param <T> the JSON API Resource model type
+ * @param <PK> the JSON API Resource model key type
  */
-public class JsonApiUtils {
-
-    public static final String MIME_APPLICATION_VND_PLUS_JSON = "application/vnd.api+json";
-    public static final String MIME_APPLICATIOM_HAL_PLUS_JSON = " application/hal+json";
-
+@JsonDeserialize(as=SimpleModelResourceDocument.class)
+public interface JsonApiModelResourceDocument<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceDocument<JsonApiModelResource<T, PK>, T, PK> {
 
 }

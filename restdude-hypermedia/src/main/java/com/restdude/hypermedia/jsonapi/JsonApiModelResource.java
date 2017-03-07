@@ -21,20 +21,20 @@
 package com.restdude.hypermedia.jsonapi;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.restdude.hypermedia.jsonapi.support.SimpleModelDocument;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
 import com.restdude.mdd.model.Model;
 
 import java.io.Serializable;
 
 /**
- * A Document that may contain up to a single model-based Resource according to JSON API 1.1.
- * Configured for deserialization as a {@link SimpleModelDocument}
+ * A Resource as defined in JSON API 1.1. Deserialized as a @link SimpleModelResource} by default
+ *
+ * @see <a href="http://jsonapi.org/format/#document-resource-objects">JSON API Resources</a>
  *
  * @param <T> the JSON API Resource model type
  * @param <PK> the JSON API Resource model key type
- *
  */
-@JsonDeserialize(as=SimpleModelDocument.class)
-public interface JsonApiModelDocument<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceDocument<JsonApiResource<T, PK>, T, PK> {
+@JsonDeserialize(as=SimpleModelResource.class)
+public interface JsonApiModelResource<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceIdentifier<PK>, JsonApiResource<T, PK> {
 
 }

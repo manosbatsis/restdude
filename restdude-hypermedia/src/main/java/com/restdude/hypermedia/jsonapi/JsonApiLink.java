@@ -20,21 +20,16 @@
  */
 package com.restdude.hypermedia.jsonapi;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
+import java.util.Map;
 
 /**
- * Created by manos on 21/2/2017.
+ * A JSON API Link
  */
 public interface JsonApiLink extends Serializable {
-    @JsonIgnore
     String getRel();
-    @JsonProperty
-    void setRel(String rel);
     String getHref();
-    void setHref(String href);
+    Map<String, Serializable> getMeta();
 }
 
 

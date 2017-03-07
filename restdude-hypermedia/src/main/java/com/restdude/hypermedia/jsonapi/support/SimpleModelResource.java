@@ -21,7 +21,7 @@
 package com.restdude.hypermedia.jsonapi.support;
 
 import com.fasterxml.jackson.annotation.*;
-import com.restdude.hypermedia.jsonapi.JsonApiResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
 import com.restdude.mdd.model.Model;
 import lombok.NonNull;
 
@@ -32,10 +32,13 @@ import java.util.Map;
  * A model wrapper that allows serializing as a Resource according to JSON API  1.1
  *
  * @see <a href="http://jsonapi.org/format/#document-resource-objects">JSON API Resources</a>
+ *
+ * @param <T> the JSON API Resource model type
+ * @param <PK> the JSON API Resource model key type
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({ "id", "type", "attributes", "relationships", "links", "meta" })
-public class SimpleModelResource<T extends Model<PK>, PK extends Serializable> extends SimpleModelResourceIdentifier<T, PK> implements JsonApiResource<T, PK> {
+public class SimpleModelResource<T extends Model<PK>, PK extends Serializable> extends SimpleModelResourceIdentifier<T, PK> implements JsonApiModelResource<T, PK> {
 
     private T attributes;
 

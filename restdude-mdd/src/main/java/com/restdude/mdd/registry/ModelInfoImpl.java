@@ -67,7 +67,8 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
     @Getter @Setter
     private Class<?> modelControllerType;
     private Boolean linkableResource = false;
-    @Getter private String requestMapping;
+    @Getter  @Setter
+    private String requestMapping;
 
 
     public ModelInfoImpl(@NonNull Class<T> modelType) {
@@ -89,7 +90,7 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
         }
         else{
             this.basePath = "";
-            this.parentApplicationPath = "";
+            this.parentApplicationPath = "/api/rest";
         }
 
         this.requestMapping = new StringBuffer("/")
@@ -165,7 +166,7 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("uriComponent", this.getUriComponent()).append("modelType", this.getModelType()).append("linkable", this.isLinkableResource()).toString();
+        return new ToStringBuilder(this).append("requestMapping", this.getRequestMapping()).append("modelType", this.getModelType()).append("linkable", this.isLinkableResource()).toString();
     }
 
 }

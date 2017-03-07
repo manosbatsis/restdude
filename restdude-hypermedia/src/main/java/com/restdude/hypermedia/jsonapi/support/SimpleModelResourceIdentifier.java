@@ -24,10 +24,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.restdude.hypermedia.jsonapi.JsonApiLink;
 import com.restdude.hypermedia.jsonapi.JsonApiResourceIdentifier;
 import com.restdude.mdd.model.Model;
+import lombok.Getter;
 import lombok.NonNull;
-import org.springframework.hateoas.ResourceSupport;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -36,14 +38,18 @@ import java.util.Map;
  * A model wrapper that allows serializing as a Resource according to JSON API  1.1
  *
  * @see <a href="http://jsonapi.org/format/#document-resource-objects">JSON API Resources</a>
+ *
+ * @param <PK> the JSON API Resource model key type
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({ "id", "type", "meta" })
-public class SimpleModelResourceIdentifier<T extends Model<PK>, PK extends Serializable> extends ResourceSupport implements Serializable, JsonApiResourceIdentifier<T, PK> {
+public class SimpleModelResourceIdentifier<T extends Model<PK>, PK extends Serializable> implements JsonApiResourceIdentifier<PK> {
 
     @JsonProperty("id")
     private PK identifier;
     private String type;
+    @Getter @Setter
+    private Map<String, JsonApiLink> links;
     private Map<String, Serializable> meta;
 
     protected SimpleModelResourceIdentifier(){

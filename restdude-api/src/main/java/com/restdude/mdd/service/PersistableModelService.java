@@ -26,6 +26,10 @@ import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.repository.ModelRepository;
+import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -69,6 +73,15 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
      */
     Object getIdentifier(Object entity);
 
+    /**
+     * Find a page of results matching the given entity type and specification
+     * @param entityType the root entity type
+     * @param spec the query specification
+     * @param pageable the page config
+     * @return the page of results, may be <code>null</code>
+     */
+    <M extends PersistableModel<MID>, MID extends Serializable> Page<M> findRelatedPaginated(Class<M> entityType, Specification<M> spec, @NonNull Pageable pageable);
+
     void addMetadatum(PK subjectId, MetadatumModel dto);
 
     void addMetadata(PK subjectId, Collection<MetadatumModel> dtos);
@@ -76,12 +89,12 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
     void removeMetadatum(PK subjectId, String predicate);
 
     /**
-     * Get the other end of a ToOne relationship
-     * @param pk the id of the root model
-     * @param fieldInfo the attribute name of the relationship
-     * @return the single entity in the other side of the relation if any, null otherwise
+     * Find the other end of a ToOne relationship
+     * @param pk the root entity ID
+     * @param fieldInfo the member/relation name
+     * @return the single related entity, if any
      */
-    PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo);
+    PersistableModel findRelatedSingle(PK pk, FieldInfo fieldInfo);
 
     /**
      * @see ModelRepository#validateConstraints(PersistableModel)

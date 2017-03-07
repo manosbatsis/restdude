@@ -173,7 +173,7 @@ public interface ModelRepository<T extends PersistableModel<PK>, PK extends Seri
 	 * @param fieldInfo the attribute name of the relationship
 	 * @return the single entity in the other side of the relation if any, null otherwise
 	 */
-	PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo);
+	<RT extends PersistableModel> RT findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo);
 
 	enum EntityGraphType {
 

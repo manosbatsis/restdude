@@ -23,9 +23,12 @@ package com.restdude.mdd.util;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restdude.util.ParamsAwarePage;
 import lombok.NonNull;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Link;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +38,7 @@ import java.util.Map;
  *
  * @param <T>
  */
-public class ParamsAwarePageImpl<T> extends org.springframework.data.domain.PageImpl<T>{
+public class ParamsAwarePageImpl<T> extends org.springframework.data.domain.PageImpl<T> implements ParamsAwarePage<T> {
 
 	private Map<String, String[]> parameters;
 
@@ -63,8 +66,14 @@ public class ParamsAwarePageImpl<T> extends org.springframework.data.domain.Page
 		this.parameters = parameters;
 	}
 
+	@Override
 	public Map<String, String[]> getParameters() {
 		return parameters;
+	}
+
+	@Override
+	public List<Link> buildLinks(HttpServletRequest request) {
+		return null;
 	}
 
 	public void setParameters(Map<String, String[]> parameters) {

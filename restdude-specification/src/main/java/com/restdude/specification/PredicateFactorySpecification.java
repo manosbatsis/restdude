@@ -83,7 +83,6 @@ public class PredicateFactorySpecification<T extends Model> implements Specifica
             predicateFactory = SpecificationUtils.getPredicateFactoryForClass(fieldType);
             log.debug("toPredicate, predicateFactory: {}", predicateFactory);
             if (predicateFactory != null) {
-                // TODO: add operator support to factories
                 predicate = predicateFactory.buildPredicate(root, builder, this.propertyPath, fieldType, conversionService, this.operator, this.propertyValues);
             }
         }

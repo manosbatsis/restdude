@@ -20,18 +20,13 @@
  */
 package com.restdude.hypermedia.jsonapi;
 
-import com.restdude.mdd.model.Model;
-
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * A Document that may contain multiple Resources according to JSON API 1.1
  *
  * @param <D> the JSON API Resource collection type
- * @param <T> the JSON API Resource model type
- * @param <PK> the JSON API Resource model key type
  */
-public interface JsonApiResourceCollectionDocument<D extends Collection<JsonApiResource<T, PK>>, T extends Model<PK>, PK extends Serializable> extends JsonApiDocument<D, T, PK> {
+public interface JsonApiResourceCollectionDocument<D extends Collection<R>, R extends JsonApiResource> extends JsonApiDocument<D> {
 
 }

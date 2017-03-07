@@ -22,25 +22,20 @@ package com.restdude.hypermedia.jsonapi;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.restdude.mdd.model.ErrorModel;
-import com.restdude.mdd.model.Model;
-import org.springframework.hateoas.Link;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
  * A Document according to JSON API 1.1
  *
- * @param <T> the JSON API Resource model type
- * @param <PK> the JSON API Resource model key type
- *
+ * @param <D> the JSON API Document data type\
  * @see <a href="http://jsonapi.org/format/upcoming/#document-structure">JSON API Resources</a>
  *
  */
 @JsonPropertyOrder({ "data", "errors", "meta", "jsonapi", "links", "included" })
-public interface JsonApiDocument<D extends Object, T extends Model<PK>, PK extends Serializable> extends LinksModel {
+public interface JsonApiDocument<D extends Object> extends JsonApiLinksContainer {
 
     /**
      * Get the Document data, i.e. embedded resource(s)
@@ -90,60 +85,5 @@ public interface JsonApiDocument<D extends Object, T extends Model<PK>, PK exten
      */
     void setMeta(Map<String, Serializable> meta);
 
-    /**
-     * Adds the given link to the document.
-     *
-     * @param link
-     */
-    void add(Link link);
-
-    /**
-     * Adds all given {@link Link}s to the document.
-     *
-     * @param links
-     */
-    void add(Iterable<Link> links);
-
-    /**
-     * Adds all given {@link Link}s to the document.
-     *
-     * @param links must not be {@literal null}.
-     */
-    void add(Link... links);
-
-    /**
-     * Returns whether the document contains {@link Link}s at all.
-     *
-     * @return
-     */
-    boolean hasLinks();
-
-    /**
-     * Returns whether the document contains a {@link Link} with the given rel.
-     *
-     * @param rel
-     * @return
-     */
-    boolean hasLink(String rel);
-
-    /**
-     * Returns all {@link Link}s contained in this document.
-     *
-     * @return
-     */
-    List<Link> getLinks();
-
-    /**
-     * Removes all {@link Link}s added to the document so far.
-     */
-    void removeLinks();
-
-    /**
-     * Returns the link with the given rel.
-     *
-     * @param rel
-     * @return the link with the given rel or {@literal null} if none found.
-     */
-    Link getLink(String rel);
 
 }

@@ -18,29 +18,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.hypermedia.jsonapi;
+package com.restdude.util;
 
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 
-import java.io.Serializable;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
-public interface LinksModel extends Serializable {
-
-
-    void add(Link link);
-
-    void add(Iterable<Link> links);
-
-    void add(Link... links);
-
-    boolean hasLinks();
-
-    boolean hasLink(String rel);
-
-    List<Link> getLinks();
-
-    void removeLinks();
-
-    Link getLink(String rel);
+/**
+ * A page aware of the query params that created it and able to provide links for navigation
+ */
+public interface ParamsAwarePage<T> extends Page<T> {
+    Map<String, String[]> getParameters();
+    List<Link> buildLinks(HttpServletRequest request);
 }

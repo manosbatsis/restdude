@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.hypermedia.jsonapi.util;
+package com.restdude.hypermedia.util;
 
-import com.restdude.hypermedia.jsonapi.JsonApiDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiModelCollectionDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
-import com.restdude.hypermedia.jsonapi.JsonApiResource;
-import com.restdude.hypermedia.jsonapi.support.SimpleModelCollectionDocument;
-import com.restdude.hypermedia.jsonapi.support.SimpleModelDocument;
+import com.restdude.hypermedia.jsonapi.*;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelResourceCollectionDocument;
+import com.restdude.hypermedia.jsonapi.support.SimpleModelResourceDocument;
 import com.restdude.mdd.model.Model;
 import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,14 +31,13 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.Link;
 
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Utility class to construct model-based instances of {@link com.yahoo.elide.jsonapi.models.JsonApiDocument}.
- * The concrete implementation build and returned using this class is either a  {@link SimpleModelDocument} or {@link SimpleModelCollectionDocument}
+ * The concrete implementation build and returned using this class is either a  {@link SimpleModelResourceDocument} or {@link SimpleModelResourceCollectionDocument}
  * depending on whether a single or a collection of resources were provided using one of the <code>withData</code> methods, some of which also automatically add
  * metadata to the resulting document. Only a single call of <code>withData</code> or <code>withErrors</code> method signatures is allowed.
  *
@@ -73,8 +69,8 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
     private String jsonType;
     private Collection<Error> errors;
     private Map<String, Serializable> meta;
-    private Collection<JsonApiResource> included;
-    private List<Link> links;
+    private Collection<JsonApiModelResource> included;
+    private List<JsonApiLink> links;
     private SimpleModelResource<T, PK> resource;
     private List<SimpleModelResource<T, PK>> resources;
 
@@ -103,12 +99,12 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
     }
 
 
-    public JsonApiModelBasedDocumentBuilder withIncluded(Collection<JsonApiResource> included) {
+    public JsonApiModelBasedDocumentBuilder withIncluded(Collection<JsonApiModelResource> included) {
         this.included = included;
         return this;
     }
 
-    public JsonApiModelBasedDocumentBuilder addLinks(Collection<Link> links) {
+    public JsonApiModelBasedDocumentBuilder addLinks(Collection<JsonApiLink> links) {
         if(this.links == null) {
             this.links = new LinkedList<>();
         }
@@ -312,7 +308,7 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
 
 
     /**
-     * Build and return  a {@link SimpleModelDocument} or {@link SimpleModelCollectionDocument} instance
+     * Build and return  a {@link SimpleModelResourceDocument} or {@link SimpleModelResourceCollectionDocument} instance
      * depending on whether a single or a collection of resources was provided using one of the <code>withData</code> methods.
      *
      * To avoid casting when controlling the result use {@link #buildModelDocument()} or {@link #buildModelCollectionDocument()}
@@ -326,7 +322,7 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
     }
 
     /**
-     * Build and return  a {@link SimpleModelDocument} or {@link SimpleModelCollectionDocument} instance
+     * Build and return  a {@link SimpleModelResourceDocument} or {@link SimpleModelResourceCollectionDocument} instance
      * depending on whether a single or a collection of resources was provided using one of the <code>withData</code> methods.
      *
      * In case of errors, the first or the second document type will be used based on <code>errorTypeSingle</code>
@@ -336,14 +332,14 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
     protected JsonApiDocument build(boolean errorTypeSingle) {
         JsonApiDocument document;
         if(this.errors != null) {
-            document = errorTypeSingle ? new SimpleModelDocument() : new SimpleModelCollectionDocument();
+            document = errorTypeSingle ? new SimpleModelResourceDocument() : new SimpleModelResourceCollectionDocument();
             document.setErrors(this.errors);
         }
         else if(this.resource != null) {
-            document = new SimpleModelDocument(this.resource);
+            document = new SimpleModelResourceDocument(this.resource);
         }
         else if(this.resources != null) {
-            document = new SimpleModelCollectionDocument(this.resources);
+            document = new SimpleModelResourceCollectionDocument(this.resources);
         }
         else {
             throw new IllegalStateException("Cannot build a JsonApiDocument without a single resource, resource collection or errors");
@@ -363,7 +359,7 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
     }
 
     /**
-     * Build and return a {@link SimpleModelDocument} after adding a single resource using an appropriate <code>withData</code> method signature.
+     * Build and return a {@link SimpleModelResourceDocument} after adding a single resource using an appropriate <code>withData</code> method signature.
      *
      * To obtain a document with multiple resources set or without knowing whether a single or multiple resources were set use
      * {@link #buildModelCollectionDocument()} or {@link #build()} respectively
@@ -372,15 +368,15 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
      * @see JsonApiModelBasedDocumentBuilder#buildModelCollectionDocument()
      * @return
      */
-    public JsonApiModelDocument<T, PK> buildModelDocument(){
+    public JsonApiModelResourceDocument<T, PK> buildModelDocument(){
         if(CollectionUtils.isNotEmpty(this.resources)){
             throw new IllegalStateException("Cannot build a JsonApiModelDocument as multiple resources are set");
         }
-        return (JsonApiModelDocument<T, PK>) this.build(true);
+        return (JsonApiModelResourceDocument<T, PK>) this.build(true);
     }
 
     /**
-     * Build and return a {@link JsonApiModelCollectionDocument} after adding resources using an appropriate <code>withData</code> method signature.
+     * Build and return a {@link JsonApiModelResourceCollectionDocument} after adding resources using an appropriate <code>withData</code> method signature.
      *
      * To obtain a document with a single resource or without knowing whether a single or multiple resources were set use
      * {@link #buildModelDocument()} or {@link #build()} respectively
@@ -389,11 +385,11 @@ public class JsonApiModelBasedDocumentBuilder<T extends Model<PK>, PK extends Se
      * @see JsonApiModelBasedDocumentBuilder#buildModelDocument()
      * @return
      */
-    public JsonApiModelCollectionDocument<T, PK> buildModelCollectionDocument(){
+    public JsonApiModelResourceCollectionDocument<T, PK> buildModelCollectionDocument(){
         if(this.resource != null){
             throw new IllegalStateException("Cannot build a JsonApiModelCollectionDocument as a single resource is set");
         }
-        return (JsonApiModelCollectionDocument<T, PK>) this.build(false);
+        return (JsonApiModelResourceCollectionDocument<T, PK>) this.build(false);
     }
 
     /**

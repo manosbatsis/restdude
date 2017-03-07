@@ -380,7 +380,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 	}
 
 	@Override
-	public PersistableModel findRelatedEntityByOwnId(@NonNull PK pk, @NonNull FieldInfo fieldInfo) {
+	public <RT extends PersistableModel> RT findRelatedEntityByOwnId(@NonNull PK pk, @NonNull FieldInfo fieldInfo) {
 		if(!fieldInfo.getFieldMappingType().isToOne()){
 			throw new IllegalArgumentException("Field " + fieldInfo.getFieldName() + " is not a relation to a single entity");
 		}
@@ -388,15 +388,25 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 		CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 		CriteriaQuery query = cb.createQuery(fieldInfo.getFieldType());
 
-		Root<T> root = query.from(this.domainClass);
-		query.where(cb.equal(root.get("pk"), pk));
+		// if we can match by reverse
+		Optional<String> reverseName = fieldInfo.getReverseFieldName();
+		if(fieldInfo.isOneToOne() && reverseName.isPresent()){
 
-		// or maybe:
-		//CompoundSelection<Integer> selection = cb.construct(fieldInfo.getFieldType(), fieldInfo.getFieldName());
-		Selection selection = root.join(fieldInfo.getFieldName(),JoinType.INNER);
+			Root root = query.from(fieldInfo.getFieldModelType());
+			query.where(cb.equal(root.<T>get(reverseName.get()).get("pk"), pk));
+		}
+		// else match by join
+		else{
 
-		query.select(selection);
-		return (PersistableModel) this.entityManager.createQuery(query).getSingleResult();
+			Root<T> root = query.from(this.domainClass);
+			query.where(cb.equal(root.get("pk"), pk));
+			// or maybe:
+			//CompoundSelection<Integer> selection = cb.construct(fieldInfo.getFieldType(), fieldInfo.getFieldName());
+			Selection selection = root.join(fieldInfo.getFieldName(),JoinType.INNER);
+			query.select(selection);
+		}
+
+		return (RT) this.entityManager.createQuery(query).getSingleResult();
 	}
 
 	@Override

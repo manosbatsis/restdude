@@ -202,11 +202,31 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
      * {@inheritDoc}
      */
     @Override
-    public PersistableModel findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo) {
+    public PersistableModel findRelatedSingle(@NonNull PK pk, @NonNull FieldInfo fieldInfo) {
+        // throw error if not valid or linkable relationship
+        if(!fieldInfo.isLinkableResource() || !fieldInfo.isToOne()){
+            throw new IllegalArgumentException("Related must be linkable and *ToOne");
+        }
         return repository.findRelatedEntityByOwnId(pk, fieldInfo);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <M extends PersistableModel<MID>, MID extends Serializable> Page<M>  findRelatedPaginated(Class<M> entityType, Specification<M> spec, @NonNull Pageable pageable) {
+        ModelRepository<M, MID> repo = (ModelRepository) this.repositoryRegistryService.getRepositoryFor(entityType);
 
+        if(repo == null){
+            throw new  IllegalArgumentException("Could not find a repository for model type: " + entityType);
+        }
+
+        if (spec != null) {
+            return repo.findAll(spec, pageable);
+        } else {
+            return repo.findAll(pageable);
+        }
+    }
 
     /**
      * {@inheritDoc}

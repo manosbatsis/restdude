@@ -32,6 +32,6 @@ import java.util.Collection;
  * @param <PK> the JSON API Resource model key type
  *
  */
-public interface JsonApiModelCollectionDocument<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceCollectionDocument<Collection<JsonApiResource<T, PK>>, T, PK> {
+public interface JsonApiModelResourceCollectionDocument<T extends Model<PK>, PK extends Serializable> extends JsonApiResourceCollectionDocument<Collection<JsonApiModelResource<T, PK>>, JsonApiModelResource<T, PK>> {
 
 }

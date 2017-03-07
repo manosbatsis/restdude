@@ -21,8 +21,8 @@
 package com.restdude.test.integration;
 
 import com.restdude.domain.users.model.Role;
-import com.restdude.hypermedia.jsonapi.JsonApiModelDocument;
-import com.restdude.hypermedia.jsonapi.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
+import com.restdude.hypermedia.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.test.AbstractControllerIT;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -100,7 +100,7 @@ public class JsonApiIT extends AbstractControllerIT {
         RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
 
         Role role = new Role("ROLE_TEST", "Test role");
-        JsonApiModelDocument<Role, String> document = new JsonApiModelBasedDocumentBuilder<Role, String>("roles")
+        JsonApiModelResourceDocument<Role, String> document = new JsonApiModelBasedDocumentBuilder<Role, String>("roles")
                 .withData(role)
                 .buildModelDocument();
 

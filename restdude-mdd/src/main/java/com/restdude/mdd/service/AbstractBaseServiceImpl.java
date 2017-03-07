@@ -49,6 +49,7 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
     private ConversionService conversionService;
     protected UserRepository userRepository;
     protected EmailService emailService;
+    protected RepositoryRegistryService repositoryRegistryService;
     protected FilePersistenceService filePersistenceService;
     protected SimpMessageSendingOperations messagingTemplate;
 
@@ -76,6 +77,11 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
     @Autowired
     public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
+    }
+
+    @Autowired
+    public void setRepositoryRegistryService(RepositoryRegistryService repositoryRegistryService) {
+        this.repositoryRegistryService = repositoryRegistryService;
     }
 
     @Autowired

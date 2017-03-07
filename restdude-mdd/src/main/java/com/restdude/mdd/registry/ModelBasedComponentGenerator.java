@@ -233,6 +233,7 @@ public class ModelBasedComponentGenerator {
             // @RequestMapping
             String pattern = null;
             pattern = getRequestMapping(modelInfo);
+            modelInfo.setRequestMapping(pattern);
             LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
 
             Map<String, Object> requestMappingMembers = new HashMap<>();
