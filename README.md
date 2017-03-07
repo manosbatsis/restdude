@@ -70,24 +70,24 @@ custom components at any time.
                                   |                           |                     |           
 ----------------------------------|---------------------------|---------------------|------------
                                   |                           |                     |            
-                      JSON+HATEOAS or JSON-API                |                     |            
- Network              with RSQL or URL params                 |                   STOMP          
+                      JSON+HATEOAS or JSON-API 1.x            |                     |            
+ Network              with RSQL/FIQL or URL params            |                   STOMP          
                                   |                           |                     |            
                                   |                           |                     |            
 ----------------------------------|---------------------------|---------------------|------------
                                   |                           |                     |            
                     +-------------+--------------------------+-----------+  +------------------+    
-                    | <strong>HostController</strong>                    +--+ Message Broker   |
+                    | <strong>HostController</strong>                                     +--+ Message Broker   |
                     +--------------------------+-------------------------+  +------+-----------+
                                                |                                   |            
  Restdude                                      |                                   |            
                     +--------------------------+-----------------------------------+-----------+
-                    |                                 HostService                              |
+                    |                                <strong>HostService</strong>                               |
                     +--------+--------------------+---------------------+----------------+-----+
                              |                    |                     |                |      
                              |                    |                     |                |      
                     +--------|-------+ +----------|-----------+ +-------|-------+ +------|-----+
-                    | HostRepository | | FileService (FS, S3) | | EmailService  | | Misc Util  |
+                    | <strong>HostRepository</strong> | | FileService (FS, S3) | | EmailService  | | Misc Util  |
                     +----------------+ +----------------------+ +---------------+ +------------+
 </pre>
                                
