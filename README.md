@@ -23,6 +23,10 @@ Full stack, high level framework for horizontal, model-driven application hacker
 - Automate basic or fine grained auditing using <a href="http://docs.spring.io/spring-data/data-jpa/docs/current/reference/html/auditing.html">Envers</a> and <a href="http://javers.org/">Javers</a>
 - Publish REST API documentation effortlesly thanks to <a href="http://springfox.github.io/springfox">Springfox</a> and <a href="http://swagger.io/swagger-ui">Swagger UI</a>
 - Optional web UI and admin panel provided out-of the-box based on bootstrap 4, backbone.marionette, core-UI, requirejs and more.
+- Coming up: 
+    - Support for <a href="http://www.w3.org/TR/json-ld/">json-ld</a> and <a href="http://www.hydra-cg.com/spec/latest/core/">hydra</a> via model annotations.
+    - Dynamic <a href="https://www.w3.org/TR/cors/">CORS</a> with fine-grained settings down to entity model records
+    - Support for <a href="https://jwt.io/">JWT (JSON Web Token)</a>
 
 ## Why?
 
