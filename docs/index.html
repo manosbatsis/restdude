@@ -6,7 +6,7 @@ isHome: true
 ---
 
 <section class="bs-docs-section">
-    <h2 id="stack" class="page-header">Technology Stack</h2>
+    <h1 id="stack" class="page-header">Technology Stack</h1>
     <ul>
 
         <li>Choose between Spring MVC or Spring Boot</li>
@@ -34,7 +34,7 @@ isHome: true
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="why" class="page-header">Why?</h2>
+    <h1 id="why" class="page-header">Why?</h1>
     <p>Contrary to other frameworks that squeeze everything within two (i.e. Controller, Repository) or even a single tier, restdude provides effortless SCRUD services by generating controller, service and repository components
         for you classes during application startup.</p>
     <p>This provides an extensible 3-tier architecture without any need for boilerplate code and allows to replace and extend the generated components with your own at any time when custom or
@@ -43,7 +43,7 @@ isHome: true
         based on entity model relationships.</p>
 </section>
 <section class="bs-docs-section">
-    <h2 id="mdd" class="page-header">Model Driven</h2>
+    <h1 id="mdd" class="page-header">Model Driven</h1>
     <p>Usecases in Restdude are typically modeled while broken down to four major tiers: </p>
 
     <ul>
@@ -67,7 +67,7 @@ isHome: true
 
 
 <section class="bs-docs-section">
-    <h2 id="ten_second_example" class="page-header">Ten Second Example</h2>
+    <h1 id="ten_second_example" class="page-header">Ten Second Example</h1>
     <p>Consider the following sample model</p>
     {% highlight java %}
     @Entity
@@ -98,7 +98,7 @@ isHome: true
     }
     {% endhighlight %}
 
-    <h3 id="generated_components" class="page-header">Generated Components</h3>
+    <h2 id="generated_components">Generated Components</h2>
     <p>Based on the above model, restdude will generate any missing components like a `Controller`, `Service` and `Repository`
     to give you the following architecture without the need for boilerplate code. You can replace or extend those with your
         custom components at any time.</p>
@@ -132,7 +132,7 @@ isHome: true
                     +----------------+ +----------------------+ +---------------+ +------------+
 </pre>
 
-    <h3 id="generated_services" class="page-header">Generated Services</h3>
+    <h2 id="generated_services">Generated Services</h2>
     <p>Some of the RESTful services provided out of the box for the above model:</p>
     <table class="table table-striped">
         <thead>
@@ -205,18 +205,18 @@ isHome: true
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="overview" class="page-header">Overview</h2>
-    <h2>Working with Models</h2>
-    <h3>Entity Models</h3>
-    <h3>Graph Models</h3>
-    <h3>Generated Components</h3>
+    <h1 id="overview" class="page-header">Overview</h1>
+    <h1>Working with Models</h1>
+    <h2>Entity Models</h2>
+    <h2>Graph Models</h2>
+    <h2>Generated Components</h2>
     <p>Contrary to other frameworks like spring-data-rest and jhipster, restdude provides effortless SCRUD services by generating controller, service and repository classes during application startup.</p>
     <p>This provides an extensible 3-tier architecture without any need for boilerplate code and allows to replace and extend the generated components with your own at any time when custom or
         otherwise additional functionality is needed. Restdude will simply not generate components that overlap with those already available.</p>
 
     <p>A modern SPA wbapp that automatically adopts to the above and can be manageably customized and extended further
         is also provided.</p>
-    <h3>Validation.</h3>
+    <h2>Validation.</h2>
     Bean validation is supported.
 
 
@@ -225,9 +225,9 @@ isHome: true
         repositories, base models and much more.
     </p>
 
-    <h3>Controllers</h3>
-    <h3>Services</h3>
-    <h3>Repositories</h3>
+    <h2>Controllers</h2>
+    <h2>Services</h2>
+    <h2>Repositories</h2>
     <p> JPA repositories work with practically any relational database and support entity graphs. Popular NoSQL data
         stores can be easily setup thanks to spring-data modules.
     </p>
@@ -280,13 +280,13 @@ isHome: true
     <p>Frontend is based on <a href="http://marionettejs.com/">backbone.marionette</a> and similarly provides base
         models, model-driven UI components views and layouts (forms, menus etc.), converters, formatters, routes and
         more.</p>
-    <h3> Dynamic Components
-    </h3>
-    <h3>Customization</h3>
-    <h3>I18n</h3>
+    <h2> Dynamic Components
+    </h2>
+    <h2>Customization</h2>
+    <h2>I18n</h2>
 </section>
 <section class="bs-docs-section">
-    <h2 id="api-reference" class="page-header">Swagger API Reference</h2>
+    <h1 id="api-reference" class="page-header">Swagger API Reference</h1>
     <p>
         The webapp provides automatically-generated API documentation based on
         <a href="http://swagger.io/">Swagger</a> and created by <a href="http://springfox.github.io/springfox/">Springfox</a>.
@@ -296,7 +296,7 @@ isHome: true
     <img src="{{ site.baseurl }}/assets/images/swagger-ui.png" class="img-responsive" alt="Responsive image">
 </section>
 <section class="bs-docs-section">
-    <h2 id="license" class="page-header">License</h2>
+    <h1 id="license" class="page-header">License</h1>
     <p>
         <img src="{{ site.baseurl }}/assets/images/agplv3-155x51.png" style="float: right"/>Restdude Hub DVD Rental is
         distributed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU
