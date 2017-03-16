@@ -1,0 +1,156 @@
+---
+layout: default
+title: Auth
+description: Authentication and Authorization
+isHome: false
+---
+
+<section class="bs-docs-section">
+    <h2 id="introduction" class="page-header">Introduction</h2>
+    <p>
+        Restdude applications are stateless by default and use <a href="https://projects.spring.io/spring-security/">Spring Security</a>,
+        a framework that focuses on providing both authentication and authorization to Java applications and can be easily extended to meet
+        custom requirements. Spring Security supports varuous technologies out of the box, including in-memory, JDBC, LDAP, OAuth, SAML, Kerberos and others.
+    </p>
+    <p>
+        This document describes the core authentication and authorization mechanisms used in restdude.
+    </p>
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="jwt" class="page-header">JWT</h2>
+    <h3 id="jwt-access" class="page-header">Access Tokens</h3>
+    <p>To obtain a JWT Access token while authenticating, make an HTTP request as follows:</p>
+{% highlight javascript %}
+// POST /api/auth/jwt/access
+// Headers: Accept=application/json; charset=UTF-8
+//		Content-Type=application/json; charset=UTF-8
+// Body:
+{
+    "password": "foo",
+    "username": "bar"
+}
+{% endhighlight %}
+    <p>If the credentials are valid, you will receive a JSON response body with the corresponding user details and an <code>access_token</code> cookie
+        that contains the compact, signed JWT Access token:</p>
+{% highlight javascript %}
+// HTTP/1.1 201 Created
+// Content-Type: application/json;charset=utf-8
+// Set-Cookie: access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2Vycy80ZjBmY2ZmMC1jOTQyLTRmYjEtYThjYS0xOGM4NDMyYWQwNmQiLCJuYW1lIjoiQWRtaW4gVXNlciIsImdpdmVuX25hbWUiOiJBZG1pbiIsImZhbWlseV9uYW1lIjoiVXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwibG9jYWxlIjoiZW4iLCJzY29wZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJleHAiOjE0ODk3MDA2MjR9.NPuRqNojx1EsaE3r844aF6syj2Vg0qkrWpxWMFZRfTALygaugkmA95zmwIXM_utrmi5Z8BqDJyTLx32Pa7XItQ;Path=/;Domain=.localhost
+// Set-Cookie: refresh_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlcyI6WyJST0xFX1JFRlJFU0hfVE9LRU4iXSwiZXhwIjoxNDg5NzAwNjI0fQ.hF76jw_BPReJy9W-dATjMbGFSO6j71KqNqIzaLfVPzRMU67bvxZ3jD9cW0Cd3IroJdR53GOq-wdCa4gQK9YhSg;Path=/;Domain=.localhost
+// Body
+    {
+    "pk": "4f0fcff0-c942-4fb1-a8ca-18c8432ad06d",
+    "username": "foo",
+    "lastPassWordChangeDate": null,
+    "emailHash": "6ae965c1342be697f5fd386090e2c22e",
+    "firstName": "Foo",
+    "lastName": "Bar",
+    // other members...
+    "roles": [
+        {"authority": "ROLE_ADMIN"},
+        {"authority": "ROLE_USER"}
+    ]
+}
+{% endhighlight %}
+
+    <h3 id="jwt-refresh" class="page-header">Refresh Tokens</h3>
+    <p>Add documentation</p>
+    <h3 id="jwt_settings" class="page-header">JWT Settings</h3>
+    <p>The following application properties control JWT generation:</p>
+    <ul>
+        <li><code>restdude.jwt.accessTokenMinutes</code>: The amount of minutes JWT Access tokens are valid.</li>
+        <li><code>restdude.jwt.refreshTokenMinutes</code>: The amount of minutes JWT Refresh tokens are valid. Should be greater than the above.</li>
+        <li><code>restdude.jwt.tokenIssuer</code>: The token issuer.</li>
+        <li><code>restdude.jwt.tokenSigningKey</code>: The secret key used to sign and verify JWTs.</li>
+    </ul>
+</section>
+<section class="bs-docs-section">
+    <h2 id="basic-auth" class="page-header">Basic Auth</h2>
+    <p>Restdude also supports Basic Authentication, mostly as a convenience during development.</p>
+    <p>To login and further access the app using Basic Auth, make an HTTP request as follows:</p>
+{% highlight javascript %}
+// POST /api/auth/basic
+// Headers: Accept=application/json; charset=UTF-8
+//		Content-Type=application/json; charset=UTF-8
+// Body:
+{
+    "password": "foo",
+    "username": "bar"
+}
+{% endhighlight %}
+    <p>If the credentials are valid, you will receive a JSON response body with the corresponding user details and a <code>restdude-sso</code> cookie
+        that iwill be the equivalent of an <code>Authentication: Basic</code> header when transparently sent back to the server in subsequent requests:</p>
+{% highlight javascript %}
+// HTTP/1.1 201 Created
+// Content-Type: application/json;charset=utf-8
+// Set-Cookie: restdude-sso=YWRtaW46YWRtaW4=;Path=/;Domain=.localhost
+// Body
+{
+    "pk": "4f0fcff0-c942-4fb1-a8ca-18c8432ad06d",
+    "username": "foo",
+    "lastPassWordChangeDate": null,
+    "emailHash": "6ae965c1342be697f5fd386090e2c22e",
+    "firstName": "Foo",
+    "lastName": "Bar",
+    // other members...
+    "roles": [
+        {"authority": "ROLE_ADMIN"},
+        {"authority": "ROLE_USER"}
+    ]
+}
+{% endhighlight %}
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="anonymous-auth" class="page-header">Anonymous Auth</h2>
+
+    <p>Add documentation</p>
+    </div>
+
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="social-signin" class="page-header">Social Sign-in</h2>
+    <p>Restdude provides transparent registration and social sign-in using Spring Social. Linkedin, Facebook, Github and other networks are supported. </p>
+    <p>Add documentation</p>
+    </div>
+
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="cookies" class="page-header">Cookies Configuration</h2>
+
+    <p>Cookies are perhaps the most secure way of storing information on the client, provided SSL is used and cookies are configured as secure and HTTP-Only, i.e. not accessible by scripts.
+        The following application properties control cookies configuration:</p>
+    <ul>
+        <li><code>restdude.cookies.httpOnly</code>: true/false.</li>
+        <li><code>restdude.cookies.secure</code>: true/false.</li>
+    </ul>
+    </div>
+
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="csrf-protection" class="page-header">CSRF Protection</h2>
+
+    <p>Add documentation</p>
+    </div>
+
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="dynamic-cors" class="page-header">Dynamic CORS</h2>
+    <p>Restdude supports both static and dynamic Cross-Origin Resource Sharing (CORS) configuration, the latter down to entity model instance.</p>
+    <p>Add documentation</p>
+    </div>
+
+</section>
+
+<section class="bs-docs-section">
+    <h2 id="auth-metadata" class="page-header">Authorization Metadata</h2>
+    <p>Restdude allows configuring authorization by annotating your models using Spring Expression Language (SpEL) expressions.
+    <p>Add documentation</p>
+    </div>
+
+</section>
