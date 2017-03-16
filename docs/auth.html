@@ -6,7 +6,7 @@ isHome: false
 ---
 
 <section class="bs-docs-section">
-    <h2 id="introduction" class="page-header">Introduction</h2>
+    <h1 id="introduction" class="page-header">Introduction</h1>
     <p>
         Restdude applications are stateless by default and use <a href="https://projects.spring.io/spring-security/">Spring Security</a>,
         a framework that focuses on providing both authentication and authorization to Java applications and can be easily extended to meet
@@ -18,8 +18,8 @@ isHome: false
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="jwt" class="page-header">JWT</h2>
-    <h3 id="jwt-access" class="page-header">Access Tokens</h3>
+    <h1 id="jwt" class="page-header">JWT</h1>
+    <h2 id="jwt-access">Access Tokens</h2>
     <p>To obtain a JWT Access token while authenticating, make an HTTP request as follows:</p>
 {% highlight javascript %}
 // POST /api/auth/jwt/access
@@ -54,9 +54,9 @@ isHome: false
 }
 {% endhighlight %}
 
-    <h3 id="jwt-refresh" class="page-header">Refresh Tokens</h3>
+    <h2 id="jwt-refresh">Refresh Tokens</h2>
     <p>Add documentation</p>
-    <h3 id="jwt_settings" class="page-header">JWT Settings</h3>
+    <h2 id="jwt_settings">JWT Settings</h2>
     <p>The following application properties control JWT generation:</p>
     <ul>
         <li><code>restdude.jwt.accessTokenMinutes</code>: The amount of minutes JWT Access tokens are valid.</li>
@@ -66,7 +66,7 @@ isHome: false
     </ul>
 </section>
 <section class="bs-docs-section">
-    <h2 id="basic-auth" class="page-header">Basic Auth</h2>
+    <h1 id="basic-auth" class="page-header">Basic Auth</h1>
     <p>Restdude also supports Basic Authentication, mostly as a convenience during development.</p>
     <p>To login and further access the app using Basic Auth, make an HTTP request as follows:</p>
 {% highlight javascript %}
@@ -103,21 +103,21 @@ isHome: false
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="anonymous-auth" class="page-header">Anonymous Auth</h2>
+    <h1 id="anonymous-auth" class="page-header">Anonymous Auth</h1>
 
     <p>Add documentation</p>
 
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="social-signin" class="page-header">Social Sign-in</h2>
+    <h1 id="social-signin" class="page-header">Social Sign-in</h1>
     <p>Restdude provides transparent registration and social sign-in using Spring Social. Linkedin, Facebook, Github and other networks are supported. </p>
     <p>Add documentation</p>
 
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="cookies" class="page-header">Cookies Configuration</h2>
+    <h1 id="cookies" class="page-header">Cookies Configuration</h1>
 
     <p>Cookies are perhaps the most secure way of storing information on the client, provided SSL is used and cookies are configured as secure and HTTP-Only, i.e. not accessible by scripts.
         The following application properties control cookies configuration:</p>
@@ -129,21 +129,21 @@ isHome: false
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="csrf-protection" class="page-header">CSRF Protection</h2>
+    <h1 id="csrf-protection" class="page-header">CSRF Protection</h1>
 
     <p>Add documentation</p>
 
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="dynamic-cors" class="page-header">Dynamic CORS</h2>
+    <h1 id="dynamic-cors" class="page-header">Dynamic CORS</h1>
     <p>Restdude supports both static and dynamic Cross-Origin Resource Sharing (CORS) configuration, the latter down to entity model instance.</p>
     <p>Add documentation</p>
 
 </section>
 
 <section class="bs-docs-section">
-    <h2 id="auth-metadata" class="page-header">Authorization Metadata</h2>
+    <h1 id="auth-metadata" class="page-header">Authorization Metadata</h1>
     <p>Restdude allows configuring authorization by annotating your models using Spring Expression Language (SpEL) expressions.
     <p>Add documentation</p>
 
