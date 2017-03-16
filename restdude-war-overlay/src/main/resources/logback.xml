@@ -27,15 +27,18 @@
         </encoder>
     </appender>
 
-    <logger name="com.restdude.test">
-        <level value="warn"/>
+    <!--logger name="com.restdude.test">
+        <level value="debug"/>
     </logger>
-    <logger name="com.restdude.mdd.registry">
-        <level value="warn"/>
+    <logger name="com.restdude.auth">
+        <level value="debug"/>
     </logger>
-    <logger name="com.restdude.mdd.controller">
-        <level value="warn"/>
+    <logger name="org.springframework.security">
+        <level value="debug"/>
     </logger>
+    <logger name="com.restdude.auth">
+        <level value="debug"/>
+    </logger-->
 
     <!--logger name="com.restdude.rsql">
         <level value="debug"/>

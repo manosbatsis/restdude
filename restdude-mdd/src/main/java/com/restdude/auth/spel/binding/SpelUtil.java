@@ -21,8 +21,8 @@
 package com.restdude.auth.spel.binding;
 
 import com.restdude.auth.spel.annotations.*;
-import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.util.ClassUtils;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,6 +52,7 @@ public class SpelUtil {
     private static final ConcurrentHashMap<String, Optional<String>> SPEL_EXPRESSION_CACHE = new ConcurrentHashMap<String, Optional<String>>();
     private static final HashMap<String, Class> METHOD_SPEL_ANNOTATIONS = new HashMap<String, Class>();
     private static final SpelExpressionParser parser = new SpelExpressionParser();
+    private static final Class<?> DEFAULT_MODEL_CONTROLLER_IMPL = ClassUtils.getClass("com.restdude.mdd.controller.AbstractModelServiceBackedController");
 
     static {
         METHOD_SPEL_ANNOTATIONS.put("count", PreAuthorizeCount.class);
@@ -109,15 +110,15 @@ public class SpelUtil {
     public static boolean isCandidate(Class targetClass, Method method) {
         return METHOD_SPEL_ANNOTATIONS.containsKey(method.getName())
                 && (PersistableModelService.class.isAssignableFrom(targetClass)
-                || AbstractPersistableModelController.class.isAssignableFrom(targetClass));
+                || DEFAULT_MODEL_CONTROLLER_IMPL.isAssignableFrom(targetClass));
     }
 
     public static Class getComponentModelInterfaceClass(Class targetClass) {
         Class interfaze = null;
         if (PersistableModelService.class.isAssignableFrom(targetClass)) {
             interfaze = PersistableModelService.class;
-        } else if (AbstractPersistableModelController.class.isAssignableFrom(targetClass)) {
-            interfaze = AbstractPersistableModelController.class;
+        } else if (DEFAULT_MODEL_CONTROLLER_IMPL.isAssignableFrom(targetClass)) {
+            interfaze = DEFAULT_MODEL_CONTROLLER_IMPL;
         }
         return interfaze;
     }

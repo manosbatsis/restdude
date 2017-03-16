@@ -23,7 +23,6 @@ package com.restdude.domain.friends.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public enum FriendshipStatus {
@@ -53,19 +52,33 @@ public enum FriendshipStatus {
 
     }
 
-    public static Set<FriendshipStatus> getAllowedNext(@Nullable FriendshipStatus current) {
+    /**
+     *
+     * @param current may be <code>null</code>
+     * @return
+     */
+    public static Set<FriendshipStatus> getAllowedNext(FriendshipStatus current) {
         return allowedNext.get(current);
     }
 
-
-    public static boolean isAllowedNext(@Nullable FriendshipStatus current, @Nullable FriendshipStatus next) {
+    /**
+     * @param current may be <code>null</code>
+     * @param next may be <code>null</code>
+     * @return
+     */
+    public static boolean isAllowedNext(FriendshipStatus current, FriendshipStatus next) {
         boolean allowed = allowedNext.get(current).contains(next);
         LOGGER.debug("isAllowedNext, current: {} ,next: {}, allowed: {}" + allowed, current, next);
         return allowed;
     }
 
 
-    public static FriendshipStatus getApplicableInverse(@Nullable FriendshipStatus current) {
+    /**
+     *
+     * @param current may be <code>null</code>
+     * @return
+     */
+    public static FriendshipStatus getApplicableInverse(FriendshipStatus current) {
         return applicableInverse.get(current);
     }
 

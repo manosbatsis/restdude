@@ -706,7 +706,7 @@
         },
 
         // Default URL for the model's representation on the server -- if you're
-        // using Backbone's restful methods, override this to change the endpoint
+        // using Backbone's restful methods, override this to change the controller
         // that will be called.
         url: function () {
             var base =

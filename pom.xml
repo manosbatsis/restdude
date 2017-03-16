@@ -39,6 +39,7 @@
 
     <modules>
         <module>restdude-api</module>
+        <module>restdude-model</module>
         <module>restdude-hypermedia</module>
         <module>restdude-specification</module>
         <module>restdude-rsql</module>
@@ -46,6 +47,7 @@
         <module>restdude-util</module>
         <module>restdude-mdd</module>
         <module>restdude-error</module>
+        <module>restdude-auth</module>
         <module>restdude-auth-spel</module>
         <module>restdude-websocket</module>
         <module>restdude-framework</module>
@@ -121,6 +123,7 @@
         <commons-collections4.version>4.1</commons-collections4.version>
 
         <!-- Misc -->
+        <jjwt.version>0.7.0</jjwt.version>
         <elide-core.version>2.5.0</elide-core.version>
         <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.1.2</thymeleaf-layout-dialect.version>
@@ -939,6 +942,13 @@
                 <artifactId>lombok</artifactId>
                 <version>1.16.12</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- JJWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
 
             <!-- javers auditing -->

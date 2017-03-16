@@ -25,7 +25,7 @@ import com.restdude.util.Constants;
 
 public class SimpleUserDetailsConfig implements UserDetailsConfig {
 
-	private String cookiesBasicAuthTokenName = Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME;
+	private String cookiesBasicAuthTokenName = Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME;
 	private boolean cookiesSecure = false;
 	private boolean cookiesHttpOnly = false;
 

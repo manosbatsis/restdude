@@ -79,7 +79,7 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
         this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
         this.jpaEntity = modelType.isAnnotationPresent(Entity.class);
 
-        // add endpoint info
+        // add controller info
         ModelResource ar = modelType.getAnnotation(ModelResource.class);
         this.uriComponent = buildUriComponent();
         if(ar != null){

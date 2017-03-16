@@ -46,7 +46,7 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
     protected static final String GENERATED_ASCIIDOCS_PATH = "target/swagger2asciidoc";
 
 
-    @Test(priority = 100, description = "Test the swagger endpoint and create the static files documentation")
+    @Test(priority = 100, description = "Test the swagger controller and create the static files documentation")
     public void testCreateStaticDocs() throws Exception {
         try {
 

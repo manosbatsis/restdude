@@ -20,17 +20,23 @@
  */
 package com.restdude.hypermedia.util;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.hypermedia.hateoas.ModelResource;
+import com.restdude.hypermedia.hateoas.ModelResources;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
+import com.restdude.mdd.model.Model;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.util.ParamsAwarePage;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.BasicLinkBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,6 +50,7 @@ public class HypermediaUtils {
 
     public static final String MIME_APPLICATION_VND_PLUS_JSON = "application/vnd.api+json";
     public static final String MIME_APPLICATIOM_HAL_PLUS_JSON = " application/hal+json";
+    public static final String MIME_APPLICATIOM_JSON = " application/json";
 
     public static List<Link> buileHateoasLinks(@NonNull ParamsAwarePage page, @NonNull HttpServletRequest request, @NonNull String pageNumberParamName) {
         List<Link> links = new LinkedList<>();
@@ -77,7 +84,7 @@ public class HypermediaUtils {
         return links;
     }
 
-    public static List<Link> buileHateoasLinks(@NonNull PersistableModel model, @NonNull ModelInfo modelInfo) {
+    public static List<Link> buileHateoasLinks(@NonNull Model model, ModelInfo modelInfo) {
         List<Link> links = null;
         if (model.getPk() != null && modelInfo != null) {
 
@@ -107,6 +114,46 @@ public class HypermediaUtils {
         return links;
     }
 
+    public static <RT extends Model<RID>, RID extends Serializable> ModelResource<RT> toHateoasResource(RT model, ModelInfo<RT, RID> modelInfo) {
+        Class<RT> modelType = (modelInfo != null) ? modelInfo.getModelType() : (Class<RT>) model.getClass();
+        ModelResource<RT> resource = new ModelResource<>(model);
+        List<Link> links = HypermediaUtils.buileHateoasLinks(model, modelInfo);
+        log.debug("toHateoasResource, model: {}, modelType: {}, modelInfo: {}", model, modelType, modelInfo);
+        if(CollectionUtils.isNotEmpty(links)) {
+            resource.add(links);
+        }
+        return resource;
+    }
 
+    /**
+     * Wrap the given models in a {@link Resources} and add {@link org.springframework.hateoas.Link}s
+     *
+     * @param models
+     */
+    public static <RT extends Model> ModelResources<RT> toHateoasResources(@NonNull Iterable<RT> models, Class<RT> modelType) {
+        LinkedList<ModelResource<RT>> wrapped = new LinkedList<>();
+        for(RT model : models){
+            wrapped.add(new ModelResource<RT>(model));
+        }
+        ModelResources<RT> resources = new ModelResources<>(wrapped);
+        return resources;
+    }
 
+    /**
+     * Wrap the given model in a JSON API Document
+     * @param model the model to wrap
+     * @return
+     */
+    public static <RT extends Model<RID>, RID extends Serializable> JsonApiModelResourceDocument<RT, RID> toDocument(RT model, ModelInfo<RT, RID> modelInfo) {
+        JsonApiModelResourceDocument<RT, RID> doc = new JsonApiModelBasedDocumentBuilder<RT, RID>(modelInfo.getUriComponent())
+                .withData(model)
+                .buildModelDocument();
+        List<Link> tmp = HypermediaUtils.buileHateoasLinks(model, modelInfo);
+        if(CollectionUtils.isNotEmpty(tmp)){
+            for(Link l : tmp){
+                doc.add(l.getRel(), l.getHref());
+            }
+        }
+        return doc;
+    }
 }

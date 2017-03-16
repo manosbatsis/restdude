@@ -20,8 +20,7 @@
  */
 package com.restdude.auth.userAccount.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.mdd.binding.SkipPropertySerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -40,13 +39,13 @@ public class EmailConfirmationOrPasswordResetRequest implements Serializable {
     private String email;
     private String password;
 
-    @JsonSerialize(using = SkipPropertySerializer.class)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String passwordConfirmation;
 
-    @JsonSerialize(using = SkipPropertySerializer.class)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String currentPassword;
 
-    @JsonSerialize(using = SkipPropertySerializer.class)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String resetPasswordToken;
 
     /**

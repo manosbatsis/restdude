@@ -51,12 +51,17 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         </constructor-arg>
     </bean>
 
+    <!-- authenticates based on JWT access token -->
+    <bean id="jwtAuthenticationFilter"
+          class="com.restdude.auth.jwt.JwtAuthenticationProcessingFilter">
+        <!--constructor-arg index="0" ref="authenticationManager"/-->
+    </bean>
+
     <!-- Declare an authentication-manager to use custom userDetailsService implementations -->
     <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider user-service-ref='userDetailsService'>
             <sec:password-encoder ref="passwordEncoder"/>
         </sec:authentication-provider>
-        <!--sec:authentication-provider ref="socialAuthenticationProvider"/-->
     </sec:authentication-manager>
 
     <sec:http create-session="stateless" entry-point-ref="restAuthenticationEntryPoint" use-expressions="true"
@@ -64,6 +69,8 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <sec:headers>
             <sec:frame-options policy="SAMEORIGIN"/>
         </sec:headers>
+
+        <sec:custom-filter ref="jwtAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
         <!-- Disable Spring Security CSRF protection since
         it requires sessions and we don't really want those
         in a stateless domain

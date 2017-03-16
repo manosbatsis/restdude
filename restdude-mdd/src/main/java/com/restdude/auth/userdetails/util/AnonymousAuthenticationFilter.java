@@ -20,7 +20,8 @@
  */
 package com.restdude.auth.userdetails.util;
 
-import com.restdude.auth.userdetails.model.UserDetails;
+import com.restdude.auth.userdetails.model.UserDetailsImpl;
+import com.restdude.domain.users.model.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class AnonymousAuthenticationFilter extends org.springframework.security.
      * @param key the key to identify tokens created by this filter
      */
     public AnonymousAuthenticationFilter(String key) {
-        super(key, UserDetails.anonymous(), UserDetails.ROLES_ANONYMOUD);
+        super(key, UserDetailsImpl.anonymous(), Role.ROLES_ANONYMOUD);
     }
 
 }

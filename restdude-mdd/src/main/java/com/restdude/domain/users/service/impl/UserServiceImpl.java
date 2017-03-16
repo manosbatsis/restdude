@@ -23,11 +23,6 @@ package com.restdude.domain.users.service.impl;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
-import com.restdude.mdd.model.MetadatumModel;
-import com.restdude.mdd.model.Roles;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.mdd.model.UserModel;
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
@@ -38,6 +33,11 @@ import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserCredentialsService;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.mdd.model.Roles;
+import com.restdude.mdd.model.UserDetails;
+import com.restdude.mdd.model.UserModel;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.HashUtils;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
@@ -122,7 +122,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
 
     @Override
     @Transactional(readOnly = false)
-    public void updateLastLogin(UserDetailsModel u){
+    public void updateLastLogin(UserDetails u){
         this.repository.updateLastLogin(u.getPk());
     }
 
@@ -509,6 +509,21 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         return found;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<User> getActiveByCredentials(String username, String password){
+        return Optional.ofNullable(this.findActiveByCredentials(username, password));
+
+    }
+
+
+    @Override
+    public Optional<User> getActiveByUsername(String username) {
+        return Optional.ofNullable(this.findActiveByUsername(username));
+    }
 
     /**
      * {@inheritDoc}

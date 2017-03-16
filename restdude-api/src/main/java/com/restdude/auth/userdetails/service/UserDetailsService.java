@@ -22,8 +22,8 @@ package com.restdude.auth.userdetails.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.domain.users.model.User;
+import com.restdude.mdd.model.UserDetails;
+import com.restdude.mdd.model.UserModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.web.SignInAdapter;
@@ -32,24 +32,24 @@ import org.springframework.social.security.SocialUserDetailsService;
 
 public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService, SocialUserDetailsService, ConnectionSignUp, SignInAdapter {
 
-    UserDetailsModel updateUsername(UsernameChangeRequest usernameChangeRequest);
+    UserDetails updateUsername(UsernameChangeRequest usernameChangeRequest);
 
-    UserDetailsModel resetPassword(EmailConfirmationOrPasswordResetRequest resource);
+    UserDetails resetPassword(EmailConfirmationOrPasswordResetRequest resource);
 
-    UserDetailsModel create(UserDetailsModel tryUserDetails);
+    UserDetails create(UserDetails tryUserDetails);
 
     void handlePasswordResetRequest(String userNameOrEmail);
 
 //	ICalipsoUserDetails confirmPrincipal(String confirmationToken);
 
-    UserDetailsModel createForImplicitSignup(User user);
+    UserDetails createForImplicitSignup(UserModel user);
 
 
     Authentication getAuthentication();
 
-    UserDetailsModel getPrincipal();
+    UserDetails getPrincipal();
 
-	User getPrincipalLocalUser();
+    UserModel getPrincipalLocalUser();
 
-	void updateLastLogin(UserDetailsModel u);
+	void updateLastLogin(UserDetails u);
 }

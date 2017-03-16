@@ -20,7 +20,6 @@
  */
 package com.restdude.init;
 
-import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.geography.model.Continent;
@@ -28,7 +27,6 @@ import com.restdude.domain.geography.model.Country;
 import com.restdude.domain.geography.service.ContinentService;
 import com.restdude.domain.geography.service.CountryService;
 import com.restdude.domain.users.model.Role;
-import com.restdude.mdd.model.Roles;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.repository.UserRegistrationCodeBatchRepository;
@@ -36,6 +34,8 @@ import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.RoleService;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.mdd.model.Roles;
+import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.email.service.EmailService;
 import org.apache.commons.configuration.Configuration;
@@ -196,6 +196,17 @@ public abstract class DataInitializer {
 //			simpleUser.setCreatedBy(system);
             simpleUser = userService.createAsConfirmed(simpleUser);
             users.add(simpleUser);
+
+            User userControllerIt = new User();
+            userControllerIt.setUsername("usercontrollerit");
+            userControllerIt.setFirstName("Usercontrollerit");
+            userControllerIt.setLastName("User");
+            userControllerIt.setCredentials(new UserCredentials.Builder().password("usercontrollerit").build());
+            userControllerIt.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("usercontrollerit@" + testEmailDomain)).build());
+            userControllerIt.setLastVisit(now);
+//			simpleUser.setCreatedBy(system);
+            userControllerIt = userService.createAsConfirmed(userControllerIt);
+            users.add(userControllerIt);
 
             int usersMax = 10;
             int usersCreated = 0;

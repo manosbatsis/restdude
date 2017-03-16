@@ -20,13 +20,13 @@
  */
 package com.restdude.auth.userdetails.controller;
 
+import com.restdude.auth.model.BasicUserDetailsImpl;
+import com.restdude.auth.model.LoginRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.auth.userdetails.model.LoginSubmission;
-import com.restdude.auth.userdetails.model.UserDetails;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
+import com.restdude.mdd.model.UserDetails;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -74,9 +74,9 @@ public class UserDetailsController {
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Login",
             notes = "Login using a JSON object with email/password properties.")
-    public UserDetailsModel create(@RequestBody LoginSubmission resource) {
-        LOGGER.debug("#create, LoginSubmission: {}", resource);
-        UserDetailsModel userDetails = new UserDetails(resource);
+    public UserDetails create(@RequestBody LoginRequest resource) {
+        LOGGER.debug("#create, LoginRequest: {}", resource);
+        UserDetails userDetails = new BasicUserDetailsImpl(resource);
         LOGGER.debug("#create, userDetails: {}", userDetails);
         userDetails = this.service.create(userDetails);
         if (userDetails != null && userDetails.getPk() != null) {
@@ -94,8 +94,8 @@ public class UserDetailsController {
     @ApiOperation(value = "Remember",
             notes = "Login user if remembered")
     @RequestMapping(method = RequestMethod.GET)
-    public UserDetailsModel remember() {
-        UserDetailsModel userDetails = this.service.getPrincipal();
+    public UserDetails remember() {
+        UserDetails userDetails = this.service.getPrincipal();
         LOGGER.debug("#remember userDetails: {}", userDetails);
         if (userDetails == null) {
             LOGGER.debug("#remember failed, logging out");
@@ -119,8 +119,8 @@ public class UserDetailsController {
     @RequestMapping(value = "verification", method = RequestMethod.POST)
     @ApiOperation(value = "Verify",
             notes = "Validation utility operation, used to verify the user based on current password.")
-    public UserDetailsModel verify(@RequestBody LoginSubmission resource) {
-        UserDetailsModel userDetails = new UserDetails(resource);
+    public UserDetails verify(@RequestBody LoginRequest resource) {
+        UserDetails userDetails = new BasicUserDetailsImpl(resource);
         return this.service.create(userDetails);
     }
 

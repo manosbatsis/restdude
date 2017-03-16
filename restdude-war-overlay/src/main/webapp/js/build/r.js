@@ -27262,7 +27262,7 @@ var requirejs, require, define, xpcUtil;
                                     " failed with this error: " + e;
                                 }
 
-                                //Find the endpoint marker.
+                                //Find the controller marker.
                                 endRegExp = new RegExp('\\/\\/\\>\\>\\s*' + type + 'End\\(\\s*[\'"]' + marker + '[\'"]\\s*\\)', "g");
                                 endMatches = endRegExp.exec(fileContents.substring(startIndex, fileContents.length));
                                 if (endMatches) {

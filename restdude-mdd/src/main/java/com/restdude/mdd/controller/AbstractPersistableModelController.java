@@ -37,6 +37,7 @@ import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
+import com.restdude.util.HttpUtil;
 import com.restdude.util.exception.http.NotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -51,6 +52,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -245,7 +247,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         if(fieldInfo.isToOne()){
             PersistableModel related = super.findRelatedSingle(pk, fieldInfo);
             // if found
-            Resource res = toHateoasResource(related, (Class<PersistableModel>)fieldInfo.getFieldModelType());
+            Resource res = HypermediaUtils.toHateoasResource(related, fieldInfo.getRelatedModelInfo());
             responseEntity = new ResponseEntity(res, HttpStatus.OK);
         }
         else if(fieldInfo.isOneToMany()){
@@ -294,7 +296,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             PersistableModel related = super.findRelatedSingle(pk, fieldInfo);
             // if found
             if(related != null) {
-                document = toDocument(related, (Class<PersistableModel>) fieldInfo.getFieldModelType());
+                document = HypermediaUtils.toDocument(related, fieldInfo.getRelatedModelInfo());
             }
         }
         else if(fieldInfo.isOneToMany()){
@@ -359,6 +361,17 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     @Deprecated
     public UiSchema plainJsonGetUiSchema() {
         return super.getUiSchema();
+    }
+
+    @RequestMapping(method = RequestMethod.OPTIONS, consumes = {HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, MimeTypeUtils.APPLICATION_JSON_VALUE}, produces = {HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, MimeTypeUtils.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Get CORS headers", notes = "Get the CORS headers for the given path")
+    public void options(HttpServletResponse response) {
+        response.setHeader(HttpUtil.ACESS_CONTROL_CREDENTIALS_NAME, "true");
+        response.setHeader(HttpUtil.ACESS_CONTROL_ORIGIN_NAME, "http://localhost:9000");
+        response.setHeader(HttpUtil.ACESS_CONTROL_METHODS_NAME, "GET, OPTIONS, POST, PUT, DELETE");
+        response.setHeader(HttpUtil.ACESS_CONTROL_HEADERS_NAME, "Origin, X-Requested-With, Content-Type, Accept");
+        response.setHeader(HttpUtil.ACESS_CONTROL_MAX_AGE_NAME, "3600");
+
     }
 
 }

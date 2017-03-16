@@ -22,14 +22,15 @@ package com.restdude.domain.users.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.mdd.service.PersistableModelService;
-import com.restdude.mdd.model.UserModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
+import com.restdude.mdd.model.UserDetails;
+import com.restdude.mdd.model.UserModel;
+import com.restdude.mdd.service.PersistableModelService;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface UserService extends PersistableModelService<User, String>{
 
@@ -88,7 +89,9 @@ public interface UserService extends PersistableModelService<User, String>{
 	 */
 	User findById(String userId);
 
-	UserModel createForImplicitSignup(User user);
+
+
+    UserModel createForImplicitSignup(User user);
 
 	/**
 	 * Get a local application user matching the given credentials, after adding
@@ -117,6 +120,15 @@ public interface UserService extends PersistableModelService<User, String>{
      */
 	User findActiveByCredentials(String userNameOrEmail, String userPassword);
 
+	/**
+	 * Get an <code>Optional</code> local application user matching the given credentials,
+	 * @param userNameOrEmail the username or email
+	 * @param userPassword    the user password
+	 * @return an optional with the local user present or null if no match was found for the given
+	 * credentials
+	 */
+	Optional<User>getActiveByCredentials(String userNameOrEmail, String userPassword) ;
+
 	//User confirmPrincipal(String confirmationToken);
 
 	void handlePasswordResetRequest(String userNameOrEmail);
@@ -131,7 +143,7 @@ public interface UserService extends PersistableModelService<User, String>{
 	 */
 	User createAsConfirmed(User resource);
 
-	void updateLastLogin(UserDetailsModel u);
+	void updateLastLogin(UserDetails u);
 
 	void expireConfirmationOrPasswordResetTokens();
 
@@ -145,4 +157,6 @@ public interface UserService extends PersistableModelService<User, String>{
      * @return
      */
     User updateUsername(UsernameChangeRequest usernameChangeRequest);
+
+    Optional<User> getActiveByUsername(String useName);
 }

@@ -40,7 +40,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@Test(description = "Test user account endpoint")
+@Test(description = "Test user account controller")
 @SuppressWarnings("unused")
 public class UserAccountControllerIT extends AbstractControllerIT {
 
@@ -98,14 +98,14 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
+                .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
                 .body("pk", equalTo(loginContext.userId))
                 .body("username", equalTo(usernameChangeRequest.getUsername()))
                 // get model
                 .extract().response();
 
         // Get result cookie and user pk
-        loginContext.ssoToken = rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME);
+        loginContext.ssoToken = rs.getCookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME);
 
         RequestSpecification requestSpec = getRequestSpec(loginContext.ssoToken);
         loginContext.requestSpec = requestSpec;
@@ -177,7 +177,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 // test assertions
                 .body("pk", notNullValue())
                 .body("emailHash", equalTo(HashUtils.md5Hex(email)))
-                .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
+                .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
                 // get model
                 .extract().as(User.class);
 
@@ -239,7 +239,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 // test assertions
                 .body("pk", notNullValue())
                 .body("emailHash", equalTo(HashUtils.md5Hex(email)))
-                .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
+                .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
                 // get model
                 .extract().as(User.class);
 

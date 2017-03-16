@@ -18,25 +18,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.auth.userdetails.util;
+package com.restdude.auth.jwt.model;
 
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.social.UserIdSource;
+import io.jsonwebtoken.Claims;
 
 /**
- * Implementation of UserIdSource that returns the Spring Security {@link Authentication}'s name as the user ID.
- * @author Craig Walls
+ * Basic interface for JWT Refresh Tokens
  */
-public class AuthenticationEmailUserIdSource implements UserIdSource {
+public interface JwtRefreshToken extends JwtToken{
 
-	public String getUserId() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) {
-			throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
-		}
-		return authentication.getName();
-	}
+    default String getToken(){
+        return null;
+    }
 
+    Claims getClaims();
 }

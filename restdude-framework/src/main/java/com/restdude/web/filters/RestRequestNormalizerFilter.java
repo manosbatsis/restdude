@@ -21,6 +21,7 @@
 package com.restdude.web.filters;
 
 import com.restdude.util.Constants;
+import com.restdude.util.CookieUtil;
 import com.restdude.util.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -68,9 +68,10 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
 
         String requestMethodOverride = getMethodOverride(request);
         String authorizationHeader = request.getHeader(Constants.HEADER_AUTHORIZATION);
+        // TODO: check if basic auth is enabled
         String cookieToken =
                 org.apache.commons.lang3.StringUtils.isNotBlank(authorizationHeader)
-                        ? null : getCookieToken(request);
+                        ? null : CookieUtil.getCookieValue(request, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME);
 
         LOGGER.debug("doFilterInternal, requestMethodOverride: " + requestMethodOverride +
                 ", authorizationHeader: " + authorizationHeader + ", cookieToken: " + cookieToken);
@@ -88,34 +89,6 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
 
     }
 
-
-    protected String getCookieToken(HttpServletRequest httpRequest) {
-        String authToken = null;
-        Cookie[] cookies = httpRequest.getCookies();
-        String ssoCookieName = Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME;
-        if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                Cookie cookie = cookies[i];
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Found cookie '" + cookie.getName() + "', secure:  " + cookie.getSecure() + ", comment: " + cookie.getComment()
-                            + ", domain: " + cookie.getDomain() + ", pathFragment: " + cookie.getValue());
-                }
-                if (cookie.getName().equalsIgnoreCase(ssoCookieName)) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Matched calipso SSO cookie'" + cookie.getName() + "', secure:  " + cookie.getSecure() + ", comment: " + cookie.getComment()
-                                + ", domain: " + cookie.getDomain() + ", pathFragment: " + cookie.getValue());
-                    }
-                    authToken = cookie.getValue();
-                    break;
-                }
-            }
-            if (LOGGER.isDebugEnabled() && authToken == null) {
-                LOGGER.debug("Found no calipso SSO cookie with name: " + ssoCookieName);
-
-            }
-        }
-        return authToken;
-    }
 
     protected String getMethodOverride(HttpServletRequest httpRequest) {
         String requestMethodOverride = httpRequest.getParameter(this.methodParam);

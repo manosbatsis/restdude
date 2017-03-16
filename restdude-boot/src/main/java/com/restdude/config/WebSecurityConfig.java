@@ -20,6 +20,7 @@
  */
 package com.restdude.config;
 
+import com.restdude.auth.jwt.JwtAuthenticationProcessingFilter;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.AnonymousAuthenticationFilter;
 import com.restdude.auth.userdetails.util.RestAuthenticationEntryPoint;
@@ -29,6 +30,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -42,10 +44,21 @@ import java.util.UUID;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // JWT
+    public static final String JWT_TOKEN_HEADER_PARAM = "X-Authorization";
+    public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/auth/login";
+    public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/**";
+    public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
+
+
+    @Autowired private AuthenticationManager authenticationManager;
+
+    // /JWT
     private UserDetailsService userDetailsService;
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     private String anonymousKey = UUID.randomUUID().toString();
+
 
     @Autowired
     public void setUserDetailsService(UserDetailsService userDetailsService) {
@@ -72,6 +85,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new AnonymousAuthenticationProvider(anonymousKey);
     }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.GET, "/resources/**", "/", "/client/**", "/template/**/*.hbs", "/fonts/**", "/img/**");
@@ -79,24 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        /*
 
-        <!-- allow anonymous register/login etc. -->
-        <sec:intercept-url pattern="/apiauth/**" access="permitAll()"/>
-        <sec:intercept-url pattern="/api/auth/**" access="permitAll()"/>
-
-        <!-- for spring social login/signup -->
-        <sec:intercept-url pattern="/login" access="permitAll"/>
-        <sec:intercept-url pattern="/signin/**" access="permitAll"/>
-        <sec:intercept-url pattern="/signup/**" access="permitAll"/>
-
-        <!-- protect REST API  modifying methods-->
-        <sec:intercept-url pattern="/api/rest/**" method="POST" access="isAuthenticated()"/>
-        <sec:intercept-url pattern="/api/rest/**" method="PUT" access="isAuthenticated()"/>
-        <sec:intercept-url pattern="/api/rest/**" method="PATCH" access="isAuthenticated()"/>
-        <sec:intercept-url pattern="/api/rest/**" method="DELETE" access="isAuthenticated()"/>
-
-        * */
         http.exceptionHandling().authenticationEntryPoint(this.restAuthenticationEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -104,8 +106,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().defaultsDisabled().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
+                //
+                // .addFilterAfter(new CsrfValidatorFilter(), CsrfFilter.class)
+                // .csrf().csrfTokenRepository(csrfTokenRepository).ignoringAntMatchers(new String[]{}).and().authorizeRequests()
                 .cors().disable()
                 .rememberMe().disable()
+                .addFilterBefore(jwtAuthenticationProcessingFilter(), AnonymousAuthenticationFilter.class)
+
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/apiauth/**").permitAll()
@@ -124,6 +131,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().authenticationEntryPoint(this.restAuthenticationEntryPoint)
                 .and()
                 .anonymous().disable()
+
                 .addFilterAt(
                         anonymousAuthenticationFilter(),
                         org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class)
@@ -132,8 +140,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
+
+
+    @Bean
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() throws Exception {
+        JwtAuthenticationProcessingFilter filter
+                = new JwtAuthenticationProcessingFilter();
+        return filter;
+    }
 }

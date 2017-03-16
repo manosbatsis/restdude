@@ -23,8 +23,7 @@ package com.restdude.auth.userdetails.service.impl;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.auth.userdetails.model.UserDetails;
+import com.restdude.auth.userdetails.model.UserDetailsImpl;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
@@ -32,6 +31,8 @@ import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.mdd.model.UserDetails;
+import com.restdude.mdd.model.UserModel;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import org.apache.commons.lang3.StringUtils;
@@ -80,7 +81,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = false)
-    public void updateLastLogin(UserDetailsModel u){
+    public void updateLastLogin(UserDetails u){
         this.userService.updateLastLogin(u);
     }
 
@@ -90,18 +91,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
      */
     @Override
-    public UserDetailsModel loadUserByUsername(
+    public UserDetails loadUserByUsername(
             String findByUsernameOrEmail) throws UsernameNotFoundException {
 
         LOGGER.debug("#loadUserByUsername, findByUsernameOrEmail: {}", findByUsernameOrEmail);
-        UserDetailsModel userDetails = null;
+        UserDetails userDetails = null;
 
         User user = this.userService.findActiveByUserNameOrEmail(findByUsernameOrEmail);
         if (user == null) {
             throw new UsernameNotFoundException("Could not match username: " + findByUsernameOrEmail);
         }
         LOGGER.debug("#loadUserByUsername, user: {}", user);
-        return UserDetails.fromUser(user);
+        return UserDetailsImpl.fromUser(user);
     }
 
     /**
@@ -109,9 +110,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Transactional(readOnly = false)
     @Override
-    public UserDetailsModel create(final UserDetailsModel tryUserDetails) {
+    public UserDetails create(final UserDetails tryUserDetails) {
         LOGGER.debug("create, userDetails: {}", tryUserDetails);
-        UserDetailsModel userDetails = null;
+        UserDetails userDetails = null;
         if (tryUserDetails != null) {
             String usernameOrEmail = tryUserDetails.getUsername();
             /*if (StringUtils.isBlank(usernameOrEmail)) {
@@ -133,7 +134,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
                     LOGGER.info("#create, user: {}", user);
                     // convert to UserDetails if not null
-                    userDetails = UserDetails.fromUser(user);
+                    userDetails = UserDetailsImpl.fromUser(user);
                 } else {
                     throw new InvalidCredentialsException();
                 }
@@ -157,18 +158,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = false)
-    public UserDetailsModel updateUsername(UsernameChangeRequest usernameChangeRequest) {
+    public UserDetails updateUsername(UsernameChangeRequest usernameChangeRequest) {
         String pw = usernameChangeRequest.getPassword();
         User user = this.userService.updateUsername(usernameChangeRequest);
-        UserDetailsModel userDetails = UserDetails.fromUser(user);
+        UserDetails userDetails = UserDetailsImpl.fromUser(user);
         userDetails.setPassword(pw);
         return userDetails;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public UserDetailsModel resetPassword(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
-        UserDetailsModel userDetails = this.getPrincipal();
+    public UserDetails resetPassword(EmailConfirmationOrPasswordResetRequest passwordResetRequest) {
+        UserDetails userDetails = this.getPrincipal();
         User u = null;
         // Case 1: if authorized as current user and in an attempt to directly change password, require current password
         if (userDetails != null && userDetails.getPk() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
@@ -186,15 +187,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             // update matching user credentials
             u = this.userService.handleConfirmationOrPasswordResetToken(passwordResetRequest);
-            //userDetails = this.create(new UserDetails( new LoginSubmission(u.getEmail(), passwordResetRequest.getPassword())));
+            //userDetails = this.create(new UserDetails( new LoginRequest(u.getEmail(), passwordResetRequest.getPassword())));
         }
         // Case 3: forgotten password
         else {
             String usernameOrEmail = userDetails != null ? userDetails.getUsername() : passwordResetRequest.getEmailOrUsername();
             this.handlePasswordResetRequest(usernameOrEmail);
-            userDetails = new UserDetails();
+            userDetails = new UserDetailsImpl();
         }
-        userDetails = u != null ? UserDetails.fromUser(u) : new UserDetails();
+        userDetails = u != null ? UserDetailsImpl.fromUser(u) : new UserDetailsImpl();
         userDetails.setPassword(u.getCredentials().getPassword());
 
         return userDetails;
@@ -206,13 +207,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetailsModel getPrincipal() {
+    public UserDetails getPrincipal() {
         return SecurityUtil.getPrincipal();
     }
 
     @Override
-    public User getPrincipalLocalUser() {
-        UserDetailsModel principal = getPrincipal();
+    public UserModel getPrincipalLocalUser() {
+        UserDetails principal = getPrincipal();
         User user = null;
         if (principal != null) {
             String username = principal.getUsername();
@@ -239,14 +240,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
-        UserDetailsModel userDetails = null;
+        UserDetails userDetails = null;
 
         LOGGER.info("#loadUserByUserId using: {}", userId);
         User user = this.userService.findActiveById(userId);
 
         LOGGER.info("#loadUserByUserId user: {}", user);
         if (user != null && user.getCredentials().getActive()) {
-            userDetails = UserDetails.fromUser(user);
+            userDetails = UserDetailsImpl.fromUser(user);
         }
 
         if (user == null) {
@@ -270,7 +271,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String socialFirstName = profile.getFirstName();
         String socialLastName = profile.getLastName();
 
-        User user = this.getPrincipalLocalUser();
+        User user = (User) this.getPrincipalLocalUser();
 
         if (user == null) {
             if (!StringUtils.isBlank(socialEmail)) {
@@ -333,11 +334,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetailsModel createForImplicitSignup(
-            User user) {
+    public UserDetails createForImplicitSignup(UserModel user) {
         LOGGER.info("#createForImplicitSignup, user: {}", user);
-        UserDetailsModel userDetails = UserDetails
-                .fromUser((User) this.userService.createForImplicitSignup(user));
+        UserDetails userDetails = UserDetailsImpl
+                .fromUser((User) this.userService.createForImplicitSignup((User) user));
         return userDetails;
     }
 

@@ -55,9 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeoutException;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -217,6 +215,66 @@ public class AbstractControllerIT {
     }
 
     /**
+     * Login using the given credentials and return the JWT token
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    protected Loggedincontext getJwtLoggedinContext(String username, String password) {
+        return this.getJwtLoggedinContext(username, password, false, false);
+    }
+
+    /**
+     * Login using the given credentials and return the Single Sign-On token
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    protected Loggedincontext getJwtLoggedinContext(String username, String password, boolean assertFailed, boolean debug) {
+        Loggedincontext lctx = new Loggedincontext();
+
+
+        // attempt login and test for a proper result
+        Response rs = getJwtLoginResponse(username, password, debug);
+
+        String accessJwt = rs.getCookie("access_token");
+
+        // Get result cookie and user pk
+        lctx.jwtAccessToken = rs.getCookie(Constants.JWT_AUTHENTICATION_TOKEN_COOKIE_NAME);
+        lctx.userId = rs.jsonPath().getString("pk");
+
+        RequestSpecification requestSpec = getJwtRequestSpec(assertFailed ? null : lctx.jwtAccessToken);
+        lctx.requestSpec = requestSpec;
+
+        return lctx;
+    }
+
+    protected Response getJwtLoginResponse(String username, String password, boolean debug) {
+        Response rs;
+
+        // create a login request body
+        Map<String, String> loginSubmission = new HashMap<String, String>();
+        loginSubmission.put("username", username);
+        loginSubmission.put("password", password);
+
+        RequestSpecification requestSpecification = given().accept(MIME_APPLICATION_JSON_UTF8).contentType(MIME_APPLICATION_JSON_UTF8).body(loginSubmission);
+
+        if(debug){
+            rs = requestSpecification.log().all().when()
+                    .post(WEBCONTEXT_PATH + "/api/auth/jwt/access");
+            rs.then().log().all().assertThat().statusCode(201);
+        }
+        else{
+            rs = requestSpecification.when()
+                    .post(WEBCONTEXT_PATH + "/api/auth/jwt/access");
+            rs.then().assertThat().statusCode(201);
+        }
+        return rs;
+    }
+
+    /**
      * Login using the given credentials and return the Single Sign-On token
      *
      * @param username
@@ -249,13 +307,13 @@ public class AbstractControllerIT {
         rs.then().log().all()
                 .assertThat()
                 .statusCode(200)
-                .cookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, assertFailed
+                .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, assertFailed
                         ? anyOf(equalTo("invalid"), nullValue())
                         : allOf(not("invalid"), notNullValue()))
                 .content("pk", assertFailed ? nullValue() : notNullValue());
 
         // Get result cookie and user pk
-        lctx.ssoToken = rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME);
+        lctx.ssoToken = rs.getCookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME);
         lctx.userId = rs.jsonPath().getString("pk");
 
         RequestSpecification requestSpec = getRequestSpec(assertFailed ? null : lctx.ssoToken);
@@ -265,15 +323,19 @@ public class AbstractControllerIT {
     }
 
     protected RequestSpecification getRequestSpec(String ssoToken) {
-        return this.getRequestSpec(ssoToken, MIME_APPLICATION_JSON_UTF8, MIME_APPLICATION_JSON_UTF8);
+        return this.getRequestSpec(ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, MIME_APPLICATION_JSON_UTF8, MIME_APPLICATION_JSON_UTF8);
     }
 
-    protected RequestSpecification getRequestSpec(String ssoToken, String accept, String contentType) {
+    protected RequestSpecification getJwtRequestSpec(String jwrAccessToken) {
+        return this.getRequestSpec(jwrAccessToken, Constants.JWT_AUTHENTICATION_TOKEN_COOKIE_NAME, MIME_APPLICATION_JSON_UTF8, MIME_APPLICATION_JSON_UTF8);
+    }
+
+    protected RequestSpecification getRequestSpec(String cookieValue, String cookieName, String accept, String contentType) {
         // extend the global spec we have already set to add the SSO token
         RequestSpecification requestSpec;
         RequestSpecBuilder b = new RequestSpecBuilder().setAccept(accept).setContentType(contentType);
-        if (ssoToken != null) {
-            b.addCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, ssoToken);
+        if (cookieValue != null) {
+            b.addCookie(cookieName, cookieValue);
         }
         requestSpec = b.build();
         return requestSpec;
@@ -298,6 +360,7 @@ public class AbstractControllerIT {
         public String userId;
         public String ssoToken;
         public RequestSpecification requestSpec;
+        public String jwtAccessToken;
     }
 
     /**

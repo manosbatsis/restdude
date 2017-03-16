@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.service;
 
-import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.model.UserDetails;
 import com.restdude.mdd.model.UserModel;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
@@ -45,7 +45,7 @@ public interface BaseService {
      * Get the current user's details
      * @return
      */
-    UserDetailsModel getPrincipal();
+    UserDetails getPrincipal();
 
     /**
      * Get the current user's details from the DB

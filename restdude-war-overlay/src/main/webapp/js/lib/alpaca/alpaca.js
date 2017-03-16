@@ -13647,7 +13647,7 @@
                                         },
                                         "action": {
                                             "title": "Action",
-                                            "description": "Form submission endpoint",
+                                            "description": "Form submission controller",
                                             "type": "string"
                                         },
                                         "method": {

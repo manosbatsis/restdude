@@ -32,6 +32,13 @@ public class HttpUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
 
+    public static final String ACESS_CONTROL_CREDENTIALS_NAME = "Access-Control-Allow-Credentials";
+    public static final String ACESS_CONTROL_ORIGIN_NAME = "Access-Control-Allow-Origin";
+    public static final String ACESS_CONTROL_METHODS_NAME = "Access-Control-Allow-Methods";
+    public static final String ACESS_CONTROL_HEADERS_NAME = "Access-Control-Allow-Headers";
+    public static final String ACESS_CONTROL_MAX_AGE_NAME = "Access-Control-Max-Age";
+    // MISC
+
     public static String setBaseUrl(ServletRequest req) {
         HttpServletRequest request = (HttpServletRequest) req;
         String baseUrl = (String) request.getAttribute(Constants.BASE_URL_KEY);

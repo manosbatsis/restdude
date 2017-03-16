@@ -18,11 +18,35 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.restdude.auth.model;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+
 /**
- *
+ * A siomple login request DTO
  */
-/**
- * @author manos
- *
- */
-package com.restdude.auth.userdetails.integration;
+public class SimpleLoginRequest implements Serializable {
+
+    private String username;
+    private String password;
+
+    public SimpleLoginRequest() {
+    }
+
+    @JsonCreator
+    public SimpleLoginRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}

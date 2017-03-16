@@ -29,6 +29,7 @@ import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserRegistrationCodeBatch;
 import com.restdude.domain.users.model.UserRegistrationCodeInfo;
 import com.restdude.test.AbstractControllerIT;
+import com.restdude.util.Constants;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
@@ -54,8 +55,8 @@ public class CsvControllerIT extends AbstractControllerIT {
         // login as admin
         Loggedincontext lctx = this.getAdminContext();
 
-        // create and utilize 5 batches
-        for (int i = 0; i < 5; i++) {
+        // create and utilize 1 batch
+        for (int i = 0; i < 1; i++) {
 
             // create batch
             //=========================
@@ -84,7 +85,7 @@ public class CsvControllerIT extends AbstractControllerIT {
 
             // get batch codes as CSV
             //=========================
-            RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, "text/csv", "text/csv");
+            RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, "text/csv", "text/csv");
             String csv = RestAssured.given().spec(reqSpec)
                     .log().all().get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches/" + batch.getPk() + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
             CsvMapper mapper = new CsvMapper();
@@ -141,7 +142,7 @@ public class CsvControllerIT extends AbstractControllerIT {
         String id = batches.get("content").get(0).get("pk").asText();
 
         // export code batch to CSV
-        RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, "text/csv", "text/csv");
+        RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, "text/csv", "text/csv");
         String csv = RestAssured.given().spec(reqSpec)
                 .log().all().get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches/" + id + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
 

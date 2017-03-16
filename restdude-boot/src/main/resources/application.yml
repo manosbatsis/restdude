@@ -91,6 +91,11 @@ server:
 # Restdude specific properties
 # ===================================================================
 restdude:
+  jwt:
+    accessTokenMinutes: 10
+    refreshTokenMinutes: 50
+    tokenIssuer: Restdude
+    tokenSigningKey: foobar
   api:
     basePath: /api/rest
     defaultParentPath:

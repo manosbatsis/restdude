@@ -22,6 +22,7 @@ package com.restdude.test.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.restdude.test.AbstractControllerIT;
+import com.restdude.util.Constants;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
@@ -62,7 +63,7 @@ public class LinksIT extends AbstractControllerIT {
 
 
         LOGGER.debug("testSimpleTypeProperty, JSON API");
-        eu = this.getCountryParent(getRequestSpec(adminLoginContext.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8));
+        eu = this.getCountryParent(getRequestSpec(adminLoginContext.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8));
 
         Assert.assertEquals(eu.get("data").get("id").asText(), "EU");
         Assert.assertEquals(eu.get("data").get("attributes").get("name").asText(), "Europe");
@@ -110,7 +111,7 @@ public class LinksIT extends AbstractControllerIT {
                 .body("content[0].name", equalTo("Greece"));
 
         LOGGER.debug("testRelatedPaging, JSON API");
-        RequestSpecification adminJsonApiRequestSpec = getRequestSpec(adminLoginContext.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+        RequestSpecification adminJsonApiRequestSpec = getRequestSpec(adminLoginContext.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
         country = given().spec(adminJsonApiRequestSpec)
                 .log().all()
                 .get(WEBCONTEXT_PATH + "/api/rest/continents/EU")

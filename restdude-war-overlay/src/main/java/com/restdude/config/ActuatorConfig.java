@@ -57,7 +57,7 @@ public class ActuatorConfig {
     @Bean
     @Autowired
     // Define the HandlerMapping similar to RequestHandlerMapping to expose the
-    // endpoint
+    // controller
     public EndpointHandlerMapping endpointHandlerMapping(Collection<? extends MvcEndpoint> endpoints) {
         LOGGER.debug("endpointHandlerMapping, endpoints: ", endpoints);
         return new EndpointHandlerMapping(endpoints);
@@ -65,40 +65,40 @@ public class ActuatorConfig {
 
     @Bean
     @Autowired
-    // define the HealthPoint endpoint
+    // define the HealthPoint controller
     public HealthMvcEndpoint healthMvcEndpoint(HealthEndpoint delegate) {
         return new HealthMvcEndpoint(delegate, false);
     }
 
     @Bean
     @Autowired
-    // define the Info endpoint
+    // define the Info controller
     public EndpointMvcAdapter infoMvcEndPoint(InfoEndpoint delegate) {
         return new EndpointMvcAdapter(delegate);
     }
 
     @Bean
     @Autowired
-    // define the beans endpoint
+    // define the beans controller
     public EndpointMvcAdapter beansEndPoint(BeansEndpoint delegate) {
         return new EndpointMvcAdapter(delegate);
     }
 
     @Bean
     @Autowired
-    // define the mappings endpoint
+    // define the mappings controller
     public EndpointMvcAdapter requestMappingEndPoint(RequestMappingEndpoint delegate) {
         return new EndpointMvcAdapter(delegate);
     }
 
     @Bean
-    @Description("Spring Actuator endpoint to expose WebSocket stats")
+    @Description("Spring Actuator controller to expose WebSocket stats")
     public WebSocketEndPoint websocketEndpoint(WebSocketMessageBrokerStats stats) {
         return new WebSocketEndPoint(stats);
     }
 
     @Bean
-    @Description("Spring Actuator endpoint to expose WebSocket message mappings")
+    @Description("Spring Actuator controller to expose WebSocket message mappings")
     public MessageMappingEndPoint messageMappingEndpoint() {
         return new MessageMappingEndPoint();
     }

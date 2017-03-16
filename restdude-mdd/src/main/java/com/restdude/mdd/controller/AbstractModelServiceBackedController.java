@@ -37,7 +37,7 @@ import com.restdude.hypermedia.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
-import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.model.UserDetails;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.registry.ModelInfoRegistry;
@@ -160,18 +160,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param model
      */
     protected ModelResource<T> toHateoasResource(@NonNull T model) {
-        Class<T> modelType = this.modelType;
-        return toHateoasResource(model, modelType);
-    }
-
-    protected <RT extends PersistableModel> ModelResource<RT> toHateoasResource(RT model, Class<RT> modelType) {
-        ModelResource<RT> resource = new ModelResource<>(model);
-        ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
-        List<Link> links = HypermediaUtils.buileHateoasLinks(model, modelInfo);
-        LOGGER.debug("toHateoasResource, model: {}, modelType: {}, modelInfo: {}", model, modelType, modelInfo);
-        resource.add(links);
-
-        return resource;
+        return HypermediaUtils.toHateoasResource(model, this.getModelInfo());
     }
 
 
@@ -182,21 +171,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      */
     protected ModelResources<T> toHateoasResources(@NonNull Iterable<T> models) {
         Class<T> modelType = this.modelType;
-        return toHateoasResources(models, modelType);
-    }
-
-    /**
-     * Wrap the given models in a {@link Resources} and add {@link org.springframework.hateoas.Link}s
-     *
-     * @param models
-     */
-    protected <RT extends PersistableModel> ModelResources<RT> toHateoasResources(@NonNull Iterable<RT> models, Class<RT> modelType) {
-        LinkedList<ModelResource<RT>> wrapped = new LinkedList<>();
-        for(RT model : models){
-            wrapped.add(new ModelResource<RT>(model));
-        }
-        ModelResources<RT> resources = new ModelResources<>(wrapped);
-        return resources;
+        return HypermediaUtils.toHateoasResources(models, modelType);
     }
 
     /**
@@ -230,27 +205,9 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @return
      */
     protected JsonApiModelResourceDocument<T, PK> toDocument(T model) {
-        return this.toDocument(model, this.modelType);
+        return HypermediaUtils.toDocument(model, this.getModelInfo());
     }
 
-    /**
-     * Wrap the given model in a JSON API Document
-     * @param model the model to wrap
-     * @return
-     */
-    protected <RT extends PersistableModel<RPK>, RPK extends Serializable> JsonApiModelResourceDocument<RT, RPK> toDocument(RT model, Class<RT> modelType) {
-        ModelInfo modelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
-        JsonApiModelResourceDocument<RT, RPK> doc = new JsonApiModelBasedDocumentBuilder<RT, RPK>(modelInfo.getUriComponent())
-                .withData(model)
-                .buildModelDocument();
-        List<Link> tmp = HypermediaUtils.buileHateoasLinks(model, modelInfo);
-        if(CollectionUtils.isNotEmpty(tmp)){
-            for(Link l : tmp){
-                doc.add(l.getRel(), l.getHref());
-            }
-        }
-        return doc;
-    }
 
     /**
      * Wrap the given collection of models in a JSON API Document
@@ -499,7 +456,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         Field[] fields = FieldUtils.getFieldsWithAnnotation(this.service.getDomainClass(), CurrentPrincipal.class);
         //ApplyPrincipalUse predicate = this.service.getDomainClass().getAnnotation(CurrentPrincipalField.class);
         if (fields.length > 0) {
-            UserDetailsModel principal = this.service.getPrincipal();
+            UserDetails principal = this.service.getPrincipal();
             for (int i = 0; i < fields.length; i++) {
                 Field field = fields[i];
                 CurrentPrincipal applyRule = field.getAnnotation(CurrentPrincipal.class);

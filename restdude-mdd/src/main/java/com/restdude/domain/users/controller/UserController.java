@@ -24,7 +24,7 @@ import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
-import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.model.UserDetails;
 import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -83,7 +83,7 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
     @Override
     public User patch(String id, User model) {
         LOGGER.debug("patch, resource: {}", model);
-        UserDetailsModel principal = this.service.getPrincipal();
+        UserDetails principal = this.service.getPrincipal();
         LOGGER.debug("patch, principal: {}", principal);
         if (!principal.isAdmin() && !principal.isSiteAdmin()) {
             model.setRoles(null);

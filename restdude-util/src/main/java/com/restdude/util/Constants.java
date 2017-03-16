@@ -22,7 +22,8 @@ package com.restdude.util;
 
 public class Constants {
 
-    public static final String REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME = "restdude-sso";
+	public static final String BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME = "restdude-sso";
+	public static final String JWT_AUTHENTICATION_TOKEN_COOKIE_NAME = "access_token";
 
 	public static final String BASE_URL_KEY = Constants.class.getName() + "#BASE_URL";
 	public static final String DOMAIN_KEY = Constants.class.getName() + "#DOMAIN";

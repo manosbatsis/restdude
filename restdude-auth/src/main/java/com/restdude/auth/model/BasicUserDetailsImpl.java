@@ -18,49 +18,44 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.auth.userdetails.model;
+package com.restdude.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.mdd.binding.SkipPropertyDeserializer;
-import com.restdude.mdd.binding.SkipPropertySerializer;
-import com.restdude.domain.users.model.Role;
 import com.restdude.mdd.model.Roles;
-import com.restdude.domain.users.model.User;
-import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.model.UserDetails;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.CollectionUtils;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 //@ApiModel
 @XmlRootElement(name = "loggedInUserDetails")
-public class UserDetails implements UserDetailsModel {
-	
-	private static final long serialVersionUID = 5206010308112791343L;
+public class BasicUserDetailsImpl implements UserDetails {
+
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(UserDetails.class);
+			.getLogger(BasicUserDetailsImpl.class);
 
-    public static final List<GrantedAuthority> ROLES_ANONYMOUD = Collections.unmodifiableList(Arrays.asList(new Role(Roles.ROLE_ANONYMOUS)));
 
 
 	private String pk;
-	
+
 	private String username;
 
-	@JsonSerialize(using = SkipPropertySerializer.class)
+	@JsonIgnore
 	private String password;
 
 	private LocalDateTime lastPassWordChangeDate;
@@ -69,12 +64,13 @@ public class UserDetails implements UserDetailsModel {
 
 	private String firstName;
 	private String lastName;
+	private String name;
 
 	private String avatarUrl;
 
 	private String telephone;
 	private String cellphone;
-	
+
 	private String locale = "en";
 	private String dateFormat;
 
@@ -88,87 +84,51 @@ public class UserDetails implements UserDetailsModel {
 	private Boolean active = false;
 	private Integer stompSessionCount = 0;
 
-	@JsonSerialize(using = SkipPropertySerializer.class)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String inactivationReason;
 
 	private LocalDateTime inactivationDate;
-	private boolean isAdmin = false;
-	private boolean isSiteAdmin = false;
+
+	private Boolean admin = null;
+	private Boolean siteAdmin = null;
 
 
-	@JsonDeserialize(using = SkipPropertyDeserializer.class)
-	@JsonProperty(value = "roles")
+	@JsonProperty(value = "roles", access = JsonProperty.Access.READ_ONLY)
 	private List<? extends GrantedAuthority> authorities;
 	private Map<String, String> metadata;
 
 	private Boolean isResetPasswordReguest = false;
 
-
-    public static UserDetailsModel anonymous() {
-        UserDetails details = new UserDetails();
-        details.setUsername("anonymousUser");
-        details.authorities = ROLES_ANONYMOUD;
-        return details;
-    }
-
-	public static UserDetailsModel fromUser(User user) {
-		UserDetails details = null;
-		if (user != null) {
-			details = new UserDetails();
-			BeanUtils.copyProperties(user, details);
-			if (user.getPk() != null) {
-				details.setPk(user.getPk().toString());
-			}
-			if (user.getCredentials() != null) {
-				BeanUtils.copyProperties(user.getCredentials(), details, "pk");
-			}
-			// init global roles
-			if (!CollectionUtils.isEmpty(user.getRoles())) {
-				details.setAuthorities(user.getRoles());
-				for (GrantedAuthority authority : user.getRoles()) {
-					if (authority.getAuthority().equals(Roles.ROLE_ADMIN)) {
-						details.isAdmin = true;
-					} else if (authority.getAuthority()
-							.equals(Roles.ROLE_SITE_OPERATOR)) {
-						details.isSiteAdmin = true;
-					}
-				}
-			}
-
-			
-		}
-		return details;
-	}
-
 	/**
 	 * Default constructor
 	 */
-	public UserDetails() {
+	public BasicUserDetailsImpl() {
 
 	}
-	public UserDetails(LoginSubmission loginSubmission) {
+
+	public BasicUserDetailsImpl(LoginRequest loginSubmission) {
 		this();
 		BeanUtils.copyProperties(loginSubmission, this);
-		if (this.username == null) {
-			this.username = loginSubmission.getEmail();
+		if (this.getUsername() == null) {
+			this.setUsername(loginSubmission.getEmail());
 		}
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-				.append("pk", pk)
+			.append("pk", pk)
 			.append("username", username)
-                //.append("email", email)
-                .append("password", this.password)
-				.append("active", this.active)
+			.append("firstName", firstName)
+			.append("lastName", lastName)
+			.append("active", active)
 			.append("metadata", metadata)
 			.append("authorities", authorities)
 			.toString();
 	}
 
 	/**
-	 * @see UserDetailsModel#getPk()
+	 * @see UserDetails#getPk()
 	 */
 	@Override
 	public String getPk() {
@@ -176,7 +136,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-	 * @see UserDetailsModel#setPk(java.lang.String)
+	 * @see UserDetails#setPk(String)
 	 */
 	@Override
 	public void setPk(String pk) {
@@ -197,7 +157,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getFirstName()
+     * @see UserDetails#getFirstName()
      */
 	@Override
 	public String getFirstName() {
@@ -205,7 +165,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setFirstName(java.lang.String)
+     * @see UserDetails#setFirstName(String)
      */
 	@Override
 	public void setFirstName(String firstName) {
@@ -213,7 +173,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getLastName()
+     * @see UserDetails#getLastName()
      */
 	@Override
 	public String getLastName() {
@@ -221,7 +181,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setLastName(java.lang.String)
+     * @see UserDetails#setLastName(String)
      */
 	@Override
 	public void setLastName(String lastName) {
@@ -229,7 +189,23 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getLastPassWordChangeDate()
+	 * @see UserDetails#getName()
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @see UserDetails#setName(String)
+	 */
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+     * @see UserDetails#getLastPassWordChangeDate()
      */
 	@Override
 	public LocalDateTime getLastPassWordChangeDate() {
@@ -237,15 +213,15 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-	 * @see UserDetailsModel#setLastPassWordChangeDate(LocalDateTime)
+	 * @see UserDetails#setLastPassWordChangeDate(LocalDateTime)
 	 */
 	@Override
 	public void setLastPassWordChangeDate(LocalDateTime lastPassWordChangeDate) {
 		this.lastPassWordChangeDate = lastPassWordChangeDate;
 	}
-	
+
 	/**
-     * @see UserDetailsModel#getEmailHash()
+     * @see UserDetails#getEmailHash()
      */
 	@Override
 	public String getEmailHash() {
@@ -253,7 +229,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setEmailHash(java.lang.String)
+     * @see UserDetails#setEmailHash(String)
      */
 	@Override
 	public void setEmailHash(String emailHash) {
@@ -261,7 +237,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getAvatarUrl()
+     * @see UserDetails#getAvatarUrl()
      */
 	@Override
 	public String getAvatarUrl() {
@@ -269,16 +245,16 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setAvatarUrl(java.lang.String)
+     * @see UserDetails#setAvatarUrl(String)
      */
 	@Override
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
 	}
-	
+
 
 	/**
-     * @see UserDetailsModel#getTelephone()
+     * @see UserDetails#getTelephone()
      */
 	@Override
 	public String getTelephone() {
@@ -286,7 +262,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setTelephone(java.lang.String)
+     * @see UserDetails#setTelephone(String)
      */
 	@Override
 	public void setTelephone(String telephone) {
@@ -294,7 +270,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getCellphone()
+     * @see UserDetails#getCellphone()
      */
 	@Override
 	public String getCellphone() {
@@ -302,7 +278,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setCellphone(java.lang.String)
+     * @see UserDetails#setCellphone(String)
      */
 	@Override
 	public void setCellphone(String cellphone) {
@@ -310,7 +286,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getBirthDay()
+     * @see UserDetails#getBirthDay()
      */
 	@Override
 	public LocalDate getBirthDay() {
@@ -318,7 +294,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-	 * @see UserDetailsModel#setBirthDay(LocalDate)
+	 * @see UserDetails#setBirthDay(LocalDate)
 	 */
 	@Override
 	public void setBirthDay(LocalDate birthDay) {
@@ -326,7 +302,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getLastVisit()
+     * @see UserDetails#getLastVisit()
      */
 	@Override
 	public LocalDateTime getLastVisit() {
@@ -334,7 +310,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-	 * @see UserDetailsModel#setLastVisit(LocalDateTime)
+	 * @see UserDetails#setLastVisit(LocalDateTime)
 	 */
 	@Override
 	public void setLastVisit(LocalDateTime lastVisit) {
@@ -342,7 +318,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getLastPost()
+     * @see UserDetails#getLastPost()
      */
 	@Override
 	public LocalDateTime getLastPost() {
@@ -350,7 +326,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-	 * @see UserDetailsModel#setLastPost(LocalDateTime)
+	 * @see UserDetails#setLastPost(LocalDateTime)
 	 */
 	@Override
 	public void setLastPost(LocalDateTime lastPost) {
@@ -358,7 +334,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getLoginAttempts()
+     * @see UserDetails#getLoginAttempts()
      */
 	@Override
 	public Short getLoginAttempts() {
@@ -366,7 +342,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setLoginAttempts(java.lang.Short)
+     * @see UserDetails#setLoginAttempts(Short)
      */
 	@Override
 	public void setLoginAttempts(Short loginAttempts) {
@@ -374,7 +350,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getActive()
+     * @see UserDetails#getActive()
      */
 	@Override
 	public Boolean getActive() {
@@ -382,7 +358,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setActive(java.lang.Boolean)
+     * @see UserDetails#setActive(Boolean)
      */
 	@Override
 	public void setActive(Boolean active) {
@@ -390,7 +366,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getInactivationReason()
+     * @see UserDetails#getInactivationReason()
      */
 	@Override
 	public String getInactivationReason() {
@@ -398,7 +374,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setInactivationReason(java.lang.String)
+     * @see UserDetails#setInactivationReason(String)
      */
 	@Override
 	public void setInactivationReason(String inactivationReason) {
@@ -406,7 +382,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getInactivationDate()
+     * @see UserDetails#getInactivationDate()
      */
 	@Override
 	public LocalDateTime getInactivationDate() {
@@ -414,7 +390,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-	 * @see UserDetailsModel#setInactivationDate(LocalDateTime)
+	 * @see UserDetails#setInactivationDate(LocalDateTime)
 	 */
 	@Override
 	public void setInactivationDate(LocalDateTime inactivationDate) {
@@ -422,7 +398,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getLocale()
+     * @see UserDetails#getLocale()
      */
 	@Override
 	public String getLocale() {
@@ -430,7 +406,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setLocale(java.lang.String)
+     * @see UserDetails#setLocale(String)
      */
 	@Override
 	public void setLocale(String locale) {
@@ -438,7 +414,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getDateFormat()
+     * @see UserDetails#getDateFormat()
      */
 	@Override
 	public String getDateFormat() {
@@ -446,7 +422,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setDateFormat(java.lang.String)
+     * @see UserDetails#setDateFormat(String)
      */
 	@Override
 	public void setDateFormat(String dateFormat) {
@@ -454,39 +430,62 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#isAdmin()
+     * @see UserDetails#isAdmin()
      */
 	@Override
-	public boolean isAdmin() {
-		return isAdmin;
+	public boolean isAdmin(){
+		if(this.admin == null){
+			this.admin = false;
+			if(CollectionUtils.isNotEmpty(this.getAuthorities())){
+				for(GrantedAuthority authority : authorities){
+					if (authority.getAuthority().equals(Roles.ROLE_ADMIN)) {
+						this.admin = true;
+						break;
+					}
+				}
+			}
+		}
+		return this.admin;
 	}
 
 	/**
-     * @see UserDetailsModel#setAdmin(boolean)
+     * @see UserDetails#setAdmin(boolean)
      */
 	@Override
 	public void setAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
+		this.admin = isAdmin;
+
 	}
 
 	/**
-     * @see UserDetailsModel#isSiteAdmin()
+     * @see UserDetails#isSiteAdmin()
      */
 	@Override
 	public boolean isSiteAdmin() {
-		return isSiteAdmin;
+		if(this.siteAdmin == null){
+			this.siteAdmin = false;
+			if(CollectionUtils.isNotEmpty(this.getAuthorities())){
+				for(GrantedAuthority authority : authorities){
+					if (authority.getAuthority().equals(Roles.ROLE_SITE_OPERATOR)) {
+						this.siteAdmin = true;
+						break;
+					}
+				}
+			}
+		}
+		return this.siteAdmin;
 	}
 
 	/**
-     * @see UserDetailsModel#setSiteAdmin(boolean)
+     * @see UserDetails#setSiteAdmin(boolean)
      */
 	@Override
 	public void setSiteAdmin(boolean isSiteAdmin) {
-		this.isSiteAdmin = isSiteAdmin;
+		this.siteAdmin = isSiteAdmin;
 	}
 
 	/**
-     * @see UserDetailsModel#setRedirectUrl(java.lang.String)
+     * @see UserDetails#setRedirectUrl(String)
      */
 	@Override
 	public void setRedirectUrl(String redirectUrl) {
@@ -494,7 +493,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getRedirectUrl()
+     * @see UserDetails#getRedirectUrl()
      */
 	@Override
 	public String getRedirectUrl() {
@@ -504,7 +503,7 @@ public class UserDetails implements UserDetailsModel {
 
 
 	/**
-     * @see UserDetailsModel#getMetadata()
+     * @see UserDetails#getMetadata()
      */
 	@Override
 	public Map<String, String> getMetadata() {
@@ -512,7 +511,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setMetadata(java.util.Map)
+     * @see UserDetails#setMetadata(Map)
      */
 	@Override
 	public void setMetadata(Map<String, String> metadata) {
@@ -520,7 +519,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#addMetadatum(java.lang.String, java.lang.String)
+     * @see UserDetails#addMetadatum(String, String)
      */
 	@Override
 	public void addMetadatum(String predicate, String object) {
@@ -534,7 +533,7 @@ public class UserDetails implements UserDetailsModel {
 
 
 	/**
-     * @see UserDetailsModel#setUsername(java.lang.String)
+     * @see UserDetails#setUsername(String)
      */
 	@Override
 	public void setUsername(String username) {
@@ -542,7 +541,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setPassword(java.lang.String)
+     * @see UserDetails#setPassword(String)
      */
 	@Override
 	public void setPassword(String password) {
@@ -550,7 +549,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#setAuthorities(List)
+     * @see UserDetails#setAuthorities(List)
      */
 	@Override
 	public void setAuthorities(
@@ -561,7 +560,7 @@ public class UserDetails implements UserDetailsModel {
 	// SocialUserDetails
 
 	/**
-     * @see UserDetailsModel#getAuthorities()
+     * @see UserDetails#getAuthorities()
      */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -569,7 +568,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getPassword()
+     * @see UserDetails#getPassword()
      */
 	@Override
 	public String getPassword() {
@@ -577,7 +576,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getUsername()
+     * @see UserDetails#getUsername()
      */
 	@Override
 	public String getUsername() {
@@ -585,7 +584,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#isAccountNonExpired()
+     * @see UserDetails#isAccountNonExpired()
      */
 	@Override
 	public boolean isAccountNonExpired() {
@@ -593,7 +592,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#isAccountNonLocked()
+     * @see UserDetails#isAccountNonLocked()
      */
 	@Override
 	public boolean isAccountNonLocked() {
@@ -601,7 +600,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#isCredentialsNonExpired()
+     * @see UserDetails#isCredentialsNonExpired()
      */
 	@Override
 	public boolean isCredentialsNonExpired() {
@@ -609,7 +608,7 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#isEnabled()
+     * @see UserDetails#isEnabled()
      */
 	@Override
 	public boolean isEnabled() {
@@ -617,17 +616,12 @@ public class UserDetails implements UserDetailsModel {
 	}
 
 	/**
-     * @see UserDetailsModel#getUserId()
+     * @see UserDetails#getUserId()
      */
 	@Override
 	public String getUserId() {
 		return this.pk;
 	}
-
-	@Override
-	public String getName() {
-		return this.getUsername();
-    }
 
 	@Override
 	@JsonIgnore

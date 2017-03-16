@@ -21,7 +21,7 @@
 package com.restdude.mdd.model;
 
 //import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.restdude.mdd.model.PersistableModel;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.social.security.SocialUserDetails;
 
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 //@JsonDeserialize(/*as=UserDetails.class*/)
-public interface UserDetailsModel extends SocialUserDetails, Principal, PersistableModel<String> {
+public interface UserDetails extends SocialUserDetails, Principal, PersistableModel<String> {
 
 
     public String getPk();
@@ -46,6 +46,10 @@ public interface UserDetailsModel extends SocialUserDetails, Principal, Persista
 	public String getLastName();
 
 	public void setLastName(String lastName);
+
+	public String getName();
+
+	public void setName(String name);
 
     public LocalDateTime getLastPassWordChangeDate();
 

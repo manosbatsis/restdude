@@ -113,7 +113,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .statusCode(401)
                 .body("httpStatusCode", is(401));
 
-        Assert.assertFalse(StringUtils.isNotBlank(rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME)));
+        Assert.assertFalse(StringUtils.isNotBlank(rs.getCookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME)));
 
     }
 
@@ -127,7 +127,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .statusCode(401)
                 .body("httpStatusCode", is(401));
 
-        Assert.assertFalse(StringUtils.isNotBlank(rs.getCookie(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME)));
+        Assert.assertFalse(StringUtils.isNotBlank(rs.getCookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME)));
 
     }
 

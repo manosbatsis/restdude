@@ -21,9 +21,10 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.controller.AbstractPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
+import com.restdude.auth.spel.annotations.PreAuthorizeCreate;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
+import com.restdude.mdd.model.Roles;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -32,33 +33,34 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  */
-@ModelResource(pathFragment = "roles", controllerSuperClass = AbstractPersistableModelController.class,
-	apiName = "Roles", apiDescription = "Operations about roles")
+@ModelResource(pathFragment = Role.API_PATH, apiName = "Roles", apiDescription = "Operations about roles")
 @Entity
 @Table(name = "role")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Relation(value = "role", collectionRelation = "roles")
+@Relation(value = "role", collectionRelation = Role.API_PATH)
 @ApiModel(value = "Role", description = "User principal roles. Roles are principals themselves and can be assigned to users.")
+@PreAuthorizeCreate(controller = " hasRole('ROLE_ADMIN') ")
 public class Role extends AbstractSystemUuidPersistableModel implements GrantedAuthority {
 
 	private static final long serialVersionUID = 3558291745762331656L;
 
+	public static final String API_PATH = "roles";
+	public static final List<GrantedAuthority> ROLES_ANONYMOUD = Collections.unmodifiableList(Arrays.asList(new Role(Roles.ROLE_ANONYMOUS)));
 
 	@NotNull
-    @Column(unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	private String name;
-	
+
 	@Column(length = 510)
 	private String description;
 
 	@JsonIgnore
-	@DiffIgnore 
-	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+	@DiffIgnore
+	@ManyToMany(mappedBy = Role.API_PATH, fetch = FetchType.LAZY)
 	private Collection<User> members = new ArrayList<User>(0);
 
 
@@ -94,7 +96,7 @@ public class Role extends AbstractSystemUuidPersistableModel implements GrantedA
 		return new ToStringBuilder(this).append("name", this.getName()).toString();
 	}
 
-	/** 
+	/**
 	 *  {@inheritDoc}
 	 */
 	@Override

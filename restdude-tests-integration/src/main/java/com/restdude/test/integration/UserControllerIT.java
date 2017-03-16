@@ -41,31 +41,33 @@ public class UserControllerIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerIT.class);
 
-    @Test(priority = 20, description = "Test registration")
+    @Test(priority = 20, description = "Test patch")
     public void testPatch() throws Exception {
 
         // --------------------------------
         // Login
         // --------------------------------
-        Loggedincontext adminLoginContext = this.getAdminContext();
-        RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
+        Loggedincontext loggedinContext = this.getLoggedinContext("usercontrollerit", "usercontrollerit");
+        RequestSpecification requestSpec = loggedinContext.requestSpec;
 
         // --------------------------------
         // Patch
         // --------------------------------
-        User user = given().spec(adminRequestSpec)
+        User user = given().spec(requestSpec)
                 .body(new User.Builder()
-                        .firstName("Adminfirst")
-                        .lastName("Adminlast")
+                        .firstName("Changedfirst")
+                        .lastName("Changedlast")
                         .build())
                 .log().all()
-                .patch(WEBCONTEXT_PATH + "/api/rest/users/" + adminLoginContext.userId)
+                .patch(WEBCONTEXT_PATH + "/api/rest/users/" + loggedinContext.userId)
                 .then()
                 .log().all()
                 .assertThat()
                 .statusCode(200)
                 // test assertions
-                .body("pk", equalTo(adminLoginContext.userId))
+                .body("pk", equalTo(loggedinContext.userId))
+                .body("firstName", equalTo("Changedfirst"))
+                .body("lastName", equalTo("Changedlast"))
                 // get model
                 .extract().as(User.class);
     }
@@ -104,7 +106,7 @@ public class UserControllerIT extends AbstractControllerIT {
 
         User userAfterUploading = given()
                 .contentType("multipart/form-data")
-                .cookies(Constants.REQUEST_AUTHENTICATION_TOKEN_COOKIE_NAME, adminLoginContext.ssoToken)
+                .cookies(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, adminLoginContext.ssoToken)
                 .multiPart(new MultiPartSpecBuilder(bytes1)
                         .fileName(file1)
                         .controlName("bannerUrl")

@@ -21,12 +21,12 @@
 package com.restdude.websocket.service.impl;
 
 
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.auth.userdetails.model.UserDetails;
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.auth.userdetails.model.UserDetailsImpl;
 import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
+import com.restdude.mdd.model.UserDetails;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.StateUpdateMessage;
 import com.restdude.websocket.model.StompSession;
@@ -67,7 +67,7 @@ public class StompSessionServiceImpl extends AbstractPersistableModelServiceImpl
     @Transactional(readOnly = false)
     public void onSessionConnectedEvent(SessionConnectedEvent event) {
         UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) event.getUser();
-        UserDetails ud = (UserDetails) auth.getPrincipal();
+        UserDetailsImpl ud = (UserDetailsImpl) auth.getPrincipal();
         // persist STOMP session
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
         StompSession stompSession = this.create(new StompSession.Builder().id(sha.getSessionId()).user(new User(ud.getPk())).build());
@@ -185,7 +185,7 @@ public class StompSessionServiceImpl extends AbstractPersistableModelServiceImpl
 
 
     public void validateUser(StompSession resource) {
-        UserDetailsModel ud = this.getPrincipal();
+        UserDetails ud = this.getPrincipal();
         LOGGER.info("validateUser userDetails: {}", ud);
         if (resource.getUser() == null) {
             User user = this.userRepository.getOne(ud.getPk());

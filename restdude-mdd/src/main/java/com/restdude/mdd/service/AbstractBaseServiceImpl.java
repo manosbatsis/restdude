@@ -24,7 +24,7 @@ package com.restdude.mdd.service;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
-import com.restdude.mdd.model.UserDetailsModel;
+import com.restdude.mdd.model.UserDetails;
 import com.restdude.mdd.model.UserModel;
 import com.restdude.util.email.service.EmailService;
 import com.restdude.websocket.Destinations;
@@ -95,13 +95,13 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
     }
 
     @Override
-    public UserDetailsModel getPrincipal() {
+    public UserDetails getPrincipal() {
         return SecurityUtil.getPrincipal();
     }
 
     @Override
     public UserModel getPrincipalLocalUser() {
-        UserDetailsModel principal = getPrincipal();
+        UserDetails principal = getPrincipal();
         User user = null;
         if (principal != null && principal.getPk() != null) {
             user = this.userRepository.getOne(principal.getPk());

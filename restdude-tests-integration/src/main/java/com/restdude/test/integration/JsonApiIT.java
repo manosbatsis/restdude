@@ -24,6 +24,7 @@ import com.restdude.domain.users.model.Role;
 import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
 import com.restdude.hypermedia.util.JsonApiModelBasedDocumentBuilder;
 import com.restdude.test.AbstractControllerIT;
+import com.restdude.util.Constants;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class JsonApiIT extends AbstractControllerIT {
         // Login
         // --------------------------------
         Loggedincontext lctx = this.getAdminContext();
-        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
 
 
         // get a country document
@@ -72,7 +73,7 @@ public class JsonApiIT extends AbstractControllerIT {
         // Login
         // --------------------------------
         Loggedincontext lctx = this.getAdminContext();
-        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
 
 
         // get a country document
@@ -97,7 +98,7 @@ public class JsonApiIT extends AbstractControllerIT {
         // Login
         // --------------------------------
         Loggedincontext lctx = this.getAdminContext();
-        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+        RequestSpecification requestSpec = getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
 
         Role role = new Role("ROLE_TEST", "Test role");
         JsonApiModelResourceDocument<Role, String> document = new JsonApiModelBasedDocumentBuilder<Role, String>("roles")

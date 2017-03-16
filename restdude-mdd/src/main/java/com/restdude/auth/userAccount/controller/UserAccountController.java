@@ -24,13 +24,13 @@ import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetReque
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
-import com.restdude.mdd.model.UserDetailsModel;
-import com.restdude.auth.userdetails.model.UserDetails;
+import com.restdude.auth.userdetails.model.UserDetailsImpl;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.mdd.model.UserDetails;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BadRequestException;
 import io.swagger.annotations.Api;
@@ -113,14 +113,14 @@ public class UserAccountController {
     @ApiOperation(value = "Confirm registration email and/or update account password", notes = "Confirm registration email and/or update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
             "currentPassword, password and passwordConfirmation to immediately change password. 2) when anonymous, provide resetPasswordToken, password and passwordConfirmation to immediately" +
             "change password. 3) when anonymous, provide email or username to have a password reset token and link sent to your inbox.")
-    public UserDetailsModel update(@RequestBody EmailConfirmationOrPasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
+    public UserDetails update(@RequestBody EmailConfirmationOrPasswordResetRequest resource, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.debug("update, resource: {}", resource);
 
-        UserDetailsModel userDetails = this.userDetailsService.resetPassword(resource);
+        UserDetails userDetails = this.userDetailsService.resetPassword(resource);
 
         // (re)login if appropriate
         if (userDetails == null) {
-            userDetails = new UserDetails();
+            userDetails = new UserDetailsImpl();
         } else if (userDetails.getPk() != null) {
             //userDetails = this.userDetailsService.create(userDetails);
             //userDetails.setPassword(resource.getPassword());
@@ -133,10 +133,10 @@ public class UserAccountController {
 
     @RequestMapping(value = "username", method = RequestMethod.PUT)
     @ApiOperation(value = "Update username", notes = "Updates the username of the curent user and updates the auth token cookie.")
-    public UserDetailsModel updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
+    public UserDetails updateUsername(@RequestBody UsernameChangeRequest resource, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.debug("updateUsername, resource: {}", resource);
 
-        UserDetailsModel userDetails = this.userDetailsService.updateUsername(resource);
+        UserDetails userDetails = this.userDetailsService.updateUsername(resource);
         if (userDetails.getUsername().equals(resource.getUsername())) {
             LOGGER.debug("updateUsername updated, updating login userDetails: {}, pw: {}", userDetails, userDetails.getPassword());
             SecurityUtil.login(request, response, userDetails, userDetailsConfig, this.userDetailsService);

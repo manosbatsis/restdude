@@ -24,7 +24,6 @@ package com.restdude.config;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
-import org.eclipse.jetty.websocket.server.WebSocketServerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -54,10 +53,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConfig.class);
 
     /**
-     * Registers the "/ws" endpoint, enabling SockJS fallback options so that alternative
+     * Registers the "/ws" controller, enabling SockJS fallback options so that alternative
      * messaging options may be used if WebSocket is not available.
      * <p>
-     * This endpoint, when prefixed with "/app", is the endpoint that the
+     * This controller, when prefixed with "/app", is the controller that the
      * controller methods are mapped to handle.
      *
      * @see WebSocketMessageBrokerConfigurer#registerStompEndpoints(StompEndpointRegistry)

@@ -79,6 +79,7 @@
             <version>${project.version}</version>
         </dependency>
 
+
         <!-- Testing dependencies -->
         <dependency>
             <groupId>io.rest-assured</groupId>
