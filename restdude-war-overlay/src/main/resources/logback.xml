@@ -27,7 +27,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.restdude.test">
+    <!--logger name="com.restdude.test">
         <level value="debug"/>
     </logger>
     <logger name="com.restdude.auth">
@@ -38,7 +38,7 @@
     </logger>
     <logger name="com.restdude.auth">
         <level value="debug"/>
-    </logger>
+    </logger-->
 
     <!--logger name="com.restdude.rsql">
         <level value="debug"/>
