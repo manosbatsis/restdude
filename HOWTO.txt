@@ -13,18 +13,39 @@
 #
 # CONFIG PROPERTIES
 # ----------------------------------------------
+
+# ----------------------------------------------
+# Restdude build README
+# ----------------------------------------------
+#
+# BUILD HOWTO
+# ----------------------------------------------
+# 0: (Optional): Eclipse users run: mvn eclipse:eclipse
+# 1: RENAME this file to dev.properties
+# 2: Run in this directory: mvn clean install
+# 3: cd restdude-hub-webapp
+# 4: Run in the restdude-hub-webapp directory: mvn clean install jetty:run
+# 5: Point your browser to http://localhost:8080/restdude/client
+# 6: Login with username: admin, password: admin
+#
+#
+# CONFIG PROPERTIES
+# ----------------------------------------------
 buildfilters.restdude.appName=Restdude
 buildfilters.restdude.contextPath=/restdude
 buildfilters.restdude.initData=true
 buildfilters.restdude.cookies.httpOnly=false
 buildfilters.restdude.cookies.secure=false
 buildfilters.restdude.registration.forceCodes=false
-buildfilters.log.rootlevel=warn
 
+buildfilters.restdude.packages=**.restdude
+buildfilters.jetty.port=8888
+buildfilters.log.rootlevel=warn
+test.log.rootlevel=warn
 
 # Email
 buildfilters.mail.enabled=true
-buildfilters.mail.test.enable=true
+buildfilters.mail.test.enable=false
 buildfilters.mail.test.user=system
 buildfilters.mail.server.host=
 buildfilters.mail.server.port=2525
@@ -46,7 +67,7 @@ buildfilters.dataSource.validationQuery=SELECT 1
 buildfilters.hibernate.dialect=org.hibernate.dialect.H2Dialect
 buildfilters.hibernate.show_sql=false
 buildfilters.hibernate.format_sql=false
-buildfilters.hibernate.hbm2ddl.auto=update
+buildfilters.hibernate.hbm2ddl.auto=create
 buildfilters.hibernate.cache.use_second_level_cache=true
 buildfilters.hibernate.cache.provider_class=net.sf.ehcache.hibernate.SingletonEhCacheProvider
 buildfilters.hibernate.id.new_generator_mappings=true
@@ -82,7 +103,11 @@ buildfilters.linkedin.consumerSecret=
 buildfilters.google.consumerKey=
 buildfilters.google.consumerSecret=
 
+# file service impl
+buildfilters.fs.filePersistenceService=com.restdude.domain.fs.DummyFilePersistenceServiceImpl
+
 # AWS S3
 buildfilters.aws_access_key_id=
 buildfilters.aws_secret_access_key=
 buildfilters.aws_namecard_bucket=
+rd_bucket=
