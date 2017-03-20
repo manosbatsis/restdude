@@ -77,6 +77,7 @@ public class AbstractControllerIT {
 
     protected String WEBSOCKET_URI;
     protected String WEBCONTEXT_PATH;
+    protected String TEST_EMAIL_DOMAIN;
     private   Loggedincontext adminContext;
 
 
@@ -87,7 +88,9 @@ public class AbstractControllerIT {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         Configuration config = ConfigurationFactory.getConfiguration();
+        LOGGER.info("setup, restdude.contextPath: {}", config.getString(ConfigurationFactory.APP_CONTEXT_PATH));
         this.WEBCONTEXT_PATH = config.getString(ConfigurationFactory.APP_CONTEXT_PATH, "/restdude");
+        this.TEST_EMAIL_DOMAIN = config.getString(ConfigurationFactory.TEST_EMAIL_DOMAIN, "restdude.com");
 
         // pickup from the jetty port
         RestAssured.port = CONFIG.getInt("jetty.http.port", 8080);
@@ -96,7 +99,7 @@ public class AbstractControllerIT {
                 .append(WEBCONTEXT_PATH)
                 .append("/ws")
                 .toString();
-        LOGGER.info("Using websocket URL {}", this.WEBSOCKET_URI);
+        LOGGER.info("setup, websocket URL {}", this.WEBSOCKET_URI);
 
 
         // configure our object mapper

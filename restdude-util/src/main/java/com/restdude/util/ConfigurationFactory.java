@@ -56,6 +56,7 @@ public class ConfigurationFactory {
 
 	public static final String TEST_EMAIL_ENABLE = "mail.test.enable";
 	public static final String TEST_EMAIL_USER = "mail.test.user";
+	public static final String TEST_EMAIL_DOMAIN = "restdude.testEmailDomain";
 	
 	public static final String FS_IMPL_CLASS = "fs.filePersistenceService";
 

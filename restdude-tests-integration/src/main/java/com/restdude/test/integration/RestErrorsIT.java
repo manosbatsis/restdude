@@ -81,7 +81,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         SystemError error = given().spec(spec)
                 .log().all()
                 .body(new UserAccountRegistration.Builder()
-                        .email("operator@restdude.com")
+                        .email("operator@" + TEST_EMAIL_DOMAIN)
                         .build())
                 .post(WEBCONTEXT_PATH + "/api/auth/account")
                 .then()
