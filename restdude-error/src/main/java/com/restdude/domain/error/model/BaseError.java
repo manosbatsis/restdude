@@ -71,7 +71,7 @@ public class BaseError extends AbstractTopicModel<ErrorComment> implements  Pers
     private String message;
 
     @ApiModelProperty(value = "The address the request originated from")
-    @Column(name = "remote_address", updatable = false, length = MAX_DESCRIPTION_LENGTH)
+    @Column(name = "remote_address", updatable = false, length = DEFAULT_MAX_DESCRIPTION_LENGTH)
     @Getter @Setter
     private String remoteAddress;
 
@@ -135,8 +135,8 @@ public class BaseError extends AbstractTopicModel<ErrorComment> implements  Pers
         if (StringUtils.isNotEmpty(this.message) && this.message.length() > BaseError.MAX_MESSAGE_LENGTH) {
             this.message = StringUtils.abbreviate(this.message, BaseError.MAX_MESSAGE_LENGTH);
         }
-        if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
-            this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, BaseError.MAX_DESCRIPTION_LENGTH);
+        if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
+            this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
         }
 
         log.debug("preSave, after: {}", this);

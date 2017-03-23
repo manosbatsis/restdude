@@ -22,10 +22,26 @@ package com.restdude.domain.topic.model;
 
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.model.CommentModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 /**
  * Base topic comment impl
  */
+@MappedSuperclass
 public abstract class AbstractTopicCommentModel<T extends AbstractTopicModel<C>, C extends AbstractTopicCommentModel<T, C>> extends AbstractCommentableModel<C> implements CommentModel<String, T, C, User> {
+
+
+    @NotNull
+    @ApiModelProperty(value = "The comment text", required = true, notes = "Max byte length: " + DEFAULT_MAX_CONTENT_LENGTH)
+    @Column(name = "text_content", nullable = false, updatable = false, length = DEFAULT_MAX_CONTENT_LENGTH)
+    @Getter
+    @Setter
+    private String content;
 
 }

@@ -27,4 +27,5 @@ import java.io.Serializable;
  */
 public interface TopicModel<PK extends Serializable, C extends CommentModel<?, ?, C, U>, U extends UserModel> extends GeneratedContentModel<PK, U>, CommentableModel<C> {
 
+    public static final int DEFAULT_MAX_DESCRIPTION_LENGTH = 1000;
 }

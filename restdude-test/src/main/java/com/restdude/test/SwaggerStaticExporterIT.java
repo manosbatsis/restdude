@@ -44,6 +44,7 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwaggerStaticExporterIT.class);
     protected static final String GENERATED_ASCIIDOCS_PATH = "target/swagger2asciidoc";
+    protected static final String GENERATED_MARKDOWN_PATH = "target/swagger2md";
 
 
     @Test(priority = 100, description = "Test the swagger controller and create the static files documentation")
@@ -57,10 +58,15 @@ public class SwaggerStaticExporterIT extends AbstractControllerIT {
             String json = given().spec(adminRequestSpec).log().all().get(swaggerPath).then().statusCode(200).extract().asString();
 
 
-            // create confluence
+            // create asciidoc
             Path targetFolder = Paths.get(SwaggerStaticExporterIT.GENERATED_ASCIIDOCS_PATH);
             LOGGER.debug("Creating static docs at: {}", targetFolder);
             this.makeDocs(json, targetFolder, MarkupLanguage.ASCIIDOC);
+
+            // create markdown
+            targetFolder = Paths.get(SwaggerStaticExporterIT.GENERATED_MARKDOWN_PATH);
+            LOGGER.debug("Creating static docs at: {}", targetFolder);
+            this.makeDocs(json, targetFolder, MarkupLanguage.MARKDOWN);
 
         } catch (Exception e) {
             LOGGER.error("Failed generating static docs", e);

@@ -25,11 +25,13 @@ import com.restdude.mdd.model.TopicModel;
 
 import javax.persistence.MappedSuperclass;
 
+
 /**
  * Base topic impl
  */
 @MappedSuperclass
 public abstract class AbstractTopicModel<C extends AbstractTopicCommentModel<?, C>> extends AbstractGeneratedContentModel implements TopicModel<String, C, User>{
+
 
 
 }

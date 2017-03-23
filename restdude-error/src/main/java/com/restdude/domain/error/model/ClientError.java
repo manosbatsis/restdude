@@ -58,8 +58,9 @@ public class ClientError extends BaseError implements PersistableError<String> {
     @Column(name = "screenshot_url", length = MAX_MESSAGE_LENGTH)
     private String screenshotUrl;
 
-    @ApiModelProperty(value = "The error description provided by the user, if any.", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.MAX_DESCRIPTION_LENGTH)
-    @Column(length = BaseError.MAX_DESCRIPTION_LENGTH)
+    @ApiModelProperty(value = "The textual content typically provided by the user, if any.", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
+    @Column(length = BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
+    @Getter @Setter
     private String description;
 
     @Lob
@@ -68,8 +69,8 @@ public class ClientError extends BaseError implements PersistableError<String> {
     @ApiModelProperty(value = "A textual representation of the client application state, e.g. the DOM tree.")
     private String state;
 
-    @ApiModelProperty(value = "The URL relevant to application view state during the error e.g. window.location.href, if any", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.MAX_DESCRIPTION_LENGTH)
-    @Column(name = "view_url", updatable = false, length = BaseError.MAX_DESCRIPTION_LENGTH)
+    @ApiModelProperty(value = "The URL relevant to application view state during the error e.g. window.location.href, if any", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
+    @Column(name = "view_url", updatable = false, length = BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
     @Getter @Setter
     private String viewUrl;
 
@@ -91,11 +92,11 @@ public class ClientError extends BaseError implements PersistableError<String> {
     public void preSave() {
         log.debug("preSave, before: {}", this);
         super.preSave();
-        if (StringUtils.isNotEmpty(this.description) && this.description.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
-            this.description = StringUtils.abbreviate(this.description, BaseError.MAX_DESCRIPTION_LENGTH);
+        if (StringUtils.isNotEmpty(this.description) && this.description.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
+            this.description = StringUtils.abbreviate(this.description, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
         }
-        if (StringUtils.isNotEmpty(this.viewUrl) && this.viewUrl.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
-            this.viewUrl = StringUtils.abbreviate(this.viewUrl, BaseError.MAX_DESCRIPTION_LENGTH);
+        if (StringUtils.isNotEmpty(this.viewUrl) && this.viewUrl.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
+            this.viewUrl = StringUtils.abbreviate(this.viewUrl, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
         }
 
         log.debug("preSave, after: {}", this);
@@ -109,13 +110,6 @@ public class ClientError extends BaseError implements PersistableError<String> {
         this.screenshotUrl = screenshotUrl;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public static class Builder {
         private String message;

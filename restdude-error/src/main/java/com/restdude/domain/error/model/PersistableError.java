@@ -34,7 +34,6 @@ import java.time.LocalDateTime;
 public interface PersistableError<PK extends Serializable> extends ErrorModel<PK> {
 
     public static final int MAX_MSTACKTRACE_LENGTH = 40000;
-    public static final int MAX_DESCRIPTION_LENGTH = 1000;
     public static final int MAX_MESSAGE_LENGTH = 500;
 
 
