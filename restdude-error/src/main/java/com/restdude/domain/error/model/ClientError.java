@@ -28,13 +28,19 @@ import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @ModelResource(pathFragment = ClientError.API_PATH,
         apiName = "Client Errors", apiDescription = "Client Error Operations", controllerSuperClass = ClientErrorController.class)
 @Entity
@@ -52,9 +58,20 @@ public class ClientError extends BaseError implements PersistableError<String> {
     @Column(name = "screenshot_url", length = MAX_MESSAGE_LENGTH)
     private String screenshotUrl;
 
-    @ApiModelProperty(value = "The error description provided by the user, if any.")
+    @ApiModelProperty(value = "The error description provided by the user, if any.", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.MAX_DESCRIPTION_LENGTH)
     @Column(length = BaseError.MAX_DESCRIPTION_LENGTH)
     private String description;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Getter @Setter
+    @ApiModelProperty(value = "A textual representation of the client application state, e.g. the DOM tree.")
+    private String state;
+
+    @ApiModelProperty(value = "The URL relevant to application view state during the error e.g. window.location.href, if any", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.MAX_DESCRIPTION_LENGTH)
+    @Column(name = "view_url", updatable = false, length = BaseError.MAX_DESCRIPTION_LENGTH)
+    @Getter @Setter
+    private String viewUrl;
 
     public ClientError() {
     }
@@ -72,10 +89,16 @@ public class ClientError extends BaseError implements PersistableError<String> {
 
     @Override
     public void preSave() {
+        log.debug("preSave, before: {}", this);
         super.preSave();
-        if (StringUtils.isNotEmpty(this.description) && this.description.length() > BaseError.MAX_MESSAGE_LENGTH) {
-            this.description = StringUtils.abbreviate(this.description, BaseError.MAX_MESSAGE_LENGTH);
+        if (StringUtils.isNotEmpty(this.description) && this.description.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
+            this.description = StringUtils.abbreviate(this.description, BaseError.MAX_DESCRIPTION_LENGTH);
         }
+        if (StringUtils.isNotEmpty(this.viewUrl) && this.viewUrl.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
+            this.viewUrl = StringUtils.abbreviate(this.viewUrl, BaseError.MAX_DESCRIPTION_LENGTH);
+        }
+
+        log.debug("preSave, after: {}", this);
     }
 
     public String getScreenshotUrl() {
@@ -127,7 +150,7 @@ public class ClientError extends BaseError implements PersistableError<String> {
 
     private ClientError(Builder builder) {
         this.setMessage(builder.message);
-        this.setUser(builder.user);
+        this.setCreatedBy(builder.user);
         this.screenshotUrl = builder.screenshotUrl;
         this.description = builder.description;
     }

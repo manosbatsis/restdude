@@ -27,12 +27,23 @@
         </encoder>
     </appender>
 
-    <!--logger name="com.restdude.test">
+    <logger name="com.restdude.test">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.auth">
+    <!--logger name="com.restdude.domain.error">
         <level value="debug"/>
     </logger>
+
+    <logger name="com.restdude.domain.users.model.UserDTO">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.util.audit.AuditorBean">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.auth.userdetails.util.SecurityUtil">
+        <level value="debug"/>
+    </logger>
+
     <logger name="org.springframework.security">
         <level value="debug"/>
     </logger>

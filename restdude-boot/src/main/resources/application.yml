@@ -72,7 +72,7 @@ logging:
     com.yahoo.elide.core: WARN
     org.springframework: WARN
     com.restdude:
-      test: WARN
+      test: DEBUG
       mdd: WARN
       jsonapi: WARN
 

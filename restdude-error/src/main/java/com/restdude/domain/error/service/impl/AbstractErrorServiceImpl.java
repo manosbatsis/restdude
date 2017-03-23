@@ -20,12 +20,12 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.mdd.repository.ModelRepository;
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.PersistableError;
 import com.restdude.domain.error.service.ErrorLogService;
 import com.restdude.domain.error.service.UserAgentService;
+import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public abstract class AbstractErrorServiceImpl<T extends PersistableError<PK>, P
     @Override
     @Transactional(readOnly = false)
     public T create(T resource) {
-        LOGGER.debug("create PersistableError: {}", resource);
+        LOGGER.debug("create PersistableError: {}, userDetails: {}", resource, this.getPrincipal());
 
         // merge the UserAgent based on it's hash/pk
         if (resource.getUserAgent() != null) {

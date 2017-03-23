@@ -30,12 +30,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.AuditorAware;
 
-
 public class AuditorBean implements AuditorAware<User> {
+
     private static final Logger LOGGER = LoggerFactory
             .getLogger(AuditorBean.class);
-
-    private User currentAuditor;
+    public static final String BEAN_NAME = "auditorBean";
 
     private UserDetailsService userDetailsService;
 
@@ -49,19 +48,20 @@ public class AuditorBean implements AuditorAware<User> {
 
     @Override
     public User getCurrentAuditor() {
-        if (currentAuditor == null) {
-            UserDetails userDetails = SecurityUtil.getPrincipal();
-            if (userDetails != null) {
-                currentAuditor = new User(userDetails.getPk());
-            }
-        } else {
-            LOGGER.debug("getCurrentAuditor returns cached result");
+        User currentAuditor = null;
+
+        UserDetails userDetails = SecurityUtil.getPrincipal();
+        if (userDetails != null && userDetails.getPk() != null) {
+            currentAuditor = new User(userDetails.getPk());
+            currentAuditor.setUsername(userDetails.getUsername());
+            currentAuditor.setFirstName(userDetails.getFirstName());
+            currentAuditor.setLastName(userDetails.getLastName());
+            currentAuditor.setName(userDetails.getName());
+            currentAuditor.setAvatarUrl(userDetails.getAvatarUrl());
         }
+        LOGGER.debug("getCurrentAuditor: {}", currentAuditor);
         return currentAuditor;
     }
 
-    public void setCurrentAuditor(User currentAuditor) {
-        this.currentAuditor = currentAuditor;
-    }
 
 }

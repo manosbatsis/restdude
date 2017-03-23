@@ -23,14 +23,16 @@ package com.restdude.domain.users.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.restdude.mdd.binding.LowCaseDeserializer;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
+import com.restdude.mdd.binding.LowCaseDeserializer;
 import com.restdude.websocket.message.IMessageResource;
 import io.swagger.annotations.ApiModel;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+@Slf4j
 @ApiModel(value = "UserDTO", description = "UserDTO is a lightweight DTO version of User")
 public class UserDTO implements IMessageResource<String> {
 
@@ -38,11 +40,12 @@ public class UserDTO implements IMessageResource<String> {
     public static UserDTO fromUser(User user) {
         UserDTO dto = null;
         if (user != null) {
+            log.debug("fromUser: {}", user);
             return new UserDTO(user.getPk(),
                     user.getFirstName(),
                     user.getLastName(),
-                    user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
                     user.getUsername(),
+                    user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
                     user.getEmailHash(),
                     user.getAvatarUrl(),
                     user.getBannerUrl(),
@@ -56,7 +59,6 @@ public class UserDTO implements IMessageResource<String> {
     private String name;
     private String firstName;
     private String lastName;
-    @JsonDeserialize(using = LowCaseDeserializer.class)
     private String username;
     @JsonDeserialize(using = LowCaseDeserializer.class)
     private String email;

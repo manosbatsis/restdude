@@ -20,12 +20,12 @@
  */
 package com.restdude.init;
 
-import com.restdude.mdd.model.ErrorModel;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.service.ErrorLogService;
 import com.restdude.domain.error.service.SystemErrorService;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.model.ErrorModel;
 import com.restdude.util.ConfigurationFactory;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
@@ -129,7 +129,7 @@ public class WarOverlayDataInitializer extends DataInitializer {
             ErrorLog st = this.stackTraceService.create(new ErrorLog(stackTrace[2].toString(), stackTrace[3].toString()));
             SystemError error = (SystemError) stackTrace[4];
             error.setErrorLog(st);
-            error.setUser(user);
+            error.setCreatedBy(user);
             LOGGER.debug("Error user: {}, new: {}", user, user.isNew());
             error = this.systemErrorService.create(error);
             errors.add(error);

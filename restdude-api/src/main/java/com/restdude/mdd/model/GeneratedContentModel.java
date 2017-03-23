@@ -18,40 +18,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.error.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.restdude.domain.users.model.User;
-import com.restdude.mdd.model.ErrorModel;
+package com.restdude.mdd.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @param <PK>
+ * Base interface for generated content
  */
-@JsonIgnoreProperties("pk")
-public interface PersistableError<PK extends Serializable> extends ErrorModel<PK> {
+public interface GeneratedContentModel<PK extends Serializable, U extends UserModel> extends PersistableModel<PK> {
 
-    public static final int MAX_MSTACKTRACE_LENGTH = 40000;
-    public static final int MAX_DESCRIPTION_LENGTH = 1000;
-    public static final int MAX_MESSAGE_LENGTH = 500;
-
-
-    User getCreatedBy();
-
-    void setCreatedBy(User user);
-
-    UserAgent getUserAgent();
-
-    void setUserAgent(UserAgent userAgent);
-
-    ErrorLog getErrorLog();
-
-    void setErrorLog(ErrorLog errorLog);
-
+    U getCreatedBy();
+    void setCreatedBy(U author);
 
     LocalDateTime getCreatedDate();
+    void setCreatedDate(LocalDateTime createdDate);
 
     LocalDateTime getLastModifiedDate();
+    void setLastModifiedDate(LocalDateTime lastModifiedDate);
+
+
 }

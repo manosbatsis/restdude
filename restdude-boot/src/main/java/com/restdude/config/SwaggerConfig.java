@@ -34,7 +34,7 @@ import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
-//@Configuration
+@Configuration
 public class SwaggerConfig {
 
     @Value("${spring.application.name}")

@@ -46,11 +46,11 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 	 * The HTTP URL of the resource, excluding the protocol, domain and port. Starts with a slash. 
 	 */
     @NotNull
-    @Column(name = "pathFragment", length = 1500, nullable = false)
+    @Column(name = "resource_path", length = 1500, nullable = false)
 	private String path;
 	
 	/**
-	 * The number of URL segments in the resourc pathFragment
+	 * The number of URL segments in the resource path
 	 */
     @NotNull
     @Column(name = "path_level", nullable = false)

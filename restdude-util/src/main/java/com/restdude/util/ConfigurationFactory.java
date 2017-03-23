@@ -94,7 +94,7 @@ public class ConfigurationFactory {
 				properties = new PropertiesConfiguration("classpath:/" + propFile);
 				LOGGER.debug("Added configuration file {}", properties.getPath());
 			} catch (ConfigurationException e) {
-				LOGGER.warn("Failed to load configuration file {}", propFile);
+				LOGGER.debug("Failed to load configuration file {}", propFile);
 			}
 		}
 		return properties;

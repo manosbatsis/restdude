@@ -25,29 +25,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.domain.error.ErrorUtil;
-import com.restdude.domain.users.model.User;
-import com.restdude.domain.users.model.UserDTO;
-import com.restdude.mdd.annotation.model.CurrentPrincipal;
+import com.restdude.domain.topic.model.AbstractTopicModel;
 import com.restdude.mdd.annotation.model.CurrentPrincipalField;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.javers.core.metamodel.annotation.DiffIgnore;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.List;
 
-
+@Slf4j
 @ModelResource(pathFragment = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyPersistableModelController.class,
         apiName = "Errors", apiDescription = "Generic error information (readonly)")
 @ApiModel(value = "BaseError", description = "Generic error superclass")
@@ -64,53 +60,35 @@ import java.time.LocalDateTime;
 @PreAuthorizePatch(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
-public class BaseError extends AbstractSystemUuidPersistableModel implements  PersistableError<String>{
+public class BaseError extends AbstractTopicModel<ErrorComment> implements  PersistableError<String>{
     public static final String API_PATH = "allErrors";
 
-    @CreatedDate
-    @DiffIgnore
-    @ApiModelProperty(value = "Date created")
-    @Column(name = "date_created", nullable = false, updatable = false)
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    @DiffIgnore
-    @ApiModelProperty(value = "Date last modified")
-    @Column(name = "date_last_modified", nullable = false)
-    private LocalDateTime lastModifiedDate;
-
-    @CreatedBy
-    @DiffIgnore
-    @JsonIgnore
-    @CurrentPrincipal
-    @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdby_id", referencedColumnName = "pk", updatable = false)
-    private User createdBy;
 
     @NotNull
     @ApiModelProperty(value = "Message for users")
     @Column(name = "error_message", nullable = false, updatable = false, length = MAX_MESSAGE_LENGTH)
+    @Getter @Setter
     private String message;
 
     @ApiModelProperty(value = "The address the request originated from")
     @Column(name = "remote_address", updatable = false, length = MAX_DESCRIPTION_LENGTH)
+    @Getter @Setter
     private String remoteAddress;
-
-    @ApiModelProperty(value = "User in context")
-    @ManyToOne
-    @JoinColumn(name = "user_id", updatable = false)
-    @CurrentPrincipal
-    private User user;
 
     @ApiModelProperty(value = "The UA string if provided with a request")
     @ManyToOne
     @JoinColumn(name = "user_agent_id", updatable = false)
+    @Getter @Setter
     private UserAgent userAgent;
 
     @ManyToOne
     @JoinColumn(name = "error_log_id", updatable = false)
     private ErrorLog errorLog;
+
+    @JsonIgnore
+    @OneToMany(mappedBy="topic", fetch= FetchType.LAZY)
+    @Getter @Setter
+    private List<ErrorComment> comments;
 
     public BaseError() {
 
@@ -148,6 +126,8 @@ public class BaseError extends AbstractSystemUuidPersistableModel implements  Pe
 
     @Override
     public void preSave() {
+
+        log.debug("preSave, before: {}", this);
         super.preSave();
         if (this.getCreatedBy() != null && this.getCreatedBy().getPk() == null) {
             this.setCreatedBy(null);
@@ -158,80 +138,10 @@ public class BaseError extends AbstractSystemUuidPersistableModel implements  Pe
         if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > BaseError.MAX_DESCRIPTION_LENGTH) {
             this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, BaseError.MAX_DESCRIPTION_LENGTH);
         }
+
+        log.debug("preSave, after: {}", this);
     }
 
-    @Override
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Override
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getRemoteAddress() {
-        return remoteAddress;
-    }
-
-    public void setRemoteAddress(String remoteAddress) {
-        this.remoteAddress = remoteAddress;
-    }
-
-
-    @JsonProperty("user")
-    public UserDTO getUserInfo() {
-        return UserDTO.fromUser(this.getUser());
-    }
-
-
-    @JsonIgnore
-    @Override
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
-    @Override
-    public UserAgent getUserAgent() {
-        return userAgent;
-    }
-
-    @Override
-    public void setUserAgent(UserAgent userAgent) {
-        this.userAgent = userAgent;
-    }
 
     @JsonIgnore
     @Override

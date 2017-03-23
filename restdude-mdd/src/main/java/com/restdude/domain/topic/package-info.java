@@ -18,16 +18,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.model;
-
-import java.io.Serializable;
-
 /**
- * Base interface for errors
+ * Created by manos on 23/3/2017.
  */
-public interface ErrorModel<PK extends Serializable> extends PersistableModel<PK> {
-
-    String getMessage();
-
-    void setMessage(String message);
-}
+package com.restdude.domain.topic;

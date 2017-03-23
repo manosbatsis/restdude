@@ -24,9 +24,9 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.util.HttpUtil;
 import com.restdude.util.exception.http.ConstraintViolationException;
 import io.swagger.annotations.ApiModel;
@@ -260,7 +260,7 @@ public class SystemError extends BaseError {
     private SystemError(Builder builder) {
 
         this.setMessage(builder.message);
-        this.setUser(builder.user);
+        this.setCreatedBy(builder.user);
 
         this.requestMethod = builder.requestMethod;
         this.requestUrl = builder.requestUrl;

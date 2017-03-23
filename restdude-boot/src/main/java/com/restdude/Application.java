@@ -20,8 +20,10 @@
  */
 package com.restdude;
 
+import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.BaseRepositoryImpl;
 import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
+import com.restdude.util.audit.AuditorBean;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
@@ -39,6 +41,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.jetty.JettyServerCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -58,7 +61,7 @@ import java.util.Map;
         repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class,
         repositoryBaseClass = BaseRepositoryImpl.class
 )
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = AuditorBean.BEAN_NAME)
 @EnableScheduling
 public class Application implements EmbeddedServletContainerCustomizer {
 
@@ -70,6 +73,10 @@ public class Application implements EmbeddedServletContainerCustomizer {
         LOGGER.debug("main, context: {}", ctx);
     }
 
+    @Bean(AuditorBean.BEAN_NAME)
+    public AuditorAware<User> auditorProvider() {
+        return new AuditorBean();
+    }
 
     @Bean
     public JettyServerCustomizer jettyServerCustomizer() {

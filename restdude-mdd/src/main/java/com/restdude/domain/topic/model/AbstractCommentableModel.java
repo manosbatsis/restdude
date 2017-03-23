@@ -18,16 +18,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.mdd.model;
+package com.restdude.domain.topic.model;
 
-import java.io.Serializable;
+import com.restdude.mdd.model.CommentableModel;
+
+import javax.persistence.MappedSuperclass;
 
 /**
- * Base interface for errors
+ * Base impl class for generated content
  */
-public interface ErrorModel<PK extends Serializable> extends PersistableModel<PK> {
+@MappedSuperclass
+public abstract class AbstractCommentableModel<C extends AbstractTopicCommentModel> extends AbstractGeneratedContentModel implements CommentableModel<C> {
 
-    String getMessage();
-
-    void setMessage(String message);
 }

@@ -20,14 +20,13 @@
  */
 package com.restdude.mdd.model;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
- * Base interface for errors
+ * Base interface for topics
  */
-public interface ErrorModel<PK extends Serializable> extends PersistableModel<PK> {
+public interface CommentableModel<C extends CommentModel> {
 
-    String getMessage();
-
-    void setMessage(String message);
+    List<C> getComments();
+    void setComments(List<C> children);
 }

@@ -22,6 +22,8 @@ package com.restdude.domain.details.contact.model;
 
 import com.restdude.domain.geography.model.PostalCode;
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.javers.core.metamodel.annotation.ShallowReference;
 
@@ -35,6 +37,12 @@ import javax.validation.constraints.NotNull;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PostalAddressDetail extends AbstractContactDetailModel {
 
+
+    @Column(name = "po_box")
+    @Getter
+    @Setter
+    private String postOfficeBoxNumber;
+
     @NotNull
     @Column(name = "addressline_1", nullable = false, updatable = true)
     private String addressLine1;
@@ -45,8 +53,9 @@ public class PostalAddressDetail extends AbstractContactDetailModel {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "posralcode_id", referencedColumnName = "pk", nullable = false)
+    @JoinColumn(name = "posralcode", referencedColumnName = "pk", nullable = false)
     private PostalCode postCode;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false, updatable = false)

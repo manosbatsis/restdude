@@ -605,26 +605,6 @@
     <dependencyManagement>
         <dependencies>
 
-            <!--dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-tree</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-analysis</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-util</artifactId>
-                <version>${asm.version}</version>
-            </dependency-->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
@@ -1232,6 +1212,11 @@
                 <groupId>io.github.swagger2markup</groupId>
                 <artifactId>swagger2markup</artifactId>
                 <version>${swagger2markup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.pegdown</groupId>
+                <artifactId>pegdown</artifactId>
+                <version>1.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>

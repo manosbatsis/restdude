@@ -114,6 +114,7 @@ public class SecurityUtil {
                 principal = null;
 			}
 			else if (User.class.isAssignableFrom(principal.getClass())) {
+				LOGGER.warn("getPrincipal1, principal: {} ",  principal.toString());
 				principal = UserDetailsImpl.fromUser((User) principal);
 			}
 		}

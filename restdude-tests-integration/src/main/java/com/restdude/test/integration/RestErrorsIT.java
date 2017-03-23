@@ -188,7 +188,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 1; i++) {
             String description = "ClientError #" + i + " created by " + this.getClass().getName();
             ClientError error = new ClientError();
             ErrorLog log = new ErrorLog();
@@ -208,7 +208,9 @@ public class RestErrorsIT extends AbstractControllerIT {
                     .statusCode(201)
                     .body("message", notNullValue())
                     .body("description", equalTo(description))
+                    .body("createdBy.pk", equalTo(adminLoginContext.userId))
                     .extract().as(ClientError.class);
+
         }
     }
 
