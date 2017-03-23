@@ -105,9 +105,8 @@
         <hibernate-validator.version>5.2.1.Final</hibernate-validator.version>
 
         <!-- springfox swagger -->
-        <springfox.version>2.5.0</springfox.version>
+        <springfox.version>2.6.1</springfox.version>
         <swagger2markup.version>1.2.0</swagger2markup.version>
-        <asm.version>5.1</asm.version>
 
         <!-- javers auditing -->
         <javers-core.version>2.3.0</javers-core.version>
