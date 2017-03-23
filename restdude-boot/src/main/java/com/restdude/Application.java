@@ -56,8 +56,8 @@ import java.util.Map;
 
 @SpringBootApplication(/*scanBasePackages = "${restdude.scan.packages}", */ exclude = {ErrorMvcAutoConfiguration.class})
 @EnableTransactionManagement
-@EntityScan({"**.restdude", "**.calipso"})
-@EnableJpaRepositories(basePackages = {"**.restdude", "**.calipso"},
+@EntityScan({"**.restdude"})
+@EnableJpaRepositories(basePackages = {"**.restdude"},
         repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class,
         repositoryBaseClass = BaseRepositoryImpl.class
 )
