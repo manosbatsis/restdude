@@ -18,18 +18,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.confirmationtoken.repository;
+package com.restdude.mdd.repository;
 
-import com.restdude.mdd.repository.ModelRepository;
-import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-public interface ConfirmationTokenReposirory extends ModelRepository<ConfirmationToken, String> {
+/**
+ * Used for context access by non-beans
+ */
+public class ApplicationContextProvider implements ApplicationContextAware{
+    public static final String BEAN_NAME = "applicationContextProvider";
 
-    @Query("select token from ConfirmationToken token where token.tokenValue = ?1 and token.targetId = ?2")
-    ConfirmationToken findByTokenValueAndRTargetId(String tokenValue, String targetId);
 
-    @Query("select token from ConfirmationToken token where token.targetId = ?1")
-    ConfirmationToken findByTargetId(String targetId);
+    private static ApplicationContext context;
 
+    public ApplicationContext getApplicationContext() {
+        return context;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext ac)
+            throws BeansException {
+        context = ac;
+    }
 }

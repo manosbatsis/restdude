@@ -42,19 +42,19 @@ import javassist.NotFoundException;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
-import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.util.Assert;
 import org.springframework.util.MimeTypeUtils;
@@ -157,7 +157,7 @@ public class ModelBasedComponentGenerator {
 
                 // grab the generic types
                 List<Class<?>> genericTypes = modelContext.getGenericTypes();
-                LOGGER.debug("createPredicateFactory, Creating class {}, genericTypes: {}", fullClassName, genericTypes);
+                //LOGGER.debug("createPredicateFactory, Creating class {}, genericTypes: {}", fullClassName, genericTypes);
                 createPredicateCmd.setGenericTypes(genericTypes);
 
                 // create and return the predicate class
@@ -220,9 +220,9 @@ public class ModelBasedComponentGenerator {
                 List<Class<?>> genericTypes = modelContext.getGenericTypes();
                 genericTypes.add(modelContext.getServiceInterfaceType());
                 createControllerCmd.setGenericTypes(genericTypes);
-                LOGGER.debug("createController, Creating class " + fullClassName +
-                        ", super: " + modelContext.getControllerSuperClass().getName() +
-                        ", genericTypes: " + genericTypes);
+                //LOGGER.debug("createController, Creating class " + fullClassName +
+                //        ", super: " + modelContext.getControllerSuperClass().getName() +
+                //        ", genericTypes: " + genericTypes);
             }
 
             // add @RestController stereotype annotation
@@ -234,7 +234,7 @@ public class ModelBasedComponentGenerator {
             String pattern = null;
             pattern = getRequestMapping(modelInfo);
             modelInfo.setRequestMapping(pattern);
-            LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
+            //LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
 
             Map<String, Object> requestMappingMembers = new HashMap<>();
             requestMappingMembers.put("value", new String[]{pattern});
@@ -264,7 +264,7 @@ public class ModelBasedComponentGenerator {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(controllerClass)
                     .addDependsOn(serviceDependency).setAutowireMode(Autowire.BY_NAME.value()).getBeanDefinition();
 
-            LOGGER.debug("createController, registering bean: {}, class: {}, exposes resources: {}", beanName, controllerClass.getSimpleName(), controllerClass.getAnnotation(ExposesResourceFor.class));
+            //LOGGER.debug("createController, registering bean: {}, class: {}, exposes resources: {}", beanName, controllerClass.getSimpleName(), controllerClass.getAnnotation(ExposesResourceFor.class));
             registry.registerBeanDefinition(beanName, beanDefinition);
 
         }
@@ -302,7 +302,7 @@ public class ModelBasedComponentGenerator {
             String fullClassName = new StringBuffer(modelContext.getBeansBasePackage())
                     .append(".service.")
                     .append(className).toString();
-            LOGGER.debug("createService interface: {}", fullClassName);
+            //LOGGER.debug("createService interface: {}", fullClassName);
 
 
             // grab the generic types
@@ -319,7 +319,7 @@ public class ModelBasedComponentGenerator {
                     .append(".service.impl.")
                     .append(className)
                     .append("Impl").toString();
-            LOGGER.debug("createService class: {}", newBImpllassName);
+            //LOGGER.debug("createService class: {}", newBImpllassName);
             CreateClassCommand createServiceCmd = new CreateClassCommand(newBImpllassName, AbstractPersistableModelServiceImpl.class);
             createServiceCmd.setInterfaces(interfaces);
             createServiceCmd.setGenericTypes(genericTypes);
@@ -372,22 +372,29 @@ public class ModelBasedComponentGenerator {
             List<Class<?>> genericTypes = modelContext.getGenericTypes();
             LOGGER.debug("#createRepository: create repository: {}, genericTypes: {}", fullClassName, genericTypes);
 
+            Map<Class<?>, Map<String, Object>> typeAnnotations = null;
+            // TODO
+            if(false/*modelContext.isAuditable()*/) {
+                typeAnnotations = new HashMap<>();
+                typeAnnotations.put(JaversSpringDataAuditable.class, null);
+            }
+            //            @
             // create the new interface
             Class<?> newRepoInterface = JavassistUtil.createInterface(
                     fullClassName
                     , repoSUperInterface,
-                    genericTypes, modelContext.isAuditable());
+                    genericTypes, typeAnnotations);
 
             // register using the uncapitalised className as the key
             AbstractBeanDefinition def = BeanDefinitionBuilder.rootBeanDefinition(ModelRepositoryFactoryBean.class)
-                    .addPropertyValue("repositoryInterface", newRepoInterface).getBeanDefinition();
+                    .addConstructorArgValue(newRepoInterface).getBeanDefinition();
             registry.registerBeanDefinition(StringUtils.uncapitalize(newRepoInterface.getSimpleName()), def);
 
             // note the repo in context
             modelContext.setRepositoryDefinition(def);
             modelContext.setRepositoryType(newRepoInterface);
 
-        } else {
+        }/* else {
             LOGGER.debug("#createRepository: NOTE repository for model type: {}", modelContext.getModelType().getName());
             // mote the repository interface as a possible dependency to a
             // service
@@ -406,7 +413,7 @@ public class ModelBasedComponentGenerator {
             Assert.notNull(modelContext.getRepositoryType(),
                     "Found a repository (factory) bean definition for " + modelContext.getGeneratedClassNamePrefix()
                             + "  but was unable to figure out the repository type.");
-        }
+        }*/
     }
 
     /**
@@ -415,12 +422,13 @@ public class ModelBasedComponentGenerator {
      *
      */
     protected void findExistingBeans() {
-        for (String name : registry.getBeanDefinitionNames()) {
+        for (String beanDefName : registry.getBeanDefinitionNames()) {
 
-            BeanDefinition d = registry.getBeanDefinition(name);
+            BeanDefinition d = registry.getBeanDefinition(beanDefName);
 
             if (d instanceof AbstractBeanDefinition && d.getBeanClassName() != null) {
                 AbstractBeanDefinition def = (AbstractBeanDefinition) d;
+                //LOGGER.debug("#findExistingBeans BeanDefinition def: {}, class name: {}", def,  def.getBeanClassName());
                 Class<?> beanType = ClassUtils.getClass(def.getBeanClassName());
 
                 // if model controller
@@ -458,21 +466,49 @@ public class ModelBasedComponentGenerator {
                     }
                 }
                 // if repository
-                else if (isOfType(def, JpaRepositoryFactoryBean.class) || isOfType(def, JpaRepository.class)) {
-                    String repoName = (String) def.getPropertyValues().get("repositoryInterface");
-
-                    Class<?> repoInterface = ClassUtils.getClass(repoName);
-                    LOGGER.debug("#findExistingBeans found repository bean: {}, class: {}", repoName, repoInterface.getCanonicalName());
-                    if (JpaRepository.class.isAssignableFrom(repoInterface)) {
-                        LOGGER.debug("#findExistingBeans repository bean: {}, is assignable", repoName);
-                        Class<?> entity = GenericTypeResolver.resolveTypeArguments(repoInterface,
-                                JpaRepository.class)[0];
-                        ModelContext modelContext = entityModelContextsMap.get(entity);
-                        if (modelContext != null) {
-                            LOGGER.debug("#findExistingBeans repository bean: {}, added to modelContext", repoName);
-                            modelContext.setRepositoryDefinition(def);
-                        }
+                else if (isOfType(def, ModelRepositoryFactoryBean.class) || isOfType(def, JpaRepository.class)) {
+                    LOGGER.debug("#findExistingBeans, found bean: {}", beanDefName);
+                    Class<?> entity = null;
+                    Class<?> repoInterface = null;
+                    Object o = def.getPropertyValues().get("repositoryInterface");
+                    // spring-data-jpa 1.11.1.RELEASE does not provide a "repositoryInterface" property
+                    // since a constructor value is used
+                    if(o == null){
+                        ConstructorArgumentValues.ValueHolder holder = def.getConstructorArgumentValues().getArgumentValue(0, JpaRepository.class);
+                        o = holder.getValue();
                     }
+
+                    if( o instanceof String){
+                        repoInterface = ClassUtils.getClass(o.toString());
+                    }else if(o instanceof Class){
+                        repoInterface = (Class<?>) o;
+                    }
+
+                    // figure out entity type
+                    if (repoInterface != null && ModelRepository.class.isAssignableFrom(repoInterface)) {
+                        Class<?>[] resolveTypeArguments = GenericTypeResolver.resolveTypeArguments(repoInterface,
+                                ModelRepository.class);
+                        LOGGER.debug("#findExistingBeans repository bean: {}, is assignable, arguments: {}", repoInterface, resolveTypeArguments);
+                        entity = resolveTypeArguments[0];
+                        if(entity != null){
+                            ModelContext modelContext = entityModelContextsMap.get(entity);
+                            if (modelContext != null) {
+                                LOGGER.debug("#findExistingBeans repository bean: {}, added to modelContext", repoInterface);
+                                modelContext.setRepositoryDefinition(def);
+                                modelContext.setRepositoryType(repoInterface);
+                                LOGGER.debug("#findExistingBeans modelContext repository definition: {}, type: {}", modelContext.getRepositoryDefinition(), modelContext.getRepositoryType());
+
+                            }
+                        }
+                        else{
+                            throw new IllegalStateException("Unknown repository interface type encountered: '" + beanDefName + "' bean definition: " + def);
+                        }
+
+                    }
+                    else{
+                        LOGGER.warn("Unknown repository interface for bean name: '{}', definition: {}", beanDefName, def);
+                    }
+
                 }
 
             }

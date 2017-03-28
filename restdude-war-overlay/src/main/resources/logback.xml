@@ -27,14 +27,21 @@
         </encoder>
     </appender>
 
-    <!--logger name="com.restdude.test">
-        <level value="debug"/>
-    </logger-->
-    <!--logger name="com.restdude.domain.error">
+    <logger name="com.restdude.test">
         <level value="debug"/>
     </logger>
+    <logger name="springfox.documentation.schema.property.CachingModelPropertiesProvider">
+        <level value="error"/>
+    </logger>
+    <!--logger name="com.restdude.mdd.repository.BaseRepositoryImpl">
+        <level value="debug"/>
+    </logger-->
+    <!--logger name="org.springframework.data">
+        <level value="debug"/>
+    </logger-->
 
-    <logger name="com.restdude.domain.users.model.UserDTO">
+
+    <!--logger name="com.restdude.domain.users.model.UserDTO">
         <level value="debug"/>
     </logger>
     <logger name="com.restdude.util.audit.AuditorBean">

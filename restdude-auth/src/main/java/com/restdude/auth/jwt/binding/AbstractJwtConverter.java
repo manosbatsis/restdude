@@ -25,8 +25,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 
 /**
  * Base class for converting from/to JWT with {@link Autowired} instance of a {@link JwtSettings} bean
@@ -48,13 +51,13 @@ public class AbstractJwtConverter {
     protected String getCompact(Claims claims, JwtSettings settings, Integer minutes) {
         String s = null;
         // create, sign and compact KWT token
-        DateTime currentTime = new DateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
 
         JwtBuilder builder = Jwts.builder()
                 .setIssuer(settings.getTokenIssuer())
-                .setIssuedAt(currentTime.toDate())
+                .setIssuedAt(new Date(currentTime.toInstant(ZoneOffset.UTC).toEpochMilli()))
                 .setClaims(claims)
-                .setExpiration(currentTime.plusMinutes(minutes).toDate())
+                .setExpiration(new Date(currentTime.plusMinutes(minutes).toInstant(ZoneOffset.UTC).toEpochMilli()))
                 .signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey());
         s = builder.compact();
         return s;

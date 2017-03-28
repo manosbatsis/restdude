@@ -119,8 +119,8 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     @Autowired
     protected ModelInfoRegistry mmdelInfoRegistry;
 
-    @Autowired
-    protected EntityLinks entityLinks;
+    //@Autowired
+    //protected EntityLinks entityLinks;
 
     protected S service;
     protected Class<T> modelType;

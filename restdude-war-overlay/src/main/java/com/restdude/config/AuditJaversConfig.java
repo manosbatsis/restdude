@@ -30,6 +30,7 @@ import org.javers.repository.sql.DialectName;
 import org.javers.repository.sql.JaversSqlRepository;
 import org.javers.repository.sql.SqlRepositoryBuilder;
 import org.javers.spring.auditable.AuthorProvider;
+import org.javers.spring.auditable.CommitPropertiesProvider;
 import org.javers.spring.auditable.SpringSecurityAuthorProvider;
 import org.javers.spring.auditable.aspect.JaversAuditableAspect;
 import org.javers.spring.auditable.aspect.springdata.JaversSpringDataAuditableRepositoryAspect;
@@ -43,18 +44,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.inject.Named;
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Configuration
-//@ComponentScan(basePackages = "**.calipso")
-//@EnableTransactionManagement
-//@EnableAspectJAutoProxy
-//@EnableJpaRepositories(basePackages = "org.javers.spring.repository.jpa")
 public class AuditJaversConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuditJaversConfig.class);
@@ -71,11 +67,14 @@ public class AuditJaversConfig {
         dialectsMap.put("ORACLE", DialectName.ORACLE);
         dialectsMap.put("org.hibernate.dialect.MySQL5InnoDBDialect", DialectName.MYSQL);
     }
-
+/*
 
     @Autowired
     @Named("dataSource")
     DataSource dataSource;
+*/
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     @Value("${restdude.hibernate.dialect}")
     private String dialect;
@@ -95,6 +94,7 @@ public class AuditJaversConfig {
 
         return TransactionalJaversBuilder
                 .javers()
+                .withTxManager(transactionManager)
                 .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
                 .registerJaversRepository(sqlRepository)
                 .build();
@@ -102,24 +102,25 @@ public class AuditJaversConfig {
 
     /**
      * Enables auto-audit aspect for ordinary repositories.<br/>
-     * <p>
+     *
      * Use {@link org.javers.spring.annotation.JaversAuditable}
      * to mark data writing methods that you want to audit.
      */
     @Bean
     public JaversAuditableAspect javersAuditableAspect() {
-        return new JaversAuditableAspect(javers(), authorProvider()/*, commitPropertiesProvider()*/);
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
     }
 
     /**
      * Enables auto-audit aspect for Spring Data repositories. <br/>
-     * <p>
+     *
      * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
      * to annotate CrudRepositories you want to audit.
      */
     @Bean
     public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
-        return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider()/*, commitPropertiesProvider()*/);
+        return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
+                commitPropertiesProvider());
     }
 
     /**
@@ -133,19 +134,19 @@ public class AuditJaversConfig {
         return new UserDetailsIdgSecurityAuthorProvider();
     }
 
-//    /**
-//     * Optional for auto-audit aspect. <br/>
-//     * @see CommitPropertiesProvider
-//     */
-//    @Bean
-//    public CommitPropertiesProvider commitPropertiesProvider() {
-//        return new CommitPropertiesProvider() {
-//            @Override
-//            public Map<String, String> provide() {
-//                return ImmutableMap.of("key", "ok");
-//            }
-//        };
-//    }
+    /**
+     * Optional for auto-audit aspect. <br/>
+     * @see CommitPropertiesProvider
+     */
+    @Bean
+    public CommitPropertiesProvider commitPropertiesProvider() {
+        return null;/*new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provide() {
+                return ImmutableMap.of("key", "ok");
+            }
+        };*/
+    }
 
     /**
      * Integrates {@link JaversSqlRepository} with Spring {@link JpaTransactionManager}

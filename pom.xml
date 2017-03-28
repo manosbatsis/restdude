@@ -78,7 +78,7 @@
         We are using a snapshot because of
         https://jira.spring.io/browse/SPR-14520
          -->
-        <spring.version>4.3.6.RELEASE</spring.version>
+        <spring.version>4.3.7.RELEASE</spring.version>
         <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
         <spring.aspects.version>${spring.version}</spring.aspects.version>
         <spring-hateoas.version>0.23.0.RELEASE</spring-hateoas.version>
@@ -89,10 +89,12 @@
         </org.springframework.security.crypto-version>
 
         <!-- Spring Data -->
-        <spring-data-jpa-version>1.10.6.RELEASE</spring-data-jpa-version>
-        <spring-data-commons-version>1.12.6.RELEASE</spring-data-commons-version>
+        <spring-data-jpa-version>1.11.1.RELEASE</spring-data-jpa-version>
+        <spring-data-commons-version>1.13.1.RELEASE</spring-data-commons-version>
+        <!--
         <spring-data-elasticsearch-version>2.0.6.RELEASE</spring-data-elasticsearch-version>
-
+        <spring-data-jpa-entity-graph.version>1.11.02</spring-data-jpa-entity-graph.version>
+        -->
         <!-- Spring Social -->
         <spring-social.version>1.1.4.RELEASE</spring-social.version>
         <spring-social-facebook-version>2.0.3.RELEASE</spring-social-facebook-version>
@@ -109,8 +111,8 @@
         <swagger2markup.version>1.2.0</swagger2markup.version>
 
         <!-- javers auditing -->
-        <javers-core.version>2.3.0</javers-core.version>
-        <javers-spring.version>2.3.0</javers-spring.version>
+        <javers-core.version>3.0.5</javers-core.version>
+        <javers-spring.version>3.0.5</javers-spring.version>
         <javers-spring-data.version>1.1.0-RC1</javers-spring-data.version>
 
         <!-- Apache Commons -->
@@ -914,7 +916,12 @@
                 <artifactId>spring-data-commons</artifactId>
                 <version>${spring-data-commons-version}</version>
             </dependency>
-
+            <!-- entity graph -->
+            <dependency>
+                <groupId>com.cosium.spring.data</groupId>
+                <artifactId>spring-data-jpa-entity-graph</artifactId>
+                <version>${spring-data-jpa-entity-graph.version}</version>
+            </dependency>
             <!-- lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>

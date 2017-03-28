@@ -20,13 +20,13 @@
  */
 package com.restdude.domain.details.contact.service.impl;
 
+import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
+import com.restdude.domain.confirmationtoken.repository.ConfirmationTokenRepository;
+import com.restdude.domain.details.contact.model.ContactDetail;
+import com.restdude.domain.details.contact.service.ContactDetailsService;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
-import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
-import com.restdude.domain.confirmationtoken.repository.ConfirmationTokenReposirory;
-import com.restdude.domain.details.contact.model.ContactDetail;
-import com.restdude.domain.details.contact.service.ContactDetailsService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
-;
+
 
 public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
         extends AbstractPersistableModelServiceImpl<T, PK, R> {
@@ -44,7 +44,7 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<P
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractContactDetailServiceImpl.class);
 
     protected ContactDetailsService contactDetailsService;
-    protected ConfirmationTokenReposirory confirmationTokenReposirory;
+    protected ConfirmationTokenRepository confirmationTokenReposirory;
 
     @Autowired
     public void setContactDetailsService(ContactDetailsService contactDetailsService) {
@@ -52,7 +52,7 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<P
     }
 
     @Autowired
-    public void setConfirmationTokenReposirory(ConfirmationTokenReposirory confirmationTokenReposirory) {
+    public void setConfirmationTokenReposirory(ConfirmationTokenRepository confirmationTokenReposirory) {
         this.confirmationTokenReposirory = confirmationTokenReposirory;
     }
 

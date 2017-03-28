@@ -57,30 +57,55 @@ import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
 
-public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Serializable> extends SimpleJpaRepository<T, PK> implements ModelRepository<T, PK> {
+
+public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Serializable> extends SimpleJpaRepository<T, PK>
+		implements ModelRepository<T, PK>{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
-    private final boolean skipValidation;
+    private boolean skipValidation = false;
 
 	private EntityManager entityManager;
 	private Class<T> domainClass;
 	protected Validator validator;
 
-    /**
+
+	/**
+	 * Creates a new {@link SimpleJpaRepository} to manage objects of the given {@link JpaEntityInformation}.
+	 *
+	 * @param entityInformation must not be {@literal null}.
+	 * @param entityManager must not be {@literal null}.
+	 */
+	public BaseRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager, Validator validator) {
+		super(entityInformation, entityManager);
+		Assert.notNull(entityInformation);
+		Assert.notNull(entityManager);
+		this.entityManager = entityManager;
+		this.domainClass = entityInformation.getJavaType();
+		Configuration config = ConfigurationFactory.getConfiguration();
+		String[] validatorExcludeClasses = config.getStringArray(ConfigurationFactory.VALIDATOR_EXCLUDES_CLASSESS);
+		this.skipValidation = Arrays.asList(validatorExcludeClasses).contains(domainClass.getCanonicalName());
+		this.validator = validator;
+		LOGGER.debug("new BaseRepositoryImpl, domainClass: {}, validator: {}", this.domainClass, this.validator);
+
+
+	}
+
+    /*
 	 * Creates a new {@link SimpleJpaRepository} to manage objects of the given {@link JpaEntityInformation}.
 	 *
      * @param domainClass must not be {@literal null}.
      * @param entityManager must not be {@literal null}.
-	 */
-	public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager, Validator validator) {
+
+	public BaseRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
 		super(domainClass, entityManager);
-        Configuration config = ConfigurationFactory.getConfiguration();
+        //Configuration config = ConfigurationFactory.getConfiguration();
         this.entityManager = entityManager;
 		this.domainClass = domainClass;
-		this.validator = validator;
-        String[] validatorExcludeClasses = config.getStringArray(ConfigurationFactory.VALIDATOR_EXCLUDES_CLASSESS);
-        this.skipValidation = Arrays.asList(validatorExcludeClasses).contains(domainClass.getCanonicalName());
+		//this.validator = validator;
+        //tring[] validatorExcludeClasses = config.getStringArray(ConfigurationFactory.VALIDATOR_EXCLUDES_CLASSESS);
+        //this.skipValidation = Arrays.asList(validatorExcludeClasses).contains(domainClass.getCanonicalName());
     }
+	 */
 
 	/***
      * {@inheritDoc}
@@ -141,6 +166,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 	 */
 	@Override
 	public T patch(@P("resource") T delta) {
+		LOGGER.debug("patch, delta: {}", delta);
 		// load existing
         T persisted = this.getOne(delta.getPk());
         LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);

@@ -20,20 +20,21 @@
  */
 package com.restdude.config;
 
-import com.restdude.mdd.repository.BaseRepositoryImpl;
 import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
+import com.restdude.util.audit.AuditorBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+//import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
+
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"**.restdude", "**.calipso"},
-        repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class,
-        repositoryBaseClass = BaseRepositoryImpl.class
+@EnableJpaRepositories(basePackages = {"**.restdude"},
+        repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class
 )
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = AuditorBean.BEAN_NAME)
 public class PersistenceJPAConfig extends AbstractPersistenceJPAConfig {
 
 }

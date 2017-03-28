@@ -30,7 +30,6 @@ import io.jsonwebtoken.Jwts;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +55,6 @@ public class UserDetailsToJwtRefreshTokenConverter extends AbstractJwtConverter 
             throw new IllegalArgumentException("Cannot create JWT Token without username");
         }
 
-        DateTime currentTime = new DateTime();
         JwtSettings settings = this.getSettings();
 
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());

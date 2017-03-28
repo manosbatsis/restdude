@@ -33,6 +33,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.core.Relation;
@@ -43,6 +44,8 @@ import javax.persistence.*;
  * Class to represent a country, including ISO 3166-1 alpha-2 code, name,
  * languages, capital and currency, native name, calling codes.
  */
+
+@DiffIgnore
 @Entity
 @Table(name = "country")
 @Include(type = "country", rootLevel = true)

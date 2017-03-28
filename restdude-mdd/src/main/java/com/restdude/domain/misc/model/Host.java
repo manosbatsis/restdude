@@ -20,11 +20,11 @@
  */
 package com.restdude.domain.misc.model;
 
-import com.restdude.mdd.controller.AbstractPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.domain.geography.model.Country;
 import com.restdude.mdd.annotation.model.ModelResource;
-import org.javers.core.metamodel.annotation.ShallowReference;
+import com.restdude.mdd.controller.AbstractPersistableModelController;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,7 +33,7 @@ import java.util.Set;
 
 /**
  */
-@ShallowReference
+@DiffIgnore
 @ModelResource(pathFragment = "hosts", controllerSuperClass = AbstractPersistableModelController.class, apiName = "Hosts", apiDescription = "Operations about hosts")
 @Entity
 @Table(name = "host")

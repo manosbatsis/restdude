@@ -26,12 +26,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
 
+@DiffIgnore
 @Entity
 @Table(name = "continent")
 @AttributeOverrides({

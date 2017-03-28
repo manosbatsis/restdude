@@ -201,8 +201,11 @@ public class AbstractPersistenceJPAConfig {
         return new HibernateExceptionTranslator();
     }
 
-    @Bean
+    @Bean(AuditorBean.BEAN_NAME)
     public AuditorAware<User> auditorProvider() {
         return new AuditorBean();
     }
+
+
+
 }

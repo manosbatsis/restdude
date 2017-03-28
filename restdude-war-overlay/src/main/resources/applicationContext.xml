@@ -11,7 +11,6 @@
         http://www.springframework.org/schema/util      http://www.springframework.org/schema/util/spring-util-4.3.xsd
         http://www.springframework.org/schema/task      http://www.springframework.org/schema/task/spring-task-4.3.xsd
         http://www.springframework.org/schema/mvc       http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
-
     <!-- read external properties config -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>

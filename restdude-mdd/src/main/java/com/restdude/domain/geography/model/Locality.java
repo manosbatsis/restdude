@@ -24,6 +24,7 @@ import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ import javax.persistence.Table;
 /**
  * Class to represent  an incorporated city or town political entity
  */
+@DiffIgnore
 @Entity
 @Table(name = "geo_locality")
 @ModelResource(pathFragment = "localities", apiName = "Localities", apiDescription = "Locality operations")
@@ -41,20 +43,6 @@ public class Locality extends AbstractFormalRegionModel<Country, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Locality.class);
 
-
-    public static String SERVICE_PRE_AUTHORIZE_SEARCH = "hasRole('ROLE_USER')";
-    public static String SERVICE_PRE_AUTHORIZE_CREATE = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_UPDATE = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_PATCH = "hasRole('ROLE_ADMIN')";
-    public static String SERVICE_PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_USER')";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE = "denyAll";
-
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_BY_ID = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_COUNT = "denyAll";
 
     public Locality() {
         super();

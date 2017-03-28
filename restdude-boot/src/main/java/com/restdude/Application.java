@@ -21,7 +21,6 @@
 package com.restdude;
 
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.repository.BaseRepositoryImpl;
 import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
 import com.restdude.util.audit.AuditorBean;
 import org.eclipse.jetty.server.Request;
@@ -58,8 +57,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EntityScan({"**.restdude"})
 @EnableJpaRepositories(basePackages = {"**.restdude"},
-        repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class,
-        repositoryBaseClass = BaseRepositoryImpl.class
+        repositoryFactoryBeanClass = ModelRepositoryFactoryBean.class
 )
 @EnableJpaAuditing(auditorAwareRef = AuditorBean.BEAN_NAME)
 @EnableScheduling
@@ -72,6 +70,7 @@ public class Application implements EmbeddedServletContainerCustomizer {
         AnnotationConfigEmbeddedWebApplicationContext ctx = (AnnotationConfigEmbeddedWebApplicationContext) SpringApplication.run(Application.class, args);
         LOGGER.debug("main, context: {}", ctx);
     }
+
 
     @Bean(AuditorBean.BEAN_NAME)
     public AuditorAware<User> auditorProvider() {

@@ -18,35 +18,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.geography.model;
+package com.restdude.domain.confirmationtoken.repository;
 
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
-import org.javers.core.metamodel.annotation.DiffIgnore;
+import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
+import com.restdude.mdd.repository.ModelRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+public interface ConfirmationTokenRepository extends ModelRepository<ConfirmationToken, String> {
 
-/**
- * Represents regions within a country.
- */
-@DiffIgnore
-@Entity
-public class LocalRegion<P extends LocalRegion>
-        extends AbstractSystemUuidPersistableModel {
+    @Query("select token from ConfirmationToken token where token.tokenValue = ?1 and token.targetId = ?2")
+    ConfirmationToken findByTokenValueAndRTargetId(String tokenValue, String targetId);
 
-	private static final long serialVersionUID = 1735385884991197359L;
+    @Query("select token from ConfirmationToken token where token.targetId = ?1")
+    ConfirmationToken findByTargetId(String targetId);
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "country_id", referencedColumnName = "pk")
-    private Country country;
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
-	}
 }

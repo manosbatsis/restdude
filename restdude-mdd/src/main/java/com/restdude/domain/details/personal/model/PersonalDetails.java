@@ -22,22 +22,23 @@ package com.restdude.domain.details.personal.model;
 
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.model.AbstractPersistableModel;
 import com.restdude.mdd.uischema.annotation.FormSchemaEntry;
 import com.restdude.mdd.uischema.annotation.FormSchemas;
 import io.swagger.annotations.ApiModel;
-import org.javers.core.metamodel.annotation.ShallowReference;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@ShallowReference
+//@EntityListeners(AuditingEntityListener.class)
+@DiffIgnore
 @Entity
 @ApiModel(description = "PersonalDetails")
 @Table(name = "details_personal")
 @Inheritance(strategy = InheritanceType.JOINED)
 @ModelResource(pathFragment = "personalDetails", apiName = "PersonalDetails", apiDescription = "Personal information operations")
-public class PersonalDetails implements PersistableModel<String> {
+public class PersonalDetails extends AbstractPersistableModel<String> {
 
     @Id
     private String pk;

@@ -24,6 +24,7 @@ import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,8 @@ import javax.persistence.Table;
 /**
  * Class to represent  a postal code
  */
+
+@DiffIgnore
 @Entity
 @Table(name = "geo_pocode")
 @ModelResource(pathFragment = "postalCodes", apiName = "PostalCodes", apiDescription = "Postal code operations")

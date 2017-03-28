@@ -33,6 +33,7 @@ import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ import java.time.LocalDateTime;
  * Base impl class for generated content
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractGeneratedContentModel extends AbstractSystemUuidPersistableModel implements GeneratedContentModel<String, User> {
 
     @CreatedDate
