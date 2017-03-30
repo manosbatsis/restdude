@@ -26,7 +26,11 @@ import com.restdude.mdd.controller.AbstractPersistableModelController;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping(value = "/api/rest/countries")
 @Api(tags = "Countries", description = "Operations about countries")
 public class CountryController extends AbstractPersistableModelController<Country, String, CountryService> {
 

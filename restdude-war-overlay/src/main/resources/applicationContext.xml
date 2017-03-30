@@ -63,7 +63,7 @@
     <bean id="handlerMapping"
           class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
 
-    <mvc:default-servlet-handler/>
+    <mvc:default-servlet-handler />
 
 
     <!-- needed by javers -->
@@ -166,5 +166,8 @@
     <!--         <context:annotation-config /> -->
     <!--         <bean name="endpointAutoConfiguration" class="org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration"/> -->
     <!--     </beans> -->
-
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="defaultContentType" value="application/json" />
+    </bean>
 </beans>

@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.mdd.model.Roles;
 import com.restdude.mdd.model.UserDetails;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -94,6 +96,10 @@ public class BasicUserDetailsImpl implements UserDetails {
 
 
 	@JsonProperty(value = "roles", access = JsonProperty.Access.READ_ONLY)
+	@Getter @Setter
+	private List<String> roles;
+
+	@JsonIgnore
 	private List<? extends GrantedAuthority> authorities;
 	private Map<String, String> metadata;
 
@@ -555,6 +561,7 @@ public class BasicUserDetailsImpl implements UserDetails {
 	public void setAuthorities(
 			List<? extends GrantedAuthority> authorities) {
 		this.authorities = authorities;
+
 	}
 
 	// SocialUserDetails

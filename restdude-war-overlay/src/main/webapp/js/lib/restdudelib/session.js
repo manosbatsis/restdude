@@ -29,11 +29,15 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'backbone'
             this.userDetails = Restdude.model.UserDetailsModel.create();
         },
         getRoles: function () {
-            return this.isAuthenticated() ? this.userDetails.get("roles") : [];
+            var roles = this.isAuthenticated() ? this.userDetails.get("roles") : [];
+            console.log("getRoles: " + roles);
+            return roles;
         },
         // Returns true if the user is authenticated.
         isAuthenticated: function () {
-            return this.userDetails && this.userDetails.get && this.userDetails.get(Restdude.config.idAttribute) && this.userDetails.get("active");
+            var is = this.userDetails && this.userDetails.get && this.userDetails.get(Restdude.config.idAttribute) && this.userDetails.get("active");
+            console.log("isAuthenticated: " + is);
+            return is;
         },
         ensureLoggedIn: function () {
             if (!this.isAuthenticated()) {

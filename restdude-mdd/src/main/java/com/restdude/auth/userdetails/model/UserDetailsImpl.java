@@ -72,6 +72,10 @@ public class UserDetailsImpl extends BasicUserDetailsImpl {
 						.map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
 						.collect(Collectors.toList());
 				details.setAuthorities(authorities);
+				List<String> roles = authorities.stream()
+						.map(role -> role.getAuthority())
+						.collect(Collectors.toList());
+				details.setRoles(roles);
 			}
 
 			

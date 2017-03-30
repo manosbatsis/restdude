@@ -52,7 +52,9 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment'],
             for (var i = 0; i < arguments.length - 1; i++) {
                 inputRoles.push(arguments[i]);
             }
-            return Restdude.isUserInAnyRole(inputRoles) ? options.fn(this) : options.inverse(this);
+            var is = Restdude.isUserInAnyRole(inputRoles);
+            console.log("ifUserInRole: " + is);
+            return is ? options.fn(this) : options.inverse(this);
         });
 
         /**

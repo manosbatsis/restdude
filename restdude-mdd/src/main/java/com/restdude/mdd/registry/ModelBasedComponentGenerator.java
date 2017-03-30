@@ -234,13 +234,12 @@ public class ModelBasedComponentGenerator {
             String pattern = null;
             pattern = getRequestMapping(modelInfo);
             modelInfo.setRequestMapping(pattern);
-            //LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
+            LOGGER.debug("getMappedModelControllerClass adding pattern: {}", pattern);
 
             Map<String, Object> requestMappingMembers = new HashMap<>();
             requestMappingMembers.put("value", new String[]{pattern});
             // add JSON and HAL defaults
             String[] defaultMimes = {MimeTypeUtils.APPLICATION_JSON_VALUE, Mimes.MIME_APPLICATIOM_HAL_PLUS_JSON_VALUE};
-            requestMappingMembers.put("consumes", defaultMimes);
             requestMappingMembers.put("produces", defaultMimes);
             createControllerCmd.addTypeAnnotation(RequestMapping.class, requestMappingMembers);
 

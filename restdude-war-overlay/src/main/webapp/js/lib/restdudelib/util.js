@@ -642,15 +642,19 @@ define(
             if (!_.isArray(inputRoles)) {
                 inputRoles = [inputRoles];
             }
+            console.log("isUserInAnyRole, inputRoles: ");
+            console.log(inputRoles);
             // only process if the user is authenticated
-            if (Restdude.session.userDetails) {
+            if (Restdude.session.isAuthenticated()) {
                 var ownedRoles = Restdude.session.getRoles();
+                console.log("isUserInAnyRole, ownedRoles: ");
+                console.log(ownedRoles);
                 var inputRole;
                 for (var j = 0; j < inputRoles.length && hasRole == false; j++) {
                     inputRole = inputRoles[j];
                     for (var k = 0; k < ownedRoles.length && hasRole == false; k++) {
                         var ownedRole = ownedRoles[k];
-                        if (inputRole == ownedRole.name) {
+                        if (inputRole == ownedRole) {
                             hasRole = true;
                         }
                     }

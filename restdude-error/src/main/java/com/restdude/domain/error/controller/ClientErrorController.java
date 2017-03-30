@@ -24,14 +24,13 @@ import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.service.ClientErrorService;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
+@RestController
+@RequestMapping(value = "/api/rest/"+ClientError.API_PATH)
 public class ClientErrorController extends AbstractPersistableModelController<ClientError, String, ClientErrorService> {
 
     /**
