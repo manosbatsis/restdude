@@ -208,7 +208,7 @@ public abstract class DataInitializer {
             userControllerIt = userService.createAsConfirmed(userControllerIt);
             users.add(userControllerIt);
 
-            int usersMax = 10;
+            int usersMax = 5;
             int usersCreated = 0;
             while (usersCreated < usersMax) {
                 for (String fullName : this.getTenNames()) {
