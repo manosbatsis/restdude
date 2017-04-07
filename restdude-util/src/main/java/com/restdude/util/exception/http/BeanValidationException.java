@@ -21,6 +21,8 @@
 package com.restdude.util.exception.http;
 
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.validation.ConstraintViolation;
 import java.util.Set;
 
@@ -93,5 +95,15 @@ public class BeanValidationException extends BadRequestException implements Cons
 
     public void setModelType(String modelType) {
         this.modelType = modelType;
+    }
+
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .appendSuper(super.toString())
+                .append("modelType", this.getModelType())
+                .append("constraintViolations", this.getConstraintViolations())
+                .toString();
     }
 }

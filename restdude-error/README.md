@@ -15,7 +15,7 @@ Property     | Type   | Description
 createdDate  | LocalDateTime | Date created
 lastModifiedDate  | LocalDateTime | Date last modified
 createdBy | User | Created by
-message   | String | Message for users
+title   | String | Message for users
 remoteAddress  | String | The address the request originated from
 user | User | User in context
 userAgent    | UserAgent | A record corresponding to the UA string provided with the request

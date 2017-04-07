@@ -20,8 +20,7 @@
  */
 package com.restdude.mdd.service;
 
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.mdd.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -38,7 +37,7 @@ import java.util.Set;
  * @param <PK>
  * @param <R>
  */
-public abstract class AbstractModelServiceImpl<T extends PersistableModel<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+public abstract class AbstractModelServiceImpl<T extends Model<PK>, PK extends Serializable>
         extends AbstractBaseServiceImpl
         implements ModelService<T, PK>{
 

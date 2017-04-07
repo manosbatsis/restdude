@@ -224,6 +224,9 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             this.userRegistrationCodeRepository.patch(code);
         }
 
+        // force any errors to occur sooner rather than later
+        this.repository.flush();
+
         return resource;
     }
 

@@ -26,7 +26,9 @@ import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractModelServiceBackedController;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.repository.ModelRepositoryFactoryBean;
+import com.restdude.mdd.service.AbstractModelServiceImpl;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.mdd.service.ModelService;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.util.CreateClassCommand;
 import com.restdude.mdd.util.JavassistUtil;
@@ -126,9 +128,12 @@ public class ModelBasedComponentGenerator {
 
             // create repository, service, and controller components
             if (model.isAnnotationPresent(ModelResource.class) || model.isAnnotationPresent(ModelRelatedResource.class)) {
-                createRepository(modelContext);
-                createService(modelContext);
-                createController(modelContext);
+                // TODO
+                if(modelContext.getModelInfo().isJpaEntity()){
+                    createRepository(modelContext);
+                    createService(modelContext);
+                    createController(modelContext);
+                }
             }
         }
 
@@ -309,20 +314,26 @@ public class ModelBasedComponentGenerator {
 
             // extend the base service interface
             Class<?> newServiceInterface = JavassistUtil.createInterface(fullClassName,
-                    PersistableModelService.class, genericTypes);
+                    modelContext.getModelInfo().isJpaEntity() ? PersistableModelService.class : ModelService.class,
+                    genericTypes);
             ArrayList<Class<?>> interfaces = new ArrayList<Class<?>>(1);
             interfaces.add(newServiceInterface);
 
             // create a service implementation bean
+
+            Class<?> serviceImplSuper = modelContext.getModelInfo().isJpaEntity() ? AbstractPersistableModelServiceImpl.class : AbstractModelServiceImpl.class;
             String newBImpllassName = new StringBuffer(modelContext.getBeansBasePackage())
                     .append(".service.impl.")
                     .append(className)
                     .append("Impl").toString();
             //LOGGER.debug("createService class: {}", newBImpllassName);
-            CreateClassCommand createServiceCmd = new CreateClassCommand(newBImpllassName, AbstractPersistableModelServiceImpl.class);
+            CreateClassCommand createServiceCmd = new CreateClassCommand(newBImpllassName, serviceImplSuper);
             createServiceCmd.setInterfaces(interfaces);
             createServiceCmd.setGenericTypes(genericTypes);
-            createServiceCmd.addGenericType(modelContext.getRepositoryType());
+            // add repo type param if entity
+            if(modelContext.getModelInfo().isJpaEntity()) {
+                createServiceCmd.addGenericType(modelContext.getRepositoryType());
+            }
             HashMap<String, Object> named = new HashMap<String, Object>();
             named.put("pathFragment", beanName);
             createServiceCmd.addTypeAnnotation(Named.class, named);
@@ -359,7 +370,7 @@ public class ModelBasedComponentGenerator {
 
     protected void createRepository(ModelContext modelContext)
             throws NotFoundException, CannotCompileException {
-        if (modelContext.getRepositoryDefinition() == null) {
+        if (modelContext.getRepositoryDefinition() == null && modelContext.getModelInfo().isJpaEntity()) {
             Class<?> repoSUperInterface = ModelRepository.class;
 
             String className = modelContext.getGeneratedClassNamePrefix() + "Repository";

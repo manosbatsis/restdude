@@ -189,9 +189,11 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 fields: {},
                 useCases: {
                     view: {
-                        view: Restdude.view.JsonSchemaLayout,
+                        //view: Restdude.view.JsonSchemaLayout,
+                        view: Restdude.view.BrowseLayout,
                         viewOptions: {
                             closeModalOnSync: true,
+                            formTemplatesKey: "horizontal",
                         }
                     },
                     create: {
@@ -281,10 +283,11 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     });
                     return fieldNames;
                 },
+                typeaheadQuery: "?name=%25wildcard%25",
                 getTypeaheadSource: function (options) {
                     var _this = this;
                     var config = {
-                        query: "?name=%25wildcard%25",
+                        query: _this.typeaheadQuery,
                         wildcard: "wildcard",
                         pathFragment: _this.getPathFragment(),
                     };
@@ -296,7 +299,11 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                         var bloodhound = new Bloodhound({
                             remote: {
                                 url: sourceUrl,
-                                wildcard: config.wildcard,
+                                // replace multiple occurences of wildcard
+                                prepare: function(query, settings) {
+                                    settings.url = settings.url.split(config.wildcard).join(encodeURIComponent(query));
+                                    return settings;
+                                },
                                 transform: function (response) {
                                     return response.content;
                                 }

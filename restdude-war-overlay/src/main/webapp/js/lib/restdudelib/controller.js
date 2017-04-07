@@ -122,7 +122,7 @@ define(
                             var skipDefaultSearch = model.skipDefaultSearch && model.wrappedCollection && model.wrappedCollection.hasCriteria();
 
                             var renderFetchable = function () {
-                                _self.showView(useCaseContext.createView({regionName: "/", regionPath: "/"}));
+                                _self.showView(useCaseContext.createView({regionName: "", regionPath: ""}));
                             };
                             var fetchable = useCaseContext.getFetchable();
                             if ((model.get(Restdude.config.idAttribute) || fetchable.length == 0 ) && model.getTypeName() != "Restdude.model.UserDetailsModel"/*

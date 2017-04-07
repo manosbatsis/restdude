@@ -21,13 +21,20 @@
 package com.restdude.mdd.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Base interface for errors
  */
 public interface ErrorModel<PK extends Serializable> extends PersistableModel<PK> {
 
-    String getMessage();
+    String getTitle();
 
-    void setMessage(String message);
+    void setTitle(String title);
+
+
+    LocalDateTime getCreatedDate();
+
+    LocalDateTime getLastModifiedDate();
+
 }

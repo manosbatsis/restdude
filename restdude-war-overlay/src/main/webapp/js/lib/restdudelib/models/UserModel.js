@@ -39,6 +39,8 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     rolesIncluded: ["ROLE_ADMIN", "ROLE_SITE_OPERATOR"],
                     rolesExcluded: null,
                 },
+
+                typeaheadQuery: "?filter=username==%25wildcard%25,firstName==%25wildcard%25,lastName==%25wildcard%25",
                 useCases: {
                     view: {
                         view: Restdude.view.UserProfileLayout,

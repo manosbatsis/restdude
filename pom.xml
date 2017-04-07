@@ -116,6 +116,7 @@
         <javers-spring-data.version>1.1.0-RC1</javers-spring-data.version>
 
         <!-- Apache Commons -->
+        <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-configuration.version>1.9</commons-configuration.version>
         <commons-beanutils.version>1.9.1</commons-beanutils.version>
@@ -1048,6 +1049,11 @@
             </dependency>
 
             <!-- COMMONS -->
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>

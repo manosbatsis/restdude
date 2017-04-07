@@ -20,9 +20,10 @@
  */
 package com.restdude.domain.error.model;
 
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
 import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
-import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.TopicModel;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -59,7 +60,7 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     private String name;
 
     @ApiModelProperty(value = "The root cause message.")
-    @Column(name = "root_cause_msg", length = PersistableError.MAX_MESSAGE_LENGTH)
+    @Column(name = "root_cause_msg", length = TopicModel.MAX_MESSAGE_LENGTH)
     private String rootCauseMessage;
 
     @ApiModelProperty(value = "First occurrence date", required = true)
@@ -76,7 +77,7 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
 
     @NotNull
     @ApiModelProperty(value = "The actual stacktrace.", required = true)
-    @Column(length = PersistableError.MAX_MSTACKTRACE_LENGTH, nullable = false)
+    @Column(length = TopicModel.MAX_MSTACKTRACE_LENGTH, nullable = false)
     private String stacktrace = "None";
 
     public ErrorLog() {
@@ -109,13 +110,13 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
 
         // trim  message if needed
         if (StringUtils.isNotEmpty(this.rootCauseMessage)
-                && this.rootCauseMessage.length() > PersistableError.MAX_MESSAGE_LENGTH) {
-            this.rootCauseMessage = StringUtils.abbreviate(this.rootCauseMessage, PersistableError.MAX_MESSAGE_LENGTH);
+                && this.rootCauseMessage.length() > TopicModel.MAX_MESSAGE_LENGTH) {
+            this.rootCauseMessage = StringUtils.abbreviate(this.rootCauseMessage, TopicModel.MAX_MESSAGE_LENGTH);
         }
 
         // trim  stacktrace if needed
-        if (StringUtils.isNotEmpty(this.stacktrace) && this.stacktrace.length() > PersistableError.MAX_MSTACKTRACE_LENGTH) {
-            this.stacktrace = StringUtils.abbreviate(this.stacktrace, PersistableError.MAX_MSTACKTRACE_LENGTH);
+        if (StringUtils.isNotEmpty(this.stacktrace) && this.stacktrace.length() > TopicModel.MAX_MSTACKTRACE_LENGTH) {
+            this.stacktrace = StringUtils.abbreviate(this.stacktrace, TopicModel.MAX_MSTACKTRACE_LENGTH);
         }
     }
 

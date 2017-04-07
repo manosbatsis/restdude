@@ -101,7 +101,7 @@ public class SystemError extends BaseError {
 
         // set default message if appropriate
         if (StringUtils.isBlank(message)) {
-            this.setMessage(HttpStatus.valueOf(httpStatusCode).getReasonPhrase());
+            this.setTitle(HttpStatus.valueOf(httpStatusCode).getReasonPhrase());
         }
 
         // add error log
@@ -206,6 +206,8 @@ public class SystemError extends BaseError {
         private User user;
 
         private String requestMethod;
+        private String remoteAddress;
+
         private String requestUrl;
         private Integer httpStatusCode;
         private Set<ConstraintViolationEntry> validationErrors;
@@ -224,6 +226,10 @@ public class SystemError extends BaseError {
 
         public Builder requestMethod(String requestMethod) {
             this.requestMethod = requestMethod;
+            return this;
+        }
+        public Builder remoteAddress(String remoteAddress) {
+            this.remoteAddress = remoteAddress;
             return this;
         }
 
@@ -259,11 +265,12 @@ public class SystemError extends BaseError {
 
     private SystemError(Builder builder) {
 
-        this.setMessage(builder.message);
+        this.setTitle(builder.message);
         this.setCreatedBy(builder.user);
 
         this.requestMethod = builder.requestMethod;
         this.requestUrl = builder.requestUrl;
+        this.setRemoteAddress(builder.remoteAddress);
         this.httpStatusCode = builder.httpStatusCode;
         this.validationErrors = builder.validationErrors;
         this.setErrorLog(builder.errorLog);

@@ -123,37 +123,85 @@ define(
                 });
             }
         });
-        Restdude.components.backgrid.RelatedModelCell = Backgrid.UriCell.extend(
+
+
+        Restdude.components.backgrid.ViewRowCell = Backgrid.UriCell.extend(
             /** @lends Restdude.components.backgrid.RelatedModelCell.prototype */
             {
-                className: "related-model-cell",
+                className: "view-row-model-cell",
                 target: "",
                 pathFragment: null,
                 useCase: "view",
                 initialize: function (options) {
                     Backgrid.UriCell.prototype.initialize.apply(this, arguments);
-                    this.pathFragment = options.column.get("pathFragment");
+                    this.pathFragment = options.column.get("pathFragment") || this.model.getPathFragment();
                     if (!this.pathFragment) {
                         throw "Required option missing: pathFragment";
                     }
                 },
                 render: function () {
                     this.$el.empty();
-                    var rawValue = this.model.get(this.column.get("name")) || "";
-                    var text = rawValue.name || rawValue.title || rawValue;
-                    this.$el.append($("<a>", {
-                        tabIndex: -1,
-                        href: "/useCases/" + this.pathFragment + "/" + (rawValue[Restdude.config.idAttribute] || rawValue) + "/" + this.useCase,
-                        title: this.title || rawValue.description || text,
-                        target: this.target
-                    }).text(text));
+                    // TODO
+                    var modelId = Restdude.getObjectProperty(this.model, "id")
+                        || Restdude.getObjectProperty(this.model, "pk");
+                    if(modelId){
+
+                        var text =  Restdude.getObjectProperty(this.model, "name")
+                            || Restdude.getObjectProperty(this.model, "title")
+                            || modelId;
+                        this.$el.append($("<a>", {
+                            "class" : "view-row-model-cell-link",
+                            tabIndex: -1,
+                            href: "/useCases/" + this.pathFragment + "/" + modelId + "/" + this.useCase,
+                            title: this.title || text,
+                            target: this.target,
+                            "data-id" : modelId,
+                            "data-fragment" : this.pathFragment,
+                        }).text(text));
+
+                        this.delegateEvents();
+                    }
+
                     return this;
                 }
             });
 
+        Restdude.components.backgrid.RelatedModelCell = Backgrid.UriCell.extend(
+        /** @lends Restdude.components.backgrid.RelatedModelCell.prototype */
+        {
+            className: "related-model-cell",
+            target: "",
+            pathFragment: null,
+            useCase: "view",
+            initialize: function (options) {
+                Backgrid.UriCell.prototype.initialize.apply(this, arguments);
+                this.pathFragment = options.column.get("pathFragment");
+                if (!this.pathFragment) {
+                    throw "Required option missing: pathFragment";
+                }
+            },
+            render: function () {
+                this.$el.empty();
+                var rawValue = this.model.get(this.column.get("name"));
+                if(rawValue){
+
+                    var isSimple = _.isString(rawValue) || _.isNumber(rawValue);
+                    var text = isSimple ? '<i class="fa fa-info-circle" aria-hidden="true"></i>' : (rawValue.name || rawValue.title || rawValue);
+                    this.$el.append($("<a>", {
+                        tabIndex: -1,
+                        href: "/useCases/" + this.pathFragment + "/" + (isSimple ? rawValue : (rawValue[Restdude.config.idAttribute] || rawValue)) + "/" + this.useCase,
+                        title: this.title || isSimple ? rawValue : (rawValue.description || text),
+                        target: this.target
+                    }).html(text));
+                }
+
+                return this;
+            }
+        });
+
 
         Restdude.components.backgrid.TextCell = Backgrid.StringCell.extend(
-            /** @lends Restdude.components.backgrid.ViewRowCell.prototype */
+            /** @lends Restdude.components.backgrid.TextCell.prototype */
             {
                 className: "text-cell",
                 tooltipStarted: false,
@@ -187,33 +235,6 @@ define(
                         }
                     }
                 },
-            });
-        Restdude.components.backgrid.ViewRowCell = Backgrid.StringCell.extend(
-            /** @lends Restdude.components.backgrid.ViewRowCell.prototype */
-            {
-                className: "view-row-cell",
-                initialize: function (options) {
-                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.viewRowEvent = "layout:viewModel";
-                },
-                events: {
-                    "click": "viewRow"
-                },
-                viewRow: function (e) {
-                    Restdude.stopEvent(e);
-                    Restdude.vent.trigger(this.viewRowEvent, this.model);
-                },
-                render: function () {
-                    this.$el.empty();
-                    var model = this.model;
-                    var formattedValue = this.formatter.fromRaw(model.get(this.column.get("name")), model);
-                    this.$el.append($("<a>", {
-                        tabIndex: -1,
-                        title: formattedValue
-                    }).text(formattedValue));
-                    this.delegateEvents();
-                    return this;
-                }
             });
 
         //
@@ -264,6 +285,38 @@ define(
                     var url = Restdude.getBaseUrl() + "/api/rest/" + this.model.getPathFragment() + "/" + this.model.get(Restdude.config.idAttribute) + "/csv";
                     this.$el.html("<a class='btn btn-xs btn-link' href='" + url + "'title='Export as Spreadsheet'><i class='fa fa-download'></i></a>");
                     //this.delegateEvents();
+                    return this;
+                }
+            });
+
+
+        Restdude.components.backgrid.ViewRowInModaLCell = Backgrid.StringCell.extend(
+            /** @lends Restdude.components.backgrid.ViewRowInModaLCell.prototype */
+            {
+                className: "view-row-cell",
+                initialize: function (options) {
+                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
+                    this.viewRowEvent = "layout:viewModel";
+                },
+                events: {
+                    "click": "viewRow"
+                },
+                viewRow: function (e) {
+                    Restdude.stopEvent(e);
+                    var useCaseContext = this.model.getUseCaseContext({
+                        key: "view"
+                    });
+                    Restdude.vent.trigger("modal:showUseCaseContext", useCaseContext);
+                },
+                render: function () {
+                    this.$el.empty();
+                    var model = this.model;
+                    var formattedValue = this.formatter.fromRaw(model.get(this.column.get("name")), model);
+                    this.$el.append($("<a>", {
+                        tabIndex: -1,
+                        title: formattedValue
+                    }).text(formattedValue));
+                    this.delegateEvents();
                     return this;
                 }
             });

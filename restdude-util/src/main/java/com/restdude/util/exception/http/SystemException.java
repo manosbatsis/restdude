@@ -20,6 +20,7 @@
  */
 package com.restdude.util.exception.http;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.util.Map;
@@ -112,5 +113,14 @@ public abstract class SystemException extends RuntimeException {
 
     public Map<String, String> getResponseHeaders() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("message", this.getMessage())
+                .append("status", this.getStatus())
+                .append("cause", this.getCause())
+                .toString();
     }
 }

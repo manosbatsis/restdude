@@ -177,8 +177,8 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .then().log().all().assertThat()
                 // test assertions
                 .statusCode(200)
-                .body("content[0].message", notNullValue())
-                .body("content[1].message", notNullValue())
+                .body("content[0].title", notNullValue())
+                .body("content[1].title", notNullValue())
                 .extract().as(JsonNode.class);
     }
 
@@ -195,8 +195,8 @@ public class RestErrorsIT extends AbstractControllerIT {
             log.setRootCauseMessage("Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC");
             log.setStacktrace("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur");
 
-            error.setMessage("Client Error #" + i + "!");
-            error.setDescription(description);
+            error.setTitle("Client Error #" + i + "!");
+            error.setDetail(description);
             error.setErrorLog(log);
 
             error = given().spec(adminRequestSpec)
@@ -206,8 +206,8 @@ public class RestErrorsIT extends AbstractControllerIT {
                     .then().log().all().assertThat()
                     // test assertions
                     .statusCode(201)
-                    .body("message", notNullValue())
-                    .body("description", equalTo(description))
+                    .body("title", notNullValue())
+                    .body("detail", equalTo(description))
                     .body("createdBy.pk", equalTo(adminLoginContext.userId))
                     .extract().as(ClientError.class);
 

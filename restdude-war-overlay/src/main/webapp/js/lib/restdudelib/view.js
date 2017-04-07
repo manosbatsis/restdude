@@ -45,6 +45,21 @@ define(
                     "click .sidebar-close": "sidebarClose",
                     "click .aside-toggle": "asideToggle",
                 },
+
+                initialize: function (options) {
+                    Restdude.view.View.prototype.initialize.apply(this, arguments);
+
+                    console.log("AppRootView.initialize, options: ");
+                    console.log(options);
+                    console.log("AppRootView.initialize, events: ");
+                    console.log(this.events);
+                    console.log("AppRootView.initialize, triggers: ");
+                    console.log(this.triggers);
+                },
+                onChildviewLayoutReplace: function (options) {
+                    console.log(this.getTypeName() + ".onChildviewLayoutReplace, arguments: ");
+                    console.log(arguments);
+                },
                 resizeBroadcast: function () {
 
                     var timesRun = 0;
@@ -107,9 +122,9 @@ define(
         Restdude.view.UseCaseLayout = Restdude.view.View.extend({
             // regionName : viewType
             regionViewTypes: {},
-            childViewEvents: {
-                "model:sync": "onModelSync"
-            },
+            //childViewEvents: {
+            //    "model:sync": "onModelSync",
+            //},
             events: {
                 "click  .layout-showCreateFormModal": "showCreateFormModal"
             },
@@ -133,33 +148,32 @@ define(
                         // spawn child usecase
                         childUseCase = _this.useCaseContext.getChildContext(regionName, ViewType);
                         // display a preconfigured view that matches the region and usecase config
-                        var viewOptions = _.extend(this.childViewOptions, {
-                            regionName: regionName,
-                            regionPath: _this.regionPath + "/" + regionName
-                        });
-                        _this.showChildView(regionName, childUseCase.createView({viewOptions: viewOptions}));
+                        _this.showChildView(regionName, childUseCase.createView(this.childViewOptions));
                     }
                 });
             },
-            showChildView: function (regionName, view) {
-                var _this = this;
 
-                // bind to view events according to childViewEvents hash
-                _.each(this.childViewEvents, function (method, eventName, list) {
-                    _this.listenTo(view, eventName, function (options) {
-                        // if method is own method name
-                        if (_.isString(method) && _this[method]) {
-                            _this[method](options);
-                        }
-                        // if method is a function
-                        else if (_.isFunction(method)) {
-                            method(options);
-                        }
-                    });
-                });
-                Restdude.view.View.prototype.showChildView.apply(this, arguments);
+            onModelShow: function (options) {
+
+                console.log(this.getTypeName() + ".onModelShow, arguments: ");
+                console.log(arguments);
+
+                options.region =  this.regionName;
+                this.triggerMethod("layout:replace", options);
             },
+            onChildviewModelShow: function (options) {
+
+                console.log(this.getTypeName() + ".onChildviewModelShow, arguments: ");
+                console.log(arguments);
+
+                options.region =  this.regionName;
+                this.triggerMethod("layout:replace", options);
+            },
+
             onModelSync: function (args) {
+
+                console.log(this.getTypeName() + ".onModelSync, args: ");
+                console.log(args);
                 // execute next useCase by default
                 if (this.closeModalOnSync) {
                     Restdude.vent.trigger("modal:destroy");
@@ -168,6 +182,7 @@ define(
                     this.nextUseCase();
                 }
             },
+
             nextUseCase: function () {
                 if (this.useCaseContext.defaultNext) {
                     Restdude.navigate("/useCases/" + this.model.getPathFragment() + '/' + this.useCaseContext.defaultNext, {
@@ -559,7 +574,8 @@ define(
         Restdude.view.BrowseLayout = Restdude.view.UseCaseLayout.extend({
                 template: Restdude.getTemplate('UseCaseLayout'),
                 regions: {
-                    contentRegion: ".contentRegion"
+                    contentRegion: ".contentRegion",
+                    contentChildRegion: ".contentChildRegion"
                 },
                 regionViewTypes: {
                     contentRegion: Restdude.view.UseCaseFormView,
@@ -623,44 +639,54 @@ define(
                 typeName: "Restdude.view.UserProfileLayout"
             });
 
+
+
         Restdude.view.UseCaseSearchLayout = Restdude.view.UseCaseLayout.extend({
-                template: Restdude.getTemplate('UseCaseSearchLayout'),
-                regions: {
-                    formRegion: ".criteriaEntryRegion",
-                    //searchBoxRegion : ".searchBoxRegion",
-                    contentRegion: ".contentRegion"
-                },
-                regionViewTypes: {
-                    formRegion: Restdude.view.UseCaseFormView,
-                    searchBoxRegion: Restdude.view.SearchBoxFormView,
-                    contentRegion: Restdude.view.UseCaseGridView
-                },
-                initialize: function (options) {
-                    Restdude.view.UseCaseLayout.prototype.initialize.apply(this, arguments);
-                    // show searchbox region if appropriate
-                    this.mergeOptions(options, ['fieldsSearchBox']);
-                    if (this.fieldsSearchBox) {
-                        this.addRegions({
-                            searchBoxRegion: {selector: ".searchBoxRegion"}
-                        });
-                    }
-                    // listenTo search responces
-                    var collection = options.collection || options.model.wrappedCollection;
-                    var _this = this;
-                    this.listenTo(collection, 'reset', function () {
-                        if (_this.regionPath == "/") {
-                            var q = $.param(collection.data);
-                            Restdude.navigate(this.useCaseContext.getRouteUrl() + "?" + q, {
-                                trigger: false
-                            })
-                        }
-                    });
-                },
+            template: Restdude.getTemplate('UseCaseSearchLayout'),
+            regions: {
+                formRegion: ".criteriaEntryRegion",
+                //searchBoxRegion : ".searchBoxRegion",
+                contentRegion: ".contentRegion"
             },
-            // static members
-            {
-                typeName: "Restdude.view.UseCaseSearchLayout"
-            });
+            regionViewTypes: {
+                formRegion: Restdude.view.UseCaseFormView,
+                searchBoxRegion: Restdude.view.SearchBoxFormView,
+                contentRegion: Restdude.view.UseCaseGridView
+            },
+            initialize: function (options) {
+                Restdude.view.UseCaseLayout.prototype.initialize.apply(this, arguments);
+                // show searchbox region if appropriate
+                this.mergeOptions(options, ['fieldsSearchBox']);
+                if (this.fieldsSearchBox) {
+                    this.addRegions({
+                        searchBoxRegion: {selector: ".searchBoxRegion"}
+                    });
+                }
+                // listenTo search responces
+                var collection = options.collection || options.model.wrappedCollection;
+                var _this = this;
+                this.listenTo(collection, 'reset', function () {
+                    if (_this.regionPath == "/") {
+                        var q = $.param(collection.data);
+                        Restdude.navigate(this.useCaseContext.getRouteUrl() + "?" + q, {
+                            trigger: false
+                        })
+                    }
+                });
+            },
+        },
+        // static members
+        {
+            typeName: "Restdude.view.UseCaseSearchLayout"
+        });
+
+        Restdude.view.TopicLayout = Restdude.view.BrowseLayout.extend({
+            template: Restdude.getTemplate('TopicLayout'),
+        },
+        // static members
+        {
+            typeName: "Restdude.view.TopicLayout"
+        });
 
         Restdude.view.DefaulfModalLayout = Restdude.view.UseCaseLayout.extend({
                 template: Restdude.getTemplate('modal-layout'),

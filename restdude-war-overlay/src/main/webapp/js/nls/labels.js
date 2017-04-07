@@ -149,6 +149,29 @@ define({
                     "label": "Recepients"
                 },
             },
+            "topics": {
+                "singular": {
+                    "label": "Topic"
+                },
+                "plural": {
+                    "label": "Topics"
+                },
+                "title": {
+                    "label": "Title"
+                },
+                "detail": {
+                    "label": "Details"
+                },
+                "createdBy": {
+                    "label": "Submitter"
+                },
+                "createdDate": {
+                    "label": "Created"
+                },
+                "lastModifiedDate": {
+                    "label": "Updated"
+                },
+            },
             "allErrors": {
                 "singular": {
                     "label": "Error"
@@ -156,14 +179,11 @@ define({
                 "plural": {
                     "label": "Errors"
                 },
-                "message": {
-                    "label": "Message"
+                "remoteAddress": {
+                    "label": "Remote Address"
                 },
-                "user": {
-                    "label": "User"
-                },
-                "createdDate": {
-                    "label": "Date"
+                "stackTraceId": {
+                    "label": "Stacktrace"
                 },
             },
             "systemErrors": {

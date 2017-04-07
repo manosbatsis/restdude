@@ -32,8 +32,10 @@ import lombok.Setter;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,14 +49,18 @@ public abstract class AbstractGeneratedContentModel extends AbstractSystemUuidPe
 
     @CreatedDate
     @DiffIgnore
-    @ApiModelProperty(value = "Date created")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ApiModelProperty(value = "Date created", readOnly = true)
     @Column(name = "date_created", nullable = false, updatable = false)
     @Getter @Setter
     private LocalDateTime createdDate;
 
     @LastModifiedDate
     @DiffIgnore
-    @ApiModelProperty(value = "Date last modified")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ApiModelProperty(value = "Date last modified", readOnly = true)
     @Column(name = "date_last_modified", nullable = false)
     @Getter @Setter
     private LocalDateTime lastModifiedDate;
@@ -68,10 +74,25 @@ public abstract class AbstractGeneratedContentModel extends AbstractSystemUuidPe
     @Getter @Setter
     private User createdBy;
 
+    @LastModifiedBy
+    @DiffIgnore
+    @JsonIgnore
+    @ApiModelProperty(value = "udated by", readOnly = true, hidden = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "updated_by", referencedColumnName = "pk", updatable = false)
+    @Getter @Setter
+    private User lastModifiedBy;
+
     @JsonProperty("createdBy")
     @ApiModelProperty(value = "The initial content author", readOnly = true)
-    public UserDTO getUserInfo() {
+    public UserDTO getCreatedByInfo() {
         return UserDTO.fromUser(this.getCreatedBy());
+    }
+
+    @JsonProperty("lastModifiedBy")
+    @ApiModelProperty(value = "The latest update author", readOnly = true)
+    public UserDTO getLastModifiedByInfo() {
+        return UserDTO.fromUser(this.getLastModifiedBy());
     }
 
 }

@@ -25,7 +25,6 @@ import com.restdude.domain.users.model.User;
 import com.restdude.mdd.model.ErrorModel;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @param <PK>
@@ -33,13 +32,12 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties("pk")
 public interface PersistableError<PK extends Serializable> extends ErrorModel<PK> {
 
-    public static final int MAX_MSTACKTRACE_LENGTH = 40000;
-    public static final int MAX_MESSAGE_LENGTH = 500;
 
 
     User getCreatedBy();
 
     void setCreatedBy(User user);
+
 
     UserAgent getUserAgent();
 
@@ -49,8 +47,4 @@ public interface PersistableError<PK extends Serializable> extends ErrorModel<PK
 
     void setErrorLog(ErrorLog errorLog);
 
-
-    LocalDateTime getCreatedDate();
-
-    LocalDateTime getLastModifiedDate();
 }

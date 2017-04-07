@@ -93,7 +93,13 @@ define(
         Restdude.view.UseCaseItemView = Restdude.view.View.extend({
 
             initialize: function (options) {
+
+                console.log(this.getTypeName() + ".initialize, options: ");
+                console.log(options);
                 Restdude.view.View.prototype.initialize.apply(this, arguments);
+
+                console.log(this.getTypeName() + ".initialize, regionName: " + this.regionName +
+                    ", regionPath: " + this.regionPath);
             },
             getSchemaType: function () {
                 return this.constructor.getSchemaType();
@@ -174,7 +180,8 @@ define(
                 // Define view template
                 template: Restdude.getTemplate('UseCaseGridView'),
                 events: {
-                    "click button.btn-windowcontrols-destroy": "back"
+                    "click button.btn-windowcontrols-destroy": "back",
+                    "click a.view-row-model-cell-link": "triggerModelShow",
                 },
                 templateContext: {
                     viewTitle: function () {
@@ -190,6 +197,20 @@ define(
                     Restdude.stopEvent(e);
                     window.history.back();
                 },
+                triggerModelShow: function (e) {
+
+                    console.log(this.getTypeName() + ".triggerModelShow, arguments: ");
+                    console.log(arguments);
+                    Restdude.stopEvent(e);
+                    var $a = $(e.currentTarget);
+                    this.triggerMethod("model:show", {
+                        id: $a.data("id"),
+                        fragment: $a.data("fragment"),
+                        useCase: "view",
+                        region: this.regionName
+                    });
+                },
+
                 initialize: function (options) {
                     Restdude.view.UseCaseItemView.prototype.initialize.apply(this, arguments);
 
@@ -447,12 +468,7 @@ define(
                                     _this.removeDraft();
                                     _this.removeDraft(draftKey);
                                 }
-                                // trigger model:sync
-                                _this.triggerMethod("model:sync", {
-                                    model: _this.model,
-                                    view: _this,
-                                    collection: _this.collection
-                                });
+                                // trigger model:syncGrid
                             },
                             error: function () {
                                 alert("Failed persisting changes");

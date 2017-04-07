@@ -136,11 +136,17 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
                 validators: [/*'required'*/],
             }
         });
-        Restdude.fields.Datetime = Restdude.fields.DateTime = Restdude.fields.datetime = Restdude.fields.Integer.extend({}, {
+
+        Restdude.fields.Datetime = Restdude.fields.DateTime = Restdude.fields.datetime = Restdude.fields.String.extend({}, {
             "backgrid": {
                 editable: false,
                 sortable: false,
-                cell: "Datetime",
+                cell: Backgrid.Extension.MomentCell.extend({
+                    //modelFormat: "YYYY-MM-DD HH:mm:ss",
+                    // You can specify the locales of the model and display formats too
+                    displayLang: Restdude.util.getLocale(),
+                    displayFormat: "YYYY MMM DD HH:mm"
+                })
             },
             "form": {
                 type: Restdude.backboneform.Datetimepicker,
@@ -159,7 +165,12 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
             "backgrid": {
                 editable: false,
                 sortable: false,
-                cell: "Date",
+                cell: Backgrid.Extension.MomentCell.extend({
+                    //modelFormat: "YYYY-MM-DD",
+                    // You can specify the locales of the model and display formats too
+                    displayLang: Restdude.util.getLocale(),
+                    displayFormat: "YYYY MMM DD"
+    })
             },
             "form": {
                 type: Restdude.backboneform.Datetimepicker,
@@ -178,7 +189,12 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
             "backgrid": {
                 editable: false,
                 sortable: false,
-                cell: "Time",
+                cell: Backgrid.Extension.MomentCell.extend({
+                    //modelFormat: "HH:mm:ss",
+                    // You can specify the locales of the model and display formats too
+                    displayLang: Restdude.util.getLocale(),
+                    displayFormat: "HH:mm"
+    })
             },
             "form": {
                 type: Restdude.backboneform.Datetimepicker,
@@ -192,6 +208,67 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
                     }
                 }
             }
+        });
+
+        Restdude.fields.FromNow = Restdude.fields.fromNow = Restdude.fields.Datetime.extend({}, {
+            "backgrid": {
+                editable: false,
+                sortable: false,
+                cell: Backgrid.Extension.MomentCell.extend({
+
+                    fromRaw: function (rawData) {
+                        if (rawData == null) return '';
+
+                        var m = this.modelInUnixOffset ? moment(rawData) :
+                            this.modelInUnixTimestamp ? moment.unix(rawData) :
+                                this.modelInUTC ?
+                                    moment.utc(rawData, this.modelFormat, this.modelLang) :
+                                    moment(rawData, this.modelFormat, this.modelLang);
+
+
+                        if (this.displayLang) m.locale(Restdude.util.getLocale());
+
+                        if (this.displayInUTC) m.utc(); else m.local();
+
+                        return m.fromNow();
+                    },
+                })
+            },
+        });
+
+        // CalendarTime
+        var MomentCalendarTimeFormatter = function (options) {
+            _.extend(this, this.defaults, options);
+        };
+        MomentCalendarTimeFormatter.prototype = new Backgrid.Extension.MomentFormatter;
+        _.extend(MomentCalendarTimeFormatter.prototype, {
+            fromRaw: function (rawData) {
+                console.log("CalendarTime.fromRaw, rawData: " + rawData);
+                if (rawData == null) return '';
+
+                var m = this.modelInUnixOffset ? moment(rawData) :
+                    this.modelInUnixTimestamp ? moment.unix(rawData) :
+                        this.modelInUTC ?
+                            moment.utc(rawData, this.modelFormat, this.modelLang) :
+                            moment(rawData, this.modelFormat, this.modelLang);
+
+
+                if (this.displayLang) m.locale(Restdude.util.getLocale());
+
+                if (this.displayInUTC) m.utc(); else m.local();
+
+                return m.calendar();
+            },
+        });
+        Restdude.fields.CalendarTime = Restdude.fields.calendarTime = Restdude.fields.Datetime.extend({}, {
+            "backgrid": {
+                editable: false,
+                sortable: true,
+                cell: Backgrid.Extension.MomentCell.extend({
+                    formatter: MomentCalendarTimeFormatter
+
+                })
+            },
         });
 
         Restdude.fields.EnumValue = Restdude.fields.enumValue = Restdude.fields.String.extend({}, {

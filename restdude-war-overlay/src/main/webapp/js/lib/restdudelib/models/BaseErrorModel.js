@@ -19,10 +19,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util", "lib/restdudelib/form",
-        "lib/restdudelib/uifield", "lib/restdudelib/backgrid", "lib/restdudelib/view", 'handlebars', "lib/restdudelib/models/Model"],
+        "lib/restdudelib/uifield", "lib/restdudelib/backgrid", "lib/restdudelib/view", 'handlebars', "lib/restdudelib/models/TopicModel"],
     function ($, _, Bloodhoud, Typeahead, Restdude, RestdudeForm, RestdudeField, RestdudeGrid, RestdudeView, Handlebars) {
 
-        Restdude.model.BaseErrorModel = Restdude.Model.extend(
+        Restdude.model.BaseErrorModel = Restdude.model.TopicModel.extend(
             /** @lends Restdude.model.BaseErrorModel.prototype */
             {
                 toString: function () {
@@ -39,21 +39,12 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     rolesExcluded: null,
                 },
                 fields: {
-                    user: {
-                        fieldType: "RelatedModel",
-                        pathFragment: "users",
-                    },
-                    message: {
-                        fieldType: "String",
-                    },
-                    createdDate: {
-                        fieldType: "Date",
-                    },
                     remoteAddress: {
                         fieldType: "String",
                     },
-                    stackTraceId: {
-                        fieldType: "String",
+                    errorLogId: {
+                        fieldType: "RelatedModel",
+                        pathFragment: "errorLogs",
                     },
                 },
             });

@@ -41,7 +41,8 @@ define([
 
             var $a = $(this);
             var href = $a.attr("href");
-
+            console.log("document a.on.click, href: " + href + ", a: ");
+            console.log($a);
             if (href && href.match(/^\/.*/) && !$(this).attr("target")) {
                 Restdude.stopEvent(event);
 

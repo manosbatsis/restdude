@@ -22,6 +22,7 @@ package com.restdude.mdd.util;
 
 import com.restdude.mdd.annotation.model.ModelRelatedResource;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.controller.AbstractModelServiceBackedController;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
@@ -58,6 +59,8 @@ public final class ModelContext {
 	private static final String AUDITABLE2 = "auditable";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelContext.class);
+
+	@Getter
     private ModelInfo modelInfo;
 
 
@@ -113,7 +116,7 @@ public final class ModelContext {
 	public Class getControllerSuperClass(){
 		Class sClass = this.modelResource.controllerSuperClass();
 		if(sClass == null || Object.class.equals(sClass)){
-			sClass = AbstractPersistableModelController.class;
+			sClass = this.modelInfo.isJpaEntity() ? AbstractPersistableModelController.class : AbstractModelServiceBackedController.class;
 		}
 		return  sClass;
 	}

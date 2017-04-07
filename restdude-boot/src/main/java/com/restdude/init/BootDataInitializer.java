@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -48,6 +49,7 @@ public class BootDataInitializer extends DataInitializer implements ApplicationR
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void run(ApplicationArguments applicationArguments) throws Exception {
         super.run();
     }

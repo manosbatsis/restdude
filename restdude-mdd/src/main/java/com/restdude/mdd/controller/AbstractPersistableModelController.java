@@ -34,9 +34,11 @@ import com.restdude.mdd.model.Model;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.registry.FieldInfo;
+import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
+import com.restdude.rsql.RsqlUtils;
 import com.restdude.util.HttpUtil;
 import com.restdude.util.exception.http.NotFoundException;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +46,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
@@ -54,6 +58,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -245,7 +252,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
         // if ToOne
         if(fieldInfo.isToOne()){
-            PersistableModel related = super.findRelatedSingle(pk, fieldInfo);
+            PersistableModel related = this.findRelatedSingle(pk, fieldInfo);
             // if found
             Resource res = HypermediaUtils.toHateoasResource(related, fieldInfo.getRelatedModelInfo());
             responseEntity = new ResponseEntity(res, HttpStatus.OK);
@@ -293,7 +300,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
         // if ToOne
         if(fieldInfo.isToOne()){
-            PersistableModel related = super.findRelatedSingle(pk, fieldInfo);
+            PersistableModel related = this.findRelatedSingle(pk, fieldInfo);
             // if found
             if(related != null) {
                 document = HypermediaUtils.toDocument(related, fieldInfo.getRelatedModelInfo());
@@ -372,6 +379,49 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         response.setHeader(HttpUtil.ACESS_CONTROL_HEADERS_NAME, "Origin, X-Requested-With, Content-Type, Accept");
         response.setHeader(HttpUtil.ACESS_CONTROL_MAX_AGE_NAME, "3600");
 
+    }
+
+
+    /**
+     * Find the other end of a ToOne relationship
+     * @param pk the root entity ID
+     * @param fieldInfo the member/relation name
+     * @return the single related entity, if any
+     * @see PersistableModelService#findRelatedSingle(java.io.Serializable, com.restdude.mdd.registry.FieldInfo)
+     */
+    protected PersistableModel findRelatedSingle(PK pk, FieldInfo fieldInfo) {
+        PersistableModel resource = this.service.findRelatedSingle(pk, fieldInfo);
+        return resource;
+    }
+
+
+    /**
+     * Find a page of results matching the other end of a ToMany relationship
+     * @param pk the root entity ID
+     * @param pageable the page config
+     * @param fieldInfo the member/relation name
+     * @return the page of results, may be <code>null</code>
+     * @see PersistableModelService#findRelatedPaginated(java.lang.Class, org.springframework.data.jpa.domain.Specification, org.springframework.data.domain.Pageable)
+     */
+    protected <M extends PersistableModel> ParamsAwarePageImpl<M> findRelatedPaginated(PK pk, Pageable pageable, FieldInfo fieldInfo) {
+        ParamsAwarePageImpl<M> page = null;
+        Optional<String> reverseFieldName = fieldInfo.getReverseFieldName();
+        if(reverseFieldName.isPresent()) {
+            Map<String, String[]> params = request.getParameterMap();
+            Map<String, String[]> implicitCriteria = new HashMap<>();
+            implicitCriteria.put(reverseFieldName.get(), new String[]{pk.toString()});
+
+            ModelInfo relatedModelInfo = fieldInfo.getRelatedModelInfo();
+            // optionally create a query specification
+            Specification<M> spec = RsqlUtils.buildtSpecification(relatedModelInfo, this.service.getConversionService(), params, implicitCriteria, PARAMS_IGNORE_FOR_CRITERIA);
+            // get the page of related children
+            Page<M> tmp = this.service.findRelatedPaginated(relatedModelInfo.getModelType(), spec, pageable);
+            page = new ParamsAwarePageImpl<M>(params, tmp.getContent(), pageable, tmp.getTotalElements());
+        }
+        else{
+            throw new IllegalArgumentException("Related field info has no reverse field name");
+        }
+        return page;
     }
 
 }

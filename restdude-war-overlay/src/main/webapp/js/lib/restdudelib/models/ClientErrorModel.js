@@ -39,9 +39,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     rolesExcluded: null,
                 },
                 fields: {
-                    description: {
-                        fieldType: "String",
-                    },
                     screenshotUrl: {
                         fieldType: "Link",
                     },

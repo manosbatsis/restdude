@@ -37,15 +37,12 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
-@EntityListeners(AuditingEntityListener.class)
 @ModelResource(pathFragment = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyPersistableModelController.class,
         apiName = "Errors", apiDescription = "Generic error information (readonly)")
 @ApiModel(value = "BaseError", description = "Generic error superclass")
@@ -66,13 +63,7 @@ public class BaseError extends AbstractTopicModel<ErrorComment> implements  Pers
     public static final String API_PATH = "allErrors";
 
 
-    @NotNull
-    @ApiModelProperty(value = "Message for users")
-    @Column(name = "error_message", nullable = false, updatable = false, length = MAX_MESSAGE_LENGTH)
-    @Getter @Setter
-    private String message;
-
-    @ApiModelProperty(value = "The address the request originated from")
+    @ApiModelProperty(value = "The address the request originated from", readOnly = true)
     @Column(name = "remote_address", updatable = false, length = DEFAULT_MAX_DESCRIPTION_LENGTH)
     @Getter @Setter
     private String remoteAddress;
@@ -96,12 +87,16 @@ public class BaseError extends AbstractTopicModel<ErrorComment> implements  Pers
 
     }
 
-    protected BaseError(HttpServletRequest request, String message) {
-        this.message = message;
+    protected BaseError(HttpServletRequest request, String title) {
+        super(title);
         // note reguest details
         this.addRequestInfo(request);
+    }
 
-
+    protected BaseError(HttpServletRequest request, String title, String detail) {
+        super(title, detail);
+        // note reguest details
+        this.addRequestInfo(request);
     }
 
     public void addRequestInfo(HttpServletRequest request) {
@@ -119,9 +114,7 @@ public class BaseError extends AbstractTopicModel<ErrorComment> implements  Pers
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("pk", this.getPk())
-                .append("message", this.getMessage())
+        return new ToStringBuilder(this).appendSuper(super.toString())
                 .append("remoteAddress", this.getRemoteAddress())
                 .toString();
     }
@@ -131,12 +124,6 @@ public class BaseError extends AbstractTopicModel<ErrorComment> implements  Pers
 
         log.debug("preSave, before: {}", this);
         super.preSave();
-        if (this.getCreatedBy() != null && this.getCreatedBy().getPk() == null) {
-            this.setCreatedBy(null);
-        }
-        if (StringUtils.isNotEmpty(this.message) && this.message.length() > BaseError.MAX_MESSAGE_LENGTH) {
-            this.message = StringUtils.abbreviate(this.message, BaseError.MAX_MESSAGE_LENGTH);
-        }
         if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
             this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
         }

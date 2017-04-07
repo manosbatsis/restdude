@@ -62,8 +62,8 @@
     </bean>
 
     <bean class="com.fasterxml.jackson.module.paramnames.ParameterNamesModule"/>
-    <bean class="com.fasterxml.jackson.datatype.jdk8.Jdk8Module"/>
-    <bean class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/>
+    <!--bean class="com.fasterxml.jackson.datatype.jdk8.Jdk8Module"/>
+    <bean class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/-->
 
     <!-- 	<bean identifier="conversionService" -->
     <!-- 		class="org.springframework.context.support.ConversionServiceFactoryBean"> -->

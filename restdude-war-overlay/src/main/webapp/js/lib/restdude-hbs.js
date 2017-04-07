@@ -50,6 +50,9 @@ define([
         'hbs!template/swaggerui',
         'hbs!template/templateBasedItemView',
         'hbs!template/templateBasedCollectionView',
+        'hbs!template/TopicLayout',
+        'hbs!template/TopicDetails',
+
         'hbs!template/wizard-layout',
         'hbs!template/wizardTabItem',
         'hbs!template/itemViewTemplate']
@@ -85,6 +88,8 @@ define([
               swaggerui,
               templateBasedItemView,
               templateBasedCollectionView,
+              TopicLayout,
+              TopicDetails,
               wizardLayout,
               wizardTabItem,
               itemViewTemplate) {
@@ -119,6 +124,9 @@ define([
             'swaggerui': swaggerui,
             "templateBasedItemView": templateBasedItemView,
             "templateBasedCollectionView": templateBasedCollectionView,
+            "TopicLayout": TopicLayout,
+            "TopicDetails": TopicDetails,
+
             "wizard-layout": wizardLayout,
             "wizardTabItem": wizardTabItem,
             "itemViewTemplate": itemViewTemplate

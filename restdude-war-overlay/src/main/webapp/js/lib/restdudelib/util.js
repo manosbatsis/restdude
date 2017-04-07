@@ -163,19 +163,22 @@ define(
                 // add view defaults
                 if (packageName == "view") {
                     _.extend(extendOptions, {
-                        taName: "div",
-                        useCaseContext: null,
-                        skipSrollToTop: false,
-                        title: "",
-                        message: "",
-                        mergableOptions: ['useCaseContext', 'model', 'closeModalOnSync', 'regionPath', 'regionName', 'title', 'message', 'fields', 'formOptions'],
-                        getTitle: function () {
-                            return Marionette.getOption(this, "title");
-                        },
-                        getMessage: function () {
-                            return Marionette.getOption(this, "message");
-                        },
-                        templateContext: {
+                        initialize: function (options) {
+                            BaseType.prototype.initialize.apply(this, arguments);
+                        }
+                    });
+                    if (newClassName == "View") {
+
+                        extendOptions.taName = "div";
+                        extendOptions.useCaseContext = null;
+                        extendOptions.skipSrollToTop = false;
+                        extendOptions.title = "";
+                        extendOptions.message = "";
+                        extendOptions.regionName = null;
+                        extendOptions.regionPath = null;
+                        extendOptions.mergableOptions = ['useCaseContext', 'model', 'closeModalOnSync', 'regionPath', 'regionName', 'title', 'message', 'fields', 'formOptions'];
+
+                        extendOptions.templateContext = {
                             viewId: function () {
                                 return Marionette.getOption(this, Restdude.config.idAttribute);
                             },
@@ -185,28 +188,62 @@ define(
                             viewMessage: function () {
                                 return this.getMessage();
                             },
-                        },
-                        initialize: function (options) {
-                            BaseType.prototype.initialize.apply(this, arguments);
-                            this.mergeOptions(options, this.mergableOptions);
-                            if (!this.skipSrollToTop) {
-                                $(window).scrollTop(0);
-                            }
-                        }
-                    });
-                    if (newClassName == "View") {
+                        };
                         extendOptions.events = {
                             // TODO: move to layouts
                             "click .btn-social": "socialLogin",
                             // TODO: move to layouts
                             "click .open-modal-page": "openModalPage",
                             "click a.locale": "changeLocale",
+                            //
                         };
-                        //
+
+                        extendOptions.initialize = function (options) {
+                            console.log(this.getTypeName() + ".initialize, options: ");
+                            console.log(options);
+                            BaseType.prototype.initialize.apply(this, arguments);
+                            this.mergeOptions(options, this.mergableOptions);
+                            console.log(this.getTypeName() + ".initialize, regionName: " + this.regionName +
+                                ", regionPath: " + this.regionPath);
+                            if (!this.skipSrollToTop) {
+                                $(window).scrollTop(0);
+                            }
+                        };
+                        extendOptions.getTitle = function () {
+                            return Marionette.getOption(this, "title");
+                        };
+                        extendOptions.getMessage = function () {
+                            return Marionette.getOption(this, "message");
+                        };
+                        extendOptions.showChildView = function (regionName, view) {
+                            var _this = this;
+                            view.regionName = regionName;
+                            view.regionPath = Marionette.getOption(this, "regionPath") + "/" + regionName;
+                            /*
+                             // bind to view events according to childViewEvents hash
+                             _.each(this.childViewEvents, function (method, eventName, list) {
+                             _this.listenTo(view, eventName, function (options) {
+                             // if method is own method name
+                             if (_.isString(method) && _this[method]) {
+                             _this[method](options);
+                             }
+                             // if method is a function
+                             else if (_.isFunction(method)) {
+                             method(options);
+                             }
+                             });
+                             });
+                             */
+                            console.log(this.getTypeName() + ".showChildView, view regionName: " + view.regionName +
+                                ", regionPath: " + view.regionPath);
+                            BaseType.prototype.showChildView.apply(this, arguments);
+                        };
+
                         extendOptions.changeLocale = function (e) {
                             Restdude.stopEvent(e);
                             Restdude.changeLocale($(e.currentTarget).data("locale"));
                         };
+
                         extendOptions.openModalPage = function (e) {
                             Restdude.stopEvent(e);
                             var $a = $(e.currentTarget);
@@ -237,7 +274,6 @@ define(
                             region.regionName = regionName;
                             region.regionPath = this.getRegionPath() + "." + regionName;
                         };
-                        extendOptions.regionPath = null;
                         extendOptions.getRegionPath = function () {
                             return this.regionPath;
                         };
@@ -1002,8 +1038,8 @@ define(
                  */
                 queryParams: {
                     totalPages: "totalPages",
-                    pageSize: "size",
-                    currentPage: "page",
+                    pageSize: "_ps",
+                    currentPage: "_pn",
                     totalRecords: "totalElements",
                     sortKey: "properties",
                     order: "direction",//"direction"?
@@ -1438,7 +1474,8 @@ define(
                 fieldMasks: null,
                 view: null,
                 viewOptions: {},
-                mergableOptions: ['key', 'pathFragment', 'className', 'title', 'titleHtml', 'description', 'descriptionHtml', 'defaultNext', 'model', 'factory',
+                mergableOptions: ['key', 'pathFragment', 'className', 'title', 'titleHtml',
+                    'description', 'descriptionHtml', 'defaultNext', 'model', 'factory',
                     'view', 'viewOptions', 'childViewOptions',
                     'roleIncludes', 'roleExcludes',
                     "template", "formTemplate", "formFieldTemplate", "formControlSize",
@@ -1461,11 +1498,16 @@ define(
                     }
                 },
                 createView: function (options) {
+                    //console.log("UseCaseContext.createView, options: ");
+                    //console.log( options);
                     options || (options = {});
                     var viewOptions = Restdude.deepExtend({}, this.viewOptions || {}, options);
                     viewOptions.useCaseContext = this;
                     viewOptions.model = this.model;
                     viewOptions.addToCollection = this.addToCollection;
+
+                    //console.log("UseCaseContext.createView, viewOptions: ");
+                    //console.log( viewOptions);
                     return new this.view(viewOptions);
                 },
                 getRouteUrl: function () {
@@ -1534,9 +1576,12 @@ define(
                         // NOTE: may update view option
                         Restdude.deepExtend(childOptions, _this.overrides[regionName]);
                         // apply child usecase overrides based on scehame type
-                        schemaTypeOverrideKey = childOptions.view.getSchemaType();
-                        Restdude.deepExtend(childOptions, _this.overrides[schemaTypeOverrideKey]);
-                        Restdude.deepExtend(childOptions, _this.overrides[regionName + '-' + schemaTypeOverrideKey]);
+                        schemaTypeOverrideKey = childOptions.view.getSchemaType ? childOptions.view.getSchemaType() : null;
+                        // if schema-based
+                        if (schemaTypeOverrideKey) {
+                            Restdude.deepExtend(childOptions, _this.overrides[schemaTypeOverrideKey]);
+                            Restdude.deepExtend(childOptions, _this.overrides[regionName + '-' + schemaTypeOverrideKey]);
+                        }
                     }
                     // Luke... I am your father
                     childOptions.parentContext = this;

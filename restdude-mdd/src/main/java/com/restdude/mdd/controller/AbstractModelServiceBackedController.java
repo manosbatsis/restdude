@@ -38,10 +38,9 @@ import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.model.RawJson;
 import com.restdude.mdd.model.UserDetails;
-import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.mdd.registry.ModelInfoRegistry;
-import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.mdd.service.ModelService;
 import com.restdude.mdd.uischema.model.UiSchema;
 import com.restdude.mdd.util.ParamsAwarePageImpl;
 import com.restdude.rsql.RsqlUtils;
@@ -65,7 +64,10 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -94,7 +96,7 @@ import java.util.*;
  * @param <PK> Resource pk type, usually Long or String
  * @param <S>  The service class
  */
-public class AbstractModelServiceBackedController<T extends PersistableModel<PK>, PK extends Serializable, S extends PersistableModelService<T, PK>> implements InitializingBean {
+public class AbstractModelServiceBackedController<T extends PersistableModel<PK>, PK extends Serializable, S extends ModelService<T, PK>> implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModelServiceBackedController.class);
 
@@ -329,7 +331,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
 
     
     protected void deleteAll() {
-        this.service.deleteAllWithCascade();
+        LOGGER.warn("deleteAll: no-op");
     }
 
     protected RawJson getJsonSchema() throws JsonProcessingException {
@@ -347,46 +349,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return schema;
     }
 
-    /**
-     * Find the other end of a ToOne relationship
-     * @param pk the root entity ID
-     * @param fieldInfo the member/relation name
-     * @return the single related entity, if any
-     * @see PersistableModelService#findRelatedSingle(java.io.Serializable, com.restdude.mdd.registry.FieldInfo)
-     */
-    protected PersistableModel findRelatedSingle(PK pk, FieldInfo fieldInfo) {
-        PersistableModel resource = this.service.findRelatedSingle(pk, fieldInfo);
-        return resource;
-    }
 
-    /**
-     * Find a page of results matching the other end of a ToMany relationship
-     * @param pk the root entity ID
-     * @param pageable the page config
-     * @param fieldInfo the member/relation name
-     * @return the page of results, may be <code>null</code>
-     * @see PersistableModelService#findRelatedPaginated(java.lang.Class, org.springframework.data.jpa.domain.Specification, org.springframework.data.domain.Pageable)
-     */
-    protected <M extends PersistableModel> ParamsAwarePageImpl<M> findRelatedPaginated(PK pk, Pageable pageable, FieldInfo fieldInfo) {
-        ParamsAwarePageImpl<M> page = null;
-        Optional<String> reverseFieldName = fieldInfo.getReverseFieldName();
-        if(reverseFieldName.isPresent()) {
-            Map<String, String[]> params = request.getParameterMap();
-            Map<String, String[]> implicitCriteria = new HashMap<>();
-            implicitCriteria.put(reverseFieldName.get(), new String[]{pk.toString()});
-
-            ModelInfo relatedModelInfo = fieldInfo.getRelatedModelInfo();
-            // optionally create a query specification
-            Specification<M> spec = RsqlUtils.buildtSpecification(relatedModelInfo, this.service.getConversionService(), params, implicitCriteria, PARAMS_IGNORE_FOR_CRITERIA);
-            // get the page of related children
-            Page<M> tmp = this.service.findRelatedPaginated(relatedModelInfo.getModelType(), spec, pageable);
-            page = new ParamsAwarePageImpl<M>(params, tmp.getContent(), pageable, tmp.getTotalElements());
-        }
-        else{
-            throw new IllegalArgumentException("Related field info has no reverse field name");
-        }
-        return page;
-    }
 
     protected ParamsAwarePageImpl<T> findPaginated(Pageable pageable, Map<String, String[]> implicitCriteria) {
         // TODO: add support for query dialects: RequestParam MultiValueMap<String, String> httpParams

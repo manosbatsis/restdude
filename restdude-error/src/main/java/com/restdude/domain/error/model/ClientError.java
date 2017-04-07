@@ -58,10 +58,6 @@ public class ClientError extends BaseError implements PersistableError<String> {
     @Column(name = "screenshot_url", length = MAX_MESSAGE_LENGTH)
     private String screenshotUrl;
 
-    @ApiModelProperty(value = "The textual content typically provided by the user, if any.", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
-    @Column(length = BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
-    @Getter @Setter
-    private String description;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
@@ -77,10 +73,10 @@ public class ClientError extends BaseError implements PersistableError<String> {
     public ClientError() {
     }
 
-    public ClientError(HttpServletRequest request, String message, String screenshotUrl, String description) {
-        super(request, message);
+    public ClientError(HttpServletRequest request, String title, String screenshotUrl, String detail) {
+        super(request, title);
         this.screenshotUrl = screenshotUrl;
-        this.description = description;
+        this.setDetail(detail);
     }
 
     @Override
@@ -92,9 +88,6 @@ public class ClientError extends BaseError implements PersistableError<String> {
     public void preSave() {
         log.debug("preSave, before: {}", this);
         super.preSave();
-        if (StringUtils.isNotEmpty(this.description) && this.description.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
-            this.description = StringUtils.abbreviate(this.description, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
-        }
         if (StringUtils.isNotEmpty(this.viewUrl) && this.viewUrl.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
             this.viewUrl = StringUtils.abbreviate(this.viewUrl, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
         }
@@ -112,13 +105,13 @@ public class ClientError extends BaseError implements PersistableError<String> {
 
 
     public static class Builder {
-        private String message;
+        private String title;
         private User user;
         private String screenshotUrl;
-        private String description;
+        private String detail;
 
         public Builder message(String message) {
-            this.message = message;
+            this.title = message;
             return this;
         }
 
@@ -133,7 +126,7 @@ public class ClientError extends BaseError implements PersistableError<String> {
         }
 
         public Builder description(String description) {
-            this.description = description;
+            this.detail = description;
             return this;
         }
 
@@ -143,9 +136,9 @@ public class ClientError extends BaseError implements PersistableError<String> {
     }
 
     private ClientError(Builder builder) {
-        this.setMessage(builder.message);
+        this.setTitle(builder.title);
         this.setCreatedBy(builder.user);
         this.screenshotUrl = builder.screenshotUrl;
-        this.description = builder.description;
+        this.setTitle(builder.detail);
     }
 }

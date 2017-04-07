@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.service;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.mdd.model.Model;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,7 +37,7 @@ import java.util.Set;
  * @param <PK>
  *            Resource pk type, usually Long or String
  */
-public interface ModelService<T extends PersistableModel<PK>, PK extends Serializable> extends BaseService {
+public interface ModelService<T extends Model<PK>, PK extends Serializable> extends BaseService {
 
 
 
