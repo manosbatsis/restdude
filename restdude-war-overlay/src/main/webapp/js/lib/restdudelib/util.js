@@ -133,7 +133,6 @@ define(
         _.each(baseComponents, function (packageComponents, packageName, list) {
             Restdude[packageName] || (Restdude[packageName] = {});
             _.each(packageComponents, function (BaseType, newClassName, list) {
-                console.log("packageName: " + packageName + ", newClassName: " + newClassName)
                 var extendOptions = {
                     initialize: function (models, options) {
                         BaseType.prototype.initialize.apply(this, arguments);
@@ -199,12 +198,8 @@ define(
                         };
 
                         extendOptions.initialize = function (options) {
-                            console.log(this.getTypeName() + ".initialize, options: ");
-                            console.log(options);
                             BaseType.prototype.initialize.apply(this, arguments);
                             this.mergeOptions(options, this.mergableOptions);
-                            console.log(this.getTypeName() + ".initialize, regionName: " + this.regionName +
-                                ", regionPath: " + this.regionPath);
                             if (!this.skipSrollToTop) {
                                 $(window).scrollTop(0);
                             }
@@ -234,8 +229,6 @@ define(
                              });
                              });
                              */
-                            console.log(this.getTypeName() + ".showChildView, view regionName: " + view.regionName +
-                                ", regionPath: " + view.regionPath);
                             BaseType.prototype.showChildView.apply(this, arguments);
                         };
 
@@ -407,39 +400,33 @@ define(
                     val = obj[key]; // new value
                     // recursion prevention
                     if (val === target) {
-                        return;
                     }
                     // reuse object references of platform components
-                    else if (val && (val.extend || _.isFunction(val))) {
+                    else if (val && (val.extend || (val.constructor && val.constructor.extend) || _.isFunction(val))) {
                         target[key] = val;
-                        return;
                         /**
                          * if new value isn't object then just overwrite by new value
                          * instead of extending.
                          */
                     } else if (typeof val !== 'object' || val === null) {
                         target[key] = val;
-                        return;
 
                         // just clone arrays (and recursive clone objects inside)
                     } else if (Array.isArray(val)) {
                         target[key] = val;//Restdude.deepCloneArray(val);
-                        return;
 
                         // custom cloning and overwrite for specific objects
                     } else if (Restdude.isSpecificValue(val)) {
                         target[key] = Restdude.cloneSpecificValue(val);
-                        return;
 
                         // overwrite by new value if source isn't object or array
                     } else if (typeof src !== 'object' || src === null || Array.isArray(src)) {
                         target[key] = Restdude.deepExtend({}, val);
-                        return;
                         // source value and new value is objects both, extending...
                     } else {
-                        target[key] = Restdude.deepExtend(src, val);
-                        return;
+                        target[key] = Restdude.deepExtend({}, src, val);
                     }
+
                 });
             });
 
@@ -502,6 +489,56 @@ define(
                 event.cancelBubble = true;
             }
         };
+
+        Restdude.showUseCaseView = function (pathFragment, modelId, useCaseKey, regionName, httpParams) {
+
+            useCaseKey || (useCaseKey = "view");
+            httpParams || (httpParams = {});
+            regionName || (regionName = "mainContentRegion");
+
+            // build the model instance representing the current request
+            $.when(Restdude.util.getUseCaseFactory(pathFragment)).done(
+                function (UseCaseFactory) {
+                    // check for usecase routes for new instances
+
+                    if (UseCaseFactory.hasUseCase(modelId)) {
+                        useCaseKey = modelId;
+                        modelId = null;
+                    }
+                    // check if model type is public
+                    if (UseCaseFactory.isPublic() ||  Restdude.util.isAuthenticated()) {
+                        var useCaseContext = UseCaseFactory.getUseCaseContext({
+                            key: useCaseKey, modelId: modelId, pathFragment: pathFragment
+                        });
+
+                        // TODO: move fetch logic to  useCase
+                        var model = useCaseContext.model;
+                        var skipDefaultSearch = model.skipDefaultSearch && model.wrappedCollection && model.wrappedCollection.hasCriteria();
+
+                        var renderFetchable = function () {
+                            Restdude.app.view.showChildView(regionName, useCaseContext.createView({regionName: regionName, regionPath: "/" + regionName}));
+                            // update history if "main" view
+                            if(regionName == "mainContentRegion"){
+                                Restdude.navigate("/useCases/" + pathFragment + (modelId ? '/' + modelId : "")  + (useCaseKey ? '/' + useCaseKey : "") , {
+                                    trigger: false
+                                })
+                            }
+                        };
+                        var fetchable = useCaseContext.getFetchable();
+                        if ((model.get(Restdude.config.idAttribute) || model.get("id") || fetchable.length == 0 ) && model.getTypeName() != "Restdude.model.UserDetailsModel"
+                        /*
+                         && (!model.wrappedCollection || (!skipDefaultSearch && fetchable.length == 0))
+                         */) {
+                            fetchable.fetch({
+                                data: fetchable.data
+                            }).then(renderFetchable);
+                        } else {
+                            renderFetchable();
+                        }
+                    }
+                }
+            );
+        }
         /**
          * Update bootstrap badges
          * @param  {[String]} the jquery selector to use
@@ -510,12 +547,9 @@ define(
          */
         Restdude.updateBadges = function (selector, text) {
             // e.g. update visual notification counters
-            //console.log("Notifications count: " + text);
             if (text) {
-                //console.log("Showing notification counters...");
                 $(selector).text(text).removeClass("hidden").show();
             } else {
-                //console.log("Hiding notification counters...");
                 $(selector).text(text).hide();
             }
         };
@@ -534,6 +568,8 @@ define(
             }
             return Restdude._chartColors[index];
         };
+
+
         /**
          * Get a conbfiguration property
          * @param  {[String]} the property name
@@ -740,10 +776,8 @@ define(
                 var restdudeSocialSignInWin = window.open("", "SignIn", "width=" + w + ",height=" + h + ",toolbar=0,scrollbars=0,status=0,resizable=0,location=0,menuBar=0,left=" + left + ",top=" + top);
 
                 var interval = window.setInterval(function () {
-                    //console.log("in interval");
                     try {
                         if (restdudeSocialSignInWin == null || restdudeSocialSignInWin.closed) {
-                            //console.log("window closed");
                             window.clearInterval(interval);
                             //closeCallback(win);
                             restdude.tryRememberMe();
@@ -890,8 +924,6 @@ define(
                         _this.mainRouter = router;
                     }
                 });
-                console.log("Restdude.Application#onBeforeStart, configured routers: ");
-                console.log(_this.routers);
                 // set model types map
                 Restdude.useCaseFactoriesMap = _.extend({}, Restdude.config.useCaseFactories || {});
                 var allModelLabels = Restdude.util.getLabels("models");
@@ -909,7 +941,6 @@ define(
             onStart: function () {
                 this.view = new Restdude.view.AppRootView();
                 this.showView(this.view);
-                //console.log("Restdude.domain started");
                 this.updateHeaderFooter();
                 // setup vent
                 Restdude._initializeVent();
@@ -1375,7 +1406,6 @@ define(
              */
             buildCacheEntryKey: function (collectionOptions) {
                 var key = collectionOptions.pathFragment ? collectionOptions.pathFragment : collectionOptions.model.getPathFragment() + "/" + (collectionOptions.useCase ? collectionOptions.useCase : "search");
-                //consolelog("Restdude.util.cache#buildCacheEntryKey: " + key);
                 return key;
             },
             /**
@@ -1395,17 +1425,13 @@ define(
                     throw "Restdude.cache.getCollection: options.model is required and must be a GenericModel subtype";
                 }
                 var key = this.buildCacheEntryKey(collectionOptions);
-                //consolelog("Restdude.util.cache.getCollection for key: " + key);
                 var collection = this.collections[key];
                 // create a fresh collection when no cache entry is found,
                 // or when the model doesn't want caching for it's collections,
                 // or when the criteria have changed
                 if (!collection || !collectionOptions.model.prototype.isCollectionCacheable() || !this.compareSearchCriteria(collection.data, collectionOptions.data)) {
-                    //consolelog("Restdude.util.cache#getCollection creating fresh collection for key: " + key);
                     collection = new Restdude.collection.GenericCollection([], collectionOptions);
                     this.collections[key] = collection;
-                } else {
-                    //consolelog("Restdude.util.cache#getCollection returning cached collection for key: " + key);
                 }
                 return collection;
             },
@@ -1420,7 +1446,6 @@ define(
                 if (collection) {
                     this.collections[key] = null;
                 }
-                //consolelog("Restdude.util.cache#removeCollection for key: " + key);
                 return collection;
             },
             /**
@@ -1437,13 +1462,9 @@ define(
              * of objects that correspond to HTTP parameters
              */
             compareSearchCriteria: function (o1, o2) {
-                //consolelog("Restdude.util.cache#compareSearchCriteria, o1: " + o1 + ", o2: " + o2);
-                //consolelog(o1);
-                //consolelog(o2);
                 for (var p in o1) {
                     if (o1.hasOwnProperty(p)) {
                         if (o1[p] + "" !== o2[p] + "") {
-                            //consolelog("Restdude.util.cache#compareSearchCriteria returns false");
                             return false;
                         }
                     }
@@ -1451,12 +1472,10 @@ define(
                 for (var p in o2) {
                     if (o2.hasOwnProperty(p)) {
                         if (o1[p] + "" !== o2[p] + "") {
-                            //consolelog("Restdude.util.cache#compareSearchCriteria returns false");
                             return false;
                         }
                     }
                 }
-                //consolelog("Restdude.util.cache#compareSearchCriteria returns true");
                 return true;
             }
         };
@@ -1498,16 +1517,11 @@ define(
                     }
                 },
                 createView: function (options) {
-                    //console.log("UseCaseContext.createView, options: ");
-                    //console.log( options);
                     options || (options = {});
-                    var viewOptions = Restdude.deepExtend({}, this.viewOptions || {}, options);
+                    var viewOptions = Restdude.deepExtend({}, (this.viewOptions || {}), options);
                     viewOptions.useCaseContext = this;
                     viewOptions.model = this.model;
                     viewOptions.addToCollection = this.addToCollection;
-
-                    //console.log("UseCaseContext.createView, viewOptions: ");
-                    //console.log( viewOptions);
                     return new this.view(viewOptions);
                 },
                 getRouteUrl: function () {
@@ -1519,7 +1533,12 @@ define(
                     return s;
                 },
                 getFetchable: function () {
-                    return this.key.indexOf("search") == 0 ? this.model.wrappedCollection : this.model
+                    // if search, use the collection as fetchable
+                    if(this.key.indexOf("search") == 0){
+                        return this.model.wrappedCollection;
+                    }
+                    // else fetch the model
+                    return  this.model;
                 },
                 getFields: function () {
                     // if not given, pick them up from model

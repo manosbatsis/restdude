@@ -93,13 +93,7 @@ define(
         Restdude.view.UseCaseItemView = Restdude.view.View.extend({
 
             initialize: function (options) {
-
-                console.log(this.getTypeName() + ".initialize, options: ");
-                console.log(options);
                 Restdude.view.View.prototype.initialize.apply(this, arguments);
-
-                console.log(this.getTypeName() + ".initialize, regionName: " + this.regionName +
-                    ", regionPath: " + this.regionPath);
             },
             getSchemaType: function () {
                 return this.constructor.getSchemaType();
@@ -198,9 +192,6 @@ define(
                     window.history.back();
                 },
                 triggerModelShow: function (e) {
-
-                    console.log(this.getTypeName() + ".triggerModelShow, arguments: ");
-                    console.log(arguments);
                     Restdude.stopEvent(e);
                     var $a = $(e.currentTarget);
                     this.triggerMethod("model:show", {
@@ -300,21 +291,13 @@ define(
         Restdude.view.JsonSchemaView = Restdude.view.UseCaseItemView.extend({
                 template: Restdude.getTemplate('JsonSchemaView'),
                 initialize: function (options) {
-                    console.log("JsonSchemaView initialize, options: ");
-                    console.log(options);
                     Restdude.view.UseCaseItemView.prototype.initialize.apply(this, arguments);
                 },
                 buildSchema: function () {
                     return this.options.jsonSchema;
                 },
                 onRender: function () {
-                    console.log("JsonSchemaView onRender, model: ");
-                    console.log(this.model.attributes);
-                    console.log("JsonSchemaView onRender,container: ");
                     var container = this.$el.find("div.jsonSchemaView:first");
-                    console.log(container);
-                    console.log("JsonSchemaView onRender, schema: ");
-                    console.log(this.schema);
                     container.alpaca({
                         "data": this.model.attributes,
                         "schema": this.schema,
@@ -503,7 +486,6 @@ define(
                 // search entities?
             },
             cancel: function () {
-                console.log("cancel");
                 window.history.back();
             },
             onRender: function () {
@@ -638,12 +620,9 @@ define(
                 var _this = this, typeAheadSources = [],
                     schema = Restdude.view.UseCaseFormView.prototype.buildSchema.apply(this, arguments);
 
-                console.log("SCHEMA: ");
-                console.log(schema);
                 // hide givne fields and use them to set the searchbox data sources
                 var label, fields = [];
                 _.each(schema, function (field, key) {
-                    console.log("hiding field: " + key);
                     field.type = "Hidden";
                     label = field.title || field.titleHTML;
                     fields.push(key);
@@ -667,8 +646,6 @@ define(
                     typeaheadSource: typeAheadSources,
                     fields: fields,
                 };
-                console.log("SCHEMA new: ");
-                console.log(schema);
                 return schema;
             }
         });

@@ -36,7 +36,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     var _this = this;
                     this.set("translatedName", Restdude.util.getLabels("countries." + this.get(Restdude.config.idAttribute)));
                     this.on('sync', function (model, response, options) {
-                        console.log("UserDetailsModel on sync")
                         _this.onLogin(model, response, options);
                     });
                     this.on('error', function (model, response, options) {
@@ -49,7 +48,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     return sUrl;
                 },
                 onLogin: function (model, response, options) {
-                    console.log("onLogin")
                     // send logged in user on their way
                     var fw = "home";
                     if (Restdude.app.fw) {
@@ -68,7 +66,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                     } else {
                         // is the application started?
                         if (Restdude.app.isStarted()) {
-                            console.log("onLogin, app is started")
                             this.browseMenu = null;
                             if (this.get(Restdude.config.idAttribute)) {
                                 Restdude.app.updateHeaderFooter();
@@ -79,7 +76,6 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                                 alert("Invalid credentials, " + Restdude.config.idAttribute + ": " + this.get(Restdude.config.idAttribute))
                             }
                         } else {
-                            console.log("onLogin, app is NOT started")
                             Restdude.app.start(Restdude.getConfigProperty("startOptions"));
                         }
                     }

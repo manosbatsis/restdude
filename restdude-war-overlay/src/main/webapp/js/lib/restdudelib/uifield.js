@@ -243,7 +243,6 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
         MomentCalendarTimeFormatter.prototype = new Backgrid.Extension.MomentFormatter;
         _.extend(MomentCalendarTimeFormatter.prototype, {
             fromRaw: function (rawData) {
-                console.log("CalendarTime.fromRaw, rawData: " + rawData);
                 if (rawData == null) return '';
 
                 var m = this.modelInUnixOffset ? moment(rawData) :

@@ -30,13 +30,11 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'backbone'
         },
         getRoles: function () {
             var roles = this.isAuthenticated() ? this.userDetails.get("roles") : [];
-            console.log("getRoles: " + roles);
             return roles;
         },
         // Returns true if the user is authenticated.
         isAuthenticated: function () {
             var is = this.userDetails && this.userDetails.get && this.userDetails.get(Restdude.config.idAttribute) && this.userDetails.get("active");
-            console.log("isAuthenticated: " + is);
             return is;
         },
         ensureLoggedIn: function () {
@@ -73,12 +71,10 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'backbone'
         logout: function () {
             var url = this.userDetails.url();
             var _self = this;
-            console.log("Restdude.session.logout URL: " + url);
             this.userDetails.destroy({
                 url: url,
                 success: function (model, response, options) {
 
-                    console.log("Restdude.session.logout success");
 
                     Restdude.navigate("/", {
                         trigger: false

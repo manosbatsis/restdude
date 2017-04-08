@@ -96,49 +96,13 @@ define(
             },
             showUseCaseView: function (pathFragment, modelId, useCaseKey, httpParams) {
                 httpParams = Restdude.getHttpUrlParams(httpParams);
-                var _self = this;
+
                 var qIndex = modelId ? modelId.indexOf("?") : -1;
                 if (qIndex > -1) {
                     modelId = modelId.substring(0, qIndex);
                 }
-                // build the model instance representing the current request
-                $.when(Restdude.util.getUseCaseFactory(pathFragment)).done(
-                    function (UseCaseFactory) {
-                        // check for usecase routes for new instances
 
-                        if (UseCaseFactory.hasUseCase(modelId)) {
-                            useCaseKey = modelId;
-                            modelId = null;
-                        }
-
-                        // check if model type is public
-                        if (UseCaseFactory.isPublic() || _self._ensureLoggedIn()) {
-                            var useCaseContext = UseCaseFactory.getUseCaseContext({
-                                key: useCaseKey, modelId: modelId, httpParams: httpParams, pathFragment: pathFragment
-                            });
-
-                            // TODO: move fetch logic to  useCase
-                            var model = useCaseContext.model;
-                            var skipDefaultSearch = model.skipDefaultSearch && model.wrappedCollection && model.wrappedCollection.hasCriteria();
-
-                            var renderFetchable = function () {
-                                _self.showView(useCaseContext.createView({regionName: "", regionPath: ""}));
-                            };
-                            var fetchable = useCaseContext.getFetchable();
-                            if ((model.get(Restdude.config.idAttribute) || fetchable.length == 0 ) && model.getTypeName() != "Restdude.model.UserDetailsModel"/*
-                             && (!model.wrappedCollection || (!skipDefaultSearch && fetchable.length == 0))
-                             */) {
-                                console.log("FETCHING");
-                                fetchable.fetch({
-                                    data: fetchable.data
-                                }).then(renderFetchable);
-                            } else {
-                                console.log("FETCHED");
-                                renderFetchable();
-                            }
-                        }
-                    }
-                );
+                Restdude.showUseCaseView(pathFragment, modelId, useCaseKey, "mainContentRegion", httpParams);
 
             },
             notFoundRoute: function () {

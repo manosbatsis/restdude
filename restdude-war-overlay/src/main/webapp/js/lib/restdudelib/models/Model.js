@@ -53,14 +53,16 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                  * or a URL based on the model path fragment otherwise.
                  */
                 url: function () {
-                    var sUrl = this.collection && _.result(this.collection, 'url') ? _.result(this.collection, 'url') : Restdude.getBaseUrl() + this.getBaseFragment() + this.getPathFragment() /*_.result(this, 'urlRoot')*/ || urlError();
-                    if (!this.isNew()) {
-                        sUrl = sUrl + (sUrl.charAt(sUrl.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.get(Restdude.config.idAttribute));
+                    var sUrl = this.collection && _.result(this.collection, 'url')
+                        ? _.result(this.collection, 'url') : Restdude.getBaseUrl() + this.getBaseFragment() + this.getPathFragment() /*_.result(this, 'urlRoot')*/ || urlError();
+
+                    var ident = this.get("id") || this.get("pk");
+                    if (ident) {
+                        sUrl = sUrl + (sUrl.charAt(sUrl.length - 1) === '/' ? '' : '/') + encodeURIComponent(ident);
                     }
                     return sUrl;
                 },
                 sync: function () {
-                    console.log("Restdude.Model#sync");
                     // apply partial update hints
                     if (!this.isNew()) {
                         var changed = this.changedAttributes();
@@ -141,21 +143,25 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 isPublic: function () {
                     return this.public || false;
                 },
-                create: function (attrs, options) {
-                    var modelAttributes = attrs;
-
+                create: function (modelAttributes, options) {
+                    var httpParams;
                     if (options && options.httpParams) {
-                        var params = _.isString(options.httpParams) ? Restdude.getHttpUrlParams(options.httpParams) : options.httpParams;
+                        httpParams = options.httpParams;
+                        delete options.httpParams;
+                        var params = _.isString(httpParams) ? Restdude.getHttpUrlParams(httpParams) : httpParams;
                         _.extend(modelAttributes, params);
+
                     }
+
                     var model = new this(modelAttributes, options);
-                    if (!modelAttributes.id && this.getTypeName() != "Restdude.model.UserDetailsModel") {
+                    if ((!model.get("pk") && !model.get("id")) && this.getTypeName() != "Restdude.model.UserDetailsModel") {
+
                         var collectionOptions = {
                             model: this,
                             url: Restdude.getBaseUrl() + this.baseFragment + this.getPathFragment(),
                         };
-                        if (options.httpParams) {
-                            collectionOptions.data = options.httpParams;
+                        if (httpParams) {
+                            collectionOptions.data = httpParams;
                         }
                         // create a model to use as a wrapper for a collection of
                         // instances of the same type, fill it with any given search criteria
@@ -231,24 +237,36 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 },
                 _getUseCaseConfig: function (key) {
                     // get superclass config
-                    var useCaseConfig = this.superClass && this.superClass._getUseCaseConfig ? this.superClass._getUseCaseConfig(key) : {};
+                    var useCaseConfig = (this.superClass && this.superClass._getUseCaseConfig
+                        ? this.superClass._getUseCaseConfig(key)
+                        : {}) || {};
+                    useCaseConfig = $.extend(true, {}, useCaseConfig);
                     // apply own config
-                    var ownConfig = $.isFunction(this.useCases) ? this.useCases()[key] : this.useCases[key];
+                    var ownConfig = ($.isFunction(this.useCases) ? this.useCases()[key] : this.useCases[key]) || {};
                     if ($.isFunction(ownConfig)) {
                         ownConfig = ownConfig();
                     }
-                    ownConfig && Restdude.deepExtend(useCaseConfig, ownConfig);
+
+                    Restdude.deepExtend(useCaseConfig, ownConfig);
                     return useCaseConfig;
                 },
                 getUseCaseContext: function (options) {
                     var useCaseConfig = this._getUseCaseConfig(options.key);
-                    Restdude.deepExtend(useCaseConfig.viewOptions, options.viewOptions);
+                    useCaseConfig.viewOptions = Restdude.deepExtend({},
+                        (useCaseConfig.viewOptions || {}),
+                        (options.viewOptions || {}));
+
                     // setup a model instance if needed
-                    useCaseConfig.model = options.model ? options.model : this.create({
-                        id: options.modelId
-                    }, {
-                        httpParams: options.httpParams
-                    });
+                    if(options.model){
+                        useCaseConfig.model = options.model;
+                    }
+                    else{
+                        useCaseConfig.model = this.create({
+                            id: options.modelId
+                        }, {
+                            httpParams: options.httpParams
+                        });
+                    }
 
                     useCaseConfig.factory = this;
                     useCaseConfig.addToCollection = options.addToCollection;

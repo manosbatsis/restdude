@@ -48,17 +48,9 @@ define(
 
                 initialize: function (options) {
                     Restdude.view.View.prototype.initialize.apply(this, arguments);
-
-                    console.log("AppRootView.initialize, options: ");
-                    console.log(options);
-                    console.log("AppRootView.initialize, events: ");
-                    console.log(this.events);
-                    console.log("AppRootView.initialize, triggers: ");
-                    console.log(this.triggers);
                 },
                 onChildviewLayoutReplace: function (options) {
-                    console.log(this.getTypeName() + ".onChildviewLayoutReplace, arguments: ");
-                    console.log(arguments);
+                    Restdude.showUseCaseView(options.fragment, options.id, options.useCase, options.region, options.httpParams);
                 },
                 resizeBroadcast: function () {
 
@@ -152,28 +144,11 @@ define(
                     }
                 });
             },
-
-            onModelShow: function (options) {
-
-                console.log(this.getTypeName() + ".onModelShow, arguments: ");
-                console.log(arguments);
-
-                options.region =  this.regionName;
-                this.triggerMethod("layout:replace", options);
-            },
             onChildviewModelShow: function (options) {
-
-                console.log(this.getTypeName() + ".onChildviewModelShow, arguments: ");
-                console.log(arguments);
-
                 options.region =  this.regionName;
                 this.triggerMethod("layout:replace", options);
             },
-
             onModelSync: function (args) {
-
-                console.log(this.getTypeName() + ".onModelSync, args: ");
-                console.log(args);
                 // execute next useCase by default
                 if (this.closeModalOnSync) {
                     Restdude.vent.trigger("modal:destroy");
@@ -182,7 +157,6 @@ define(
                     this.nextUseCase();
                 }
             },
-
             nextUseCase: function () {
                 if (this.useCaseContext.defaultNext) {
                     Restdude.navigate("/useCases/" + this.model.getPathFragment() + '/' + this.useCaseContext.defaultNext, {
@@ -599,8 +573,6 @@ define(
                     var url = Restdude.getBaseUrl() + '/api/rest/' + this.model.getPathFragment() + "/jsonschema";
                     $.getJSON(url, {})
                         .done(function (data) {
-                            console.log("JsonSchemaLayout.onRender.success, data:");
-                            console.log(data);
                             var childUseCase;
                             _.each(_this.regionViewTypes, function (ViewType, regionName, list) {
                                 // only show existing regions as they may be added contitionally
@@ -612,8 +584,6 @@ define(
                                         regionName: regionName,
                                         regionPath: _this.regionPath + "/" + regionName,
                                     });
-                                    console.log("JsonSchemaLayout.onRender.success, viewOptions:");
-                                    console.log(viewOptions);
                                     _this.showChildView(regionName, childUseCase.createView({
                                         viewOptions: viewOptions,
                                         jsonSchema: data

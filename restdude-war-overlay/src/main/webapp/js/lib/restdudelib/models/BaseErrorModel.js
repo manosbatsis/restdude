@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
             /** @lends Restdude.model.BaseErrorModel.prototype */
             {
                 toString: function () {
-                    return this.get("message");
+                    return this.get("title");
                 }
             }, {
                 // static members
