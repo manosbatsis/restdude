@@ -28,6 +28,23 @@ define(
         //////////////////////////////////////////////////
         // Layouts
         //////////////////////////////////////////////////
+        Restdude.view.BreadcrumbItemView = Marionette.View.extend({
+            template: Restdude.getTemplate('BreadcrumbItemView'),
+            className : 'breadcrumb',
+            tagName   : 'ol'
+        });
+
+        // The collection view, will render when initialized and when its collection changes
+        Restdude.view.BreadcrumbListView = Marionette.CollectionView.extend({
+            childView  : Restdude.view.BreadcrumbItemView,
+            collection : new Backbone.Collection([{ name : 'foo', url : 'foo' }]),
+            initialize : function(options){
+                Marionette.CollectionView.prototype.initialize.apply(this, arguments);
+                this.listenTo(this.collection, 'change', this.render );
+                //this.render();
+            }
+        });
+
 
         Restdude.view.AppRootView = Restdude.view.View.extend({
                 tagName: "body",
@@ -35,6 +52,10 @@ define(
                 template: Restdude.getTemplate('AppRootView'),
                 regions: {
                     headerRegion: "#restdudeHeaderRegion",
+                    breadcrumbRegion: {
+                        el: "#restdudeBreadcrumbRegion",
+                        replaceElement: true
+                    },
                     sidebarRegion: "#restdudeSidebarRegion",
                     mainContentRegion: "#restdudeMainContentRegion",
                     modalRegion: Restdude.view.ModalRegion,
@@ -48,6 +69,9 @@ define(
 
                 initialize: function (options) {
                     Restdude.view.View.prototype.initialize.apply(this, arguments);
+                },
+                onRender: function () {
+                    this.showChildView("breadcrumbRegion", new Restdude.view.BreadcrumbListView());
                 },
                 onChildviewLayoutReplace: function (options) {
                     Restdude.showUseCaseView(options.fragment, options.id, options.useCase, options.region, options.httpParams);
@@ -781,4 +805,6 @@ define(
                 // static members
                 typeName: "UserRegistrationLayout"
             });
+
+        return Restdude;
     });

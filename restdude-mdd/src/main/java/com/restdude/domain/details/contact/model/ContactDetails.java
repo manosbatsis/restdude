@@ -21,9 +21,9 @@
 package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.PersistableModel;
 import io.swagger.annotations.ApiModel;
 import org.javers.core.metamodel.annotation.ShallowReference;
 

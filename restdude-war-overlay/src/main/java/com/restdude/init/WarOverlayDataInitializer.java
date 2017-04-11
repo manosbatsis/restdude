@@ -60,14 +60,6 @@ public class WarOverlayDataInitializer extends DataInitializer {
         Configuration config = ConfigurationFactory.getConfiguration();
         boolean initData = config.getBoolean(ConfigurationFactory.INIT_DATA, true);
 
-        if (initData && this.systemErrorService.count() == 0) {
-
-            initSystemErrors(this.userService.findAll());
-
-        } else {
-
-            LOGGER.debug("run, skipping data init");
-        }
 
 
         // send test email?

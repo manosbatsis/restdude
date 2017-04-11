@@ -20,6 +20,7 @@
  */
 package com.restdude.config;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.restdude.domain.error.resolver.RestExceptionHandler;
 import com.restdude.mdd.binding.CsvMessageConverter;
 import com.restdude.mdd.binding.CustomEnumConverterFactory;
@@ -84,6 +85,7 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         builder.featuresToEnable(com.fasterxml.jackson.databind.MapperFeature.DEFAULT_VIEW_INCLUSION)
                 .featuresToDisable(
+                        SerializationFeature.FAIL_ON_EMPTY_BEANS,
                         com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                         com.fasterxml.jackson.databind.DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS,
                         com.fasterxml.jackson.databind.DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE,

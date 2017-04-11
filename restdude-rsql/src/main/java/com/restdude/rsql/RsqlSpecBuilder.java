@@ -20,7 +20,7 @@
  */
 package com.restdude.rsql;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.specification.PredicateFactorySpecification;
 import cz.jirutka.rsql.parser.ast.ComparisonNode;

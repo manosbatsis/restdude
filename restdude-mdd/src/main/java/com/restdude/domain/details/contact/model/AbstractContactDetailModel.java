@@ -22,8 +22,8 @@ package com.restdude.domain.details.contact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
-import com.restdude.mdd.model.PersistableModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

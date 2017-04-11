@@ -24,7 +24,7 @@ import com.restdude.auth.jwt.JwtAuthenticationProcessingFilter;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.AnonymousAuthenticationFilter;
 import com.restdude.auth.userdetails.util.RestAuthenticationEntryPoint;
-import com.restdude.mdd.model.Roles;
+import com.restdude.domain.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

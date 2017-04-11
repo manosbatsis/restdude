@@ -21,6 +21,7 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.restdude.domain.CommentableModel;
 import com.restdude.domain.error.controller.ClientErrorController;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.FilePersistence;
@@ -40,22 +41,22 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 
-@Slf4j
-@ModelResource(pathFragment = ClientError.API_PATH,
-        apiName = "Client Errors", apiDescription = "Client Error Operations", controllerSuperClass = ClientErrorController.class)
 @Entity
 @Table(name = "error_client")
+@ModelResource(pathFragment = ClientError.API_PATH,
+        apiName = "Client Errors", apiDescription = "Client Error Operations", controllerSuperClass = ClientErrorController.class)
 @ApiModel(value = "ClientError", description = "Client errors are created upon client request and refer to exceptions occurred " +
         "specifically within client application code. ")
 @JsonIgnoreProperties("pk")
-public class ClientError extends BaseError implements PersistableError<String> {
+@Slf4j
+public class ClientError extends BaseError implements PersistableError {
 
     public static final String API_PATH = "clientErrors";
 
     @ApiModelProperty(value = "A client application screenshot demonstrating the issue.")
     @FilePersistence(maxWidth = 1920, maxHeight = 1080)
     @FilePersistencePreview(maxWidth = 200, maxHeight = 200)
-    @Column(name = "screenshot_url", length = MAX_MESSAGE_LENGTH)
+    @Column(name = "screenshot_url", length = CommentableModel.MAX_TITLE_LENGTH)
     private String screenshotUrl;
 
 
@@ -65,8 +66,8 @@ public class ClientError extends BaseError implements PersistableError<String> {
     @ApiModelProperty(value = "A textual representation of the client application state, e.g. the DOM tree.")
     private String state;
 
-    @ApiModelProperty(value = "The URL relevant to application view state during the error e.g. window.location.href, if any", notes = "Values will be trimmed to max byte length, i.e. " + BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
-    @Column(name = "view_url", updatable = false, length = BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH)
+    @ApiModelProperty(value = "The URL relevant to application view state during the error e.g. window.location.href, if any", notes = "Values will be trimmed to max byte length, i.e. " + MAX_DETAIL_LENGTH)
+    @Column(name = "view_url", updatable = false, length = MAX_DETAIL_LENGTH)
     @Getter @Setter
     private String viewUrl;
 
@@ -88,8 +89,8 @@ public class ClientError extends BaseError implements PersistableError<String> {
     public void preSave() {
         log.debug("preSave, before: {}", this);
         super.preSave();
-        if (StringUtils.isNotEmpty(this.viewUrl) && this.viewUrl.length() > BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH) {
-            this.viewUrl = StringUtils.abbreviate(this.viewUrl, BaseError.DEFAULT_MAX_DESCRIPTION_LENGTH);
+        if (StringUtils.isNotEmpty(this.viewUrl) && this.viewUrl.length() > MAX_DETAIL_LENGTH) {
+            this.viewUrl = StringUtils.abbreviate(this.viewUrl, MAX_DETAIL_LENGTH);
         }
 
         log.debug("preSave, after: {}", this);

@@ -26,7 +26,7 @@ import com.restdude.auth.jwt.model.JwtToken;
 import com.restdude.auth.model.SimpleLoginRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import com.restdude.util.CookieUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

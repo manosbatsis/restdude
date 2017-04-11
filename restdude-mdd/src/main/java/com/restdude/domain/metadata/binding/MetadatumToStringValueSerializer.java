@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.domain.MetadatumModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

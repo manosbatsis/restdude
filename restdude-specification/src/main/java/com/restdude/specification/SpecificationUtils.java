@@ -20,7 +20,7 @@
  */
 package com.restdude.specification;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.specification.factory.*;
 import com.restdude.util.ClassUtils;
 import org.slf4j.Logger;

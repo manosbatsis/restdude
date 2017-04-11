@@ -21,6 +21,7 @@
 package com.restdude.mdd.model;
 
 import com.restdude.auth.spel.annotations.*;
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.validation.Unique;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

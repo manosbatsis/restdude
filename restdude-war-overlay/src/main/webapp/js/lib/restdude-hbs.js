@@ -21,6 +21,8 @@
 define([
 
         'hbs!template/AppRootView',
+        'hbs!template/BreadcrumbItemView',
+
         'hbs!template/modal-layout',
         'hbs!template/sidebar',
         'hbs!template/header',
@@ -59,6 +61,7 @@ define([
     ,
 
     function (AppRootView,
+              BreadcrumbItemView,
               modal_layout,
               sidebar,
               header,
@@ -95,6 +98,7 @@ define([
               itemViewTemplate) {
         return {
             "AppRootView": AppRootView,
+            "BreadcrumbItemView" : BreadcrumbItemView,
             "modal-layout": modal_layout,
             "sidebar": sidebar,
             "header": header,

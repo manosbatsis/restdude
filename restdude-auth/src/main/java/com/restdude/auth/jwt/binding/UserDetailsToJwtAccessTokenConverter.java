@@ -22,7 +22,7 @@ package com.restdude.auth.jwt.binding;
 
 import com.restdude.auth.config.JwtSettings;
 import com.restdude.auth.jwt.model.JwtAccessToken;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;

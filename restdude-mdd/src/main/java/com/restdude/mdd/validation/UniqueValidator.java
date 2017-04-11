@@ -21,7 +21,7 @@
 package com.restdude.mdd.validation;
 
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.util.EntityUtil;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.proxy.HibernateProxyHelper;

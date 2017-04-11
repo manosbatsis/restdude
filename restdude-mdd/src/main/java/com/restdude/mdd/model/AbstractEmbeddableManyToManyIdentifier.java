@@ -23,6 +23,7 @@ package com.restdude.mdd.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.friends.model.FriendshipIdentifier;
 import com.restdude.mdd.binding.EmbeddableManyToManyIdDeserializer;
 import com.restdude.mdd.binding.EmbeddableManyToManyIdSerializer;

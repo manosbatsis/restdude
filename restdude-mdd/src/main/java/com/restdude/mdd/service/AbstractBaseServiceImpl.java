@@ -22,14 +22,15 @@ package com.restdude.mdd.service;
 
 
 import com.restdude.auth.userdetails.util.SecurityUtil;
+import com.restdude.domain.UserDetails;
+import com.restdude.domain.UserModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.UserRepository;
-import com.restdude.mdd.model.UserDetails;
-import com.restdude.mdd.model.UserModel;
 import com.restdude.util.email.service.EmailService;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,12 +100,21 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
         return SecurityUtil.getPrincipal();
     }
 
+
+    protected User initRoles(User user){
+        if(user != null){
+            Hibernate.initialize(user.getRoles());
+        }
+        return user;
+    }
+
     @Override
     public UserModel getPrincipalLocalUser() {
         UserDetails principal = getPrincipal();
         User user = null;
         if (principal != null && principal.getPk() != null) {
             user = this.userRepository.getOne(principal.getPk());
+            initRoles(user);
         }
 
         if(LOGGER.isDebugEnabled()){

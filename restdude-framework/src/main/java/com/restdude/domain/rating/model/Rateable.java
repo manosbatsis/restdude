@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.rating.model;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.rating.repository.RateableRepository;
 
 import java.io.Serializable;

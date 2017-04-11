@@ -20,18 +20,41 @@
  */
 package com.restdude.domain.users.service.impl;
 
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.domain.Roles;
 import com.restdude.domain.users.model.Role;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.repository.RoleRepository;
 import com.restdude.domain.users.service.RoleService;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
 
-
+@Slf4j
 @Named("roleService")
 public class RoleServiceImpl extends AbstractPersistableModelServiceImpl<Role, String, RoleRepository> implements RoleService {
+
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param systemUser
+	 */
+	@Override
+	protected void initDataOverride(User systemUser) {
+
+		if (this.count() == 0) {
+			Role adminRole = new Role(Roles.ROLE_ADMIN, "System Administrator.");
+			log.debug("#initRoles, creating");
+			adminRole = this.create(adminRole);
+			Role siteAdminRole = new Role(Roles.ROLE_SITE_OPERATOR, "Site Operator.");
+			siteAdminRole = this.create(siteAdminRole);
+			// this is added to users by user service, just creating it
+			Role userRole = new Role(Roles.ROLE_USER, "Logged in user");
+			userRole = this.create(userRole);
+		}
+	}
 
 	@Override
 	public Role findByIdOrName(String idOrName) {
@@ -59,4 +82,6 @@ public class RoleServiceImpl extends AbstractPersistableModelServiceImpl<Role, S
         member.addRole(role);
         userRepository.save(member);
     }
+
+
 }

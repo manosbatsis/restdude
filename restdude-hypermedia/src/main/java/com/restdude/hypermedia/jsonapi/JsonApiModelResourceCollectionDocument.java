@@ -20,7 +20,7 @@
  */
 package com.restdude.hypermedia.jsonapi;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 
 import java.io.Serializable;
 import java.util.Collection;

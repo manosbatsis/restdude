@@ -21,8 +21,8 @@
 package com.restdude.domain.metadata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.model.MetadataSubjectModel;
-import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.domain.MetadataSubjectModel;
+import com.restdude.domain.MetadatumModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class MetadatumDTO implements MetadatumModel {

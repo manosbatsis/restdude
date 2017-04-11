@@ -22,9 +22,9 @@ package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.auth.spel.annotations.PreAuthorizeCreate;
+import com.restdude.domain.Roles;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
-import com.restdude.mdd.model.Roles;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.javers.core.metamodel.annotation.DiffIgnore;

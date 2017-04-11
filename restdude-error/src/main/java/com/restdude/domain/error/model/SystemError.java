@@ -53,7 +53,7 @@ import java.util.Set;
         "(i.e. without manual intervention) to handle and inform the user about runtime exceptions. "
         + "They may be persisted automatically according to restdude.validationErrors.system.persist* configuration properties. "
         + "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
-@JsonPropertyOrder({"message", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
+@JsonPropertyOrder({"title", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
         "validationErrors", "user"})
 @JsonIgnoreProperties("pk")
 public class SystemError extends BaseError {
@@ -99,7 +99,7 @@ public class SystemError extends BaseError {
         // set status
         this.httpStatusCode = httpStatusCode;
 
-        // set default message if appropriate
+        // set default title if appropriate
         if (StringUtils.isBlank(message)) {
             this.setTitle(HttpStatus.valueOf(httpStatusCode).getReasonPhrase());
         }
@@ -202,7 +202,8 @@ public class SystemError extends BaseError {
 
     public static class Builder {
 
-        private String message;
+        private String title;
+        private String detail;
         private User user;
 
         private String requestMethod;
@@ -214,8 +215,13 @@ public class SystemError extends BaseError {
         private Throwable throwable;
         private ErrorLog errorLog;
 
-        public Builder message(String message) {
-            this.message = message;
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder detail(String detail) {
+            this.detail = detail;
             return this;
         }
 
@@ -265,7 +271,8 @@ public class SystemError extends BaseError {
 
     private SystemError(Builder builder) {
 
-        this.setTitle(builder.message);
+        this.setTitle(builder.title);
+        this.setDetail(builder.detail);
         this.setCreatedBy(builder.user);
 
         this.requestMethod = builder.requestMethod;

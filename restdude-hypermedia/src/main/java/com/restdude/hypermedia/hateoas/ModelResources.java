@@ -21,7 +21,7 @@
 package com.restdude.hypermedia.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
 

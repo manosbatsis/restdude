@@ -20,11 +20,11 @@
  */
 package com.restdude.hypermedia.jsonapi.support;
 
+import com.restdude.domain.ErrorModel;
 import com.restdude.hypermedia.jsonapi.JsonApiDocument;
 import com.restdude.hypermedia.jsonapi.JsonApiLink;
 import com.restdude.hypermedia.jsonapi.JsonApiResource;
 import com.restdude.hypermedia.util.JsonApiModelBasedDocumentBuilder;
-import com.restdude.mdd.model.ErrorModel;
 import lombok.Getter;
 import lombok.Setter;
 

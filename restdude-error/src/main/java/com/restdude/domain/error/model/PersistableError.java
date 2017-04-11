@@ -21,18 +21,19 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.restdude.domain.ErrorModel;
+import com.restdude.domain.cases.CaseModel;
+import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.model.ErrorModel;
-
-import java.io.Serializable;
 
 /**
- * @param <PK>
  */
 @JsonIgnoreProperties("pk")
-public interface PersistableError<PK extends Serializable> extends ErrorModel<PK> {
+public interface PersistableError extends ErrorModel<String>, CaseModel<ErrorComment> {
 
 
+    CaseStatus getStatus();
+    void setStatus(CaseStatus status);
 
     User getCreatedBy();
 

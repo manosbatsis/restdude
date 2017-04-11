@@ -20,7 +20,7 @@
  */
 package com.restdude.specification;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;

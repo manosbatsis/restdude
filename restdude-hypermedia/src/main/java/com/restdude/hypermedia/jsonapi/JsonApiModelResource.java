@@ -21,8 +21,8 @@
 package com.restdude.hypermedia.jsonapi;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.restdude.domain.Model;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
-import com.restdude.mdd.model.Model;
 
 import java.io.Serializable;
 

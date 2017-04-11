@@ -103,16 +103,16 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
     </sec:http>
 
 
-    <!-- sec:websocket-message-broker>
-            <sec:intercept-message type="CONNECT" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message type="UNSUBSCRIBE" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message type="DISCONNECT" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message type="MESSAGE" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message type="SUBSCRIBE" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message pattern="/domain/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message pattern="/topic/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-            <sec:intercept-message pattern="/user/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
-    </sec:websocket-message-broker-->
+    <!-- sec:websoctitlesage-broker>
+            <sec:interctitlesage type="CONNECT" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage type="UNSUBSCRIBE" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage type="DISCONNECT" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage type="MESSAGE" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage type="SUBSCRIBE" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage pattern="/domain/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage pattern="/topic/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+            <sec:interctitlesage pattern="/user/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" />
+    </sec:websoctitlesage-broker-->
 
 
     <!-- To enable Method Security Expressions and custom PermissionEvaluator

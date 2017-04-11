@@ -20,9 +20,16 @@
  */
 package com.restdude.domain.users.service.impl;
 
+import com.restdude.auth.model.UserDetailsAuthenticationToken;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
 import com.restdude.auth.userdetails.controller.form.ValidatorUtil;
+import com.restdude.auth.userdetails.model.UserDetailsImpl;
+import com.restdude.auth.userdetails.util.SecurityUtil;
+import com.restdude.domain.MetadatumModel;
+import com.restdude.domain.Roles;
+import com.restdude.domain.UserDetails;
+import com.restdude.domain.UserModel;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
@@ -33,37 +40,46 @@ import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.domain.users.service.UserCredentialsService;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.mdd.model.MetadatumModel;
-import com.restdude.mdd.model.Roles;
-import com.restdude.mdd.model.UserDetails;
-import com.restdude.mdd.model.UserModel;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.HashUtils;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.InvalidCredentialsException;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//@Named("userService")
 public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, String, UserRepository>
         implements UserService {
 
@@ -71,6 +87,9 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
     private static final String USERDTO_CLASS = UserDTO.class.getCanonicalName();
 
     private final StringKeyGenerator generator = KeyGenerators.string();
+
+    @Value("${restdude.testEmailDomain}")
+    private String testEmailDomain;
 
 
     private UserCredentialsService credentialsService;
@@ -83,6 +102,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
 
     private PasswordEncoder passwordEncoder;
     private Validator validator;
+
 
     @Autowired
     public void setValidator(Validator validator) {
@@ -131,7 +151,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public User findActiveByCredentials(String userNameOrEmail, String password, Map metadata) {
 
         User user = null;
@@ -146,6 +166,56 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             }
         }
         return user;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param id
+     */
+    @Override
+    public User findById(String id) {
+        return this.initRoles(super.findById(id));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param ids
+     */
+    @Override
+    public List<User> findByIds(Set<String> ids) {
+        return this.initRoles(super.findByIds(ids));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<User> findAll() {
+        return this.initRoles(super.findAll());
+    }
+
+    private List<User> initRoles(List<User> all) {
+        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(all)){
+            for(User user : all){
+                this.initRoles(user);
+            }
+        }
+        return all;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param spec
+     * @param pageable
+     */
+    @Override
+    public Page<User> findPaginated(Specification<User> spec, Pageable pageable) {
+        Page<User> users = super.findPaginated(spec, pageable);
+        this.initRoles(users.getContent());
+        return users;
     }
 
     @Override
@@ -227,7 +297,16 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         // force any errors to occur sooner rather than later
         this.repository.flush();
 
-        return resource;
+        return initRoles(resource);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public User patch(User resource) {
+        return initRoles(super.patch(resource));
     }
 
     protected UserRegistrationCode noteRegistrationCode(UserCredentials credentials) {
@@ -455,7 +534,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
                 }
             }
         }
-        return found;
+        return initRoles(found);
     }
 
     /**
@@ -479,7 +558,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
      */
     @Override
     public User findActiveByUsername(String username) {
-        return this.repository.findActiveByUsername(username);
+        return initRoles(this.repository.findActiveByUsername(username));
     }
 
     /**
@@ -487,7 +566,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
      */
     @Override
     public User findActiveByEmail(String email) {
-        return this.repository.findActiveByEmail(email);
+        return initRoles(this.repository.findActiveByEmail(email));
     }
 
     /**
@@ -495,7 +574,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
      */
     @Override
     public User findActiveById(String id) {
-        return this.repository.findActiveById(id);
+        return initRoles(this.repository.findActiveById(id));
     }
 
     /**
@@ -509,7 +588,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
                     ? this.findActiveByEmail(userNameOrEmail)
                     : this.findActiveByUsername(userNameOrEmail);
         }
-        return found;
+        return initRoles(found);
     }
 
 
@@ -668,6 +747,117 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
 
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param systemUser
+     */
+    @Override
+    protected void initDataOverride(User systemUser) {
+
+        LOGGER.debug("run");
+        if(this.count() == 0){
+
+
+            Role adminRole = this.roleRepository.findByIdOrName(Roles.ROLE_ADMIN);
+            Role operatorRole = roleRepository.findByIdOrName(Roles.ROLE_SITE_OPERATOR);
+
+            LocalDateTime now = LocalDateTime.now();
+            String domain = this.getTestEmailDomain();
+
+            User system = new User();
+            system.setUsername("system");
+            system.setFirstName("System");
+            system.setLastName("User");
+            system.setCredentials(new UserCredentials.Builder().password("system").build());
+            system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@" + domain)).build());
+            system.setLastVisit(now);
+            system = this.createAsConfirmed(system);
+
+            User adminUser = new User();
+            adminUser.setUsername("admin");
+            adminUser.setFirstName("Admin");
+            adminUser.setLastName("User");
+            adminUser.setLastVisit(now);
+            adminUser.addRole(adminRole);
+            adminUser.setCredentials(new UserCredentials.Builder().password("admin").build());
+            adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("admin@" + domain)).build());
+//			adminUser.setCreatedBy(system);
+            adminUser = this.createAsConfirmed(adminUser);
+
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UserDetailsAuthenticationToken(UserDetailsImpl.fromUser(adminUser)));
+            LOGGER.debug("run, principal: {}", SecurityUtil.getPrincipal());
+
+
+            User adminFriend = new User();
+            adminFriend.setUsername("adminFriend");
+            adminFriend.setFirstName("Admins");
+            adminFriend.setLastName("Friend");
+            adminFriend.setLastVisit(now);
+            adminFriend.setCredentials(new UserCredentials.Builder().password("adminFriend").build());
+            adminFriend.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("adminFriend@" + domain)).build());
+//			adminUser.setCreatedBy(system);
+            adminFriend = this.createAsConfirmed(adminFriend);
+
+
+            User opUser = new User();
+            opUser.setUsername("operator");
+            opUser.setFirstName("Operator");
+            opUser.setLastName("User");
+            opUser.setCredentials(new UserCredentials.Builder().password("operator").build());
+            opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@" + domain)).build());
+            opUser.setLastVisit(now);
+            opUser.addRole(operatorRole);
+//			opUser.setCreatedBy(system);
+            opUser = this.createAsConfirmed(opUser);
+
+            User simpleUser = new User();
+            simpleUser.setUsername("simple");
+            simpleUser.setFirstName("Simple");
+            simpleUser.setLastName("User");
+            simpleUser.setCredentials(new UserCredentials.Builder().password("simple").build());
+            simpleUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("simple@" + domain)).build());
+            simpleUser.setLastVisit(now);
+//			simpleUser.setCreatedBy(system);
+            simpleUser = this.createAsConfirmed(simpleUser);
+
+            User userControllerIt = new User();
+            userControllerIt.setUsername("usercontrollerit");
+            userControllerIt.setFirstName("Usercontrollerit");
+            userControllerIt.setLastName("User");
+            userControllerIt.setCredentials(new UserCredentials.Builder().password("usercontrollerit").build());
+            userControllerIt.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("usercontrollerit@" + domain)).build());
+            userControllerIt.setLastVisit(now);
+//			simpleUser.setCreatedBy(system);
+            userControllerIt = this.createAsConfirmed(userControllerIt);
+
+
+            int usersMax = 5;
+            int usersCreated = 0;
+            while (usersCreated < usersMax) {
+                for (String fullName : this.getTenNames()) {
+                    String userName = fullName.toLowerCase().replace(" ", "") + usersCreated;
+                    User u = new User();
+                    u.setUsername(userName);
+                    u.setFirstName(fullName.substring(0, fullName.indexOf(" ")));
+                    u.setLastName(fullName.substring(fullName.indexOf(" ") + 1));
+                    u.setCredentials(new UserCredentials.Builder().password(userName).build());
+                    u.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail(userName + "@" + testEmailDomain)).build());
+                    u.setLastVisit(now);
+//					u.setCreatedBy(system);
+                    u = this.createAsConfirmed(u);
+
+                    usersCreated++;
+                    LOGGER.info("Created user: " + u);
+                    if (usersCreated >= usersMax) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     public static InternetAddress isValidEmailAddress(String email) {
         InternetAddress emailAddr = null;
         try {
@@ -678,4 +868,33 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         }
         return emailAddr;
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public User updateFiles(String id, MultipartHttpServletRequest request, HttpServletResponse response) {
+        return initRoles(super.updateFiles(id, request, response));
+    }
+
+    private String[] getTenNames() {
+        try {
+            URL namey = new URL("http://namey.muffinlabs.com/name.json?count=10&with_surname=true");
+            URLConnection yc = namey.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+            String[] names = in.readLine().replace("[", "").replace("]", "").replace("\"", "").split(",");
+            return names;
+        } catch (Exception e) {
+            String[] names = {"Linda Hernandez", "David Ellis", "Nancy Morgan", "Elizabeth White", "Richard Collins",
+                    "David Sanchez", "Michael Cox", "Karen Moore", "John Gray", "Carol Garcia"};
+            return names;
+        }
+    }
+
+    protected String getTestEmailDomain() {
+        Configuration config = ConfigurationFactory.getConfiguration();
+        return config.getString("restdude.testEmailDomain", this.testEmailDomain);
+    }
+
+
+
+
 }

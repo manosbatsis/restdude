@@ -23,8 +23,8 @@ package com.restdude.auth.jwt.binding;
 
 import com.restdude.auth.config.JwtSettings;
 import com.restdude.auth.jwt.model.JwtRefreshToken;
-import com.restdude.mdd.model.Roles;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.Roles;
+import com.restdude.domain.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.NonNull;

@@ -21,10 +21,10 @@
 package com.restdude.mdd.controller;
 
 
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
+import com.restdude.mdd.service.PersistableModelService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

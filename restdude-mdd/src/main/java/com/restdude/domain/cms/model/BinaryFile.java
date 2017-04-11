@@ -21,8 +21,8 @@
 package com.restdude.domain.cms.model;
 
 
+import com.restdude.domain.UploadedFileModel;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
-import com.restdude.mdd.model.UploadedFileModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.Formula;
 

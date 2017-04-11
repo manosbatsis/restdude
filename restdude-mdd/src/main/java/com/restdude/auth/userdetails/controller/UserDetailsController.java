@@ -26,7 +26,7 @@ import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import com.restdude.util.exception.http.InvalidCredentialsException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

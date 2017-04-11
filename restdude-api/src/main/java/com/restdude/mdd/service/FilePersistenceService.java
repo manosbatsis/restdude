@@ -20,10 +20,10 @@
  */
 package com.restdude.mdd.service;
 
+import com.restdude.domain.FileDTO;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.FilePersistencePreviews;
-import com.restdude.mdd.model.FileDTO;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;

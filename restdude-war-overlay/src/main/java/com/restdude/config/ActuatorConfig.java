@@ -98,7 +98,7 @@ public class ActuatorConfig {
     }
 
     @Bean
-    @Description("Spring Actuator controller to expose WebSocket message mappings")
+    @Description("Spring Actuator controller to expose WebSocket title mappings")
     public MessageMappingEndPoint messageMappingEndpoint() {
         return new MessageMappingEndPoint();
     }

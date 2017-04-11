@@ -24,7 +24,7 @@ import com.restdude.auth.jwt.binding.UserDetailsToJwtAccessTokenConverter;
 import com.restdude.auth.jwt.binding.UserDetailsToJwtRefreshTokenConverter;
 import com.restdude.auth.jwt.model.JwtAccessToken;
 import com.restdude.auth.jwt.model.JwtRefreshToken;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

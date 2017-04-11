@@ -20,6 +20,8 @@
  */
 package com.restdude.mdd.model;
 
+import com.restdude.domain.PersistableModel;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 

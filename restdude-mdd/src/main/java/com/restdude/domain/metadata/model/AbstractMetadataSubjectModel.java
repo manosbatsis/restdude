@@ -23,11 +23,11 @@ package com.restdude.domain.metadata.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
+import com.restdude.domain.MetadataSubjectModel;
+import com.restdude.domain.MetadatumModel;
 import com.restdude.domain.metadata.binding.MetadataMapDeserializer;
 import com.restdude.domain.metadata.binding.MetadatumToStringValueSerializer;
-import com.restdude.mdd.model.MetadataSubjectModel;
-import com.restdude.mdd.model.MetadatumModel;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import org.jodah.typetools.TypeResolver;
 import org.springframework.util.CollectionUtils;
 

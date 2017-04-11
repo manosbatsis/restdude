@@ -20,9 +20,15 @@
  */
 package com.restdude.domain.error.repository;
 
-import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.error.model.ClientError;
+import com.restdude.mdd.repository.ModelRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface ClientErrorRepository extends ModelRepository<ClientError, String> {
 
+    String ERRORS_WORKFLOW_NAME = "WEBERR";
+
+    @Query(value = "select w from CaseWorkflow w  where w.maintainerContext.owner.username = 'system' and w.maintainerContext.title = 'System' and w.name = '" + ERRORS_WORKFLOW_NAME + "'")
+    CaseWorkflow getWorkflow();
 }

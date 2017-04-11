@@ -21,7 +21,7 @@
 package com.restdude.hypermedia.jsonapi;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.restdude.mdd.model.ErrorModel;
+import com.restdude.domain.ErrorModel;
 
 import java.io.Serializable;
 import java.util.Collection;

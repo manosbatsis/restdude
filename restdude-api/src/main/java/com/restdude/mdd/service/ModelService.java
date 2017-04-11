@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.service;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

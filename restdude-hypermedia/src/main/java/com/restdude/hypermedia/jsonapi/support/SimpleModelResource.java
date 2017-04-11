@@ -21,8 +21,8 @@
 package com.restdude.hypermedia.jsonapi.support;
 
 import com.fasterxml.jackson.annotation.*;
+import com.restdude.domain.Model;
 import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
-import com.restdude.mdd.model.Model;
 import lombok.NonNull;
 
 import java.io.Serializable;

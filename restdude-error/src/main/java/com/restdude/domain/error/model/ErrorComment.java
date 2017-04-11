@@ -20,37 +20,17 @@
  */
 package com.restdude.domain.error.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.domain.topic.model.AbstractTopicCommentModel;
-import lombok.Getter;
-import lombok.Setter;
+import com.restdude.domain.cases.model.AbstractCaseCommentModel;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Comments for discussing errors
  */
 @Entity
 @Table(name = "error_comment")
-public class ErrorComment extends AbstractTopicCommentModel<BaseError, ErrorComment> {
+public class ErrorComment extends AbstractCaseCommentModel<BaseError, ErrorComment>   {
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic", referencedColumnName = "pk", nullable = false)
-    @Getter @Setter
-    private BaseError topic;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent", referencedColumnName = "pk", nullable = true)
-    @Getter @Setter
-    private ErrorComment parent;
-
-    @JsonIgnore
-    @OneToMany(mappedBy="parent", fetch= FetchType.LAZY)
-    @Getter @Setter
-    private List<ErrorComment> comments;
 
 }

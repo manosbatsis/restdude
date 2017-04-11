@@ -29,6 +29,7 @@ import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
 import com.restdude.auth.spel.annotations.PreAuthorizePatch;
 import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
+import com.restdude.domain.UserModel;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.metadata.model.AbstractMetadataSubjectModel;
@@ -36,7 +37,6 @@ import com.restdude.domain.users.controller.UserController;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.UserModel;
 import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -144,7 +144,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     ContactDetails contactDetails;
 
     // @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "role_id")}, inverseJoinColumns = {
             @JoinColumn(name = "user_id")})
     private List<Role> roles;

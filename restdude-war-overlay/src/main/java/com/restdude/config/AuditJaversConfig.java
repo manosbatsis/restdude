@@ -22,7 +22,7 @@ package com.restdude.config;
 
 
 import com.restdude.auth.userdetails.util.SecurityUtil;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import org.javers.core.Javers;
 import org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook;
 import org.javers.repository.sql.ConnectionProvider;

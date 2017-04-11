@@ -21,9 +21,6 @@
 package com.restdude.mdd.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
@@ -42,12 +39,12 @@ public abstract class AbstractSystemUuidPersistableModel extends AbstractPersist
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
 	private String pk;
-
+/*
 	// TODO, tmp
 	@Formula(" pk ")
 	@Getter @Setter
 	private String id;
-
+*/
 
 	/**
      * {@inheritDoc}

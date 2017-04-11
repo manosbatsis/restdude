@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.error.model;
 
+import com.restdude.domain.CommentableModel;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
 import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
-import com.restdude.mdd.model.TopicModel;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -59,8 +59,8 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     @Formula(" (pk) ")
     private String name;
 
-    @ApiModelProperty(value = "The root cause message.")
-    @Column(name = "root_cause_msg", length = TopicModel.MAX_MESSAGE_LENGTH)
+    @ApiModelProperty(value = "The root cause title.")
+    @Column(name = "root_cause_msg", length = CommentableModel.MAX_TITLE_LENGTH)
     private String rootCauseMessage;
 
     @ApiModelProperty(value = "First occurrence date", required = true)
@@ -71,13 +71,13 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     @Column(name = "last_occurred")
     private LocalDateTime lastOccurred;
 
-    @Formula(" (select count(*) from error_abstract errS where errS.error_log_id = pk) ")
+    @Formula(" (select count(*) from error_base err_base where err_base.error_log_id = pk) ")
     @ApiModelProperty(value = "The number of errors corresponding to this stacktrace.")
     private Integer errorCount = 0;
 
     @NotNull
     @ApiModelProperty(value = "The actual stacktrace.", required = true)
-    @Column(length = TopicModel.MAX_MSTACKTRACE_LENGTH, nullable = false)
+    @Column(length = CommentableModel.MAX_STACKTRACE_LENGTH, nullable = false)
     private String stacktrace = "None";
 
     public ErrorLog() {
@@ -108,15 +108,15 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
             this.setPk(HashUtils.buildHash(this.stacktrace));
         }
 
-        // trim  message if needed
+        // trim  title if needed
         if (StringUtils.isNotEmpty(this.rootCauseMessage)
-                && this.rootCauseMessage.length() > TopicModel.MAX_MESSAGE_LENGTH) {
-            this.rootCauseMessage = StringUtils.abbreviate(this.rootCauseMessage, TopicModel.MAX_MESSAGE_LENGTH);
+                && this.rootCauseMessage.length() > CommentableModel.MAX_TITLE_LENGTH) {
+            this.rootCauseMessage = StringUtils.abbreviate(this.rootCauseMessage, CommentableModel.MAX_TITLE_LENGTH);
         }
 
         // trim  stacktrace if needed
-        if (StringUtils.isNotEmpty(this.stacktrace) && this.stacktrace.length() > TopicModel.MAX_MSTACKTRACE_LENGTH) {
-            this.stacktrace = StringUtils.abbreviate(this.stacktrace, TopicModel.MAX_MSTACKTRACE_LENGTH);
+        if (StringUtils.isNotEmpty(this.stacktrace) && this.stacktrace.length() > CommentableModel.MAX_STACKTRACE_LENGTH) {
+            this.stacktrace = StringUtils.abbreviate(this.stacktrace, CommentableModel.MAX_STACKTRACE_LENGTH);
         }
     }
 

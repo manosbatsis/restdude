@@ -20,8 +20,8 @@
  */
 package com.restdude.mdd.registry;
 
+import com.restdude.domain.Model;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.Model;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.specification.IPredicateFactory;
 import lombok.Getter;

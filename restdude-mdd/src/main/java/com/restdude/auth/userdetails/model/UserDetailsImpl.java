@@ -22,9 +22,9 @@ package com.restdude.auth.userdetails.model;
 
 import com.restdude.auth.model.BasicUserDetailsImpl;
 import com.restdude.auth.model.LoginRequest;
+import com.restdude.domain.UserDetails;
 import com.restdude.domain.users.model.Role;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.model.UserDetails;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

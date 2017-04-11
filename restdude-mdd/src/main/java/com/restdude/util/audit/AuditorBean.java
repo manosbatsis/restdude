@@ -22,8 +22,8 @@ package com.restdude.util.audit;
 
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
+import com.restdude.domain.UserDetails;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.model.UserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,24 +20,31 @@
  */
 package com.restdude.mdd.service;
 
+import com.restdude.auth.model.UserDetailsAuthenticationToken;
+import com.restdude.auth.userdetails.model.UserDetailsImpl;
+import com.restdude.domain.MetadatumModel;
+import com.restdude.domain.PersistableModel;
+import com.restdude.domain.Roles;
+import com.restdude.domain.UploadedFileModel;
+import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
-import com.restdude.mdd.model.MetadatumModel;
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.specification.SpecificationUtils;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -58,11 +65,10 @@ import java.util.*;
  * @param <PK> Resource pk type, usually Long or String
  * @param <R>  The repository class to automatically inject
  */
+@Slf4j
 public abstract class AbstractPersistableModelServiceImpl<T extends PersistableModel<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
         extends AbstractBaseServiceImpl
         implements PersistableModelService<T, PK>{
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistableModelServiceImpl.class);
 
     protected R repository;
 
@@ -90,6 +96,50 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
         return this.repository.getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public final void initData() {
+
+        // load system user if it exists
+        User systemUser = this.userRepository.findByUsername("admin");
+        log.debug("initData, available users: {}, systemUser: {}", this.userRepository.count(), systemUser);
+        List<User> users = this.userRepository.findAll();
+        for(User u : users){
+            log.debug("initData, available user: {}", u);
+        }
+
+        Authentication auth = null;
+
+        // init auth with system user or emulate
+        if(systemUser != null){
+            auth = new UserDetailsAuthenticationToken(UserDetailsImpl.fromUser(systemUser));
+        }
+        else{
+            auth = new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
+                            Arrays.asList(new SimpleGrantedAuthority[]{new SimpleGrantedAuthority(Roles.ROLE_USER), new SimpleGrantedAuthority(Roles.ROLE_ADMIN)}));
+        }
+
+        // login
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // init data
+        this.initDataOverride(systemUser);
+
+        // logout
+        SecurityContextHolder.clearContext();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void initDataOverride(User systemUser){
+        // noop, override if needed
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -98,7 +148,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @ModelDrivenPreAuth
     public T create(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
-        LOGGER.debug("create resource: {}", resource);
+        log.debug("create resource: {}", resource);
         resource = repository.persist(resource);
         this.postCreate(resource);
         return resource;
@@ -118,7 +168,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @ModelDrivenPreAuth
     public T update(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
-        LOGGER.debug("update resource: {}", resource);
+        log.debug("update resource: {}", resource);
         return repository.save(resource);
     }
 
@@ -129,7 +179,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @Transactional(readOnly = false)
     @ModelDrivenPreAuth
     public T patch(@P("resource") T resource) {
-        LOGGER.debug("patch resource: {}", resource);
+        log.debug("patch resource: {}", resource);
         return repository.patch(resource);
     }
 
@@ -243,7 +293,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @Override
     @ModelDrivenPreAuth
     public Page<T> findPaginated(Specification<T> spec, @NonNull Pageable pageable) {
-        LOGGER.debug("findPaginated, pageable: {}", pageable);
+        log.debug("findPaginated, pageable: {}", pageable);
 
         if (spec != null) {
             return this.repository.findAll(spec, pageable);
@@ -274,8 +324,8 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
      */
     @Transactional(readOnly = false)
     public void addMetadatum(PK subjectId, MetadatumModel dto) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("addMetadatum subjectId: " + subjectId + ", metadatum: " + dto);
+        if (log.isDebugEnabled()) {
+            log.debug("addMetadatum subjectId: " + subjectId + ", metadatum: " + dto);
         }
         this.repository.addMetadatum(subjectId, dto.getPredicate(),
                 dto.getObject());
@@ -295,8 +345,8 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
 
     @Transactional(readOnly = false)
     public void removeMetadatum(PK subjectId, String predicate) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("removeMetadatum subjectId: " + subjectId + ", predicate: "
+        if (log.isDebugEnabled()) {
+            log.debug("removeMetadatum subjectId: " + subjectId + ", predicate: "
                     + predicate);
         }
         this.repository.removeMetadatum(subjectId, predicate);
@@ -318,7 +368,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @Transactional(readOnly = false)
     public T updateFiles(@PathVariable PK id, MultipartHttpServletRequest request, HttpServletResponse response) {
         T entity = this.findById(id);
-        LOGGER.debug("Entity before uploading files: {}", entity);
+        log.debug("Entity before uploading files: {}", entity);
         try {
             String basePath = new StringBuffer(this.getDomainClass().getSimpleName())
                     .append('/').append(id).append('/').toString();
@@ -344,7 +394,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
         // return the updated entity
         entity = this.update(entity);
 
-        LOGGER.debug("Entity after uploading files: {}", entity);
+        log.debug("Entity after uploading files: {}", entity);
         return entity;
     }
 

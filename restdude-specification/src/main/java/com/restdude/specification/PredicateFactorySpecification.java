@@ -20,7 +20,7 @@
  */
 package com.restdude.specification;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import com.restdude.mdd.registry.ModelInfo;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

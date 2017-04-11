@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.registry;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
 import lombok.NonNull;
@@ -37,6 +37,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -102,7 +103,6 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
             Set<BeanDefinition> entityBeanDefs = EntityUtil.findAllModels(basePackage);
             for (BeanDefinition beanDef : entityBeanDefs) {
                 Class<? extends Model> modelType = (Class<? extends Model>) ClassUtils.getClass(beanDef.getBeanClassName());
-                LOGGER.info("Found model class {}", modelType.getCanonicalName());
                 this.addEntryFor(modelType);
             }
         }
@@ -135,6 +135,12 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
     protected <T extends Model<PK>, PK extends Serializable> void addEntryFor(Class<T> modelClass){
         Assert.notNull(modelClass, "Parameter modelClass cannot be null");
 
+        // ignore abstract classes
+        if(Modifier.isAbstract(modelClass.getModifiers())){
+            LOGGER.warn("addEntryFor, given model class is abstract: {}", modelClass);
+        }
+
+        LOGGER.info("addEntryFor model class {}", modelClass.getCanonicalName());
         // check for existing
         if(this.modelEntries.containsKey(modelClass)){
             throw new RuntimeException("ModelInfoRegistry entry already exists, failed to add model type: " + modelClass.getCanonicalName());
@@ -173,18 +179,26 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
     protected void resolveInverseFields(ModelInfo modelInfo, Set<String> fieldNames) {
         for(String fieldName : fieldNames){
+            LOGGER.debug("resolveInverseFields for model type: {}, field: {}", modelInfo.getModelType(), fieldName);
             FieldInfo field = modelInfo.getField(fieldName);
             if(!field.isInverse()){
                 // scan ModelInfo on the other side to find an inverse JPA mapping, if any
                 ModelInfo inverseModelInfo = this.getEntryFor(field.getFieldModelType());
-                Set<String> inversePropertyNames = inverseModelInfo.getInverseFieldNames();
 
-                // go over inverse fields to find a match, if any
-                for(String inversePropertyName: inversePropertyNames){
-                    FieldInfo inverseField = inverseModelInfo.getField(inversePropertyName);
-                    if(fieldName.equals(inverseField.getReverseFieldName())){
-                        field.setReverseFieldName(inverseField.getFieldName());
-                        break;
+                // warn if the inverse field type model info does not exist
+                if(inverseModelInfo == null){
+                    LOGGER.warn("resolveInverseFields: No model info entry found for type: {}", field.getFieldModelType());
+                }
+                else{
+                    Set<String> inversePropertyNames = inverseModelInfo.getInverseFieldNames();
+
+                    // go over inverse fields to find a match, if any
+                    for(String inversePropertyName: inversePropertyNames){
+                        FieldInfo inverseField = inverseModelInfo.getField(inversePropertyName);
+                        if(inverseField != null && fieldName.equals(inverseField.getReverseFieldName())){
+                            field.setReverseFieldName(inverseField.getFieldName());
+                            break;
+                        }
                     }
                 }
 

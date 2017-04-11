@@ -51,7 +51,7 @@
 
         <dependency>
             <groupId>com.restdude</groupId>
-            <artifactId>restdude-mdd</artifactId>
+            <artifactId>restdude-case</artifactId>
             <version>${project.version}</version>
         </dependency>
 

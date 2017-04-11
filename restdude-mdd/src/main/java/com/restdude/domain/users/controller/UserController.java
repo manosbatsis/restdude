@@ -20,11 +20,12 @@
  */
 package com.restdude.domain.users.controller;
 
+import com.restdude.domain.UserDetails;
 import com.restdude.domain.metadata.model.MetadatumDTO;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.util.exception.http.NotFoundException;
 import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,8 +47,13 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
 
     @RequestMapping(value = "byUserNameOrEmail/{userNameOrEmail}", method = RequestMethod.GET)
     @ApiOperation(value = "Get one by username or email", notes = "Get the single user with the given username or email.")
-    public Resource<User> getByUserNameOrEmail(@PathVariable String userNameOrEmail) {
-        return this.toHateoasResource(this.service.findOneByUserNameOrEmail(userNameOrEmail));
+    public Resource<User> getByUserNameOrEmail(@PathVariable(required = true) String userNameOrEmail) {
+        User u = this.service.findOneByUserNameOrEmail(userNameOrEmail);
+        if(u == null){
+            LOGGER.warn("Not entry found for {}", userNameOrEmail);
+            throw new NotFoundException();
+        }
+        return this.toHateoasResource(u);
     }
 
     @RequestMapping(value = "{subjectId}/metadata", method = RequestMethod.PUT)

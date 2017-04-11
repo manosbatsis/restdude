@@ -176,7 +176,7 @@ public class RestExceptionHandler extends AbstractHandlerExceptionResolver imple
 
         } catch (Exception invocationEx) {
             LOGGER.error("Failed handling exception", originalException);
-            RuntimeException wrapperErxception = new RuntimeException("Failed handling original exception with message [" + originalException.getMessage() + "]", invocationEx);
+            RuntimeException wrapperErxception = new RuntimeException("Failed handling original exception with title [" + originalException.getMessage() + "]", invocationEx);
             wrapperErxception.addSuppressed(originalException);
             throw wrapperErxception;
         }

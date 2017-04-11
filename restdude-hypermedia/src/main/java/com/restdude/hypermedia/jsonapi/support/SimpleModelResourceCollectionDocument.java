@@ -22,9 +22,9 @@ package com.restdude.hypermedia.jsonapi.support;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.restdude.domain.Model;
 import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
 import com.restdude.hypermedia.jsonapi.JsonApiModelResourceCollectionDocument;
-import com.restdude.mdd.model.Model;
 import io.swagger.annotations.ApiModel;
 
 import java.io.Serializable;

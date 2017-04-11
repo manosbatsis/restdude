@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.registry;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import com.restdude.util.ClassUtils;
 import com.yahoo.elide.annotation.ComputedRelationship;
 import lombok.Getter;
@@ -73,7 +73,7 @@ public class FieldInfoImpl implements FieldInfo {
     @Getter private Class<?> fieldType;
     @Getter private FieldMappingType fieldMappingType;
     @Getter private Class<? extends Model> fieldModelType;
-    @Setter private String reverseFieldName;
+    @Setter private String reverseFieldName = null;
     @Getter private boolean inverse = false;
     @Getter private CascadeType[] cascadeTypes;
     @Getter private Method getterMethod;

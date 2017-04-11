@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.controller;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.util.exception.http.NotImplementedException;
 import io.swagger.annotations.ApiOperation;

@@ -20,7 +20,7 @@
  */
 package com.restdude.auth.model;
 
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 

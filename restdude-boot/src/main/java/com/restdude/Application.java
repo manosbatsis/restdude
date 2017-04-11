@@ -147,7 +147,7 @@ public class Application implements EmbeddedServletContainerCustomizer {
             ;
 
             response.getWriter()
-                    .append("{\"status\":\"ERROR\",\"message\":\"HTTP ")
+                    .append("{\"status\":\"ERROR\",\"title\":\"HTTP ")
                     .append(String.valueOf(response.getStatus()))
                     .append("\"}");
 

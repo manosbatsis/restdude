@@ -21,7 +21,7 @@
 package com.restdude.auth.jwt.binding;
 
 import com.restdude.auth.model.UserDetailsAuthenticationToken;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import com.restdude.util.Constants;
 import com.restdude.util.CookieUtil;
 import lombok.extern.slf4j.Slf4j;

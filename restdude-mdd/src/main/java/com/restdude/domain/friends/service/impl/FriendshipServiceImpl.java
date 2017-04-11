@@ -20,7 +20,6 @@
  */
 package com.restdude.domain.friends.service.impl;
 
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipDTO;
 import com.restdude.domain.friends.model.FriendshipIdentifier;
@@ -29,6 +28,7 @@ import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.friends.service.FriendshipService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.ActivityNotificationMessage;
@@ -218,4 +218,19 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
         this.sendStompActivityMessage(msg, useernames);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param systemUser
+     */
+    @Override
+    protected void initDataOverride(User systemUser) {
+        User admin = this.userRepository.findByUsername("admin");
+        User adminFriend = this.userRepository.findByUsername("adminFriend");
+        Friendship f = new Friendship(admin, adminFriend);
+        if (!this.exists(f)) {
+            LOGGER.debug("createTestFriendships friendship: {}", f);
+            f = this.createTest(f);
+        }
+    }
 }

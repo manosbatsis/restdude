@@ -21,8 +21,8 @@
 package com.restdude.hypermedia.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.restdude.domain.Model;
 import com.restdude.hypermedia.util.HypermediaUtils;
-import com.restdude.mdd.model.Model;
 import com.restdude.util.ParamsAwarePage;
 import lombok.Getter;
 import lombok.NonNull;

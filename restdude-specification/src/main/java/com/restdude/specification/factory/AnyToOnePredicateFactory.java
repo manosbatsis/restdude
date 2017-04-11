@@ -20,7 +20,7 @@
  */
 package com.restdude.specification.factory;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.specification.PredicateOperator;
 import com.restdude.util.ClassUtils;
 import lombok.extern.slf4j.Slf4j;

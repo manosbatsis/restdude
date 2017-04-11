@@ -20,11 +20,11 @@
  */
 package com.restdude.hypermedia.util;
 
+import com.restdude.domain.Model;
 import com.restdude.hypermedia.jsonapi.*;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResource;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResourceCollectionDocument;
 import com.restdude.hypermedia.jsonapi.support.SimpleModelResourceDocument;
-import com.restdude.mdd.model.Model;
 import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;

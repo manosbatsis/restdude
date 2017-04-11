@@ -21,9 +21,9 @@
 package com.restdude.mdd.service;
 
 
-import com.restdude.mdd.model.MetadatumModel;
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.model.UploadedFileModel;
+import com.restdude.domain.MetadatumModel;
+import com.restdude.domain.PersistableModel;
+import com.restdude.domain.UploadedFileModel;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.repository.ModelRepository;
 import lombok.NonNull;
@@ -56,7 +56,10 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
 
     String PRE_AUTHORIZATION_PREFIX = "SERVICE_";
 
-
+    /**
+     * Override to initialize data related to your model type
+     */
+    void initData();
 
     /**
      * Return the id of the entity.
@@ -130,4 +133,5 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
     void deleteFiles(PK id, String... filenames);
 
     T updateFiles(@PathVariable PK id, MultipartHttpServletRequest request, HttpServletResponse response);
+
 }

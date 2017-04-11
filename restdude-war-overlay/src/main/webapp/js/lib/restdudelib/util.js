@@ -91,7 +91,7 @@ define(
                 labels: Restdude.util.getLabels(),
                 useCase: self.useCaseContext,
             };
-            if (self.model && self.model.getSuperClass()) {
+            if (self.model && self.model.getSuperClass && self.model.getSuperClass()) {
                 result.labels.models[self.model.getPathFragment()] = self.model.getLabels();
             }
 

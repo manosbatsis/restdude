@@ -34,7 +34,32 @@
         <level value="error"/>
     </logger>
 
+    <logger name="com.restdude.domain.cases.service.impl.MembershipServiceImpl">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.domain.cases.service.impl.MembershipRequestServiceImpl">
+        <level value="debug"/>
+    </logger>
 
+    <!--
+
+    <logger name="com.restdude.domain.users.service.UserDataLoader">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.domain.users.service.RoleDataLoader">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.domain.error.service.ErrorDataLoader">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.domain.users.service.impl.UserServiceImpl">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.domain.cases">
+        <level value="debug"/>
+    </logger>
+
+    -->
     <!--logger name="com.restdude.domain.users.model.UserDTO">
         <level value="debug"/>
     </logger>

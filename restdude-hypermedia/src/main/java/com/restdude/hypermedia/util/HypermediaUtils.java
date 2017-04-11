@@ -20,10 +20,10 @@
  */
 package com.restdude.hypermedia.util;
 
+import com.restdude.domain.Model;
 import com.restdude.hypermedia.hateoas.ModelResource;
 import com.restdude.hypermedia.hateoas.ModelResources;
 import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
-import com.restdude.mdd.model.Model;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.util.ParamsAwarePage;

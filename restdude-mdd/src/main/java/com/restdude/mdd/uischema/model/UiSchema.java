@@ -21,7 +21,7 @@
 package com.restdude.mdd.uischema.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.uischema.serializer.UiSchemaSerializer;
 
 /**

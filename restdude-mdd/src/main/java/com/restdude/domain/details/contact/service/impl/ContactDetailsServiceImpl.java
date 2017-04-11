@@ -20,13 +20,13 @@
  */
 package com.restdude.domain.details.contact.service.impl;
 
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.details.contact.model.*;
 import com.restdude.domain.details.contact.repository.ContactDetailsRepository;
 import com.restdude.domain.details.contact.repository.EmailDetailRepository;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.HashUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;

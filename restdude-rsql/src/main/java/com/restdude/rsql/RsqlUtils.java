@@ -20,7 +20,7 @@
  */
 package com.restdude.rsql;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.registry.ModelInfo;
 import com.restdude.specification.PredicateOperator;
 import cz.jirutka.rsql.parser.RSQLParser;

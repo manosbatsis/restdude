@@ -22,7 +22,7 @@ package com.restdude.auth.jwt;
 
 import com.restdude.auth.jwt.binding.EncryptedJwtAccessTokenToUserDetailsConverter;
 import com.restdude.auth.model.UserDetailsAuthenticationToken;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

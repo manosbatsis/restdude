@@ -20,7 +20,7 @@
  */
 package com.restdude.auth.social.model;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;

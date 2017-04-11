@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.details.contact.model;
 
-import com.restdude.mdd.model.PersistableModel;
+import com.restdude.domain.PersistableModel;
 
 import java.io.Serializable;
 

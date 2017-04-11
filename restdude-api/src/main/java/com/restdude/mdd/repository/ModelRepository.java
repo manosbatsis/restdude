@@ -20,9 +20,9 @@
  */
 package com.restdude.mdd.repository;
 
-import com.restdude.mdd.model.MetadatumModel;
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.model.UploadedFileModel;
+import com.restdude.domain.MetadatumModel;
+import com.restdude.domain.PersistableModel;
+import com.restdude.domain.UploadedFileModel;
 import com.restdude.mdd.registry.FieldInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

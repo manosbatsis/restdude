@@ -57,7 +57,6 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.*;
@@ -344,8 +343,8 @@ public class AbstractControllerIT {
         return requestSpec;
     }
 
-    protected User getUserByUsernameOrEmail(String userNameOrEmail) {
-        return get(WEBCONTEXT_PATH + "/api/rest/users/byUserNameOrEmail/{userNameOrEmail}", userNameOrEmail).as(User.class);
+    protected User getUserByUsernameOrEmail(RequestSpecification requestSpec, String userNameOrEmail) {
+        return given().spec(requestSpec).log().all().get(WEBCONTEXT_PATH + "/api/rest/users/byUserNameOrEmail/{userNameOrEmail}", userNameOrEmail).then().log().all().extract().as(User.class);
     }
 
     protected Host getRandomHost(RequestSpecification someRequestSpec) {

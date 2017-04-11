@@ -20,8 +20,8 @@
  */
 package com.restdude.mdd.service;
 
-import com.restdude.mdd.model.UserDetails;
-import com.restdude.mdd.model.UserModel;
+import com.restdude.domain.UserDetails;
+import com.restdude.domain.UserModel;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 import com.restdude.websocket.message.IMessageResource;
 import org.springframework.core.convert.ConversionService;

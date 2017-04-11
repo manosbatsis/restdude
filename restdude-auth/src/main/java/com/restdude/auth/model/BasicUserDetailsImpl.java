@@ -22,8 +22,8 @@ package com.restdude.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.mdd.model.Roles;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.Roles;
+import com.restdude.domain.UserDetails;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;

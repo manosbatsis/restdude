@@ -22,8 +22,8 @@ package com.restdude.auth.userdetails.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
-import com.restdude.mdd.model.UserDetails;
-import com.restdude.mdd.model.UserModel;
+import com.restdude.domain.UserDetails;
+import com.restdude.domain.UserModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.web.SignInAdapter;

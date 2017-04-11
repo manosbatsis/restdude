@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.friends.model;
 
-import com.restdude.mdd.model.AbstractEmbeddableManyToManyIdentifier;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.model.AbstractEmbeddableManyToManyIdentifier;
 import io.swagger.annotations.ApiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,4 +54,5 @@ public class FriendshipIdentifier extends AbstractEmbeddableManyToManyIdentifier
     public User buildRight(Serializable right) {
         return new User(right.toString());
     }
+
 }

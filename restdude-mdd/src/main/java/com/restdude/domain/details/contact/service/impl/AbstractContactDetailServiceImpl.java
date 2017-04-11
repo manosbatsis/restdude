@@ -20,11 +20,11 @@
  */
 package com.restdude.domain.details.contact.service.impl;
 
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.confirmationtoken.model.ConfirmationToken;
 import com.restdude.domain.confirmationtoken.repository.ConfirmationTokenRepository;
 import com.restdude.domain.details.contact.model.ContactDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
-import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import org.apache.commons.lang3.BooleanUtils;

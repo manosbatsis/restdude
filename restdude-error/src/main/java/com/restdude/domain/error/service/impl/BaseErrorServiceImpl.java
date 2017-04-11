@@ -21,6 +21,7 @@
 package com.restdude.domain.error.service.impl;
 
 
+import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.error.model.BaseError;
 import com.restdude.domain.error.repository.BaseErrorRepository;
 import com.restdude.domain.error.service.BaseErrorService;
@@ -30,10 +31,23 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 
 @Named(BaseErrorService.BEAN_ID)
-public class BaseErrorServiceImpl extends AbstractErrorServiceImpl<BaseError, String, BaseErrorRepository>
+public class BaseErrorServiceImpl extends AbstractErrorServiceImpl<BaseError, BaseErrorRepository>
         implements BaseErrorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseErrorServiceImpl.class);
+
+
+    @Override
+    public CaseWorkflow getWorkflow() {
+        if(this.workflow == null){
+            this.workflow = this.repository.getWorkflow();
+        }
+        return this.workflow;
+    }
+
+    public String getWorkflowName(){
+        return BaseErrorRepository.ERRORS_WORKFLOW_NAME;
+    }
 
 
 }

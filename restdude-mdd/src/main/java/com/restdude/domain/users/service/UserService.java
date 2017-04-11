@@ -22,18 +22,17 @@ package com.restdude.domain.users.service;
 
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
+import com.restdude.domain.UserDetails;
+import com.restdude.domain.UserModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserInvitationResultsDTO;
 import com.restdude.domain.users.model.UserInvitationsDTO;
-import com.restdude.mdd.model.UserDetails;
-import com.restdude.mdd.model.UserModel;
 import com.restdude.mdd.service.PersistableModelService;
 
 import java.util.Map;
 import java.util.Optional;
 
-public interface UserService extends PersistableModelService<User, String>{
-
+public interface UserService extends PersistableModelService<User, String> {
 
 	/**
      * Find the first user matching one of the given username or email tokena
@@ -159,4 +158,5 @@ public interface UserService extends PersistableModelService<User, String>{
     User updateUsername(UsernameChangeRequest usernameChangeRequest);
 
     Optional<User> getActiveByUsername(String useName);
+
 }

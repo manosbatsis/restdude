@@ -22,7 +22,7 @@ package com.restdude.auth.jwt.binding;
 
 import com.restdude.auth.config.JwtSettings;
 import com.restdude.auth.model.BasicUserDetailsImpl;
-import com.restdude.mdd.model.UserDetails;
+import com.restdude.domain.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;

@@ -27,7 +27,6 @@ import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,10 +87,12 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 	protected String getPathSeparator(){
 		return PATH_SEPARATOR;
 	}
-	
-	@PreUpdate
-    @PrePersist
-    public void normalizePath() throws UnsupportedEncodingException{
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void preSave() {
 		// set pathFragment
 		if(this.getPath() == null){
 			StringBuffer path = new StringBuffer();
@@ -104,9 +105,9 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 		}
 		// set pathFragment level
 		Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
-		this.setPathLevel(pathLevel.shortValue());
-		
+		this.setPathLevel(pathLevel.shortValue());;
 	}
+
 	
 	@SuppressWarnings("rawtypes")
 	@Override

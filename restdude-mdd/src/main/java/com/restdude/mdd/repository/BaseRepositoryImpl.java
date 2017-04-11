@@ -20,11 +20,11 @@
  */
 package com.restdude.mdd.repository;
 
+import com.restdude.domain.MetadataSubjectModel;
+import com.restdude.domain.MetadatumModel;
+import com.restdude.domain.PersistableModel;
+import com.restdude.domain.UploadedFileModel;
 import com.restdude.domain.cms.model.BinaryFile;
-import com.restdude.mdd.model.MetadataSubjectModel;
-import com.restdude.mdd.model.MetadatumModel;
-import com.restdude.mdd.model.PersistableModel;
-import com.restdude.mdd.model.UploadedFileModel;
 import com.restdude.mdd.registry.FieldInfo;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ConfigurationFactory;
@@ -397,6 +397,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
                 Set<ConstraintViolation> errors = new HashSet<ConstraintViolation>();
                 errors.addAll(violations);
                 BeanValidationException ex = new BeanValidationException("Validation failed", errors);
+                LOGGER.warn("validate, errors: {}", errors);
                 ex.setModelType(this.getDomainClass().getCanonicalName());
                 throw ex;
             }

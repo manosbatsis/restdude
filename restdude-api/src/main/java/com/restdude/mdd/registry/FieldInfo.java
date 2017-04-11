@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.registry;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;

@@ -20,7 +20,7 @@
  */
 package com.restdude.mdd.service;
 
-import com.restdude.mdd.model.Model;
+import com.restdude.domain.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

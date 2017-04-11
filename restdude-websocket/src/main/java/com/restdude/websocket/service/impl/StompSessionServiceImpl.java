@@ -22,10 +22,10 @@ package com.restdude.websocket.service.impl;
 
 
 import com.restdude.auth.userdetails.model.UserDetailsImpl;
+import com.restdude.domain.UserDetails;
 import com.restdude.domain.friends.repository.FriendshipRepository;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
-import com.restdude.mdd.model.UserDetails;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.websocket.Destinations;
 import com.restdude.websocket.message.StateUpdateMessage;

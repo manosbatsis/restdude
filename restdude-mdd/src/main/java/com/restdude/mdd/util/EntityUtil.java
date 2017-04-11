@@ -20,9 +20,9 @@
  */
 package com.restdude.mdd.util;
 
+import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.annotation.model.ModelRelatedResource;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.PersistableModel;
 import com.restdude.mdd.validation.CaseSensitive;
 import com.restdude.util.ClassUtils;
 import org.apache.commons.lang3.StringUtils;

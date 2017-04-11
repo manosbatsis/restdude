@@ -21,9 +21,9 @@
 package com.restdude.domain.metadata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.domain.MetadataSubjectModel;
+import com.restdude.domain.MetadatumModel;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
-import com.restdude.mdd.model.MetadataSubjectModel;
-import com.restdude.mdd.model.MetadatumModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import javax.persistence.*;

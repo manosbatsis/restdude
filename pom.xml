@@ -46,6 +46,7 @@
         <module>restdude-resources</module>
         <module>restdude-util</module>
         <module>restdude-mdd</module>
+        <module>restdude-case</module>
         <module>restdude-error</module>
         <module>restdude-auth</module>
         <module>restdude-auth-spel</module>

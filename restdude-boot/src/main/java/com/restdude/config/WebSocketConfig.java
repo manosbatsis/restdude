@@ -69,7 +69,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
     }
 
     /**
-     * Configure the message broker with eenableSimpleBroker(), to enablee a simple memory-based message broker
+     * Configure the title broker with eenableSimpleBroker(), to enablee a simple memory-based title broker
      * to carry messages back to the client on destinations prefixed with "/topic".
      * <p>
      * The "/app" prefix is designated for messages that are bound for @MessageMapping-annotated methods.
