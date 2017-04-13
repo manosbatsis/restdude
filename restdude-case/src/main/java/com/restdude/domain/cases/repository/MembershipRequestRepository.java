@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.MembershipContext;
 import com.restdude.domain.cases.model.MembershipRequest;
+import com.restdude.domain.cases.model.SpaceContext;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,8 +32,8 @@ import java.util.Optional;
 public interface MembershipRequestRepository extends ModelRepository<MembershipRequest,String> {
 
     @Query("select req from MembershipRequest req where req.context.pk = :#{#context.pk} AND req.user.pk = :#{#user.pk}")
-    Optional<MembershipRequest> findOneByContextAndUser(@Param("context") MembershipContext context, @Param("user") User user);
+    Optional<MembershipRequest> findOneByContextAndUser(@Param("context") SpaceContext context, @Param("user") User user);
 
     @Query("select case when (count(req) > 0)  then true else false end from MembershipRequest req where req.context.pk = :#{#context.pk} AND req.user.pk = :#{#user.pk}")
-    Boolean exists(@Param("context") MembershipContext context, @Param("user") User user);
+    Boolean exists(@Param("context") SpaceContext context, @Param("user") User user);
 }

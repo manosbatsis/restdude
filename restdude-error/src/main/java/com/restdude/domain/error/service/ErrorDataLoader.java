@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.error.service;
 
-import com.restdude.domain.cases.service.MembershipContextDataLoader;
+import com.restdude.domain.cases.service.SpaceContextDataLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,14 +37,14 @@ import javax.inject.Named;
 @Named("errorDataLoader")
 public class ErrorDataLoader {
 
-    private MembershipContextDataLoader membershipContextDataLoader;
+    private SpaceContextDataLoader spaceContextDataLoader;
     private BaseErrorService baseErrorService;
     private SystemErrorService systemErrorService;
     private ClientErrorService clientErrorService;
 
     @Autowired
-    public void setMembershipContextDataLoader(MembershipContextDataLoader membershipContextDataLoader) {
-        this.membershipContextDataLoader = membershipContextDataLoader;
+    public void setSpaceContextDataLoader(SpaceContextDataLoader spaceContextDataLoader) {
+        this.spaceContextDataLoader = spaceContextDataLoader;
     }
 
     @Autowired

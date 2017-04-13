@@ -132,6 +132,7 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
                 nameProperty: "name",
                 baseFragment: '/api/rest/',
                 typeaheadSources: {},
+                pathFragment: "allModels",
                 menuConfig: {
                     rolesIncluded: ["ROLE_ADMIN", "ROLE_SITE_OPERATOR"],
                     rolesExcluded: null,

@@ -32,11 +32,11 @@ import javax.inject.Named;
  * Initializes user records
  */
 @Component
-@Named("membershipContextDataLoader")
-public class MembershipContextDataLoader {
+@Named("spaceContextDataLoader")
+public class SpaceContextDataLoader {
 
     private UserDataLoader userDataLoader;
-    private MembershipContextService membershipContextService;
+    private SpaceContextService spaceContextService;
 
     @Autowired
     public void setUserDataLoader(UserDataLoader userDataLoader) {
@@ -44,13 +44,13 @@ public class MembershipContextDataLoader {
     }
 
     @Autowired
-    public void setMembershipContextService(MembershipContextService membershipContextService) {
-        this.membershipContextService = membershipContextService;
+    public void setSpaceContextService(SpaceContextService spaceContextService) {
+        this.spaceContextService = spaceContextService;
     }
 
     @PostConstruct
     @Transactional(readOnly = false)
     public void run()  {
-        membershipContextService.initData();
+        spaceContextService.initData();
     }
 }

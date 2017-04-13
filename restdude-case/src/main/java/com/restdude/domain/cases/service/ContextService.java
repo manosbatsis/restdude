@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.cases.service;
 
-import com.restdude.domain.cases.model.MembershipContext;
-import com.restdude.domain.cases.model.dto.MembershipContextInfo;
+import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.dto.SpaceContextInfo;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.service.PersistableModelService;
 import org.springframework.data.domain.Page;
@@ -29,11 +29,11 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
 
-public interface ContextService<T extends MembershipContext> extends PersistableModelService<T, String> {
+public interface ContextService<T extends SpaceContext> extends PersistableModelService<T, String> {
 
-    Page<MembershipContextInfo> findVisible(Pageable pageable);
+    Page<SpaceContextInfo> findVisible(Pageable pageable);
 
-    Page<MembershipContextInfo> findMy(Pageable pageable);
+    Page<SpaceContextInfo> findMy(Pageable pageable);
 
     Set<String> getActivityNotificationRecepients(User activityUser, T resource);
 }

@@ -37,6 +37,12 @@ function ($, _, Bloodhoud, Typeahead, Restdude, RestdudeForm, RestdudeField, Res
             menuConfig: false,
             fields: function(){
                 return {
+                    name: {
+                        fieldType: "String",
+                        backgrid: {
+                            cell: Restdude.components.backgrid.ViewRowCell,
+                        }
+                    },
                     title: {
                         fieldType: "String",
                         backgrid: {

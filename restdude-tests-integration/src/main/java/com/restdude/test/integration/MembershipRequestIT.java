@@ -22,12 +22,12 @@ package com.restdude.test.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JacksonUtils;
-import com.restdude.domain.cases.model.MembershipContext;
 import com.restdude.domain.cases.model.MembershipRequest;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitationsResult;
+import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
-import com.restdude.domain.cases.model.enums.MembershipContextActivity;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
+import com.restdude.domain.cases.model.enums.SpaceContextActivity;
 import com.restdude.domain.users.model.User;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -42,9 +42,9 @@ import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.equalTo;
 
-@Test(singleThreaded = true, description = "Test MembershipContext membership requests")
+@Test(singleThreaded = true, description = "Test SpaceContext membership requests")
 @SuppressWarnings("unused")
-public class MembershipRequestIT extends AbstractMembershipContextIT {
+public class MembershipRequestIT extends AbstractSpaceContextIT {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRequestIT.class);
 
@@ -59,15 +59,15 @@ public class MembershipRequestIT extends AbstractMembershipContextIT {
 		StompSession ownerSession = getStompSession(WEBSOCKET_URI, ownerLoginContext, null, null, null);
 		BlockingQueue<JsonNode> ownerActivitiesQueue = getActivityQueue(ownerSession);
 
-		LOGGER.info("Owner: Create a MembershipContext...");
-		MembershipContext ownedMembershipContext = this.createMembershipContext(ownerLoginContext, ContextVisibilityType.PUBLIC);
+		LOGGER.info("Owner: Create a SpaceContext...");
+		SpaceContext ownedSpaceContext = this.createSpaceContext(ownerLoginContext, ContextVisibilityType.PUBLIC);
 
 
 		Loggedincontext ittest0LoginContext = this.getLoggedinContext("usercontrollerit", "usercontrollerit");
 		MembershipRequest confirmedMembershipRequest = given()
 				.spec(ittest0LoginContext.requestSpec)
 				.body(new MembershipRequest.Builder()
-						.context(ownedMembershipContext)
+						.context(ownedSpaceContext)
 						.build())
 				.post(WEBCONTEXT_PATH + "/api/rest/" + MembershipRequest.API_PATH_FRAGMENT)
 				.then()
@@ -77,7 +77,7 @@ public class MembershipRequestIT extends AbstractMembershipContextIT {
 				.extract().as(MembershipRequest.class);
 	}
 
-	@Test(priority = 10, description = "Test MembershipContext invitation list created by owner")
+	@Test(priority = 10, description = "Test SpaceContext invitation list created by owner")
 	public void testClosed() throws Exception {
 
 		// --------------------------------
@@ -98,18 +98,18 @@ public class MembershipRequestIT extends AbstractMembershipContextIT {
 		BlockingQueue<JsonNode> ittest0ActivitiesQueue = getActivityQueue(ittest0Session);
 		BlockingQueue<JsonNode> ittest1ActivitiesQueue = getActivityQueue(ittest1Session);
 
-		LOGGER.info("Owner: Create a MembershipContext...");
-		MembershipContext ownedMembershipContext = this.createMembershipContext(ownerLoginContext, ContextVisibilityType.CLOSED);
+		LOGGER.info("Owner: Create a SpaceContext...");
+		SpaceContext ownedSpaceContext = this.createSpaceContext(ownerLoginContext, ContextVisibilityType.CLOSED);
 
 		// --------------------------------
 		// Owner: Create Invitations
 		// --------------------------------
 		User invitedUser = this.getUserByUsernameOrEmail(ownerLoginContext.requestSpec, "adminFriend");
 		LOGGER.info("Owner: Create invitation for  user: {}", invitedUser);
-		MembershipRequest singleRequest = createMembershipInvitation(ownerLoginContext, ownedMembershipContext, invitedUser);
+		MembershipRequest singleRequest = createMembershipInvitation(ownerLoginContext, ownedSpaceContext, invitedUser);
 
 		LOGGER.info("Owner: Create batch invitations for recipient list...");
-		MembershipContextInvitationsResult batchRequest = createMembershipContextMembershipBatchInvitation(ownerLoginContext, ownedMembershipContext,
+		SpaceContextInvitationsResult batchRequest = createSpaceContextMembershipBatchInvitation(ownerLoginContext, ownedSpaceContext,
 				Arrays.asList(new String[]{"operator", "ittest2", "ittest3@restdude.com", "ittest4@restdude.com", "ittest5@restdude.com"}));
 
 
@@ -126,16 +126,16 @@ public class MembershipRequestIT extends AbstractMembershipContextIT {
 		Assert.assertEquals(itest0Pending.get("object").get("status").asText(), MembershipRequestStatus.SENT_INVITE.name());
 
 		// user0: accept
-		updateMembershipContextMembershipRequest(ittest0LoginContext, itest0Pending.get("object").get("pk").asText(), MembershipRequestStatus.CONFIRMED);
+		updateSpaceContextMembershipRequest(ittest0LoginContext, itest0Pending.get("object").get("pk").asText(), MembershipRequestStatus.CONFIRMED);
 
 		// verify new membership notifications were received
 		JsonNode ownerNewMemberMsw = ownerActivitiesQueue.poll(5, SECONDS);
 		LOGGER.debug("owner: received new member notification: {}", JacksonUtils.prettyPrint(ownerNewMemberMsw));
-		Assert.assertEquals(ownerNewMemberMsw.get("predicate").asText(), MembershipContextActivity.BECAME_MEMBER_OF.name());
+		Assert.assertEquals(ownerNewMemberMsw.get("predicate").asText(), SpaceContextActivity.BECAME_MEMBER_OF.name());
 
 
         // user0: remove self and block further  invites
-        updateMembershipContextMembershipRequest(ittest0LoginContext, itest0Pending.get("object").get("pk").asText(), MembershipRequestStatus.BLOCK_INVITE);
+        updateSpaceContextMembershipRequest(ittest0LoginContext, itest0Pending.get("object").get("pk").asText(), MembershipRequestStatus.BLOCK_INVITE);
 
 
 	}

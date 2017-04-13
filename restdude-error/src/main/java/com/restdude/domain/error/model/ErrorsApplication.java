@@ -72,7 +72,7 @@ public class ErrorsApplication extends AbstractApplicationContext<BaseError, Err
 		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
 		private User owner;
 		private ContextVisibilityType visibility = ContextVisibilityType.CLOSED;
-		private MembershipContext parent;
+		private SpaceContext parent;
 		private CaseWorkflow workflow;
 
 		public Builder name(String name) {
@@ -105,7 +105,7 @@ public class ErrorsApplication extends AbstractApplicationContext<BaseError, Err
 			return this;
 		}
 
-		public Builder parent(MembershipContext parent) {
+		public Builder parent(SpaceContext parent) {
 			this.parent = parent;
 			return this;
 		}

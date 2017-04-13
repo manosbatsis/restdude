@@ -20,22 +20,22 @@
  */
 package com.restdude.domain.cases.service.impl;
 
-import com.restdude.domain.cases.model.MembershipContext;
+import com.restdude.domain.cases.model.SpaceContext;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
-import com.restdude.domain.cases.repository.MembershipContextRepository;
-import com.restdude.domain.cases.service.MembershipContextService;
+import com.restdude.domain.cases.repository.SpaceContextRepository;
+import com.restdude.domain.cases.service.SpaceContextService;
 import com.restdude.domain.users.model.User;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Named;
 
 @Slf4j
-@Named("membershipContextService")
-public class MembershipContextServiceImpl
-		extends AbstractContextServiceImpl<MembershipContext, MembershipContextRepository>
-		implements MembershipContextService {
+@Named("spaceContextService")
+public class SpaceContextServiceImpl
+		extends AbstractContextServiceImpl<SpaceContext, SpaceContextRepository>
+		implements SpaceContextService {
 
-	private MembershipContext syetemMembershipContext;
+	private SpaceContext syetemSpaceContext;
 
 
 	/**
@@ -45,15 +45,15 @@ public class MembershipContextServiceImpl
 	protected void initDataOverride(User systemUser){
 
 		// initialize globals?
-		this.syetemMembershipContext = this.repository.getSystemContext();
-		if(this.syetemMembershipContext  == null){
+		this.syetemSpaceContext = this.repository.getSystemContext();
+		if(this.syetemSpaceContext == null){
 
 
-			// create global MembershipContext
-			this.syetemMembershipContext = this.create(
-					new MembershipContext.Builder().owner(systemUser)
-							.name(MembershipContextRepository.SYSTEM_CONTEXT_NAME)
-							.title(MembershipContextRepository.SYSTEM_CONTEXT_TITLE)
+			// create global SpaceContext
+			this.syetemSpaceContext = this.create(
+					new SpaceContext.Builder().owner(systemUser)
+							.name(SpaceContextRepository.SYSTEM_CONTEXT_NAME)
+							.title(SpaceContextRepository.SYSTEM_CONTEXT_TITLE)
 							.description("System context")
 							.visibility(ContextVisibilityType.SECRET)
 							.build());
@@ -63,11 +63,11 @@ public class MembershipContextServiceImpl
 	}
 
 	@Override
-	public MembershipContext getSystemContext(){
-		if(this.syetemMembershipContext == null){
-			this.syetemMembershipContext = this.repository.getSystemContext();
+	public SpaceContext getSystemContext(){
+		if(this.syetemSpaceContext == null){
+			this.syetemSpaceContext = this.repository.getSystemContext();
 		}
-		return this.syetemMembershipContext;
+		return this.syetemSpaceContext;
 	}
 
 }

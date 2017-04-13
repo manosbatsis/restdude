@@ -135,6 +135,45 @@ define({
             },//vatInput
         },//restdude
         "models": {
+            "allModels": {
+                "name": {
+                    "label": "Name"
+                },
+                "title": {
+                    "label": "Title"
+                },
+                "description": {
+                    "label": "Description"
+                },
+                "owner": {
+                    "label": "Created by"
+                },
+                "createdBy": {
+                    "label": "Created by"
+                },
+                "createdDate": {
+                    "label": "Created"
+                },
+                "lastModifiedDate": {
+                    "label": "Updated"
+                },
+                "lastModifiedBy": {
+                    "label": "Updated by"
+                },
+            },
+            "hierarchicals": {
+                "visibility": {
+                    "label": "Visibility"
+                },
+            },
+            "spaces": {
+                "singular": {
+                    "label": "Space"
+                },
+                "plural": {
+                    "label": "Spaces"
+                },
+            },
             "invitations": {
                 "singular": {
                     "label": "Invite Users"
@@ -156,20 +195,8 @@ define({
                 "plural": {
                     "label": "Topics"
                 },
-                "title": {
-                    "label": "Title"
-                },
                 "detail": {
                     "label": "Details"
-                },
-                "createdBy": {
-                    "label": "Submitter"
-                },
-                "createdDate": {
-                    "label": "Created"
-                },
-                "lastModifiedDate": {
-                    "label": "Updated"
                 },
             },
             "allErrors": {
@@ -288,12 +315,6 @@ define({
                 "plural": {
                     "label": "Roles"
                 },
-                "name": {
-                    "label": "Name"
-                },
-                "description": {
-                    "label": "Description"
-                }
             },
             "registrationCodeBatches": {
                 "singular": {
@@ -302,20 +323,11 @@ define({
                 "plural": {
                     "label": "Beta code packs"
                 },
-                "name": {
-                    "label": "Name"
-                },
-                "description": {
-                    "label": "Description"
-                },
                 "batchSize": {
                     "label": "Size"
                 },
                 "available": {
                     "label": "Available"
-                },
-                "createdDate": {
-                    "label": "Created"
                 },
                 "expirationDate": {
                     "label": "Expires"
@@ -358,9 +370,6 @@ define({
                 },
                 "plural": {
                     "label": "Countries"
-                },
-                "name": {
-                    "label": "Name"
                 },
                 "nativeName": {
                     "label": "Native Name"

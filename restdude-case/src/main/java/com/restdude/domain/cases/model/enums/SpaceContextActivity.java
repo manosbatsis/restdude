@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+package com.restdude.domain.cases.model.enums;
 
-import com.restdude.domain.cases.model.MembershipContext;
+import io.swagger.annotations.ApiModel;
 
-/**
- * Calipso JPA repository for the MembershipContext entity.
- * {@inheritDoc}
- */
-public interface MembershipContextRepository extends ContextRepository<MembershipContext> {
+@ApiModel
+public enum SpaceContextActivity {
 
-
+	BECAME_MEMBER_OF, STOPPED_BEING_MEMBER_OF;
 }

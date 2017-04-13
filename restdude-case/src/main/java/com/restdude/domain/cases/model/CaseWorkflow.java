@@ -52,7 +52,7 @@ public class CaseWorkflow extends AbstractBasicAuditedModel {
     @JoinColumn(name = "maintainer_context", nullable = false, updatable = false)
     @ApiModelProperty(value = "The context that controls this workflow (VS just using it)", required = true)
     @Getter @Setter
-    private MembershipContext maintainerContext;
+    private SpaceContext maintainerContext;
 
     @OneToMany(mappedBy = "workflow", orphanRemoval = true)
     @JsonIgnore
@@ -64,13 +64,13 @@ public class CaseWorkflow extends AbstractBasicAuditedModel {
 
     }
 
-    public CaseWorkflow(String name, String description, MembershipContext maintainerContext) {
+    public CaseWorkflow(String name, String description, SpaceContext maintainerContext) {
         this.name = name;
         this.description = description;
         this.maintainerContext = maintainerContext;
     }
 
-    public CaseWorkflow(String name, String description, MembershipContext businessContext, List<CaseStatus> statuses) {
+    public CaseWorkflow(String name, String description, SpaceContext businessContext, List<CaseStatus> statuses) {
         this(name, description, businessContext);
         this.statuses = statuses;
     }

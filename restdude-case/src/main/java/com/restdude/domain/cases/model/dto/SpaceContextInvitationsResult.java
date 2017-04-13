@@ -27,8 +27,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "MembershipContext invitation list results", description = "MembershipContextInvitationsResult is a model reporting  the submission results (see properties).")
-public class MembershipContextInvitationsResult implements Serializable {
+@ApiModel(value = "SpaceContext invitation list results", description = "SpaceContextInvitationsResult is a model reporting  the submission results (see properties).")
+public class SpaceContextInvitationsResult implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public class MembershipContextInvitationsResult implements Serializable {
 	@ApiModelProperty(value = "Recipients the system failed processing.")
 	private Set<String> failed;
 
-	public MembershipContextInvitationsResult() {
+	public SpaceContextInvitationsResult() {
 		super();
 	}
 
@@ -176,12 +176,12 @@ public class MembershipContextInvitationsResult implements Serializable {
 			return this;
 		}
 
-		public MembershipContextInvitationsResult build() {
-			return new MembershipContextInvitationsResult(this);
+		public SpaceContextInvitationsResult build() {
+			return new SpaceContextInvitationsResult(this);
 		}
 	}
 
-	private MembershipContextInvitationsResult(Builder builder) {
+	private SpaceContextInvitationsResult(Builder builder) {
 		this.contextId = builder.contextId;
 		this.invited = builder.invited;
 		this.invalid = builder.invalid;

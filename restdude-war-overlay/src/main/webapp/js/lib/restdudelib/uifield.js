@@ -273,7 +273,12 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
         Restdude.fields.EnumValue = Restdude.fields.enumValue = Restdude.fields.String.extend({}, {
             "form": {
                 type: Backbone.Form.editors.ModelSelect2,
-            }
+            },
+            "backgrid": {
+                editable: false,
+                sortable: false,
+                cell: "Text"
+            },
         });
         Restdude.fields.Lov = Restdude.fields.lov = Restdude.fields.Base.extend({}, {
             form: {

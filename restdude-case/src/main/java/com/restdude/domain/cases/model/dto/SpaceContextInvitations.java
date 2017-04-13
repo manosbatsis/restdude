@@ -27,27 +27,27 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(description = "A model representing an invitation by a MembershipContext owner, addressed to multiple users.")
-public class MembershipContextInvitations implements Serializable {
+@ApiModel(description = "A model representing an invitation by a SpaceContext owner, addressed to multiple users.")
+public class SpaceContextInvitations implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value = "The ID of the MembershipContext this invitation list applies to. ")
-	private String membershipContextId;
+	@ApiModelProperty(value = "The ID of the SpaceContext this invitation list applies to. ")
+	private String spaceContextId;
 
-	@ApiModelProperty(value = "The carbon copy recipients list, where each entry is a user id, a username or an email address. Used only by MembershipContext  owners to create multiple invitations in a single request. Holds the invitations sent successfully when model is a the body of an HTTP response.")
+	@ApiModelProperty(value = "The carbon copy recipients list, where each entry is a user id, a username or an email address. Used only by SpaceContext  owners to create multiple invitations in a single request. Holds the invitations sent successfully when model is a the body of an HTTP response.")
 	private Set<String> cc;
 
-	public MembershipContextInvitations() {
+	public SpaceContextInvitations() {
 		super();
 	}
 
-	public String getMembershipContextId() {
-		return membershipContextId;
+	public String getSpaceContextId() {
+		return spaceContextId;
 	}
 
-	public void setMembershipContextId(String membershipContextId) {
-		this.membershipContextId = membershipContextId;
+	public void setSpaceContextId(String spaceContextId) {
+		this.spaceContextId = spaceContextId;
 	}
 
 	public Set<String> getCc() {
@@ -80,13 +80,13 @@ public class MembershipContextInvitations implements Serializable {
 			return this;
 		}
 
-		public MembershipContextInvitations build() {
-			return new MembershipContextInvitations(this);
+		public SpaceContextInvitations build() {
+			return new SpaceContextInvitations(this);
 		}
 	}
 
-	private MembershipContextInvitations(Builder builder) {
-		this.membershipContextId = builder.businessContextId;
+	private SpaceContextInvitations(Builder builder) {
+		this.spaceContextId = builder.businessContextId;
 		this.cc = builder.cc;
 	}
 }

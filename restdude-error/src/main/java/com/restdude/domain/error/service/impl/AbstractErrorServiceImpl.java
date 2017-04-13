@@ -22,10 +22,10 @@ package com.restdude.domain.error.service.impl;
 
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.domain.cases.model.MembershipContext;
+import com.restdude.domain.cases.model.SpaceContext;
 import com.restdude.domain.cases.service.CaseStatusService;
 import com.restdude.domain.cases.service.CaseWorkflowService;
-import com.restdude.domain.cases.service.MembershipContextService;
+import com.restdude.domain.cases.service.SpaceContextService;
 import com.restdude.domain.cases.service.impl.AbstractCaseServiceImpl;
 import com.restdude.domain.error.model.BaseError;
 import com.restdude.domain.error.model.ErrorLog;
@@ -59,7 +59,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
 
     private UserService userService;
     private CaseStatusService caseStatusService;
-    private MembershipContextService membershipContextService;
+    private SpaceContextService spaceContextService;
     private PersistableModelService<ErrorsApplication, String> errorsApplicationService;
     private CaseWorkflowService caseWorkflowService;
 
@@ -79,8 +79,8 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
     }
 
     @Autowired
-    public void setMembershipContextService(MembershipContextService membershipContextService) {
-        this.membershipContextService = membershipContextService;
+    public void setSpaceContextService(SpaceContextService spaceContextService) {
+        this.spaceContextService = spaceContextService;
     }
 
     @Autowired
@@ -107,7 +107,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
         if(this.workflow == null){
 
             // create global BusinessContext
-            MembershipContext syetemBusinessContext = this.membershipContextService.getSystemContext();
+            SpaceContext syetemBusinessContext = this.spaceContextService.getSystemContext();
 
             // TODO: move to system error service
             // create errors application and workflow

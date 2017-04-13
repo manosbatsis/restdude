@@ -22,8 +22,8 @@ package com.restdude.domain.cases.service;
 
 import com.restdude.domain.cases.model.BusinessContext;
 import com.restdude.domain.cases.model.MembershipRequest;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitations;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitationsResult;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitations;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.service.PersistableModelService;
 
@@ -39,7 +39,7 @@ public interface MembershipRequestService extends PersistableModelService<Member
 	 * @param resource
 	 * @return
 	 */
-	public MembershipContextInvitationsResult create(MembershipContextInvitations resource);
+	public SpaceContextInvitationsResult create(SpaceContextInvitations resource);
 
 
 	public MembershipRequest createConfirmed(MembershipRequest resource);

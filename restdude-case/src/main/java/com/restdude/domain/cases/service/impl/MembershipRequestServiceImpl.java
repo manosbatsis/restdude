@@ -23,15 +23,15 @@ package com.restdude.domain.cases.service.impl;
 import com.restdude.domain.UserDetails;
 import com.restdude.domain.cases.model.BusinessContext;
 import com.restdude.domain.cases.model.Membership;
-import com.restdude.domain.cases.model.MembershipContext;
 import com.restdude.domain.cases.model.MembershipRequest;
+import com.restdude.domain.cases.model.SpaceContext;
 import com.restdude.domain.cases.model.dto.BusinessContextMembershipRequestInfo;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitations;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitationsResult;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitations;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
-import com.restdude.domain.cases.repository.MembershipContextRepository;
 import com.restdude.domain.cases.repository.MembershipRequestRepository;
+import com.restdude.domain.cases.repository.SpaceContextRepository;
 import com.restdude.domain.cases.service.MembershipRequestService;
 import com.restdude.domain.cases.service.MembershipService;
 import com.restdude.domain.friends.model.FriendshipIdentifier;
@@ -59,7 +59,7 @@ public class MembershipRequestServiceImpl
 	
 	protected MembershipService businessContextMembershipService;
 
-	protected MembershipContextRepository membershipContextRepository;
+	protected SpaceContextRepository spaceContextRepository;
 
 	protected UserRepository userRepository;
 	
@@ -69,8 +69,8 @@ public class MembershipRequestServiceImpl
 	}
 
 	@Autowired
-	public void setMembershipContextRepository(MembershipContextRepository membershipContextRepository) {
-		this.membershipContextRepository = membershipContextRepository;
+	public void setSpaceContextRepository(SpaceContextRepository spaceContextRepository) {
+		this.spaceContextRepository = spaceContextRepository;
 	}
 
 	@Autowired
@@ -95,13 +95,13 @@ public class MembershipRequestServiceImpl
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public MembershipContextInvitationsResult create(MembershipContextInvitations resource){
+	public SpaceContextInvitationsResult create(SpaceContextInvitations resource){
 
 		// get current principal
 		UserDetails userDetails = this.getPrincipal();
 
 		/// get the BusinessContext
-		MembershipContext businessContext = this.membershipContextRepository.getOne(resource.getMembershipContextId());
+		SpaceContext businessContext = this.spaceContextRepository.getOne(resource.getSpaceContextId());
 
 		// verify principal is the context owner
 		if (!businessContext.getOwner().getPk().equals(userDetails.getPk())) {
@@ -109,7 +109,7 @@ public class MembershipRequestServiceImpl
 		}
 
 		// init report
-		MembershipContextInvitationsResult.Builder results = new MembershipContextInvitationsResult.Builder().businessContextId(businessContext.getPk());
+		SpaceContextInvitationsResult.Builder results = new SpaceContextInvitationsResult.Builder().businessContextId(businessContext.getPk());
 
 		// process recipients
 		for(String userHandle : resource.getCc()){
@@ -209,7 +209,7 @@ public class MembershipRequestServiceImpl
 	private MembershipRequest create(MembershipRequest resource, boolean skipValidation) {
 		// get current principal and target BusinessContext
 		UserDetails userDetails = this.getPrincipal();
-		resource.setContext(this.membershipContextRepository.getOne(resource.getContext().getPk()));
+		resource.setContext(this.spaceContextRepository.getOne(resource.getContext().getPk()));
 		log.debug("create, userDetails: {}, ", userDetails);
 		log.debug("create, resource context owner: {}", resource.getContext().getOwner());
 		log.debug("create, resource context: {}}", resource.getContext());
@@ -221,7 +221,7 @@ public class MembershipRequestServiceImpl
 			resource.setUser(new User(userDetails.getPk()));
 		}
 
-		log.debug("create, userDetails: {}, isOwner: {}", userDetails, this.membershipContextRepository.isOwner(resource.getContext(), new User(userDetails.getPk())));
+		log.debug("create, userDetails: {}, isOwner: {}", userDetails, this.spaceContextRepository.isOwner(resource.getContext(), new User(userDetails.getPk())));
 		log.debug("create, resource context owner: {}", resource.getContext().getOwner());
 		log.debug("create, resource context: {}}", resource.getContext());
 		log.debug("create, resource user: {}, ", resource.getUser());
@@ -246,14 +246,14 @@ public class MembershipRequestServiceImpl
 			// request mode
 			if (userDetails.getPk().equals(resource.getUser().getPk())) {
 				// make sure context is visible if user is requesting to join
-				if(!this.membershipContextRepository.isVisible(resource.getContext().getPk())) {
+				if(!this.spaceContextRepository.isVisible(resource.getContext().getPk())) {
 					throw new UnauthorizedException("Cannot complete request to join, BusinessContext does not exist or is not visible");
 				}
 			}
 			// invitation mode
 			else{
 				// make sure current principal can invite the target user
-				if(!this.membershipContextRepository.canApproveRequestToJoinMembershipContext(resource.getContext())) {
+				if(!this.spaceContextRepository.canApproveRequestToJoinSpaceContext(resource.getContext())) {
 					throw new UnauthorizedException("Cannot complete invitation, BusinessContext does not exist or user is unauthorized or is not friend of target user");
 				}
 			}
@@ -336,7 +336,7 @@ public class MembershipRequestServiceImpl
 		MembershipRequest reference = persisted != null ? persisted : requestResource;
 		boolean isRequestUser = userDetails.getPk().equals(reference.getUser().getPk());
 		log.debug("validateRequest, isRequestUser: {}, reference: {}", isRequestUser, reference);
-		boolean isJoinRequestHandler = this.membershipContextRepository.canInviteUserToMembershipContext(reference.getContext());
+		boolean isJoinRequestHandler = this.spaceContextRepository.canInviteUserToSpaceContext(reference.getContext());
 		boolean isBusinessContextOwner = userDetails.getPk().equals(requestResource.getContext().getOwner().getPk());
 		log.debug("validateRequest, isJoinRequestHandler: {}, isBusinessContextOwner: {}", isJoinRequestHandler, isBusinessContextOwner);
 

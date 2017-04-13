@@ -66,7 +66,7 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel {
 	@JoinColumn(name = "context", nullable = false, updatable = false)
 	@ApiModelProperty(value = "The BusinessContext this membership request is for", required = true)
 	@Getter @Setter
-	private MembershipContext context;
+	private SpaceContext context;
 
 	@NotNull
 	@ManyToOne
@@ -131,7 +131,7 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel {
 	public static class Builder {
 		private String id;
 		private MembershipRequestStatus status;
-		private MembershipContext context;
+		private SpaceContext context;
 		private User user;
 
 		public Builder id(String id) {
@@ -144,7 +144,7 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel {
 			return this;
 		}
 
-		public Builder context(MembershipContext context) {
+		public Builder context(SpaceContext context) {
 			this.context = context;
 			return this;
 		}

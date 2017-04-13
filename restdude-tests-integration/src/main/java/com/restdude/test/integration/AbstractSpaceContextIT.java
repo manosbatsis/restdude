@@ -20,10 +20,10 @@
  */
 package com.restdude.test.integration;
 
-import com.restdude.domain.cases.model.MembershipContext;
 import com.restdude.domain.cases.model.MembershipRequest;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitations;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitationsResult;
+import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitations;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
 import com.restdude.domain.users.model.User;
@@ -40,79 +40,79 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
- * Base class for rest-assured based, MembershipContext-aware controller integration testing
+ * Base class for rest-assured based, SpaceContext-aware controller integration testing
  */
 @SuppressWarnings("unused")
-public abstract class AbstractMembershipContextIT extends AbstractControllerIT {
+public abstract class AbstractSpaceContextIT extends AbstractControllerIT {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMembershipContextIT.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSpaceContextIT.class);
 
 	public static final String RESOURCE_TEST_AVATAR_IMG = "blank-profile.gif";
 	public static final String RESOURCE_TEST_BANNER_IMG = "banner_gameplay_final_1920_1080.gif";
 
 	private final StringKeyGenerator generator = KeyGenerators.string();
 
-	protected MembershipContext createMembershipContext(Loggedincontext ownerLoginContext) {
-		return this.createMembershipContext(ownerLoginContext, ContextVisibilityType.PUBLIC);
+	protected SpaceContext createSpaceContext(Loggedincontext ownerLoginContext) {
+		return this.createSpaceContext(ownerLoginContext, ContextVisibilityType.PUBLIC);
 	}
 
-	protected MembershipContext createMembershipContext(Loggedincontext ownerLoginContext, ContextVisibilityType visibility) {
+	protected SpaceContext createSpaceContext(Loggedincontext ownerLoginContext, ContextVisibilityType visibility) {
 		String contextName = generator.generateKey();
-		MembershipContext businessContext = given().spec(ownerLoginContext.requestSpec)
+		SpaceContext businessContext = given().spec(ownerLoginContext.requestSpec)
 				.log().all()
-				.body(new MembershipContext.Builder()
+				.body(new SpaceContext.Builder()
 						//.owner(new User(ownerLoginContext.userId))
 						.name(contextName)
 						.title(this.getClass().getSimpleName() + " " + contextName)
 						.description("Created by "+this.getClass().getName())
 						.visibility(visibility)
 						.build())
-				.post(WEBCONTEXT_PATH + "/api/rest/" + MembershipContext.API_PATH_FRAGMENT)
+				.post(WEBCONTEXT_PATH + "/api/rest/" + SpaceContext.API_PATH_FRAGMENT)
 				.then().log().all()
 				.assertThat()
 				// test assertions
 				.statusCode(201)
 				.body("pk", notNullValue())
 				// get model
-				.extract().as(MembershipContext.class);
+				.extract().as(SpaceContext.class);
 		return businessContext;
 	}
 
 
-	protected MembershipContext getOwnedMembershipContext(Loggedincontext ownerLoginContext) {
-		// obtain a random MembershipContext id
+	protected SpaceContext getOwnedSpaceContext(Loggedincontext ownerLoginContext) {
+		// obtain a random SpaceContext id
 		String contextId = given().spec(ownerLoginContext.requestSpec)
 				.param("owner", ownerLoginContext.userId)
-				.get(WEBCONTEXT_PATH + "/api/rest/" + MembershipContext.API_PATH_FRAGMENT + "/my").then()
+				.get(WEBCONTEXT_PATH + "/api/rest/" + SpaceContext.API_PATH_FRAGMENT + "/my").then()
 				.assertThat()
 				.body("content[0].pk", notNullValue())
 				.statusCode(200)
 				.extract().path("content[0].pk");
-		// use the public MembershipContext
-		MembershipContext publicMembershipContext = new MembershipContext();
-		publicMembershipContext.setPk(contextId);
-		return publicMembershipContext;
+		// use the public SpaceContext
+		SpaceContext publicSpaceContext = new SpaceContext();
+		publicSpaceContext.setPk(contextId);
+		return publicSpaceContext;
 	}
 
-	protected MembershipContext getMembershipContext(Loggedincontext ownerLoginContext, String contextId) {
-		// obtain the MembershipContext matching the ID
+	protected SpaceContext getSpaceContext(Loggedincontext ownerLoginContext, String contextId) {
+		// obtain the SpaceContext matching the ID
 		Assert.assertNotNull(contextId);
-		MembershipContext context = given().spec(ownerLoginContext.requestSpec)
-				.get(WEBCONTEXT_PATH + "/api/rest/" + MembershipContext.API_PATH_FRAGMENT + "/" + contextId).then()
+		SpaceContext context = given().spec(ownerLoginContext.requestSpec)
+				.get(WEBCONTEXT_PATH + "/api/rest/" + SpaceContext.API_PATH_FRAGMENT + "/" + contextId).then()
 				.assertThat()
 				.statusCode(200)
-				.extract().as(MembershipContext.class);
+				.extract().as(SpaceContext.class);
 		return context;
 	}
 
 
-	protected MembershipRequest createMembershipInvitation(Loggedincontext ownerLoginContext, MembershipContext ownedMembershipContext, User invited) {
-		LOGGER.debug("createMembershipInvitation, ownedMembershipContext: {}, invited: {}", ownedMembershipContext, invited);
+	protected MembershipRequest createMembershipInvitation(Loggedincontext ownerLoginContext, SpaceContext ownedSpaceContext, User invited) {
+		LOGGER.debug("createMembershipInvitation, ownedSpaceContext: {}, invited: {}", ownedSpaceContext, invited);
 		return given()
 				.spec(ownerLoginContext.requestSpec)
 				 .log().all()
 				.body(new MembershipRequest.Builder()
-						.context(ownedMembershipContext)
+						.context(ownedSpaceContext)
 						.user(invited)
 						.build())
 				.post(WEBCONTEXT_PATH + "/api/rest/" + MembershipRequest.API_PATH_FRAGMENT)
@@ -124,9 +124,9 @@ public abstract class AbstractMembershipContextIT extends AbstractControllerIT {
 				.extract().as(MembershipRequest.class);
 	}
 
-	protected MembershipContextInvitationsResult createMembershipContextMembershipBatchInvitation(Loggedincontext ownerLoginContext, MembershipContext ownedMembershipContext, Iterable<String> cc) {
-		MembershipContextInvitations.Builder b = new MembershipContextInvitations.Builder()
-				.businessContextId(ownedMembershipContext.getPk());
+	protected SpaceContextInvitationsResult createSpaceContextMembershipBatchInvitation(Loggedincontext ownerLoginContext, SpaceContext ownedSpaceContext, Iterable<String> cc) {
+		SpaceContextInvitations.Builder b = new SpaceContextInvitations.Builder()
+				.businessContextId(ownedSpaceContext.getPk());
 		for (String ccItem : cc){
 			b.cc(ccItem);
 		}
@@ -138,11 +138,11 @@ public abstract class AbstractMembershipContextIT extends AbstractControllerIT {
 				.then()
 				.log().all()
 				.assertThat().statusCode(200)
-				.extract().as(MembershipContextInvitationsResult.class);
+				.extract().as(SpaceContextInvitationsResult.class);
 	}
 
 
-	protected MembershipRequest updateMembershipContextMembershipRequest(Loggedincontext loginContext, String requestId, MembershipRequestStatus newStatus) {
+	protected MembershipRequest updateSpaceContextMembershipRequest(Loggedincontext loginContext, String requestId, MembershipRequestStatus newStatus) {
 		return given()
 				.spec(loginContext.requestSpec)
 				 .log().all()
@@ -156,23 +156,23 @@ public abstract class AbstractMembershipContextIT extends AbstractControllerIT {
 				.extract().as(MembershipRequest.class);
 	}
 
-	protected void ensureMembershipContextMembership(Loggedincontext ownerLoginContext, Loggedincontext memberLoginContext, MembershipContext ownedMembershipContext, String notecEmail) {
-		MembershipContextInvitationsResult invitationsResult = given()
+	protected void ensureSpaceContextMembership(Loggedincontext ownerLoginContext, Loggedincontext memberLoginContext, SpaceContext ownedSpaceContext, String notecEmail) {
+		SpaceContextInvitationsResult invitationsResult = given()
 				.spec(ownerLoginContext.requestSpec)
-				.body(new MembershipContextInvitations.Builder()
-						.businessContextId(ownedMembershipContext.getPk())
+				.body(new SpaceContextInvitations.Builder()
+						.businessContextId(ownedSpaceContext.getPk())
 						.cc(notecEmail)
 						.build())
 				.post(WEBCONTEXT_PATH + "/api/rest/" + MembershipRequest.API_PATH_FRAGMENT + "/cc")
 				.then()
-				.assertThat().statusCode(200).extract().as(MembershipContextInvitationsResult.class);
+				.assertThat().statusCode(200).extract().as(SpaceContextInvitationsResult.class);
 		// accept invitation if marked as invited
 		if(CollectionUtils.isNotEmpty(invitationsResult.getInvited()) && invitationsResult.getInvited().contains(notecEmail)){
 			// get invitation id
 			String invitationId = given()
 					.spec(memberLoginContext.requestSpec)
 					.log().all()
-					.param("context", ownedMembershipContext.getPk())
+					.param("context", ownedSpaceContext.getPk())
 					.param("user", memberLoginContext.userId)
 					.get(WEBCONTEXT_PATH + "/api/rest/" + MembershipRequest.API_PATH_FRAGMENT)
 					.then()
@@ -180,7 +180,7 @@ public abstract class AbstractMembershipContextIT extends AbstractControllerIT {
 					.statusCode(200)
 					.body("content[0].status", equalTo(MembershipRequestStatus.SENT_INVITE.name()))
 					.extract().path("content[0].pk");
-			// Accept invitationMembershipContextMembershipRequestServiceImpl
+			// Accept invitationSpaceContextMembershipRequestServiceImpl
 			MembershipRequest confirmedMembershipRequest = given()
 					.spec(memberLoginContext.requestSpec)
 					.body(new MembershipRequest.Builder()

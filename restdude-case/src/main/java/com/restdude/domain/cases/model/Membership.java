@@ -60,7 +60,7 @@ public class Membership extends AbstractSystemUuidPersistableModel {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)
 	@Getter @Setter
-	private MembershipContext context;
+	private SpaceContext context;
 
 	@NotNull
 	@ManyToOne
@@ -73,7 +73,7 @@ public class Membership extends AbstractSystemUuidPersistableModel {
 		super();
 	}
 	
-	public Membership(MembershipContext context, User user) {
+	public Membership(SpaceContext context, User user) {
 		super();
 		this.context = context;
 		this.user = user;
@@ -116,10 +116,10 @@ public class Membership extends AbstractSystemUuidPersistableModel {
 	}
 
 	public static class Builder {
-		private MembershipContext context1;
+		private SpaceContext context1;
 		private User user;
 
-		public Builder context(MembershipContext context1) {
+		public Builder context(SpaceContext context1) {
 			this.context1 = context1;
 			return this;
 		}

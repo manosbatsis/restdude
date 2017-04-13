@@ -22,10 +22,10 @@ package com.restdude.domain.cases.service.impl;
 
 import com.restdude.domain.UserDetails;
 import com.restdude.domain.cases.model.Membership;
-import com.restdude.domain.cases.model.MembershipContext;
-import com.restdude.domain.cases.model.dto.MembershipContextInfo;
+import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.dto.SpaceContextInfo;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
-import com.restdude.domain.cases.model.enums.MembershipContextActivity;
+import com.restdude.domain.cases.model.enums.SpaceContextActivity;
 import com.restdude.domain.cases.repository.MembershipRepository;
 import com.restdude.domain.cases.service.BusinessContextMembersActivityMessanger;
 import com.restdude.domain.cases.service.MembershipService;
@@ -72,7 +72,7 @@ public class MembershipServiceImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> findOnlineMemberUsernames(MembershipContext businessContext){
+	public Set<String> findOnlineMemberUsernames(SpaceContext businessContext){
 		return this.repository.findOnlineMemberUsernames(businessContext);
 	}
 
@@ -80,7 +80,7 @@ public class MembershipServiceImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Membership getMembership(MembershipContext businessContext){
+	public Membership getMembership(SpaceContext businessContext){
 		User user = new User(this.getPrincipal().getPk());
 		return getMembership(businessContext, user);
 	}
@@ -89,7 +89,7 @@ public class MembershipServiceImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Membership getMembership(MembershipContext businessContext, User user){
+	public Membership getMembership(SpaceContext businessContext, User user){
 		// check for membership
 		LOGGER.debug("getMembership, context: {}, user: {}", businessContext, user);
 		Membership membership = this.repository.findOneByBusinessContextAndUser(businessContext, user).orElse(null);
@@ -125,9 +125,9 @@ public class MembershipServiceImpl
 
 
 		// create and send message to context members
-		ActivityNotificationMessage<UserDTO, MembershipContextActivity, MembershipContextInfo> msg =
-				new ActivityNotificationMessage<UserDTO, MembershipContextActivity, MembershipContextInfo>(
-						UserDTO.fromUser(resource.getUser()), MembershipContextActivity.BECAME_MEMBER_OF, MembershipContextInfo.from(resource.getContext()));
+		ActivityNotificationMessage<UserDTO, SpaceContextActivity, SpaceContextInfo> msg =
+				new ActivityNotificationMessage<UserDTO, SpaceContextActivity, SpaceContextInfo>(
+						UserDTO.fromUser(resource.getUser()), SpaceContextActivity.BECAME_MEMBER_OF, SpaceContextInfo.from(resource.getContext()));
 
 		// send notification to BusinessContext members
 		Set<String> recepients = this.repository.findOnlineMemberUsernames(resource.getContext());
@@ -150,7 +150,7 @@ public class MembershipServiceImpl
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(MembershipContext businessContext, User user){
+	public void delete(SpaceContext businessContext, User user){
 		Membership membership = this.getMembership(businessContext, user);
 		if(membership != null){
 			this.delete(membership);
@@ -195,11 +195,11 @@ public class MembershipServiceImpl
 		notifyDeletion(resource.getContext(), resource.getUser());
 	}
 
-	private void notifyDeletion(MembershipContext businessContext, User user) {
+	private void notifyDeletion(SpaceContext businessContext, User user) {
 		// create and send message to context members
-		ActivityNotificationMessage<UserDTO, MembershipContextActivity, MembershipContextInfo> msg =
-				new ActivityNotificationMessage<UserDTO, MembershipContextActivity, MembershipContextInfo>(
-						UserDTO.fromUser(user), MembershipContextActivity.STOPPED_BEING_MEMBER_OF, MembershipContextInfo.from(businessContext));
+		ActivityNotificationMessage<UserDTO, SpaceContextActivity, SpaceContextInfo> msg =
+				new ActivityNotificationMessage<UserDTO, SpaceContextActivity, SpaceContextInfo>(
+						UserDTO.fromUser(user), SpaceContextActivity.STOPPED_BEING_MEMBER_OF, SpaceContextInfo.from(businessContext));
 
 		// send the message
 		this.sendStompActivityMessageToMembers(msg, businessContext);

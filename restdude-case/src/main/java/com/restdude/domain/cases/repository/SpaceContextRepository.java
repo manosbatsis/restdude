@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.service;
+package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.MembershipContext;
+import com.restdude.domain.cases.model.SpaceContext;
 
-public interface MembershipContextService extends ContextService<MembershipContext> {
+/**
+ * Calipso JPA repository for the SpaceContext entity.
+ * {@inheritDoc}
+ */
+public interface SpaceContextRepository extends ContextRepository<SpaceContext> {
 
-    /**
-     * Get the system business context
-     * @return
-     */
-    MembershipContext getSystemContext();
+
 }

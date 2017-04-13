@@ -21,7 +21,7 @@
 package com.restdude.domain.cases.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.domain.cases.model.MembershipContext;
+import com.restdude.domain.cases.model.SpaceContext;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.websocket.message.MessageResource;
@@ -37,14 +37,14 @@ import java.time.LocalDateTime;
 
 @ApiModel(description = "A lightweight DTO version of BusinessContext used for websocket messaging")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MembershipContextInfo extends MessageResource<String> {
+public class SpaceContextInfo extends MessageResource<String> {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MembershipContextInfo.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpaceContextInfo.class);
 
-	public static MembershipContextInfo from(MembershipContext resource) {
-		return new MembershipContextInfo(resource);
+	public static SpaceContextInfo from(SpaceContext resource) {
+		return new SpaceContextInfo(resource);
 	}
 
 	private String description;
@@ -56,12 +56,12 @@ public class MembershipContextInfo extends MessageResource<String> {
 
 	private ContextVisibilityType visibility;
 	
-	public MembershipContextInfo() {
+	public SpaceContextInfo() {
 		super();
 	}
 
 
-	public MembershipContextInfo(String id, String name, String description, String avatarUrl, String bannerUrl, UserDTO owner, ContextVisibilityType visibility, LocalDateTime lastModifiedDate) {
+	public SpaceContextInfo(String id, String name, String description, String avatarUrl, String bannerUrl, UserDTO owner, ContextVisibilityType visibility, LocalDateTime lastModifiedDate) {
 		super(id, name);
 		this.description = description;
 		this.avatarUrl = avatarUrl;
@@ -71,7 +71,7 @@ public class MembershipContextInfo extends MessageResource<String> {
 		this.visibility = visibility;
 	}
 
-	public MembershipContextInfo(String id, String name, String description, String avatarUrl, String bannerUrl,
+	public SpaceContextInfo(String id, String name, String description, String avatarUrl, String bannerUrl,
 								 String ownerId, String ownerFirstName, String ownerLastName, String ownerUsername, String ownerEmail, String ownerEmailHash, String ownerAvatarUrl,
 								 String ownerBannerUrl, Integer ownerStompSessionCount, ContextVisibilityType visibility) {
 		this(id, name, description, avatarUrl, bannerUrl,
@@ -79,14 +79,14 @@ public class MembershipContextInfo extends MessageResource<String> {
 				ownerBannerUrl, ownerStompSessionCount, visibility, null);
 	}
 
-	public MembershipContextInfo(String id, String name, String description, String avatarUrl, String bannerUrl,
+	public SpaceContextInfo(String id, String name, String description, String avatarUrl, String bannerUrl,
 								 String ownerId, String ownerFirstName, String ownerLastName, String ownerUsername, String ownerEmail, String ownerEmailHash, String ownerAvatarUrl,
 								 String ownerBannerUrl, Integer ownerStompSessionCount, ContextVisibilityType visibility, LocalDateTime lastModifiedDate) {
 		this(id, name, description, avatarUrl, bannerUrl,
 				new UserDTO(ownerId, ownerFirstName, ownerLastName, ownerUsername, ownerEmail, ownerEmailHash, ownerAvatarUrl, ownerBannerUrl, ownerStompSessionCount), visibility, lastModifiedDate);
 	}
 
-	private MembershipContextInfo(MembershipContext resource) {
+	private SpaceContextInfo(SpaceContext resource) {
 		this(resource.getPk(), resource.getName(), resource.getDescription(), resource.getAvatarUrl(), resource.getBannerUrl(),  UserDTO.fromUser(resource.getOwner()), resource.getVisibility(), null);
 	}
 	
@@ -114,8 +114,8 @@ public class MembershipContextInfo extends MessageResource<String> {
 
 	@Override
 	public boolean equals(final Object obj){
-		if(obj instanceof MembershipContextInfo){
-			final MembershipContextInfo other = (MembershipContextInfo) obj;
+		if(obj instanceof SpaceContextInfo){
+			final SpaceContextInfo other = (SpaceContextInfo) obj;
 			return new EqualsBuilder()
 					.append(id, other.id)
 					.append(name, other.name)

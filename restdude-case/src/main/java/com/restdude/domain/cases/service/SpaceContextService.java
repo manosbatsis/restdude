@@ -18,12 +18,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.model.enums;
+package com.restdude.domain.cases.service;
 
-import io.swagger.annotations.ApiModel;
+import com.restdude.domain.cases.model.SpaceContext;
 
-@ApiModel
-public enum MembershipContextActivity {
+public interface SpaceContextService extends ContextService<SpaceContext> {
 
-	BECAME_MEMBER_OF, STOPPED_BEING_MEMBER_OF;
+    /**
+     * Get the system business context
+     * @return
+     */
+    SpaceContext getSystemContext();
 }

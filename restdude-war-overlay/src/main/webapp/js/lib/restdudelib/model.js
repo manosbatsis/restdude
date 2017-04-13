@@ -23,7 +23,9 @@ define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util
         "lib/restdudelib/models/Model", "lib/restdudelib/models/HostModel", "lib/restdudelib/models/UserRegistrationCodeBatchModel", "lib/restdudelib/models/UserRegistrationCodeModel",
         "lib/restdudelib/models/UserInvitationsModel", "lib/restdudelib/models/RoleModel", "lib/restdudelib/models/UserModel", "lib/restdudelib/models/CountryModel",
         "lib/restdudelib/models/UserAccountModel", "lib/restdudelib/models/UserDetailsModel",
-        "lib/restdudelib/models/BaseErrorModel", "lib/restdudelib/models/SystemErrorModel", "lib/restdudelib/models/ClientErrorModel", "lib/restdudelib/models/ErrorLogModel"],
+        "lib/restdudelib/models/BaseErrorModel", "lib/restdudelib/models/SystemErrorModel", "lib/restdudelib/models/ClientErrorModel", "lib/restdudelib/models/ErrorLogModel",
+        "lib/restdudelib/models/SpaceModel"
+    ],
 
     function ($, _, Bloodhoud, Typeahead, Restdude, RestdudeForm, RestdudeField, RestdudeGrid, RestdudeView, Handlebars, moment) {
 

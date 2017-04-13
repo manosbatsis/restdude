@@ -45,16 +45,16 @@ import java.util.Set;
  * {@value #API_MODEL_DESCRIPTION}
  */
 @Entity
-@Table(name = "membership_context")
+@Table(name = "space_context")
 @Inheritance(strategy = InheritanceType.JOINED)
-@ModelResource(pathFragment = MembershipContext.API_PATH_FRAGMENT,
-		apiName = "MembershipContext",
-		apiDescription = "MembershipContext management")
-@ApiModel(description = MembershipContext.API_MODEL_DESCRIPTION)
-public class MembershipContext extends AbstractPersistableHierarchicalModel<MembershipContext> {
+@ModelResource(pathFragment = SpaceContext.API_PATH_FRAGMENT,
+		apiName = "Space",
+		apiDescription = "SpaceContext management")
+@ApiModel(description = SpaceContext.API_MODEL_DESCRIPTION)
+public class SpaceContext extends AbstractPersistableHierarchicalModel<SpaceContext> {
 
-	public static final String API_PATH_FRAGMENT = "membershipContexts";
-	public static final String API_MODEL_DESCRIPTION = "A model representing a membership context, such as an organization, team, or process type.";
+	public static final String API_PATH_FRAGMENT = "spaces";
+	public static final String API_MODEL_DESCRIPTION = "A model representing a context, such as an organization, team, or process type.";
 
 	@NotNull
 	@Column(name = "title", nullable = false, unique = true)
@@ -122,11 +122,11 @@ public class MembershipContext extends AbstractPersistableHierarchicalModel<Memb
     private List<MembershipRequest> membershipRequests;
 
 
-	public MembershipContext() {
+	public SpaceContext() {
 		super();
 	}
 
-	public MembershipContext(String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
+	public SpaceContext(String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
 		this.title = title;
 		this.description = description;
 		this.avatarUrl = avatarUrl;
@@ -137,7 +137,7 @@ public class MembershipContext extends AbstractPersistableHierarchicalModel<Memb
 		this.membershipRequests = membershipRequests;
 	}
 
-	public MembershipContext(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
+	public SpaceContext(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
 		super(name);
 		this.title = title;
 		this.description = description;
@@ -149,7 +149,7 @@ public class MembershipContext extends AbstractPersistableHierarchicalModel<Memb
 		this.membershipRequests = membershipRequests;
 	}
 
-	public MembershipContext(String name, MembershipContext parent, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
+	public SpaceContext(String name, SpaceContext parent, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
 		super(name, parent);
 		this.title = title;
 		this.description = description;
@@ -217,12 +217,12 @@ public class MembershipContext extends AbstractPersistableHierarchicalModel<Memb
 			return this;
 		}
 
-		public MembershipContext build() {
-			return new MembershipContext(this);
+		public SpaceContext build() {
+			return new SpaceContext(this);
 		}
 	}
 
-	private MembershipContext(Builder builder) {
+	private SpaceContext(Builder builder) {
 		this.setName(builder.name);
 		this.setTitle(builder.title);
 		this.setDescription(builder.description);

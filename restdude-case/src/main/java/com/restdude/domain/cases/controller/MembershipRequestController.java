@@ -21,8 +21,8 @@
 package com.restdude.domain.cases.controller;
 
 import com.restdude.domain.cases.model.MembershipRequest;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitations;
-import com.restdude.domain.cases.model.dto.MembershipContextInvitationsResult;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitations;
+import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
 import com.restdude.domain.cases.service.MembershipRequestService;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
 import io.swagger.annotations.Api;
@@ -42,7 +42,7 @@ public class MembershipRequestController extends AbstractPersistableModelControl
 	@RequestMapping(value = "cc", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Create multiple invitations to a BusinessContext", notes = "Only the owner of the BusinessContext in context is allowed this peration.")
-	public MembershipContextInvitationsResult create(@RequestBody MembershipContextInvitations resource) {
+	public SpaceContextInvitationsResult create(@RequestBody SpaceContextInvitations resource) {
 		return this.service.create(resource);
 	}
     

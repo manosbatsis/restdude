@@ -43,7 +43,7 @@ import java.util.Set;
 		apiName = "BusinessContext",
 		apiDescription = "BusinessContext management")
 @ApiModel(description = BusinessContext.API_MODEL_DESCRIPTION)*/
-public class BusinessContext extends MembershipContext {
+public class BusinessContext extends SpaceContext {
 
 	public static final String API_PATH_FRAGMENT = "businessContexts";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a business context, such as an organization, team, or process type.";

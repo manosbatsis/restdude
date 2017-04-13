@@ -38,7 +38,7 @@ import java.util.Set;
  * {@value #API_MODEL_DESCRIPTION}
  */
 @MappedSuperclass
-public class AbstractApplicationContext<T extends AbstractCaseModel, CT extends AbstractCaseCommentModel> extends MembershipContext {
+public class AbstractApplicationContext<T extends AbstractCaseModel, CT extends AbstractCaseCommentModel> extends SpaceContext {
 
 	public static final String API_PATH_FRAGMENT = "businessContextApplications";
 	public static final String API_MODEL_DESCRIPTION = "A model representing an application of a business context";
