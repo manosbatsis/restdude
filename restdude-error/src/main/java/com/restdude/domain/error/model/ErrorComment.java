@@ -33,4 +33,11 @@ import javax.persistence.Table;
 public class ErrorComment extends AbstractCaseCommentModel<BaseError, ErrorComment>   {
 
 
+    public ErrorComment() {
+    }
+
+    public ErrorComment(BaseError subject, String content) {
+        this.setSubject(subject);
+        this.setContent(content);
+    }
 }

@@ -21,6 +21,7 @@
 package com.restdude.domain.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.restdude.domain.details.contact.model.ContactDetails;
@@ -34,6 +35,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Slf4j
 @ApiModel(value = "UserDTO", description = "UserDTO is a lightweight DTO version of User")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements IMessageResource<String> {
 
 
@@ -71,6 +73,13 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     public UserDTO(String pk, String firstName, String lastName, String username, String email, String emailHash, String avatarUrl, String bannerUrl, Integer stompSessionCount) {
+        this(pk, firstName, lastName, username, emailHash, avatarUrl);;
+        this.email = StringUtils.lowerCase(email);
+        this.bannerUrl = bannerUrl;
+        this.stompSessionCount = stompSessionCount;
+    }
+
+    public UserDTO(String pk, String firstName, String lastName, String username, String emailHash, String avatarUrl){
         super();
         this.pk = pk;
         this.firstName = firstName;
@@ -80,8 +89,6 @@ public class UserDTO implements IMessageResource<String> {
         this.email = StringUtils.lowerCase(email);
         this.emailHash = emailHash;
         this.avatarUrl = avatarUrl;
-        this.bannerUrl = bannerUrl;
-        this.stompSessionCount = stompSessionCount;
     }
 
     public UserDTO(User user) {
@@ -135,18 +142,18 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     /**
-     * @see com.restdude.websocket.message.IMessageResource#getPk()
+     * @see com.restdude.websocket.message.IMessageResource#getId()
      */
     @Override
-    public String getPk() {
+    public String getId() {
         return pk;
     }
 
     /**
-     * @see com.restdude.websocket.message.IMessageResource#setPk(java.io.Serializable)
+     * @see com.restdude.websocket.message.IMessageResource#setId(java.io.Serializable)
      */
     @Override
-    public void setPk(String pk) {
+    public void setId(String pk) {
         this.pk = pk;
     }
 

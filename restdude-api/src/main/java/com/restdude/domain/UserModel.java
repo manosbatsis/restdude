@@ -33,6 +33,11 @@ import java.util.Locale;
  * Created by manos on 4/2/2017.
  */
 public interface UserModel {
+
+    String getPk();
+
+    void setPk(String pk);
+
     Locale getLocaleObject();
 
     boolean hasRole(String roleName);

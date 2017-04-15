@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.cases.model;
 
+import com.restdude.domain.cases.IMembership;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
@@ -45,7 +46,7 @@ import javax.validation.constraints.NotNull;
 	apiName = "Context Memberships",
 	apiDescription = "Operations about context memberships")
 @ApiModel(description = Membership.API_MODEL_DESCRIPTION)
-public class Membership extends AbstractSystemUuidPersistableModel {
+public class Membership extends AbstractSystemUuidPersistableModel implements IMembership {
 
 	public static final String API_PATH_FRAGMENT = "contextMemberships";
 	public static final String API_MODEL_DESCRIPTION = "An entity model representing a membership to some context";
@@ -60,7 +61,7 @@ public class Membership extends AbstractSystemUuidPersistableModel {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)
 	@Getter @Setter
-	private SpaceContext context;
+	private Space context;
 
 	@NotNull
 	@ManyToOne
@@ -73,7 +74,7 @@ public class Membership extends AbstractSystemUuidPersistableModel {
 		super();
 	}
 	
-	public Membership(SpaceContext context, User user) {
+	public Membership(Space context, User user) {
 		super();
 		this.context = context;
 		this.user = user;
@@ -116,10 +117,10 @@ public class Membership extends AbstractSystemUuidPersistableModel {
 	}
 
 	public static class Builder {
-		private SpaceContext context1;
+		private Space context1;
 		private User user;
 
-		public Builder context(SpaceContext context1) {
+		public Builder context(Space context1) {
 			this.context1 = context1;
 			return this;
 		}

@@ -20,23 +20,32 @@
  */
 package com.restdude.domain.cases.service.impl;
 
-import com.restdude.domain.cases.CaseModel;
+import com.restdude.domain.cases.model.AbstractCaseCommentModel;
+import com.restdude.domain.cases.model.AbstractCaseModel;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
+import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractCaseServiceImpl<T extends CaseModel<?>, R extends ModelRepository<T, String>>
-        extends AbstractPersistableModelServiceImpl<T, String, R> {
+public abstract class AbstractCaseServiceImpl<T extends AbstractCaseModel<?, ?, ?>, CC extends AbstractCaseCommentModel, R extends AbstractCaseModelRepository<T>>
+        extends AbstractPersistableModelServiceImpl<T, String, R>        {
 
 
     public abstract CaseWorkflow getWorkflow();
     public abstract String getWorkflowName();
+    public abstract String getWorkflowTitle();
+    public abstract String getWorkflowDescription();
+
+
+    public static final char INDEX_CHAR = '-';
+
 
     /**
      * {@inheritDoc}
@@ -52,7 +61,7 @@ public abstract class AbstractCaseServiceImpl<T extends CaseModel<?>, R extends 
     /**
      * {@inheritDoc}
      */
-    List<CaseStatus> getNextStatusOptions(T unpersisted){
+    public List<CaseStatus> getNextStatusOptions(T unpersisted){
         CaseWorkflow workflow = this.getWorkflow();
         if(workflow != null && CollectionUtils.isNotEmpty(workflow.getStatuses())){
             return workflow.getStatuses();
@@ -61,5 +70,46 @@ public abstract class AbstractCaseServiceImpl<T extends CaseModel<?>, R extends 
     }
 
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract List<CaseCommenttInfo> getCompactCommentsBySubject(T subject);
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract Integer getCaseIndex(T persisted);
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<CaseCommenttInfo> getCompactCommentsBySubject(String id){
+        T resource = this.findById(id);
+        return this.getCompactCommentsBySubject(resource);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public T create(T resource) {
+
+        // save case
+        resource = super.create(resource);
+
+        log.debug("create, calling getCaseIndex with: {}", resource);
+        log.debug("create, this.repository: {}", this.repository);
+        // TODO: tmp hack, needs to be refactored to some transaction synchronization handler in @PostPersit or whatever
+        Integer caseIndex = this.getCaseIndex(resource);
+        resource.setCaseIndex(caseIndex);
+        resource.setName(new StringBuffer(resource.getApplicationDTO().getName()).append(INDEX_CHAR).append(caseIndex).toString());
+        resource = this.repository.save(resource);
+        log.debug("create, returning error:: {}", resource);
+
+        return resource;
+    }
 
 }

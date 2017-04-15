@@ -20,7 +20,6 @@
  */
 package com.restdude.domain.error.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.restdude.domain.CommentableModel;
 import com.restdude.domain.error.controller.ClientErrorController;
 import com.restdude.domain.users.model.User;
@@ -47,7 +46,7 @@ import javax.servlet.http.HttpServletRequest;
         apiName = "Client Errors", apiDescription = "Client Error Operations", controllerSuperClass = ClientErrorController.class)
 @ApiModel(value = "ClientError", description = "Client errors are created upon client request and refer to exceptions occurred " +
         "specifically within client application code. ")
-@JsonIgnoreProperties("pk")
+
 @Slf4j
 public class ClientError extends BaseError implements PersistableError {
 

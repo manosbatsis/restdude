@@ -163,7 +163,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     }
 
     public User(UserDTO dto) {
-        this.setPk(dto.getPk());
+        this.setPk(dto.getId());
         this.setFirstName(dto.getFirstName());
         this.setLastName(dto.getLastName());
         this.username = dto.getUsername();
@@ -173,6 +173,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     public User(String id) {
         this.setPk(id);
     }
+
 
     @Override
     public Locale getLocaleObject() {

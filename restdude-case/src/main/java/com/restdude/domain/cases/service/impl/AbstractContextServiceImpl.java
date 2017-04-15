@@ -23,8 +23,8 @@ package com.restdude.domain.cases.service.impl;
 import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.UserDetails;
 import com.restdude.domain.cases.model.Membership;
-import com.restdude.domain.cases.model.SpaceContext;
-import com.restdude.domain.cases.model.dto.SpaceContextInfo;
+import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.repository.ContextRepository;
 import com.restdude.domain.cases.service.ContextService;
@@ -48,7 +48,7 @@ import java.util.Set;
 
 
 @Slf4j
-public abstract class AbstractContextServiceImpl<T extends SpaceContext, R extends ContextRepository<T>>
+public abstract class AbstractContextServiceImpl<T extends Space, R extends ContextRepository<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R> implements ContextService<T> {
 
     MembershipService membershipService;
@@ -122,7 +122,7 @@ public abstract class AbstractContextServiceImpl<T extends SpaceContext, R exten
      */
     @Override
     @PreAuthorize(SpelUtil.HAS_ROLE_USER)
-    public Page<SpaceContextInfo> findVisible(Pageable pageable) {
+    public Page<BaseContextInfo> findVisible(Pageable pageable) {
         return this.repository.findVisible(pageable);
     }
 
@@ -131,7 +131,7 @@ public abstract class AbstractContextServiceImpl<T extends SpaceContext, R exten
      */
     @Override
     @PreAuthorize(SpelUtil.HAS_ROLE_USER)
-    public Page<SpaceContextInfo> findMy(Pageable pageable) {
+    public Page<BaseContextInfo> findMy(Pageable pageable) {
         return this.repository.findMy(pageable);
     }
 

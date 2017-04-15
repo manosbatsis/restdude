@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.error.model;
 
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
 import com.restdude.mdd.model.AbstractAssignedIdPersistableModel;
-import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.util.HashUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -45,20 +45,6 @@ import javax.validation.constraints.NotNull;
 public class UserAgent extends AbstractAssignedIdPersistableModel<String> {
 
     public static final String API_PATH = "userAgents";
-
-    public static String SERVICE_PRE_AUTHORIZE_SEARCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_CREATE = "hasRole('ROLE_USER')";
-    public static String SERVICE_PRE_AUTHORIZE_UPDATE = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_PATCH = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_VIEW = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_BY_ID = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_ALL = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_DELETE_WITH_CASCADE = "denyAll";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_BY_IDS = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_FIND_ALL = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
-    public static String SERVICE_PRE_AUTHORIZE_COUNT = "hasAnyRole('ROLE_ADMIN', 'ROLE_SITE_OPERATOR')";
 
     public static final int MAX_VALUE_LENGTH = 1600;
 

@@ -20,10 +20,14 @@
  */
 package com.restdude.domain.cases.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.CommentableModel;
 import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
-import com.restdude.domain.cases.CaseModel;
+import com.restdude.domain.cases.ICaseModel;
+import com.restdude.domain.cases.model.dto.BaseContextInfo;
+import com.restdude.domain.cases.model.dto.CaseStatustInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,8 +45,17 @@ import java.util.List;
  */
 @Slf4j
 @MappedSuperclass
-public abstract class AbstractCaseModel<A extends AbstractApplicationContext, C extends AbstractCaseCommentModel<?, C>> extends AbstractBasicAuditedModel implements CaseModel<C> {
+public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCaseModel<A, C, CC>, CC extends AbstractCaseCommentModel>
+        extends AbstractBasicAuditedModel
+        implements ICaseModel<A, CC> {
 
+
+    @JsonProperty( access = JsonProperty.Access.READ_ONLY)
+    @ApiModelProperty(value = "Short descriptive title", readOnly = true)
+    @Column(name = "name", nullable = true, updatable = true, length = CommentableModel.MAX_TITLE_LENGTH)
+    @Getter
+    @Setter
+    private String name;
 
     @NotNull
     @ApiModelProperty(value = "Short descriptive title")
@@ -65,20 +78,51 @@ public abstract class AbstractCaseModel<A extends AbstractApplicationContext, C 
     @ApiModelProperty(value = "Current case status", allowableValues = "OPEM, CLOSED, [CUSTOM_VALUE]")
     @ManyToOne
     @JoinColumn(referencedColumnName = "pk", nullable = false, updatable = false)
-    @Getter
-    @Setter
     private CaseStatus status;
 
     @ApiModelProperty(value = "The application this case belongs to")
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "pk", nullable = false, updatable = false)
-    @Getter @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "application", nullable=false)
     private A application;
 
     @JsonIgnore
     @OneToMany(mappedBy="subject", fetch= FetchType.LAZY)
     @Getter @Setter
-    private List<C> comments;
+    private List<CC> comments;
+
+    @JsonIgnore
+    public CaseStatus getStatus() {
+        return status;
+    }
+
+    @JsonGetter("status")
+    public CaseStatustInfo getStatusrDTO() {
+        return CaseStatustInfo.from(this.status);
+    }
+
+    public void setStatus(CaseStatus status) {
+        this.status = status;
+    }
+
+
+    @JsonGetter("application")
+    public BaseContextInfo getApplicationDTO() {
+        return BaseContextInfo.from(this.application);
+    }
+
+    @JsonIgnore
+    @Override
+    public A getApplication() {
+        return application;
+    }
+
+    @Override
+    public void setApplication(A application) {
+        this.application = application;
+    }
+
+
+
 
     public AbstractCaseModel() {
     }
@@ -96,7 +140,10 @@ public abstract class AbstractCaseModel<A extends AbstractApplicationContext, C 
     public String toString() {
         return new ToStringBuilder(this)
                 .append("pk", this.getPk())
+                .append("name", this.getName())
+                .append("caseIndex", this.getCaseIndex())
                 .append("title", this.getTitle())
+                .append("status", this.getStatus())
                 .append("detail", this.getDetail())
                 .toString();
     }

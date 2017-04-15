@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cases.service;
 
-import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.repository.MembershipRepository;
 import com.restdude.websocket.message.IActivityNotificationMessage;
 
@@ -41,7 +41,7 @@ public interface BusinessContextMembersActivityMessanger {
 	 * @param msg the message to send
 	 * @param businessContext the BusinessContext whose online members should receive the message
 	 */
-	default void sendStompActivityMessageToMembers(IActivityNotificationMessage msg, SpaceContext businessContext) {
+	default void sendStompActivityMessageToMembers(IActivityNotificationMessage msg, Space businessContext) {
 		this.sendStompActivityMessageToMembers(msg, businessContext, null);
 	}
 
@@ -51,7 +51,7 @@ public interface BusinessContextMembersActivityMessanger {
 	 * @param businessContext the BusinessContext whose online members should receive the message
 	 * @param cc any additional recipients user names to be treated as recipients
 	 */
-	default void sendStompActivityMessageToMembers(IActivityNotificationMessage msg, SpaceContext businessContext, List<String> cc) {
+	default void sendStompActivityMessageToMembers(IActivityNotificationMessage msg, Space businessContext, List<String> cc) {
 		// build recipients collection
 		Set<String> usernames = new HashSet<String>();
 

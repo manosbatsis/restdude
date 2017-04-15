@@ -1210,9 +1210,9 @@ define(
             },
             fetch: function (options) {
                 options || (options = {});
-                var data = (options.data || {});
+                options.url || (options.url = this.url);
                 options.data = {
-                    page: "no"
+                    page: "no",
                 };
                 return Backbone.Collection.prototype.fetch.call(this, options);
             }

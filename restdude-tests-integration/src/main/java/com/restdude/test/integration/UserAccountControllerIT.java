@@ -75,7 +75,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(200)
                 // test assertions
-                .body("pk", equalTo(adminLoginContext.userId))
+                .body("id", equalTo(adminLoginContext.userId))
                 .body("firstName", equalTo("Newfirst"))
                 .body("lastName", equalTo("Newlast"))
                 .body("username", equalTo("simplenew"))

@@ -20,10 +20,13 @@
  */
 package com.restdude.domain.error.service;
 
-import com.restdude.mdd.service.PersistableModelService;
+import com.restdude.domain.cases.service.CaseService;
 import com.restdude.domain.error.model.BaseError;
+import com.restdude.domain.error.model.ErrorComment;
 
 
-public interface BaseErrorService extends PersistableModelService<BaseError, String> {
-    public static final String BEAN_ID = "baseErrorService";
+public interface BaseErrorService extends CaseService<BaseError, ErrorComment> {
+
+    String BEAN_ID = "baseErrorService";
+
 }

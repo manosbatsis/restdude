@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.error.controller;
 
+import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.service.ClientErrorService;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/rest/"+ClientError.API_PATH)
@@ -63,6 +65,14 @@ public class ClientErrorController extends AbstractPersistableModelController<Cl
     public void deleteFiles(String id, String... filenames) {
         this.service.deleteFiles(id, filenames);
         ;
+    }
+
+    @ApiOperation(value = "Get all comments for the case matching the given id (compact)")
+    @RequestMapping(value = "{id}/comments",
+            method = {RequestMethod.GET},
+            produces = {"application/json"})
+    public List<CaseCommenttInfo> getComments(@PathVariable String id) {
+        return this.service.getCompactCommentsBySubject(id);
     }
 
 }

@@ -20,8 +20,8 @@
  */
 package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.SpaceContext;
-import com.restdude.domain.cases.model.dto.SpaceContextInfo;
+import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.data.domain.Page;
@@ -31,18 +31,18 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
 @NoRepositoryBean
-public interface ContextRepository<T extends SpaceContext> extends ModelRepository<T,String> {
+public interface ContextRepository<T extends Space> extends ModelRepository<T,String> {
 
     String SYSTEM_CONTEXT_NAME = "SYS_CTX";
     String SYSTEM_CONTEXT_TITLE = "System context";
 
-    String BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS = " context.pk, context.name, context.description, context.avatarUrl, context.bannerUrl,  " +
+    String BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS = " context.pk, context.name, context.title, context.description, context.avatarUrl, context.bannerUrl,  " +
             "  context.owner.pk, context.owner.firstName, context.owner.lastName, context.owner.username, context.owner.contactDetails.primaryEmail.email, " +
             "context.owner.emailHash, context.owner.avatarUrl, context.owner.bannerUrl, " +
-            "context.owner.stompSessionCount, context.visibility ";
+            "context.visibility ";
     String SELECT_BUSINESS_CONTEXT_INFO =
-            "select new com.restdude.domain.cases.model.dto.SpaceContextInfo(" + BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS + ") from SpaceContext context ";
-    String SELECT_COUNT_BUSINESS_CONTEXT_IDS = "select count(context.pk) from SpaceContext context ";
+            "select new com.restdude.domain.cases.model.dto.BaseContextInfo(" + BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS + ") from Space context ";
+    String SELECT_COUNT_BUSINESS_CONTEXT_IDS = "select count(context.pk) from Space context ";
     String VISIBLE = "  left join context.memberships as membership "
             + "where context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.PUBLIC "
             + " or context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.OPEN "
@@ -53,7 +53,7 @@ public interface ContextRepository<T extends SpaceContext> extends ModelReposito
 
     // Using GROUP BY because of a Hibernatre bug related toDISTINCT keyword
     @Query(value = FIND_VISIBLE)
-    Page<SpaceContextInfo> findVisible(Pageable pageable);
+    Page<BaseContextInfo> findVisible(Pageable pageable);
 
     // Using GROUP BY because of a Hibernatre bug related toDISTINCT keyword
     @Query(value = SELECT_BUSINESS_CONTEXT_INFO +
@@ -65,10 +65,10 @@ public interface ContextRepository<T extends SpaceContext> extends ModelReposito
             "     or contextMembership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.CLOSED " +
             "     or membership.user.pk = ?#{principal.pk} ) " +
             " group by " + BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS)
-    Page<SpaceContextInfo> findVisibleMembershipSpaceContexts(User u, Pageable pageable);
+    Page<BaseContextInfo> findVisibleMembershipSpaces(User u, Pageable pageable);
 
     @Query(value = "select CASE WHEN COUNT(context) > 0 THEN true ELSE false END  "
-            + "from SpaceContext context "
+            + "from Space context "
             + "  left join context.memberships as membership "
             + "where context.pk = ?1 "
             + "		and (context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.PUBLIC "
@@ -78,8 +78,8 @@ public interface ContextRepository<T extends SpaceContext> extends ModelReposito
     boolean isVisible(String id);
 
 
-    @Query("select (persisted.owner.pk = :#{#user.pk}) from SpaceContext persisted where persisted.pk = :#{#context.pk} ")
-    boolean isOwner(@Param("context") SpaceContext context, @Param("user") User user);
+    @Query("select (persisted.owner.pk = :#{#user.pk}) from Space persisted where persisted.pk = :#{#context.pk} ")
+    boolean isOwner(@Param("context") Space context, @Param("user") User user);
 
     @Query(value = "select CASE WHEN COUNT(membership) > 0 THEN true ELSE false END  "
             + "from Membership membership "
@@ -88,18 +88,18 @@ public interface ContextRepository<T extends SpaceContext> extends ModelReposito
             + "		and (membership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.PUBLIC "
             + "         or membership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.OPEN "
             + "         or membership.context.owner.pk = ?#{principal.pk} ) ")
-    boolean canInviteUserToSpaceContext(@Param("context") SpaceContext context);
+    boolean canInviteUserToSpace(@Param("context") Space context);
 
     @Query(value = "select CASE WHEN COUNT(membership) > 0 THEN true ELSE false END  "
             + "from Membership membership "
             + "where membership.user.pk = ?#{principal.pk} and membership.context.pk = :#{#context.pk} "
             + "		and (membership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.OPEN "
             + "         or membership.context.owner.pk = ?#{principal.pk} ) ")
-    boolean canApproveRequestToJoinSpaceContext(@Param("context") SpaceContext context);
+    boolean canApproveRequestToJoinSpace(@Param("context") Space context);
 
     @Query(value = SELECT_BUSINESS_CONTEXT_INFO + " where context.owner.pk = ?#{principal.pk} ")
-    Page<SpaceContextInfo> findMy(Pageable pageable);
+    Page<BaseContextInfo> findMy(Pageable pageable);
 
-    @Query(value = "select context from SpaceContext context  where context.owner.username = 'system' and context.name = '" + SYSTEM_CONTEXT_NAME + "' ")
-    SpaceContext getSystemContext();
+    @Query(value = "select context from Space context  where context.owner.username = 'system' and context.name = '" + SYSTEM_CONTEXT_NAME + "' ")
+    Space getSystemContext();
 }

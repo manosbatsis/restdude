@@ -21,7 +21,7 @@
 package com.restdude.domain.cases.service;
 
 import com.restdude.domain.cases.model.Membership;
-import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.service.PersistableModelService;
 
@@ -30,26 +30,26 @@ import java.util.Set;
 public interface MembershipService extends PersistableModelService<Membership, String> {
 
 
-	Set<String> findOnlineMemberUsernames(SpaceContext context);
+	Set<String> findOnlineMemberUsernames(Space context);
 
 	/**
 	 * Get the membership of the current user for the given BusinessContext if any exists, 
 	 * else implicitly accept any pending invitation sent to the 
 	 * user for the given BusinessContext or create a join request otherwise.
 	 */
-	Membership getMembership(SpaceContext context);
+	Membership getMembership(Space context);
 
 	/**
 	 * Get the membership of the given user for the given BusinessContext if any exists, 
 	 * else implicitly accept any pending invitation sent to the 
 	 * user for the given BusinessContext or create a join request otherwise.
 	 */
-	Membership getMembership(SpaceContext context, User user);
+	Membership getMembership(Space context, User user);
 
 	/**
-	 * Delete any membership of the given user for the given SpaceContext, if any exists
+	 * Delete any membership of the given user for the given Space, if any exists
 	 */
-	void delete(SpaceContext businessContext, User user);
+	void delete(Space businessContext, User user);
 
 	Membership createTest(Membership resource);
 	

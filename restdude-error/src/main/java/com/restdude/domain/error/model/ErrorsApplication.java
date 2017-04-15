@@ -20,7 +20,9 @@
  */
 package com.restdude.domain.error.model;
 
-import com.restdude.domain.cases.model.*;
+import com.restdude.domain.cases.model.CaseWorkflow;
+import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.cases.model.SpaceCasesApp;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
@@ -29,8 +31,6 @@ import io.swagger.annotations.ApiModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
-import java.util.Set;
 
 /**
  * {@value #API_MODEL_DESCRIPTION}
@@ -42,7 +42,7 @@ import java.util.Set;
 @ModelResource(pathFragment = ErrorsApplication.API_PATH_FRAGMENT,
 		apiName = "ErrorsApplication",
 		apiDescription = "ErrorsApplication management")
-public class ErrorsApplication extends AbstractApplicationContext<BaseError, ErrorComment> {
+public class ErrorsApplication extends SpaceCasesApp<BaseError> {
 
 	public static final String API_PATH_FRAGMENT = "errorApplications";
 	public static final String API_MODEL_DESCRIPTION = "A model representing an Errors Management process";
@@ -51,17 +51,7 @@ public class ErrorsApplication extends AbstractApplicationContext<BaseError, Err
 	public ErrorsApplication(){
 	}
 
-	public ErrorsApplication(String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow) {
-		super(title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests, workflow);
-	}
 
-	public ErrorsApplication(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow) {
-		super(name, title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests, workflow);
-	}
-
-	public ErrorsApplication(String name, BusinessContext parent, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow) {
-		super(name, parent, title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests, workflow);
-	}
 
 
 	public static class Builder {
@@ -72,7 +62,7 @@ public class ErrorsApplication extends AbstractApplicationContext<BaseError, Err
 		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
 		private User owner;
 		private ContextVisibilityType visibility = ContextVisibilityType.CLOSED;
-		private SpaceContext parent;
+		private Space space;
 		private CaseWorkflow workflow;
 
 		public Builder name(String name) {
@@ -105,8 +95,8 @@ public class ErrorsApplication extends AbstractApplicationContext<BaseError, Err
 			return this;
 		}
 
-		public Builder parent(SpaceContext parent) {
-			this.parent = parent;
+		public Builder space(Space space) {
+			this.space = space;
 			return this;
 		}
 
@@ -132,7 +122,7 @@ public class ErrorsApplication extends AbstractApplicationContext<BaseError, Err
 		this.setAvatarUrl(builder.avatarUrl);
 		this.setBannerUrl(builder.bannerUrl);
 		this.setOwner(builder.owner);
-		this.setParent(builder.parent);
+		this.setSpace(builder.space);
 		this.setVisibility(builder.visibility);
 		this.setWorkflow(builder.workflow);
 

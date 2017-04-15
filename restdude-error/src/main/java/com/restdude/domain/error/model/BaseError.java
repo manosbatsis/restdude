@@ -21,7 +21,6 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
@@ -37,7 +36,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 @Entity
 @Table(name = "error_base")
 @Inheritance(strategy = InheritanceType.JOINED)
-@EntityListeners(AuditingEntityListener.class)
 @ModelResource(pathFragment = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyPersistableModelController.class,
         apiName = "Errors", apiDescription = "Generic error information (readonly)")
 @ApiModel(value = "BaseError", description = "Generic error superclass")
@@ -58,9 +55,8 @@ import javax.servlet.http.HttpServletRequest;
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 
-@JsonIgnoreProperties("pk")
 @Slf4j
-public class BaseError extends AbstractCaseModel<ErrorsApplication, ErrorComment>  implements  PersistableError {
+public class BaseError extends AbstractCaseModel<ErrorsApplication, BaseError, ErrorComment>  implements  PersistableError {
     public static final String API_PATH = "allErrors";
 
 

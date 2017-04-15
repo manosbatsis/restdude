@@ -674,13 +674,49 @@ define(
             typeName: "Restdude.view.UseCaseSearchLayout"
         });
 
-        Restdude.view.TopicLayout = Restdude.view.BrowseLayout.extend({
-            template: Restdude.getTemplate('TopicLayout'),
-        },
-        // static members
-        {
-            typeName: "Restdude.view.TopicLayout"
-        });
+
+        Restdude.view.CaseDetailsLayout = Restdude.view.UseCaseLayout.extend({
+                template: Restdude.getTemplate('CaseDetailsLayout'),
+
+                collection: null,
+                regions: {
+                    commentsRegion: ".commentsRegion"
+                },
+                regionViewTypes: {
+                },
+                onRender: function () {
+                    var _this = this;
+
+                    var renderFetchable = function () {
+                        var commentsView = new Restdude.view.TemplateBasedCollectionView ({
+                            collection: _this.model.get("comments"),
+                            childViewOptions: {
+                                tagName : "div",
+                                className: "comment callout callout-warning row",
+                                template: Restdude.getTemplate('CaseComment'),
+                            }
+                        });
+                        _this.showChildView("commentsRegion", commentsView);
+                    };
+
+
+                    if(_this.model.get("comments")){
+                        renderFetchable();
+                    }
+                    else{
+                        var commentsUrl = Restdude.getBaseUrl() + "/api/rest/" + _this.model.getPathFragment() + "/" +
+                            Restdude.getObjectProperty(_this.model, "pk", Restdude.getObjectProperty(_this.model, "id")) + "/comments";
+                        console.log("Comments URL: " + commentsUrl);
+                        var comments = new Restdude.collection.AllCollection({}, { url: commentsUrl });
+                        _this.model.set("comments", comments);
+                        comments.fetch().then(renderFetchable);
+                    }
+                },
+            },
+            // static members
+            {
+                typeName: "Restdude.view.UseCaseSearchLayout"
+            });
 
         Restdude.view.DefaulfModalLayout = Restdude.view.UseCaseLayout.extend({
                 template: Restdude.getTemplate('modal-layout'),

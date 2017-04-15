@@ -385,6 +385,14 @@ define(["lib/restdudelib/form", "lib/restdudelib/backgrid", 'underscore', 'handl
             }
         });
 
+        Restdude.fields.ViewModel = Restdude.fields.view = Restdude.fields.String.extend({}, {
+            backgrid: {
+                editable: false,
+                sortable: true,
+                cell: Restdude.components.backgrid.ViewRowCell,
+            }
+        });
+
         Restdude.fields.Edit = Restdude.fields.edit = Restdude.fields.Base.extend({}, {
             "backgrid": {
                 label: "edit",

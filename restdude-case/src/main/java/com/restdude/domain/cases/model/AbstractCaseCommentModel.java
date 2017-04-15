@@ -22,12 +22,10 @@ package com.restdude.domain.cases.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
-import com.restdude.domain.cases.CaseCommentModel;
-import com.restdude.domain.cases.CaseModel;
+import com.restdude.domain.cases.ICaseCommentModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -37,8 +35,8 @@ import java.util.List;
  * Base case comment implementation
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractCaseCommentModel<T extends CaseModel<C>, C extends CaseCommentModel<T, C>> extends AbstractBasicAuditedModel implements CaseCommentModel<T, C> {
+public abstract class AbstractCaseCommentModel<T extends AbstractCaseModel, C extends AbstractCaseCommentModel>
+        extends AbstractBasicAuditedModel implements ICaseCommentModel<T, C> {
 
 
     @NotNull

@@ -21,17 +21,17 @@
 package com.restdude.domain.cases.service.impl;
 
 import com.restdude.domain.UserDetails;
-import com.restdude.domain.cases.model.BusinessContext;
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.MembershipRequest;
-import com.restdude.domain.cases.model.SpaceContext;
-import com.restdude.domain.cases.model.dto.BusinessContextMembershipRequestInfo;
-import com.restdude.domain.cases.model.dto.SpaceContextInvitations;
-import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
+import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.cases.model.dto.MembershipRequestInfo;
+import com.restdude.domain.cases.model.dto.SpaceInvitations;
+import com.restdude.domain.cases.model.dto.SpaceInvitationsResult;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
 import com.restdude.domain.cases.repository.MembershipRequestRepository;
-import com.restdude.domain.cases.repository.SpaceContextRepository;
+import com.restdude.domain.cases.repository.SpaceRepository;
 import com.restdude.domain.cases.service.MembershipRequestService;
 import com.restdude.domain.cases.service.MembershipService;
 import com.restdude.domain.friends.model.FriendshipIdentifier;
@@ -59,7 +59,7 @@ public class MembershipRequestServiceImpl
 	
 	protected MembershipService businessContextMembershipService;
 
-	protected SpaceContextRepository spaceContextRepository;
+	protected SpaceRepository spaceContextRepository;
 
 	protected UserRepository userRepository;
 	
@@ -69,7 +69,7 @@ public class MembershipRequestServiceImpl
 	}
 
 	@Autowired
-	public void setSpaceContextRepository(SpaceContextRepository spaceContextRepository) {
+	public void setSpaceRepository(SpaceRepository spaceContextRepository) {
 		this.spaceContextRepository = spaceContextRepository;
 	}
 
@@ -84,8 +84,8 @@ public class MembershipRequestServiceImpl
 	}
 
 	@Override
-	public Optional<MembershipRequest> findOneByContextAndUser(BusinessContext businessContext, User user) {
-		return this.repository.findOneByContextAndUser(businessContext, user);
+	public Optional<MembershipRequest> findOneByContextAndUser(BaseContext context, User user) {
+		return this.repository.findOneByContextAndUser(context, user);
 	}
 
 	/**
@@ -95,13 +95,13 @@ public class MembershipRequestServiceImpl
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public SpaceContextInvitationsResult create(SpaceContextInvitations resource){
+	public SpaceInvitationsResult create(SpaceInvitations resource){
 
 		// get current principal
 		UserDetails userDetails = this.getPrincipal();
 
 		/// get the BusinessContext
-		SpaceContext businessContext = this.spaceContextRepository.getOne(resource.getSpaceContextId());
+		Space businessContext = this.spaceContextRepository.getOne(resource.getSpaceId());
 
 		// verify principal is the context owner
 		if (!businessContext.getOwner().getPk().equals(userDetails.getPk())) {
@@ -109,7 +109,7 @@ public class MembershipRequestServiceImpl
 		}
 
 		// init report
-		SpaceContextInvitationsResult.Builder results = new SpaceContextInvitationsResult.Builder().businessContextId(businessContext.getPk());
+		SpaceInvitationsResult.Builder results = new SpaceInvitationsResult.Builder().businessContextId(businessContext.getPk());
 
 		// process recipients
 		for(String userHandle : resource.getCc()){
@@ -180,9 +180,9 @@ public class MembershipRequestServiceImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Boolean exists(BusinessContext businessContext, User user) {
-		Boolean exists = this.repository.exists(businessContext, user);
-		log.debug("exists: {}, context: {}, user: {}", exists, businessContext, user);
+	public Boolean exists(BaseContext context, User user) {
+		Boolean exists = this.repository.exists(context, user);
+		log.debug("exists: {}, context: {}, user: {}", exists, context, user);
 		return exists;
 	}
 
@@ -253,7 +253,7 @@ public class MembershipRequestServiceImpl
 			// invitation mode
 			else{
 				// make sure current principal can invite the target user
-				if(!this.spaceContextRepository.canApproveRequestToJoinSpaceContext(resource.getContext())) {
+				if(!this.spaceContextRepository.canApproveRequestToJoinSpace(resource.getContext())) {
 					throw new UnauthorizedException("Cannot complete invitation, BusinessContext does not exist or user is unauthorized or is not friend of target user");
 				}
 			}
@@ -336,7 +336,7 @@ public class MembershipRequestServiceImpl
 		MembershipRequest reference = persisted != null ? persisted : requestResource;
 		boolean isRequestUser = userDetails.getPk().equals(reference.getUser().getPk());
 		log.debug("validateRequest, isRequestUser: {}, reference: {}", isRequestUser, reference);
-		boolean isJoinRequestHandler = this.spaceContextRepository.canInviteUserToSpaceContext(reference.getContext());
+		boolean isJoinRequestHandler = this.spaceContextRepository.canInviteUserToSpace(reference.getContext());
 		boolean isBusinessContextOwner = userDetails.getPk().equals(requestResource.getContext().getOwner().getPk());
 		log.debug("validateRequest, isJoinRequestHandler: {}, isBusinessContextOwner: {}", isJoinRequestHandler, isBusinessContextOwner);
 
@@ -423,10 +423,10 @@ public class MembershipRequestServiceImpl
 		// send notifications for new requests to owner
 		else if(MembershipRequestStatus.SENT_REQUEST.equals(businessContextMembershipRequest.getStatus())){
 			// create and send message to context owner
-			ActivityNotificationMessage<UserDTO, MembershipRequestStatus, BusinessContextMembershipRequestInfo> msg =
+			ActivityNotificationMessage<UserDTO, MembershipRequestStatus, MembershipRequestInfo> msg =
 					new ActivityNotificationMessage<>(
 							UserDTO.fromUser(businessContextMembershipRequest.getUser()), MembershipRequestStatus.SENT_REQUEST,
-							BusinessContextMembershipRequestInfo.from(businessContextMembershipRequest));
+							MembershipRequestInfo.from(businessContextMembershipRequest));
 			// notify according to BusinessContext type
 			if(ContextVisibilityType.OPEN.equals(businessContextMembershipRequest.getContext().getVisibility())){
 				this.sendStompActivityMessage(msg, this.businessContextMembershipService.findOnlineMemberUsernames(businessContextMembershipRequest.getContext()));
@@ -439,10 +439,10 @@ public class MembershipRequestServiceImpl
 		// send notifications for new invitations to recipient user
 		else if(MembershipRequestStatus.SENT_INVITE.equals(businessContextMembershipRequest.getStatus())){
 			// create and send message to context owner
-			ActivityNotificationMessage<UserDTO, MembershipRequestStatus, BusinessContextMembershipRequestInfo> msg =
+			ActivityNotificationMessage<UserDTO, MembershipRequestStatus, MembershipRequestInfo> msg =
 					new ActivityNotificationMessage<>(
 							UserDTO.fromUser(businessContextMembershipRequest.getContext().getOwner()), MembershipRequestStatus.SENT_INVITE,
-							BusinessContextMembershipRequestInfo.from(businessContextMembershipRequest));
+							MembershipRequestInfo.from(businessContextMembershipRequest));
 			this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getUser().getPk()));
 		}
 

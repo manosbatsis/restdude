@@ -104,8 +104,8 @@
         <spring-social-twitter-version>1.1.0.RELEASE</spring-social-twitter-version>
         <spring-social-google-version>1.0.0.RELEASE</spring-social-google-version>
 
-        <hibernate.version>5.2.6.Final</hibernate.version>
-        <hibernate-validator.version>5.2.1.Final</hibernate-validator.version>
+        <hibernate.version>5.2.9.Final</hibernate.version>
+        <hibernate-validator.version>5.4.1.Final</hibernate-validator.version>
 
         <!-- springfox swagger -->
         <springfox.version>2.6.1</springfox.version>
@@ -998,6 +998,13 @@
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b08</version>
+            </dependency>
+
 
             <!-- AWS -->
             <dependency>

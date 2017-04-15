@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.cases.service;
 
-import com.restdude.domain.cases.model.BusinessContext;
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.MembershipRequest;
-import com.restdude.domain.cases.model.dto.SpaceContextInvitations;
-import com.restdude.domain.cases.model.dto.SpaceContextInvitationsResult;
+import com.restdude.domain.cases.model.dto.SpaceInvitations;
+import com.restdude.domain.cases.model.dto.SpaceInvitationsResult;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.service.PersistableModelService;
 
@@ -32,14 +32,14 @@ import java.util.Optional;
 
 public interface MembershipRequestService extends PersistableModelService<MembershipRequest, String> {
 
-	public Optional<MembershipRequest> findOneByContextAndUser(BusinessContext businessContext, User user);
+	public Optional<MembershipRequest> findOneByContextAndUser(BaseContext context, User user);
 
 	/**
 	 * Persist a list of BusinessContext invitations made by the BusinessContext owner.
 	 * @param resource
 	 * @return
 	 */
-	public SpaceContextInvitationsResult create(SpaceContextInvitations resource);
+	public SpaceInvitationsResult create(SpaceInvitations resource);
 
 
 	public MembershipRequest createConfirmed(MembershipRequest resource);
@@ -48,6 +48,6 @@ public interface MembershipRequestService extends PersistableModelService<Member
 	/**
 	 * Check if an entry already exists for the given BusinessContext and User
 	 */
-	public Boolean exists(BusinessContext businessContext, User user);
+	public Boolean exists(BaseContext context, User user);
 
 }

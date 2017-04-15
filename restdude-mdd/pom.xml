@@ -223,10 +223,10 @@
             <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
         </dependency>
 
-        <!-- Elide -->
+        <!-- lombok -->
         <dependency>
-            <groupId>com.yahoo.elide</groupId>
-            <artifactId>elide-core</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <!-- image scaler -->
@@ -235,6 +235,12 @@
             <artifactId>imgscalr-lib</artifactId>
         </dependency>
 
+
+        <!-- Elide -->
+        <dependency>
+            <groupId>com.yahoo.elide</groupId>
+            <artifactId>elide-core</artifactId>
+        </dependency>
 
         <!-- actuator stats -->
         <dependency>
@@ -321,10 +327,10 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>

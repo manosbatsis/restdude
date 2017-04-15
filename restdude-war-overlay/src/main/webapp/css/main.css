@@ -126,3 +126,8 @@ button[class^="btn-cancel-search-"], button[class*=" btn-cancel-search-"] {
         text-transform: uppercase;
         font-weight: bold;
     }
+}
+/* backgrid overrides */
+.backgrid .moment-cell{
+    text-align: left;
+}

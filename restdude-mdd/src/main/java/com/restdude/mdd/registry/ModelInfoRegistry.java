@@ -179,27 +179,33 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
     protected void resolveInverseFields(ModelInfo modelInfo, Set<String> fieldNames) {
         for(String fieldName : fieldNames){
-            LOGGER.debug("resolveInverseFields for model type: {}, field: {}", modelInfo.getModelType(), fieldName);
             FieldInfo field = modelInfo.getField(fieldName);
             if(!field.isInverse()){
-                // scan ModelInfo on the other side to find an inverse JPA mapping, if any
-                ModelInfo inverseModelInfo = this.getEntryFor(field.getFieldModelType());
+                if(field.getFieldModelType() != null){
 
-                // warn if the inverse field type model info does not exist
-                if(inverseModelInfo == null){
-                    LOGGER.warn("resolveInverseFields: No model info entry found for type: {}", field.getFieldModelType());
-                }
-                else{
-                    Set<String> inversePropertyNames = inverseModelInfo.getInverseFieldNames();
+                    // scan ModelInfo on the other side to find an inverse JPA mapping, if any
+                    ModelInfo inverseModelInfo = this.getEntryFor(field.getFieldModelType());
 
-                    // go over inverse fields to find a match, if any
-                    for(String inversePropertyName: inversePropertyNames){
-                        FieldInfo inverseField = inverseModelInfo.getField(inversePropertyName);
-                        if(inverseField != null && fieldName.equals(inverseField.getReverseFieldName())){
-                            field.setReverseFieldName(inverseField.getFieldName());
-                            break;
+                    // warn if the inverse field type model info does not exist
+                    if(inverseModelInfo == null){
+                        LOGGER.warn("resolveInverseFields: No model info entry found for type: {}", field.getFieldModelType());
+                    }
+                    else{
+                        Set<String> inversePropertyNames = inverseModelInfo.getInverseFieldNames();
+
+                        // go over inverse fields to find a match, if any
+                        for(String inversePropertyName: inversePropertyNames){
+                            FieldInfo inverseField = inverseModelInfo.getField(inversePropertyName);
+                            if(inverseField != null && fieldName.equals(inverseField.getReverseFieldName())){
+                                field.setReverseFieldName(inverseField.getFieldName());
+                                break;
+                            }
                         }
                     }
+                }
+                else{
+
+                    LOGGER.debug("resolveInverseFields, not fieldModelType found for model: {}, field: {}", modelInfo.getModelType(), fieldName);
                 }
 
             }

@@ -26,10 +26,11 @@ import com.restdude.domain.cases.repository.CaseWorkflowRepository;
 import com.restdude.domain.cases.service.CaseWorkflowService;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+
+import javax.inject.Named;
 
 @Slf4j
-@Service
+@Named("caseWorkflowService")
 public class CaseWorkflowServiceImpl extends AbstractPersistableModelServiceImpl<CaseWorkflow, String, CaseWorkflowRepository>
         implements CaseWorkflowService {
 

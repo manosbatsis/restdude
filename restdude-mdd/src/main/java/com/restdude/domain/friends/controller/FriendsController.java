@@ -80,7 +80,7 @@ public class FriendsController implements InitializingBean {
             @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = "sort", required = false) String sort) {
         // validate status
         status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.SENT, FriendshipStatus.PENDING, FriendshipStatus.CONFIRMED, FriendshipStatus.BLOCK});
         return this.findFriendsPaginated(this.friendshipService.getPrincipal().getPk(), status, page, size, sort);
@@ -94,7 +94,7 @@ public class FriendsController implements InitializingBean {
             @RequestParam(value = "status", required = false, defaultValue = "CONFIRMED") String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = "sort", required = false) String sort) {
 
         // validate targget friend
 //		FriendshipIdentifier friendshipId = new FriendshipIdentifier(this.friendshipService.getPrincipal().getIdentifier(), friendId);
@@ -117,7 +117,7 @@ public class FriendsController implements InitializingBean {
             String[] status,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "sort", required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = "sort", required = false) String sort) {
 
         Map<String, String[]> parameters = new HashMap<String, String[]>();
         parameters.put("pk.left.pk", new String[]{targetId});

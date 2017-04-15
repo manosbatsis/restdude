@@ -34,15 +34,21 @@
         <level value="error"/>
     </logger>
 
+    <logger name="com.restdude.domain.cases">
+        <level value="debug"/>
+    </logger>
+    <!--
+
+
+    <logger name="com.restdude.mdd.registry">
+        <level pathFragment="debug"/>
+    </logger>
     <logger name="com.restdude.domain.cases.service.impl.MembershipServiceImpl">
         <level value="debug"/>
     </logger>
     <logger name="com.restdude.domain.cases.service.impl.MembershipRequestServiceImpl">
         <level value="debug"/>
     </logger>
-
-    <!--
-
     <logger name="com.restdude.domain.users.service.UserDataLoader">
         <level value="debug"/>
     </logger>
@@ -84,9 +90,6 @@
         <level value="debug"/>
     </logger-->
 
-    <!--logger name="com.restdude.mdd.controller">
-        <level pathFragment="debug"/>
-    </logger-->
     <!--logger name="com.restdude.util.ClassUtils">
         <level pathFragment="debug"/>
     </logger-->

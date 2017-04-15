@@ -182,6 +182,39 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .extract().as(JsonNode.class);
     }
 
+    @Test(description = "Test case index", priority = 75)
+    public void testCaseIndexAndComments() throws Exception {
+
+        Loggedincontext adminLoginContext = this.getLoggedinContext("operator", "operator");
+        RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
+        // select user
+        JsonNode errorsPage = given().spec(adminRequestSpec)
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/" + SystemError.API_PATH)
+                .then().log().all().assertThat()
+                // test assertions
+                .statusCode(200)
+                .body("content[0].caseIndex", notNullValue())
+                .body("content[1].title", notNullValue())
+                .extract().as(JsonNode.class);
+        String errorId = errorsPage.get("content").get(0).get("pk").asText();
+
+        LOGGER.debug("testCaseIndexAndComments, found error case id: {}", errorId);
+        JsonNode comments = given().spec(adminRequestSpec)
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/" + SystemError.API_PATH + "/" + errorId + "/comments")
+                .then().log().all().assertThat()
+                // test assertions
+                .statusCode(200)
+                .extract().as(JsonNode.class);
+
+        Assert.assertTrue(comments.isArray());
+        Assert.assertNotNull(comments.get(0).get("id").asText());
+        Assert.assertNotNull(comments.get(0).get("content").asText());
+        Assert.assertNotNull(comments.get(0).get("createdDate").asText());
+        Assert.assertNotNull(comments.get(0).get("author").get("username").asText());
+    }
+
     @Test(description = "Test client error submission", priority = 80)
     public void testClientErrorSubmission() throws Exception {
 
@@ -208,7 +241,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                     .statusCode(201)
                     .body("title", notNullValue())
                     .body("detail", equalTo(description))
-                    .body("createdBy.pk", equalTo(adminLoginContext.userId))
+                    .body("createdBy.id", equalTo(adminLoginContext.userId))
                     .extract().as(ClientError.class);
 
         }

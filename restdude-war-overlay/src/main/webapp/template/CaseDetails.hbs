@@ -1,0 +1,41 @@
+<div class="tmpl-hint">start TopicDetails.hbs</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-title">
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-header">Details</div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                {{ detail }}
+                </blockquote>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-title">
+                    <img class="img-avatar" src="http://www.gravatar.com/avatar/{{ createdBy.emailHash }}?s=30&amp;d=404" alt="avatar: {{ createdBy.name }}">
+                    {{ createdBy.name }} {{#if createdBy.username}}<small>( {{createdBy.username}} )</small>{{/if}}
+                </h3>
+            </div>
+
+            <table class="table">
+                <tr>
+                    <th>Created</th>
+                    <td>{{momentFromNow createdDate}}: {{momentDateTime createdDate}}</td>
+                </tr>
+                <tr>
+                    <th>Last Visit</th>
+                    <td>{{momentFromNow lastModifiedDate}}: {{momentDateTime lastModifiedDate}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
+<div class="tmpl-hint">end TopicDetails.hbs</div>

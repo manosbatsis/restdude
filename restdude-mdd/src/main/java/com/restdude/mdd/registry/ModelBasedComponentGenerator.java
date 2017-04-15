@@ -127,7 +127,7 @@ public class ModelBasedComponentGenerator {
             createPredicateFactory(modelContext);
 
             // create repository, service, and controller components
-            if (model.isAnnotationPresent(ModelResource.class) || model.isAnnotationPresent(ModelRelatedResource.class)) {
+            if (modelContext.getModelInfo().getModelResource() != null || model.isAnnotationPresent(ModelRelatedResource.class)) {
                 // TODO
                 if(modelContext.getModelInfo().isJpaEntity()){
                     createRepository(modelContext);

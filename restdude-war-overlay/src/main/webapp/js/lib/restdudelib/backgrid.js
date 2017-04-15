@@ -141,14 +141,12 @@ define(
                 },
                 render: function () {
                     this.$el.empty();
-                    // TODO
-                    var modelId = Restdude.getObjectProperty(this.model, "id")
-                        || Restdude.getObjectProperty(this.model, "pk");
+
+                    var modelId = Restdude.getObjectProperty(this.model, "pk", Restdude.getObjectProperty(this.model, "id"));
+                    var text = this.model.get(this.column.get("name"));
+
                     if(modelId){
 
-                        var text =  Restdude.getObjectProperty(this.model, "name")
-                            || Restdude.getObjectProperty(this.model, "title")
-                            || modelId;
                         this.$el.append($("<a>", {
                             "class" : "view-row-model-cell-link",
                             tabIndex: -1,
@@ -160,6 +158,9 @@ define(
                         }).text(text));
 
                         this.delegateEvents();
+                    }
+                    else{
+                        this.$el.append($("<span>", {}).text(text));
                     }
 
                     return this;

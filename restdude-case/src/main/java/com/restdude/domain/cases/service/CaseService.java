@@ -20,16 +20,23 @@
  */
 package com.restdude.domain.cases.service;
 
-import com.restdude.domain.cases.CaseModel;
+import com.restdude.domain.cases.model.AbstractCaseCommentModel;
+import com.restdude.domain.cases.model.AbstractCaseModel;
 import com.restdude.domain.cases.model.CaseStatus;
+import com.restdude.domain.cases.model.CaseWorkflow;
+import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.mdd.service.PersistableModelService;
 
 import java.util.List;
 
 
-public interface CaseService<T extends CaseModel<?>> extends PersistableModelService<T, String> {
+public interface CaseService< T extends AbstractCaseModel<?, ?, ?>, CC extends AbstractCaseCommentModel> extends PersistableModelService<T, String> {
 
 
+    CaseWorkflow getWorkflow();
+    String getWorkflowName();
+    String getWorkflowTitle();
+    String getWorkflowDescription();
 
     /**
      * Get the status suitable for this new transient entry
@@ -42,9 +49,18 @@ public interface CaseService<T extends CaseModel<?>> extends PersistableModelSer
     /**
      * Get the status options suitable for this entry
      *
-     * @param unpersisted
+     * @param persisted
      * @return
      */
-    List<CaseStatus> getNextStatusOptions(T unpersisted);
+    List<CaseStatus> getNextStatusOptions(T persisted);
 
+    /**
+     * Gett all comments for the given case
+     *
+     * @param subject
+     * @return
+     */
+    List<CaseCommenttInfo> getCompactCommentsBySubject(T subject);
+
+    List<CaseCommenttInfo> getCompactCommentsBySubject(String id);
 }

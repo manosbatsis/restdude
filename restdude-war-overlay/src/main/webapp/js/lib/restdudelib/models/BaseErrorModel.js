@@ -19,10 +19,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 define(['jquery', 'underscore', 'bloodhound', 'typeahead', "lib/restdudelib/util", "lib/restdudelib/form",
-        "lib/restdudelib/uifield", "lib/restdudelib/backgrid", "lib/restdudelib/view", 'handlebars', "lib/restdudelib/models/TopicModel"],
+        "lib/restdudelib/uifield", "lib/restdudelib/backgrid", "lib/restdudelib/view", 'handlebars', "lib/restdudelib/models/CaseModel"],
     function ($, _, Bloodhoud, Typeahead, Restdude, RestdudeForm, RestdudeField, RestdudeGrid, RestdudeView, Handlebars) {
 
-        Restdude.model.BaseErrorModel = Restdude.model.TopicModel.extend(
+        Restdude.model.BaseErrorModel = Restdude.model.CaseModel.extend(
             /** @lends Restdude.model.BaseErrorModel.prototype */
             {
                 toString: function () {

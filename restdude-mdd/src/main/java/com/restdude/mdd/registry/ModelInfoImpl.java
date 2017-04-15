@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> implements ModelInfo<T, PK> {
 
     @Getter private final Class<T> modelType;
+    @Getter private final ModelResource modelResource;
     @Getter private final String packageName;
     @Getter private final String beansBasePackage;
 
@@ -79,14 +80,16 @@ public class ModelInfoImpl<T extends Model<PK>, PK extends Serializable> impleme
         this.beansBasePackage = packageName.endsWith(".model") ? packageName.substring(0, packageName.indexOf(".model")) : packageName;
         this.jpaEntity = modelType.isAnnotationPresent(Entity.class);
 
-        // add controller info
-        ModelResource ar = modelType.getAnnotation(ModelResource.class);
-        this.uriComponent = buildUriComponent();
-        if(ar != null){
 
-            this.linkableResource = ar.linkable();
-            this.basePath = ar.basePath();
-            this.parentApplicationPath = ar.parentPath();
+        modelResource = modelType.getAnnotation(ModelResource.class);
+
+        // add controller info
+        this.uriComponent = buildUriComponent();
+        if(modelResource != null){
+
+            this.linkableResource = modelResource.linkable();
+            this.basePath = modelResource.basePath();
+            this.parentApplicationPath = modelResource.parentPath();
         }
         else{
             this.basePath = "";

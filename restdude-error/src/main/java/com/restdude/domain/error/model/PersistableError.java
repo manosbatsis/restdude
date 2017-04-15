@@ -20,16 +20,12 @@
  */
 package com.restdude.domain.error.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.restdude.domain.ErrorModel;
-import com.restdude.domain.cases.CaseModel;
+import com.restdude.domain.cases.ICaseModel;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.users.model.User;
 
-/**
- */
-@JsonIgnoreProperties("pk")
-public interface PersistableError extends ErrorModel<String>, CaseModel<ErrorComment> {
+public interface PersistableError extends ErrorModel<String>, ICaseModel<ErrorsApplication, ErrorComment> {
 
 
     CaseStatus getStatus();

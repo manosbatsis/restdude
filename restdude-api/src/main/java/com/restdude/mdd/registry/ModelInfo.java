@@ -21,6 +21,7 @@
 package com.restdude.mdd.registry;
 
 import com.restdude.domain.Model;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.specification.IPredicateFactory;
 
 import java.io.Serializable;
@@ -42,6 +43,7 @@ public interface ModelInfo<T extends Model<PK>, PK extends Serializable> {
     Boolean isLinkableResource();
 
     Class<T> getModelType();
+    ModelResource getModelResource();
 
     String getPackageName();
 

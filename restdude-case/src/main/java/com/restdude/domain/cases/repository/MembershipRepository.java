@@ -20,9 +20,9 @@
  */
 package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.BusinessContext;
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
-import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,15 +39,15 @@ import java.util.Set;
 public interface MembershipRepository extends ModelRepository<Membership, String> {
 
     @Query("select membership from Membership membership where membership.context = ?1 AND membership.user = ?2")
-    Optional<Membership> findOneByBusinessContextAndUser(@Param("context") SpaceContext context, @Param("user") User user);
+    Optional<Membership> findOneByBusinessContextAndUser(@Param("context") Space context, @Param("user") User user);
 
     @Modifying
     @Query("delete from Membership membership where membership.context = ?1 AND membership.user = ?2")
-    void deleteByBusinessContextAndUser(@Param("context") BusinessContext context, @Param("user") User user);
+    void deleteByBusinessContextAndUser(@Param("context") BaseContext context, @Param("user") User user);
 
     @Query("select membership.user.username from Membership membership where membership.context = ?1 AND membership.user.stompSessionCount > 0 ")
-    Set<String> findOnlineMemberUsernames(SpaceContext context);
+    Set<String> findOnlineMemberUsernames(Space context);
 
     @Query("select case when (count(contextMembership) > 0)  then true else false end from Membership contextMembership where contextMembership.context.pk = :#{#context.pk} AND contextMembership.user.pk = :#{#user.pk}")
-    Boolean exists(@Param("context") SpaceContext context, @Param("user") User user);
+    Boolean exists(@Param("context") Space context, @Param("user") User user);
 }

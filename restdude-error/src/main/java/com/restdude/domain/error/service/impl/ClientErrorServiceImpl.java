@@ -21,6 +21,7 @@
 package com.restdude.domain.error.service.impl;
 
 import com.restdude.domain.cases.model.CaseWorkflow;
+import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.repository.ClientErrorRepository;
 import com.restdude.domain.error.service.ClientErrorService;
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
+import java.util.List;
 
 @Named(ClientErrorService.BEAN_ID)
 public class ClientErrorServiceImpl extends AbstractErrorServiceImpl<ClientError, ClientErrorRepository>
@@ -46,6 +48,27 @@ public class ClientErrorServiceImpl extends AbstractErrorServiceImpl<ClientError
     public String getWorkflowName(){
         return ClientErrorRepository.ERRORS_WORKFLOW_NAME;
     }
+    public String getWorkflowTitle(){
+        return ClientErrorRepository.ERRORS_WORKFLOW_TITLE;
+    }
+    public String getWorkflowDescription(){
+        return ClientErrorRepository.ERRORS_WORKFLOW_DESCRIPTION;
+    }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<CaseCommenttInfo> getCompactCommentsBySubject(ClientError subject){
+        return this.repository.getCompactCommentsBySubject(subject);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public Integer getCaseIndex(ClientError persisted){
+        return this.repository.getCaseIndex(persisted);
+    }
 
 }

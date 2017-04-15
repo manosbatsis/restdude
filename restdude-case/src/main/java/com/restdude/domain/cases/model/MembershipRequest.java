@@ -23,6 +23,7 @@ package com.restdude.domain.cases.model;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restdude.domain.cases.IMembershipRequest;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
@@ -49,7 +50,7 @@ import javax.validation.constraints.NotNull;
 		apiName = "Membership Requests",
 		apiDescription = "Requests to join a BusinessContext")
 @ApiModel(description = MembershipRequest.API_MODEL_DESCRIPTION)
-public class MembershipRequest extends AbstractSystemUuidPersistableModel {
+public class MembershipRequest extends AbstractSystemUuidPersistableModel implements IMembershipRequest {
 
 	public static final String API_PATH_FRAGMENT = "businessContextMembershipsRequests";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a user request or invitation to join a Website.";
@@ -66,7 +67,7 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel {
 	@JoinColumn(name = "context", nullable = false, updatable = false)
 	@ApiModelProperty(value = "The BusinessContext this membership request is for", required = true)
 	@Getter @Setter
-	private SpaceContext context;
+	private Space context;
 
 	@NotNull
 	@ManyToOne
@@ -131,7 +132,7 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel {
 	public static class Builder {
 		private String id;
 		private MembershipRequestStatus status;
-		private SpaceContext context;
+		private Space context;
 		private User user;
 
 		public Builder id(String id) {
@@ -144,7 +145,7 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel {
 			return this;
 		}
 
-		public Builder context(SpaceContext context) {
+		public Builder context(Space context) {
 			this.context = context;
 			return this;
 		}

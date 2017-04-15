@@ -22,19 +22,21 @@ package com.restdude.domain.error.service.impl;
 
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.domain.cases.model.SpaceContext;
+import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
 import com.restdude.domain.cases.service.CaseStatusService;
 import com.restdude.domain.cases.service.CaseWorkflowService;
-import com.restdude.domain.cases.service.SpaceContextService;
+import com.restdude.domain.cases.service.SpaceService;
 import com.restdude.domain.cases.service.impl.AbstractCaseServiceImpl;
 import com.restdude.domain.error.model.BaseError;
+import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.ErrorsApplication;
+import com.restdude.domain.error.repository.ErrorCommentRepository;
 import com.restdude.domain.error.service.ErrorLogService;
 import com.restdude.domain.error.service.UserAgentService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
-import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.service.PersistableModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +46,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends ModelRepository<T, String>>
-        extends AbstractCaseServiceImpl<T,  R>  {
+public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends AbstractCaseModelRepository<T>>
+        extends AbstractCaseServiceImpl<T, ErrorComment,  R>  {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractErrorServiceImpl.class);
-
+    public static final char INDEX_CHAR = '-';
 
 
     protected  CaseWorkflow workflow;
@@ -59,9 +61,15 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
 
     private UserService userService;
     private CaseStatusService caseStatusService;
-    private SpaceContextService spaceContextService;
+    private SpaceService spaceContextService;
     private PersistableModelService<ErrorsApplication, String> errorsApplicationService;
+    protected ErrorCommentRepository errorCommentRepository;
     private CaseWorkflowService caseWorkflowService;
+
+    @Autowired
+    public void setErrorCommentRepository(ErrorCommentRepository errorCommentRepository) {
+        this.errorCommentRepository = errorCommentRepository;
+    }
 
     @Autowired
     public void setCaseWorkflowService(CaseWorkflowService caseWorkflowService) {
@@ -79,7 +87,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
     }
 
     @Autowired
-    public void setSpaceContextService(SpaceContextService spaceContextService) {
+    public void setSpaceService(SpaceService spaceContextService) {
         this.spaceContextService = spaceContextService;
     }
 
@@ -88,13 +96,25 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
         this.errorsApplicationService = errorsApplicationService;
     }
 
+
+    @Autowired
+    public void setErrorLogService(ErrorLogService errorLogService) {
+        this.errorLogService = errorLogService;
+    }
+
+    @Autowired
+    public void setUUserAgentService(UserAgentService userAgentService) {
+        this.userAgentService = userAgentService;
+    }
+
     protected ErrorLogService getErrorLogService() {
         return errorLogService;
     }
 
-    // TODO: move to case service
-    public abstract CaseWorkflow getWorkflow();
-    public abstract String getWorkflowName();
+    public ErrorsApplication getErrorApplication() {
+        return errorApplication;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -107,11 +127,10 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
         if(this.workflow == null){
 
             // create global BusinessContext
-            SpaceContext syetemBusinessContext = this.spaceContextService.getSystemContext();
+            Space syetemBusinessContext = this.spaceContextService.getSystemContext();
 
             // TODO: move to system error service
             // create errors application and workflow
-            String appName = this.getDomainClass().getSimpleName() + "application";
             this.workflow = this.caseWorkflowService.create(
                     new CaseWorkflow(this.getWorkflowName(), "Workflow configuration for " + this.getDomainClass().getSimpleName() + "entries", syetemBusinessContext));
 
@@ -122,18 +141,15 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends M
             this.workflow.setStatuses(errorsWorkflowStatuses);
 
             this.errorApplication = this.errorsApplicationService.create(
-                    new ErrorsApplication.Builder().parent(syetemBusinessContext).owner(systemUser).name(this.getWorkflowName()).title(appName).description(appName).workflow(this.workflow).build());
+                    new ErrorsApplication.Builder()
+                            .space(syetemBusinessContext)
+                            .owner(systemUser)
+                            .name(this.getWorkflowName())
+                            .title(this.getWorkflowTitle())
+                            .description(this.getWorkflowDescription())
+                            .workflow(this.workflow).build());
         }
 
-    }
-    @Autowired
-    public void setErrorLogService(ErrorLogService errorLogService) {
-        this.errorLogService = errorLogService;
-    }
-
-    @Autowired
-    public void setUUserAgentService(UserAgentService userAgentService) {
-        this.userAgentService = userAgentService;
     }
 
     /**

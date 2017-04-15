@@ -39,12 +39,6 @@ public abstract class AbstractSystemUuidPersistableModel extends AbstractPersist
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
 	private String pk;
-/*
-	// TODO, tmp
-	@Formula(" pk ")
-	@Getter @Setter
-	private String id;
-*/
 
 	/**
      * {@inheritDoc}

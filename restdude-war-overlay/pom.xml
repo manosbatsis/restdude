@@ -286,5 +286,18 @@
             <artifactId>websocket-server</artifactId>
             <scope>provided</scope>
         </dependency>
+
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

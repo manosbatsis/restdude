@@ -25,7 +25,7 @@ import com.restdude.websocket.message.IActivityNotificationMessage;
 public class Destinations {
 
     /**
-     * Publishes {@link com.restdude.websocket.message.IStateUpdateMessage} state updates for entities the user is expected to be interested in, for example friend status
+     * Publishes {@link com.restdude.websocket.message.IActivityNotificationMessage} state updates for entities the user is expected to be interested in, for example friend status
      */
     public final static String USERQUEUE_UPDATES_STATE = "/queue/updates/state";
 

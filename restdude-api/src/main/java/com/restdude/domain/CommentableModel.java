@@ -20,14 +20,14 @@
  */
 package com.restdude.domain;
 
-import com.restdude.domain.cases.CaseCommentModel;
+import com.restdude.domain.cases.ICaseCommentModel;
 
 import java.util.List;
 
 /**
  * Base interface for commentable models
  */
-public interface CommentableModel<C extends CaseCommentModel> extends PersistableModel<String>{
+public interface CommentableModel<C extends ICaseCommentModel> extends PersistableModel<String>{
 
     int MAX_TITLE_LENGTH = 500;
     int MAX_DETAIL_LENGTH = 1000;

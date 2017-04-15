@@ -20,6 +20,8 @@
  */
 package com.restdude.mdd.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.domain.PersistableModel;
 import com.restdude.mdd.validation.Unique;
@@ -84,6 +86,16 @@ public abstract class AbstractPersistableModel<PK extends Serializable> implemen
      * {@inheritDoc}
      */
     public abstract void setPk(PK pk);
+
+    // TODO: tmp hack to bridge entity/DTO till ID names are reverted back to "id"
+    @JsonSetter("id")
+    public void setId(PK id) {
+        this.setPk(id);
+    }
+    @JsonGetter("id")
+    public PK getId() {
+        return this.getPk();
+    }
 
     /**
      * @see java.lang.Object#equals(java.lang.Object)

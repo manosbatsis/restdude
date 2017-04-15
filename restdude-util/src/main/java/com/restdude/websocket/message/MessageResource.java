@@ -20,6 +20,9 @@
  */
 package com.restdude.websocket.message;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -30,11 +33,13 @@ public class MessageResource<PK extends Serializable> implements IMessageResourc
     /**
      * The resource ID
      */
+    @Getter @Setter
     protected PK id;
 
     /**
      * The resource human-readable name
      */
+    @Getter @Setter
     protected String name;
 
     public MessageResource() {
@@ -47,19 +52,4 @@ public class MessageResource<PK extends Serializable> implements IMessageResourc
         this.name = name;
     }
 
-    public PK getPk() {
-        return id;
-    }
-
-    public void setPk(PK id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
