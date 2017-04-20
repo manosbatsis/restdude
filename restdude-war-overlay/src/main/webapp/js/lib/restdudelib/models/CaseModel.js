@@ -42,6 +42,13 @@ function ($, _, Bloodhoud, Typeahead, Restdude, RestdudeForm, RestdudeBackgrid, 
                 "title": {
                     fieldType: "ViewModel",
                 },
+                "status": {
+                    fieldType: "String",
+                    backgrid: {
+                        cell: Restdude.components.backgrid.ChildStringAttributeCell,
+                        path: "status.name"
+                    }
+                },
                 "detail": {
                     fieldType: "Text",
                 },

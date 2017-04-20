@@ -91,6 +91,15 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
     private List<CC> comments;
 
     @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = {@JoinColumn(name = "member_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "case_id")})
+    @Getter @Setter
+    private List<Membership> assignedTo;
+
+
+
+    @JsonIgnore
     public CaseStatus getStatus() {
         return status;
     }
@@ -144,7 +153,6 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
                 .append("caseIndex", this.getCaseIndex())
                 .append("title", this.getTitle())
                 .append("status", this.getStatus())
-                .append("detail", this.getDetail())
                 .toString();
     }
 

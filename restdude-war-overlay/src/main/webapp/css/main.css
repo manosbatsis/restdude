@@ -36,12 +36,14 @@ body.full-height-column {
 }
 
 div#restdudeMainContentRegion {
-    padding-top: 30px;
 }
 
 /* Misk
 -------------------------------------------------- */
 
+.bg-white {
+    background-color: #FFFFFF;
+}
 .tmpl-hint {
     display: none;
 }

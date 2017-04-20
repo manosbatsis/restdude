@@ -130,7 +130,7 @@ require.config({
         'humanize': 'lib/humanize-duration',
         'chart': 'lib/Chart',
         'template': '../template',
-
+        'showdown': 'lib/showdown',
     },
     wrapShim: true,
     packages: [{

@@ -113,14 +113,10 @@ public class BaseError extends AbstractCaseModel<ErrorsApplication, BaseError, E
 
     @Override
     public void preSave() {
-
-        log.debug("preSave, before: {}", this);
         super.preSave();
         if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > MAX_DETAIL_LENGTH) {
             this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, MAX_DETAIL_LENGTH);
         }
-
-        log.debug("preSave, after: {}", this);
     }
 
 

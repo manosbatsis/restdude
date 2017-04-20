@@ -51,4 +51,5 @@ public interface BaseErrorRepository extends AbstractCaseModelRepository<BaseErr
 
     @Query(value = GET_ERROR_COMMENTS)
     List<CaseCommenttInfo> getCompactCommentsBySubject(@P("subject") @Param("subject") BaseError subject);
+
 }

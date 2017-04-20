@@ -38,6 +38,7 @@ import com.restdude.domain.error.service.UserAgentService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
 import com.restdude.mdd.service.PersistableModelService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
 
             // add error statuses
             List<CaseStatus> errorsWorkflowStatuses = new LinkedList<>();
+            errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.UNASSIGNED, "Status for cases that have not yet been assigned", this.workflow)));
             errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.OPEN, "Status for pending cases", this.workflow)));
             errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.CLOSED, "Status for closed cases", this.workflow)));
             this.workflow.setStatuses(errorsWorkflowStatuses);
@@ -151,6 +153,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
         }
 
     }
+
 
     /**
      * {@inheritDoc}
@@ -174,7 +177,9 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
         }
         // merge the ErrorLog based on it's hash (i.e. ID)
         if (resource.getErrorLog() != null) {
+            this.setDetailFromLogIfMissing(resource);
             ErrorLog log = this.errorLogService.findOrCreate(resource.getErrorLog());
+
             resource.setErrorLog(log);
             if (log.getFirstOccurred() == null) {
                 log.setFirstOccurred(resource.getCreatedDate());
@@ -186,6 +191,20 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
         resource = super.create(resource);
 
         return resource;
+    }
+
+    protected void setDetailFromLogIfMissing(T resource) {
+        // if the description detail is empty, use the error log instead
+        ErrorLog errorLog = resource.getErrorLog();
+        if(StringUtils.isBlank(resource.getDetail())
+                && errorLog != null
+                && StringUtils.isNotBlank(errorLog.getRootCauseMessage())){
+            String detail = new StringBuffer().append("Error logged automatically, root case: \"`").append(errorLog.getRootCauseMessage())
+                    .append("`... \", trace: \n```\n").append(org.apache.commons.lang3.StringUtils.abbreviate(errorLog.getStacktrace(), BaseError.MAX_DETAIL_LENGTH-250))
+                    .append("\n```\n see attached error log for more information").toString();
+            LOGGER.debug("create, detail: {}", detail);
+            resource.setDetail(detail);
+        }
     }
 
 }

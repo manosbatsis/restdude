@@ -5,7 +5,7 @@
 <div class="comment-content col-md-11 col-sm-10">
     <h6 class="small comment-meta"><a href="#">{{createdBy.username}}</a> | {{momentFromNow createdDate}}</h6>
     <div class="comment-body">
-        {{content}}
+        {{{showdownToMarkup content}}}
     </div>
 </div>
 <div class="tmpl-hint">end CaseComment.hbs</div>

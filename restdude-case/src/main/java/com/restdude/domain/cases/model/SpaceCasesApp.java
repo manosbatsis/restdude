@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "context_cases")
+@Table(name = "context_cases_app")
 public class SpaceCasesApp<C extends AbstractCaseModel> extends SpaceApp {
 
 	public static final String API_PATH_FRAGMENT = "caseApplications";

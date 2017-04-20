@@ -139,6 +139,6 @@ public class ClientError extends BaseError implements PersistableError {
         this.setTitle(builder.title);
         this.setCreatedBy(builder.user);
         this.screenshotUrl = builder.screenshotUrl;
-        this.setTitle(builder.detail);
+        this.setDetail(builder.detail);
     }
 }

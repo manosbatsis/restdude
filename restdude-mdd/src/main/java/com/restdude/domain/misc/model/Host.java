@@ -56,7 +56,7 @@ public class Host extends AbstractSystemUuidPersistableModel {
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "host_aliases", joinColumns = @JoinColumn(name = "host_id"))
     //, uniqueConstraints = {	@UniqueConstraint(columnNames = { "host_alias" }) }
-            Set<String> aliases = new HashSet<String>();
+    Set<String> aliases = new HashSet<String>();
 
     public Host() {
         super();
@@ -142,11 +142,17 @@ public class Host extends AbstractSystemUuidPersistableModel {
 
     public static class Builder {
         private String name;
+        private String description;
         private Country country;
         private Set<String> aliases = new HashSet<String>();
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
             return this;
         }
 
@@ -172,6 +178,7 @@ public class Host extends AbstractSystemUuidPersistableModel {
 
     private Host(Builder builder) {
         this.name = builder.name;
+        this.description = builder.description;
         this.country = builder.country;
         this.aliases = builder.aliases;
     }

@@ -37,6 +37,7 @@ import static com.restdude.domain.CommentableModel.MAX_DETAIL_LENGTH;
 @Table(name = "case_status")
 public class CaseStatus extends AbstractBasicAuditedModel {
 
+    public static final String UNASSIGNED = "Unassigned";
     public static final String OPEN = "Open";
     public static final String CLOSED = "Closed";
 

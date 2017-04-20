@@ -97,7 +97,6 @@ public class BeanValidationException extends BadRequestException implements Cons
         this.modelType = modelType;
     }
 
-
     @Override
     public String toString() {
         return new ToStringBuilder(this)

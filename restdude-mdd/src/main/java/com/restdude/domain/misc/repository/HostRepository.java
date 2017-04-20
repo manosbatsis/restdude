@@ -18,21 +18,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain;
+package com.restdude.domain.misc.repository;
 
-import com.restdude.domain.cases.ICaseCommentModel;
+import com.restdude.domain.misc.model.Host;
+import com.restdude.mdd.repository.ModelRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-/**
- * Base interface for commentable models
- */
-public interface CommentableModel<C extends ICaseCommentModel> extends PersistableModel<String>{
 
-    int MAX_TITLE_LENGTH = 1000;
-    int MAX_DETAIL_LENGTH = 2000;
-    int MAX_STACKTRACE_LENGTH = 40000;
+@Repository
+public interface HostRepository extends ModelRepository<Host, String> {
 
-    List<C> getComments();
-    void setComments(List<C> children);
+	@Query("select h from Host h join h.aliases a where h.name = ?1 or ?1 = a ")
+	public Optional<Host> findByName(String address);
+
 }

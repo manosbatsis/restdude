@@ -145,6 +145,9 @@ define({
                 "description": {
                     "label": "Description"
                 },
+                "status": {
+                    "label": "Status"
+                },
                 "owner": {
                     "label": "Created by"
                 },

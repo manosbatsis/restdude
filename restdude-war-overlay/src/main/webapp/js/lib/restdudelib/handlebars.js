@@ -18,8 +18,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment'],
-    function (Restdude, _, Handlebars, moment) {
+define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment', 'showdown'],
+    function (Restdude, _, Handlebars, moment, showdown) {
+
+
+        // TODO
+        var showdownConverter = new showdown.Converter({
+            ghCodeBlocks: true
+        });
+
         // register restdude helpers for handlebars
         Handlebars.registerHelper("getLocale", function (propName, options) {
             return Restdude.util.getLocale();
@@ -38,6 +45,7 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment'],
             }
             return (metaValue);
         });
+
         /**
          * Check if the loggedin user has any of the given roles. Any numberof roles can be passed to the helper.
          * @example
@@ -73,6 +81,20 @@ define(["lib/restdudelib/util", 'underscore', 'handlebars', 'moment'],
             return !Restdude.isUserInAnyRole(inputRoles) ? options.fn(this) : options.inverse(this);
         });
 
+        /**
+         * Convert the given markdown text to HTML
+         * @example {{momentFromNow someDate}}
+         */
+        Handlebars.registerHelper('showdownToMarkup', function (text) {
+            if (!text) return '';
+            console.log("showdownToMarkup, text: \n");
+            console.log(text);
+            var markdown = showdownConverter.makeHtml(text);
+            console.log("showdownToMarkup, markdown: \n");
+            console.log(markdown);
+            //return  new Handlebars.SafeString(markdown);
+            return markdown;
+        });
         /**
          * Calculate "from" now using the given date
          * @example {{momentFromNow someDate}}

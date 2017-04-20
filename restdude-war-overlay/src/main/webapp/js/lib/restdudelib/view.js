@@ -30,18 +30,21 @@ define(
         //////////////////////////////////////////////////
         Restdude.view.BreadcrumbItemView = Marionette.View.extend({
             template: Restdude.getTemplate('BreadcrumbItemView'),
-            className : 'breadcrumb',
-            tagName   : 'ol'
+            className : 'breadcrumb-item',
+            tagName   : 'li'
         });
 
         // The collection view, will render when initialized and when its collection changes
         Restdude.view.BreadcrumbListView = Marionette.CollectionView.extend({
+            className : 'breadcrumb',
+            tagName   : 'ol',
             childView  : Restdude.view.BreadcrumbItemView,
-            collection : new Backbone.Collection([{ name : 'foo', url : 'foo' }]),
             initialize : function(options){
                 Marionette.CollectionView.prototype.initialize.apply(this, arguments);
+                if(!this.collection){
+                    throw "A collection is required";
+                }
                 this.listenTo(this.collection, 'change', this.render );
-                //this.render();
             }
         });
 
@@ -50,6 +53,10 @@ define(
                 tagName: "body",
                 className: "navbar-fixed fixed-nav ",
                 template: Restdude.getTemplate('AppRootView'),
+                breadcrumbs: new Backbone.Collection([
+                    {name: "foo", url: "#"},
+                    {name: "bar", url: "#"},
+                ]),
                 regions: {
                     headerRegion: "#restdudeHeaderRegion",
                     breadcrumbRegion: {
@@ -71,10 +78,27 @@ define(
                     Restdude.view.View.prototype.initialize.apply(this, arguments);
                 },
                 onRender: function () {
-                    this.showChildView("breadcrumbRegion", new Restdude.view.BreadcrumbListView());
+                    console.log(this.breadcrumbs);
+                    this.showChildView("breadcrumbRegion", new Restdude.view.BreadcrumbListView({
+                        collection : this.breadcrumbs
+                    }));
                 },
                 onChildviewLayoutReplace: function (options) {
                     Restdude.showUseCaseView(options.fragment, options.id, options.useCase, options.region, options.httpParams);
+                },
+                showChildView : function (regionName, view) {
+                    // reset breadcrumbs
+
+                    console.log(this.getTypeName() + "#showChildView regionName: " + regionName);
+                    if ("mainContentRegion" == regionName) {
+                        var breadcrumbs = view.getBreadcrumbs ? view.getBreadcrumbs() : [];
+
+                        console.log(this.getTypeName() + "#showChildView reset breadcrumbs: ");
+                        console.log(breadcrumbs);
+                        this.breadcrumbs.reset(breadcrumbs);
+                    }
+
+                    Restdude.view.View.prototype.showChildView.apply(this, arguments);
                 },
                 resizeBroadcast: function () {
 
@@ -136,6 +160,7 @@ define(
             });
 
         Restdude.view.UseCaseLayout = Restdude.view.View.extend({
+            className: "UseCaseLayout container-fluid",
             // regionName : viewType
             regionViewTypes: {},
             //childViewEvents: {
@@ -677,26 +702,53 @@ define(
 
         Restdude.view.CaseDetailsLayout = Restdude.view.UseCaseLayout.extend({
                 template: Restdude.getTemplate('CaseDetailsLayout'),
-
+                className: "CaseDetailsLayout",
                 collection: null,
                 regions: {
-                    commentsRegion: ".commentsRegion"
+                    commentsRegion: ".commentsRegion",
+                    newCommentRegion: ".newCommentRegion"
                 },
                 regionViewTypes: {
                 },
+                getBreadcrumbs: function () {
+                    var breadcrumbs = [];
+                    if(this.model){
+                        var app = this.model.get("application");
+                        if(app.name){
+                            breadcrumbs.push({
+                                name: app.name,
+                                url: "#"
+                            });
+                        }
+                        breadcrumbs.push({
+                            name: this.model.get("name"),
+                            url: "#"
+                        });
+                    }
+                    console.log(this.getTypeName() + "#getBreadcrumbs returns: ");
+                    console.log(breadcrumbs);
+                    return breadcrumbs;
+                },
+                onDestroy: function () {
+                    $("body:first").removeClass("bg-white");
+                },
                 onRender: function () {
+                    $("body:first").addClass("bg-white");
                     var _this = this;
-
                     var renderFetchable = function () {
                         var commentsView = new Restdude.view.TemplateBasedCollectionView ({
+                            className : 'foo',
+                            tagName   : 'div',
                             collection: _this.model.get("comments"),
                             childViewOptions: {
                                 tagName : "div",
-                                className: "comment callout callout-warning row",
+                                className: "comment callout callout-default row",
                                 template: Restdude.getTemplate('CaseComment'),
                             }
                         });
                         _this.showChildView("commentsRegion", commentsView);
+                        // show comment form
+
                     };
 
 

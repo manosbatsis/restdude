@@ -211,6 +211,7 @@ define(
                             return Marionette.getOption(this, "message");
                         };
                         extendOptions.showChildView = function (regionName, view) {
+
                             var _this = this;
                             view.regionName = regionName;
                             view.regionPath = Marionette.getOption(this, "regionPath") + "/" + regionName;
@@ -490,11 +491,12 @@ define(
             }
         };
 
-        Restdude.showUseCaseView = function (pathFragment, modelId, useCaseKey, regionName, httpParams) {
+        Restdude.showUseCaseView = function (pathFragment, modelId, useCaseKey, regionName, httpParams, parentView) {
 
             useCaseKey || (useCaseKey = "view");
             httpParams || (httpParams = {});
             regionName || (regionName = "mainContentRegion");
+            parentView || (parentView = Restdude.app.view);
 
             // build the model instance representing the current request
             $.when(Restdude.util.getUseCaseFactory(pathFragment)).done(
@@ -516,7 +518,7 @@ define(
                         var skipDefaultSearch = model.skipDefaultSearch && model.wrappedCollection && model.wrappedCollection.hasCriteria();
 
                         var renderFetchable = function () {
-                            Restdude.app.view.showChildView(regionName, useCaseContext.createView({regionName: regionName, regionPath: "/" + regionName}));
+                            parentView.showChildView(regionName, useCaseContext.createView({regionName: regionName, regionPath: "/" + regionName}));
                             // update history if "main" view
                             if(regionName == "mainContentRegion"){
                                 Restdude.navigate("/useCases/" + pathFragment + (modelId ? '/' + modelId : "")  + (useCaseKey ? '/' + useCaseKey : "") , {
