@@ -209,7 +209,6 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .extract().as(JsonNode.class);
 
         Assert.assertTrue(comments.isArray());
-        Assert.assertNotNull(comments.get(0).get("id").asText());
         Assert.assertNotNull(comments.get(0).get("content").asText());
         Assert.assertNotNull(comments.get(0).get("createdDate").asText());
         Assert.assertNotNull(comments.get(0).get("author").get("username").asText());

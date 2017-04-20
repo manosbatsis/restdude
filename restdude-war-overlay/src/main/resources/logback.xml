@@ -34,9 +34,6 @@
         <level value="error"/>
     </logger>
 
-    <logger name="com.restdude.domain.cases">
-        <level value="debug"/>
-    </logger>
     <!--
 
 
