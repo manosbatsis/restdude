@@ -209,9 +209,12 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .extract().as(JsonNode.class);
 
         Assert.assertTrue(comments.isArray());
-        Assert.assertNotNull(comments.get(0).get("content").asText());
-        Assert.assertNotNull(comments.get(0).get("createdDate").asText());
-        Assert.assertNotNull(comments.get(0).get("author").get("username").asText());
+        if(comments.size() > 0){
+
+            Assert.assertNotNull(comments.get(0).get("content").asText());
+            Assert.assertNotNull(comments.get(0).get("createdDate").asText());
+            Assert.assertNotNull(comments.get(0).get("author").get("username").asText());
+        }
     }
 
     @Test(description = "Test client error submission", priority = 80)
