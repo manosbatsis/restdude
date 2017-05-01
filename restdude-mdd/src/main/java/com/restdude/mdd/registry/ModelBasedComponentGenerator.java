@@ -31,7 +31,7 @@ import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.mdd.service.ModelService;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.mdd.util.CreateClassCommand;
-import com.restdude.mdd.util.JavassistUtil;
+import com.restdude.mdd.util.JavassistBaseUtil;
 import com.restdude.mdd.util.ModelContext;
 import com.restdude.specification.IPredicateFactory;
 import com.restdude.specification.SpecificationUtils;
@@ -166,7 +166,7 @@ public class ModelBasedComponentGenerator {
                 createPredicateCmd.setGenericTypes(genericTypes);
 
                 // create and return the predicate class
-                Class<IPredicateFactory> factoryType = (Class<IPredicateFactory>) JavassistUtil.createClass(createPredicateCmd);
+                Class<IPredicateFactory> factoryType = (Class<IPredicateFactory>) JavassistBaseUtil.createClass(createPredicateCmd);
 
                 predicateFactory = ClassUtils.newInstance(factoryType);
 
@@ -226,7 +226,7 @@ public class ModelBasedComponentGenerator {
                 genericTypes.add(modelContext.getServiceInterfaceType());
                 createControllerCmd.setGenericTypes(genericTypes);
                 //LOGGER.debug("createController, Creating class " + fullClassName +
-                //        ", super: " + modelContext.getControllerSuperClass().getName() +
+                //        ", super: " + modelContext.getControllerSuperClass().getSource() +
                 //        ", genericTypes: " + genericTypes);
             }
 
@@ -261,7 +261,7 @@ public class ModelBasedComponentGenerator {
             }
 
             // create and register controller class
-            controllerClass = JavassistUtil.createClass(createControllerCmd);
+            controllerClass = JavassistBaseUtil.createClass(createControllerCmd);
 
             // add service dependency
             String serviceDependency = StringUtils.uncapitalize(modelContext.getGeneratedClassNamePrefix()) + "Service";
@@ -313,7 +313,7 @@ public class ModelBasedComponentGenerator {
             List<Class<?>> genericTypes = modelContext.getGenericTypes();
 
             // extend the base service interface
-            Class<?> newServiceInterface = JavassistUtil.createInterface(fullClassName,
+            Class<?> newServiceInterface = JavassistBaseUtil.createInterface(fullClassName,
                     modelContext.getModelInfo().isJpaEntity() ? PersistableModelService.class : ModelService.class,
                     genericTypes);
             ArrayList<Class<?>> interfaces = new ArrayList<Class<?>>(1);
@@ -339,7 +339,7 @@ public class ModelBasedComponentGenerator {
             createServiceCmd.addTypeAnnotation(Named.class, named);
 
             // create and register a service implementation bean
-            Class<?> serviceClass = JavassistUtil.createClass(createServiceCmd);
+            Class<?> serviceClass = JavassistBaseUtil.createClass(createServiceCmd);
             AbstractBeanDefinition def = BeanDefinitionBuilder.rootBeanDefinition(serviceClass).getBeanDefinition();
             registry.registerBeanDefinition(beanName, def);
 
@@ -390,7 +390,7 @@ public class ModelBasedComponentGenerator {
             }
             //            @
             // create the new interface
-            Class<?> newRepoInterface = JavassistUtil.createInterface(
+            Class<?> newRepoInterface = JavassistBaseUtil.createInterface(
                     fullClassName
                     , repoSUperInterface,
                     genericTypes, typeAnnotations);
@@ -405,7 +405,7 @@ public class ModelBasedComponentGenerator {
             modelContext.setRepositoryType(newRepoInterface);
 
         }/* else {
-            LOGGER.debug("#createRepository: NOTE repository for model type: {}", modelContext.getModelType().getName());
+            LOGGER.debug("#createRepository: NOTE repository for model type: {}", modelContext.getModelType().getSource());
             // mote the repository interface as a possible dependency to a
             // service
             Class<?> beanClass = ClassUtils.getClass(modelContext.getRepositoryDefinition().getBeanClassName());
@@ -413,7 +413,7 @@ public class ModelBasedComponentGenerator {
             if (ModelRepositoryFactoryBean.class.isAssignableFrom(beanClass)) {
                 for (PropertyValue propertyValue : modelContext.getRepositoryDefinition().getPropertyValues()
                         .getPropertyValueList()) {
-                    if (propertyValue.getName().equals("repositoryInterface")) {
+                    if (propertyValue.getSource().equals("repositoryInterface")) {
                         Object obj = propertyValue.getValue();
                         modelContext.setRepositoryType(String.class.isAssignableFrom(obj.getClass())
                                 ? ClassUtils.getClass(obj.toString()) : (Class<?>) obj);
@@ -438,7 +438,7 @@ public class ModelBasedComponentGenerator {
 
             if (d instanceof AbstractBeanDefinition && d.getBeanClassName() != null) {
                 AbstractBeanDefinition def = (AbstractBeanDefinition) d;
-                //LOGGER.debug("#findExistingBeans BeanDefinition def: {}, class name: {}", def,  def.getBeanClassName());
+                //LOGGER.debug("#findExistingBeans BeanDefinition def: {}, class source: {}", def,  def.getBeanClassName());
                 Class<?> beanType = ClassUtils.getClass(def.getBeanClassName());
 
                 // if model controller
@@ -516,7 +516,7 @@ public class ModelBasedComponentGenerator {
 
                     }
                     else{
-                        LOGGER.warn("Unknown repository interface for bean name: '{}', definition: {}", beanDefName, def);
+                        LOGGER.warn("Unknown repository interface for bean source: '{}', definition: {}", beanDefName, def);
                     }
 
                 }

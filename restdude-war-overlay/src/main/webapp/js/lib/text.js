@@ -75,10 +75,10 @@ define(['module'], function (module) {
         },
 
         /**
-         * Parses a resource name into its component parts. Resource names
-         * look like: module/name.ext!strip, where the !strip part is
+         * Parses a resource source into its component parts. Resource names
+         * look like: module/source.ext!strip, where the !strip part is
          * optional.
-         * @param {String} name the resource name
+         * @param {String} name the resource source
          * @returns {Object} with properties "moduleName", "ext" and "strip"
          * where strip is a boolean.
          */

@@ -52,7 +52,7 @@ define(
         Restdude.view.TemplateBasedItemView = Restdude.view.View.extend(
             /** @lends Restdude.view.TemplateBasedItemView.prototype */
             {
-                template: Restdude.getTemplate("templateBasedItemView"),//_.template('{{#if url}}<a href="{{url}}">{{/if}}{{#if name}}<h5>{{name}}</h5>{{else}}{{#if title}}<h5>{{title}}</h5>{{/if}}{{/if}}{{#if description}}{{description}}{{/if}}{{#if url}}</a>{{/if}}'),
+                template: Restdude.getTemplate("templateBasedItemView"),//_.template('{{#if url}}<a href="{{url}}">{{/if}}{{#if source}}<h5>{{source}}</h5>{{else}}{{#if title}}<h5>{{title}}</h5>{{/if}}{{/if}}{{#if description}}{{description}}{{/if}}{{#if url}}</a>{{/if}}'),
                 tagName: "li",
                 initialize: function (models, options) {
                     Restdude.view.View.prototype.initialize.apply(this, arguments);

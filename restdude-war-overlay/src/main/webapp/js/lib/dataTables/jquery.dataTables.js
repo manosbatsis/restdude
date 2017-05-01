@@ -347,8 +347,8 @@
         /**
          * Map one parameter onto another
          *  @param {object} o Object to map
-         *  @param {*} knew The new parameter name
-         *  @param {*} old The old parameter name
+         *  @param {*} knew The new parameter source
+         *  @param {*} old The old parameter source
          */
         var _fnCompatMap = function (o, knew, old) {
             if (o[knew] !== undefined) {
@@ -4414,7 +4414,7 @@
          *  @param {object} ret target object
          *  @param {object} src source object
          *  @param {string} name property
-         *  @param {string} [mappedName] name to map too - optional, name used if not given
+         *  @param {string} [mappedName] source to map too - optional, source used if not given
          *  @memberof DataTable#oApi
          */
         function _fnMap(ret, src, name, mappedName) {
@@ -5929,18 +5929,18 @@
          *
          *     [
          *       {
-	 *         name:      'data'                -- string   - Property name
+	 *         source:      'data'                -- string   - Property source
 	 *         val:       function () {},       -- function - Api method (or undefined if just an object
 	 *         methodExt: [ ... ],              -- array    - Array of Api object definitions to extend the method result
 	 *         propExt:   [ ... ]               -- array    - Array of Api object definitions to extend the property
 	 *       },
          *       {
-	 *         name:     'row'
+	 *         source:     'row'
 	 *         val:       {},
 	 *         methodExt: [ ... ],
 	 *         propExt:   [
 	 *           {
-	 *             name:      'data'
+	 *             source:      'data'
 	 *             val:       function () {},
 	 *             methodExt: [ ... ],
 	 *             propExt:   [ ... ]
@@ -6436,7 +6436,7 @@
 
         //     [
         //       {
-        //         name:      'data'                -- string   - Property name
+        //         source:      'data'                -- string   - Property source
         //         val:       function () {},       -- function - Api method (or undefined if just an object
         //         methodExt: [ ... ],              -- array    - Array of Api object definitions to extend the method result
         //         propExt:   [ ... ]               -- array    - Array of Api object definitions to extend the property
@@ -7358,7 +7358,7 @@
          * {integer}           - column index (>=0 count from left, <0 count from right)
          * "{integer}:visIdx"  - visible column index (i.e. translate to column index)  (>=0 count from left, <0 count from right)
          * "{integer}:visible" - alias for {integer}:visIdx  (>=0 count from left, <0 count from right)
-         * "{string}:name"     - column name
+         * "{string}:source"     - column source
          * "{string}"          - jQuery selector on column header nodes
          *
          */
@@ -8355,7 +8355,7 @@
             /**
              * A list of the columns that sorting should occur on when this column
              * is sorted. That this property is an array allows multi-column sorting
-             * to be defined for a column (for example first name / last name columns
+             * to be defined for a column (for example first source / last source columns
              * would benefit from this). The values are integers pointing to the
              * columns to be sorted on (typically it will be a single integer pointing
              * at itself, but that doesn't need to be the case).
@@ -8519,8 +8519,8 @@
             "sDefaultContent": null,
 
             /**
-             * Name for the column, allowing reference to the column by name as well as
-             * by index (needs a lookup to work by name).
+             * Name for the column, allowing reference to the column by source as well as
+             * by index (needs a lookup to work by source).
              *  @type string
              */
             "sName": null,
@@ -8921,14 +8921,14 @@
              * have `targets` defined in each object in the array. Values in the `targets`
              * array may be:
              *   <ul>
-             *     <li>a string - class name will be matched on the TH for the column</li>
+             *     <li>a string - class source will be matched on the TH for the column</li>
              *     <li>0 or a positive integer - column index counting from the left</li>
              *     <li>a negative integer - column index counting from the right</li>
              *     <li>the string "_all" - all columns (i.e. assign a default)</li>
              *   </ul>
              *  @member
              *
-             *  @name DataTable.defaults.columnDefs
+             *  @source DataTable.defaults.columnDefs
              */
             "aoColumnDefs": null,
 
@@ -9589,7 +9589,7 @@
             /**
              * This function allows you to 'post process' each row after it have been
              * generated for each table draw, but before it is rendered on screen. This
-             * function might be used for setting the row class name etc.
+             * function might be used for setting the row class source etc.
              *  @type function
              *  @param {node} row "TR" element for the current row
              *  @param {array} data Raw data array for this row
@@ -9598,7 +9598,7 @@
              *    rows (after filtering)
              *
              *  @dtopt Callbacks
-             *  @name DataTable.defaults.rowCallback
+             *  @source DataTable.defaults.rowCallback
              *
              *  @example
              *    $(document).ready( function() {
@@ -9651,7 +9651,7 @@
              * passed in parameter is the data set that has been constructed by
              * DataTables, and you can add to this or modify it as you require.
              *  @type function
-             *  @param {array} data Data array (array of objects which are name/value
+             *  @param {array} data Data array (array of objects which are source/value
              *    pairs) that has been constructed by DataTables and will be sent to the
              *    server. In the case of Ajax sourced data with server-side processing
              *    this will be an empty array, for server-side processing there will be a
@@ -9661,7 +9661,7 @@
              *
              *  @dtopt Callbacks
              *  @dtopt Server-side
-             *  @name DataTable.defaults.serverParams
+             *  @source DataTable.defaults.serverParams
              *
              *  @deprecated 1.10. Please use `ajax` for this functionality now.
              */
@@ -10562,7 +10562,7 @@
              *    <"H"lfr>t<"F"ip> <i>(when `jQueryUI` is true)</i>
              *
              *  @dtopt Options
-             *  @name DataTable.defaults.dom
+             *  @source DataTable.defaults.dom
              *
              *  @example
              *    $(document).ready( function() {
@@ -10727,12 +10727,12 @@
              * Define which column(s) an order will occur on for this column. This
              * allows a column's ordering to take multiple columns into account when
              * doing a sort or use the data from a different column. For example first
-             * name / last name columns make sense to do a multi-column sort over the
+             * source / last source columns make sense to do a multi-column sort over the
              * two columns.
              *  @type array|int
              *  @default null <i>Takes the value of the column index automatically</i>
              *
-             *  @name DataTable.defaults.column.orderData
+             *  @source DataTable.defaults.column.orderData
              *  @dtopt Columns
              *
              *  @example
@@ -10957,16 +10957,16 @@
              *    * `.` - Dotted Javascript notation. Just as you use a `.` in
              *      Javascript to read from nested objects, so to can the options
              *      specified in `data`. For example: `browser.version` or
-             *      `browser.name`. If your object parameter name contains a period, use
-             *      `\\` to escape it - i.e. `first\\.name`.
+             *      `browser.source`. If your object parameter source contains a period, use
+             *      `\\` to escape it - i.e. `first\\.source`.
              *    * `[]` - Array notation. DataTables can automatically combine data
              *      from and array source, joining the data with the characters provided
-             *      between the two brackets. For example: `name[, ]` would provide a
+             *      between the two brackets. For example: `source[, ]` would provide a
              *      comma-space separated list from the source array. If no characters
              *      are provided between the brackets, the original array source is
              *      returned.
              *    * `()` - Function notation. Adding `()` to the end of a parameter will
-             *      execute a function of the name given. For example: `browser()` for a
+             *      execute a function of the source given. For example: `browser()` for a
              *      simple function on the data source, `browser.version()` for a
              *      function in a nested property or even `browser().version` to get an
              *      object property if the function called returns an object. Note that
@@ -11001,15 +11001,15 @@
              * is simply a getter and thus simpler to use.
              *
              * Note that prior to DataTables 1.9.2 `data` was called `mDataProp`. The
-             * name change reflects the flexibility of this property and is consistent
+             * source change reflects the flexibility of this property and is consistent
              * with the naming of mRender. If 'mDataProp' is given, then it will still
-             * be used by DataTables, as it automatically maps the old name to the new
+             * be used by DataTables, as it automatically maps the old source to the new
              * if required.
              *
              *  @type string|int|function|null
              *  @default null <i>Use automatically calculated column index</i>
              *
-             *  @name DataTable.defaults.column.data
+             *  @source DataTable.defaults.column.data
              *  @dtopt Columns
              *
              *  @example
@@ -11107,7 +11107,7 @@
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "data": "name[, ]"
+		 *          "data": "source[, ]"
 		 *        } ]
 		 *      } );
 		 *    } );
@@ -11133,16 +11133,16 @@
              *    * `.` - Dotted Javascript notation. Just as you use a `.` in
              *      Javascript to read from nested objects, so to can the options
              *      specified in `data`. For example: `browser.version` or
-             *      `browser.name`. If your object parameter name contains a period, use
-             *      `\\` to escape it - i.e. `first\\.name`.
+             *      `browser.source`. If your object parameter source contains a period, use
+             *      `\\` to escape it - i.e. `first\\.source`.
              *    * `[]` - Array notation. DataTables can automatically combine data
              *      from and array source, joining the data with the characters provided
-             *      between the two brackets. For example: `name[, ]` would provide a
+             *      between the two brackets. For example: `source[, ]` would provide a
              *      comma-space separated list from the source array. If no characters
              *      are provided between the brackets, the original array source is
              *      returned.
              *    * `()` - Function notation. Adding `()` to the end of a parameter will
-             *      execute a function of the name given. For example: `browser()` for a
+             *      execute a function of the source given. For example: `browser()` for a
              *      simple function on the data source, `browser.version()` for a
              *      function in a nested property or even `browser().version` to get an
              *      object property if the function called returns an object.
@@ -11169,7 +11169,7 @@
              *  @type string|int|function|object|null
              *  @default null Use the data source value.
              *
-             *  @name DataTable.defaults.column.render
+             *  @source DataTable.defaults.column.render
              *  @dtopt Columns
              *
              *  @example
@@ -11182,7 +11182,7 @@
 		 *          { "data": "browser" },
 		 *          {
 		 *            "data": "platform",
-		 *            "render": "[, ].name"
+		 *            "render": "[, ].source"
 		 *          }
 		 *        ]
 		 *      } );
@@ -11383,7 +11383,7 @@
              *  @type string
              *  @default <i>Empty string</i>
              *
-             *  @name DataTable.defaults.column.name
+             *  @source DataTable.defaults.column.name
              *  @dtopt Columns
              *
              *  @example
@@ -11391,11 +11391,11 @@
              *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [
-		 *          { "name": "engine", "targets": [ 0 ] },
-		 *          { "name": "browser", "targets": [ 1 ] },
-		 *          { "name": "platform", "targets": [ 2 ] },
-		 *          { "name": "version", "targets": [ 3 ] },
-		 *          { "name": "grade", "targets": [ 4 ] }
+		 *          { "source": "engine", "targets": [ 0 ] },
+		 *          { "source": "browser", "targets": [ 1 ] },
+		 *          { "source": "platform", "targets": [ 2 ] },
+		 *          { "source": "version", "targets": [ 3 ] },
+		 *          { "source": "grade", "targets": [ 4 ] }
 		 *        ]
 		 *      } );
 		 *    } );
@@ -11405,11 +11405,11 @@
              *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "columns": [
-		 *          { "name": "engine" },
-		 *          { "name": "browser" },
-		 *          { "name": "platform" },
-		 *          { "name": "version" },
-		 *          { "name": "grade" }
+		 *          { "source": "engine" },
+		 *          { "source": "browser" },
+		 *          { "source": "platform" },
+		 *          { "source": "version" },
+		 *          { "source": "grade" }
 		 *        ]
 		 *      } );
 		 *    } );

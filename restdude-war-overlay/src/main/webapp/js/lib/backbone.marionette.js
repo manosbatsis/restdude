@@ -122,7 +122,7 @@
     // `this.triggerMethod("foo:bar")` will trigger the "foo:bar" event and
     // call the "onFooBar" method.
     function triggerMethod(event) {
-        // get the method name from the event name
+        // get the method source from the event source
         var methodName = 'on' + event.replace(splitter, getEventName);
         var method = getOption.call(this, methodName);
         var result = void 0;

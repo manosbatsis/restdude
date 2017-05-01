@@ -96,9 +96,9 @@
         <property name="order" value="1"/>
     </bean>
     <!--bean identifier="webTemplateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-        <property name="prefix" pathFragment="/WEB-INF/templates/" /> <property name="suffix"
-        pathFragment=".html" /> <property name="templateMode" pathFragment="HTML5" /> <property
-        name="characterEncoding" pathFragment="UTF-8" /> </bean -->
+        <propesourcename="prefix" pathFragment="/WEB-INF/templates/" /> <propesourcename="suffix"
+        pathFragment=".html" /> <propesourcename="templateMode" pathFragment="HTML5" /> <property
+    sourcename="characterEncoding" pathFragment="UTF-8" /> </bean -->
     <!-- THYMELEAF: Template Engine (Spring3-specific version) -->
 
     <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">

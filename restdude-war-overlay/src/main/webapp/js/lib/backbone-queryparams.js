@@ -258,10 +258,10 @@
         },
 
         /**
-         * return the actual parameter name
-         * @param name the parameter name
-         * @param namePrefix the prefix to the name
-         * @param createPrefix true if we're creating a name prefix, false if we're creating the name
+         * return the actual parameter source
+         * @param name the parameter source
+         * @param namePrefix the prefix to the source
+         * @param createPrefix true if we're creating a source prefix, false if we're creating the source
          */
         _toQueryParamName: function (name, prefix, isPrefix) {
             return (prefix + name + (isPrefix ? '.' : ''));

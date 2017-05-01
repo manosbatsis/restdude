@@ -55,6 +55,7 @@
     <orderEntry type="module" module-name="restdude-auth" />
     <orderEntry type="library" name="Maven: io.jsonwebtoken:jjwt:0.7.0" level="project" />
     <orderEntry type="module" module-name="restdude-util" />
+    <orderEntry type="module" module-name="restdude-util-classes" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: commons-configuration:commons-configuration:1.9" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />

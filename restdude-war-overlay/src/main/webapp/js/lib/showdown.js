@@ -283,8 +283,8 @@ showdown.getDefaultOptions = function (simple) {
 /**
  * Get or set a subParser
  *
- * subParser(name)       - Get a registered subParser
- * subParser(name, func) - Register a subParser
+ * subParser(source)       - Get a registered subParser
+ * subParser(source, func) - Register a subParser
  * @static
  * @param {string} name
  * @param {function} [func]
@@ -593,9 +593,9 @@ showdown.helper.forEach = function (obj, callback) {
 };
 
 /**
- * Standardidize extension name
+ * Standardidize extension source
  * @static
- * @param {string} s extension name
+ * @param {string} s extension source
  * @returns {string}
  */
 showdown.helper.stdExtName = function (s) {

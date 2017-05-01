@@ -376,7 +376,7 @@
 
     function getFileNameAndLineNumber(stackLine) {
         // Named functions: "at functionName (filename:lineNumber:columnNumber)"
-        // In IE10 function name can have spaces ("Anonymous function") O_o
+        // In IE10 function source can have spaces ("Anonymous function") O_o
         var attempt1 = /at .+ \((.+):(\d+):(?:\d+)\)$/.exec(stackLine);
         if (attempt1) {
             return [attempt1[1], Number(attempt1[2])];
@@ -410,7 +410,7 @@
             lineNumber <= qEndingLine;
     }
 
-// discover own file name and line number range for filtering stack
+// discover own file source and line number range for filtering stack
 // traces
     function captureLine() {
         if (!hasStacks) {
@@ -714,12 +714,12 @@
 
     /**
      * Constructs a Promise with a promise descriptor object and optional fallback
-     * function.  The descriptor contains methods like when(rejected), get(name),
-     * set(name, value), post(name, args), and delete(name), which all
+     * function.  The descriptor contains methods like when(rejected), get(source),
+     * set(source, value), post(source, args), and delete(source), which all
      * return either a value, a promise for a value, or a rejection.  The fallback
-     * accepts the operation name, a resolver, and any further arguments that would
+     * accepts the operation source, a resolver, and any further arguments that would
      * have been forwarded to the appropriate method above had a method been
-     * provided with the proper name.  The API makes no guarantees about the nature
+     * provided with the proper source.  The API makes no guarantees about the nature
      * of the returned object, apart from that it is usable whereever promises are
      * bought and sold.
      */
@@ -1076,7 +1076,7 @@
                 delete value[name];
             },
             "post": function (name, args) {
-                // Mark Miller proposes that post with no name should apply a
+                // Mark Miller proposes that post with no source should apply a
                 // promised function.
                 if (name === null || name === void 0) {
                     return value.apply(void 0, args);
@@ -1300,7 +1300,7 @@
     /**
      * sends a message to a value in a future turn
      * @param object* the recipient
-     * @param op the name of the message operation, e.g., "when",
+     * @param op the source of the message operation, e.g., "when",
      * @param args further arguments to be forwarded to the operation
      * @returns result {Promise} a promise for the result of the operation
      */
@@ -1321,7 +1321,7 @@
     /**
      * Gets the value of a property in a future turn.
      * @param object    promise or immediate reference for target object
-     * @param name      name of property to get
+     * @param source      source of property to get
      * @return promise for the property value
      */
     Q.get = function (object, key) {
@@ -1335,7 +1335,7 @@
     /**
      * Sets the value of a property in a future turn.
      * @param object    promise or immediate reference for object object
-     * @param name      name of property to set
+     * @param source      source of property to set
      * @param value     new value of property
      * @return promise for the return value
      */
@@ -1350,7 +1350,7 @@
     /**
      * Deletes a property in a future turn.
      * @param object    promise or immediate reference for target object
-     * @param name      name of property to delete
+     * @param source      source of property to delete
      * @return promise for the return value
      */
     Q.del = // XXX legacy
@@ -1366,7 +1366,7 @@
     /**
      * Invokes a method in a future turn.
      * @param object    promise or immediate reference for target object
-     * @param name      name of method to invoke
+     * @param source      source of method to invoke
      * @param value     a value to post, typically an array of
      *                  invocation arguments for promises that
      *                  are ultimately backed with `resolve` values,
@@ -1389,7 +1389,7 @@
     /**
      * Invokes a method in a future turn.
      * @param object    promise or immediate reference for target object
-     * @param name      name of method to invoke
+     * @param source      source of method to invoke
      * @param ...args   array of invocation arguments
      * @return promise for the return value
      */
@@ -1834,7 +1834,7 @@
      * Calls a method of a Node-style object that accepts a Node-style
      * callback with a given array of arguments, plus a provided callback.
      * @param object an object that has the named method
-     * @param {String} name name of the method of object
+     * @param {String} source source of the method of object
      * @param {Array} args arguments to pass to the method; the callback
      * will be provided by Q and appended to these arguments.
      * @returns a promise for the value or error
@@ -1858,7 +1858,7 @@
      * callback, forwarding the given variadic arguments, plus a provided
      * callback argument.
      * @param object an object that has the named method
-     * @param {String} name name of the method of object
+     * @param {String} source source of the method of object
      * @param ...args arguments to pass to the method; the callback will
      * be provided by Q and appended to these arguments.
      * @returns a promise for the value or error

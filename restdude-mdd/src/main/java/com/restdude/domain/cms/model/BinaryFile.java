@@ -86,14 +86,14 @@ public class BinaryFile extends AbstractSystemUuidPersistableModel implements Up
 	
 //	@Override
 //	public String toString() {
-//		return "BinaryFile [name=" + name + ", thumbnailFilename="
+//		return "BinaryFile [source=" + source + ", thumbnailFilename="
 //				+ thumbnailFilename + ", newFilename=" + newFilename
 //				+ ", fileNameExtention=" + fileNameExtention + ", pathFragment=" + pathFragment
 //				+ ", parentPath=" + parentPath + ", contentType=" + contentType
 //				+ ", size=" + size + ", thumbnailSize=" + thumbnailSize
 //				+ ", url=" + url + ", thumbnailUrl=" + thumbnailUrl
 //				+ ", deleteUrl=" + deleteUrl + ", deleteType=" + deleteType
-//				+ ", getName()=" + getName() + ", getThumbnailFilename()="
+//				+ ", getSource()=" + getSource() + ", getThumbnailFilename()="
 //				+ getThumbnailFilename() + ", getNewFilename()="
 //				+ getNewFilename() + ", getFileNameExtention()="
 //				+ getFileNameExtention() + ", getPath()=" + getPath()

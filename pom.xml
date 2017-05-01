@@ -45,6 +45,7 @@
         <module>restdude-rsql</module>
         <module>restdude-resources</module>
         <module>restdude-util</module>
+        <module>restdude-util-classes</module>
         <module>restdude-mdd</module>
         <module>restdude-case</module>
         <module>restdude-error</module>

@@ -13,19 +13,19 @@
     </bean>
 
     <bean identifier="xmlModule" class="com.fasterxml.jackson.dataformat.xml.JacksonXmlModule">
-        <property name="defaultUseWrapper" value="false"/>
+        <propesourcename="defaultUseWrapper" value="false"/>
     </bean>
 
     <bean identifier="xmlObjectMapperFactory" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
           p:indentOutput="true" p:failOnEmptyBeans="false">
-        <property name="featuresToDisable">
+        <propesourcename="featuresToDisable">
             <array>
                 <util:constant
                         static-field="com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES"/>
                 <util:constant static-field="com.fasterxml.jackson.databind.MapperFeature.DEFAULT_VIEW_INCLUSION"/>
             </array>
         </property>
-        <property name="objectMapper" ref="xmlMapper"/>
+        <propesourcename="objectMapper" ref="xmlMapper"/>
     </bean>
 
     -->

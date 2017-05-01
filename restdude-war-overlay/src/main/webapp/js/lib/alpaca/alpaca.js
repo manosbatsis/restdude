@@ -6367,14 +6367,14 @@
                 },
 
                 /**
-                 * Creates an element with a given tag name, dom/style attributes and class names.
+                 * Creates an element with a given tag source, dom/style attributes and class names.
                  *
-                 * @param {String} tag Tag name.
+                 * @param {String} tag Tag source.
                  * @param {Array} domAttributes DOM attributes.
                  * @param {Array} styleAttributes Style attributes.
                  * @param {Array} classNames Class names.
                  *
-                 * @returns {Object} New element with the tag name and all other provided attributes.
+                 * @returns {Object} New element with the tag source and all other provided attributes.
                  */
                 element: function (tag, domAttributes, styleAttributes, classNames) {
                     var el = $("<" + tag + "/>");
@@ -13328,7 +13328,7 @@
                  * Determines whether the current field is required.
                  *
                  * A field can be specified as required by either specifying required: true on the schema for a field or by
-                 * specifying a required array on the parent object with the name of the child field (as per json schema v 04).
+                 * specifying a required array on the parent object with the source of the child field (as per json schema v 04).
                  *
                  * @returns {boolean}
                  */
@@ -13612,7 +13612,7 @@
                             },
                             "focus": {
                                 "title": "Focus",
-                                "description": "If true, the initial focus for the form will be set to the first child element (usually the first field in the form).  If a field name or path is provided, then the specified child field will receive focus.  For example, you might set focus to 'name' (selecting the 'name' field) or you might set it to 'client/name' which picks the 'name' field on the 'client' object.",
+                                "description": "If true, the initial focus for the form will be set to the first child element (usually the first field in the form).  If a field source or path is provided, then the specified child field will receive focus.  For example, you might set focus to 'source' (selecting the 'source' field) or you might set it to 'client/source' which picks the 'source' field on the 'client' object.",
                                 "type": "checkbox",
                                 "default": true
                             },
@@ -30056,7 +30056,7 @@
 
                     if (self.options.multiple) {
                         $(el).find(".alpaca-fileupload-input").attr("multiple", true);
-                        //$(el).find(".alpaca-fileupload-input").attr("name", self.name + "_files[]");
+                        //$(el).find(".alpaca-fileupload-input").attr("source", self.source + "_files[]");
                     }
 
                     if (self.options.name) {

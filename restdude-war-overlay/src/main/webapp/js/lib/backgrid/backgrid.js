@@ -847,7 +847,7 @@
          @param {Backgrid.Column} options.column
 
          @throws {ReferenceError} If formatter is a string but a formatter class of
-         said name cannot be found in the Backgrid module.
+         said source cannot be found in the Backgrid module.
          */
         initialize: function (options) {
             this.column = options.column;
@@ -1444,9 +1444,9 @@
         },
 
         /**
-         Renders the options if `optionValues` is a list of name-value pairs. The
+         Renders the options if `optionValues` is a list of source-value pairs. The
          options are contained inside option groups if `optionValues` is a list of
-         object hashes. The name is rendered at the option text and the value is the
+         object hashes. The source is rendered at the option text and the value is the
          option value. If `optionValues` is a function, it is called without a
          parameter.
          */
@@ -1485,7 +1485,7 @@
                     this.$el.append(optgroup);
                 }
                 else {
-                    throw new TypeError("optionValues elements must be a name-value pair or an object hash of { name: 'optgroup label', value: [option name-value pairs] }");
+                    throw new TypeError("optionValues elements must be a source-value pair or an object hash of { source: 'optgroup label', value: [option source-value pairs] }");
                 }
             }
 
@@ -1530,12 +1530,12 @@
      SelectCell is also a different kind of cell in that upon going into edit mode
      the cell renders a list of options to pick from, as opposed to an input box.
 
-     SelectCell cannot be referenced by its string name when used in a column
+     SelectCell cannot be referenced by its string source when used in a column
      definition because it requires an `optionValues` class attribute to be
-     defined. `optionValues` can either be a list of name-value pairs, to be
-     rendered as options, or a list of object hashes which consist of a key *name*
-     which is the option group name, and a key *values* which is a list of
-     name-value pairs to be rendered as options under that option group.
+     defined. `optionValues` can either be a list of source-value pairs, to be
+     rendered as options, or a list of object hashes which consist of a key *source*
+     which is the option group source, and a key *values* which is a list of
+     source-value pairs to be rendered as options under that option group.
 
      In addition, `optionValues` can also be a parameter-less function that
      returns one of the above. If the options are static, it is recommended the
@@ -1573,7 +1573,7 @@
         formatter: SelectFormatter,
 
         /**
-         @property {Array.<Array>|Array.<{name: string, values: Array.<Array>}>} optionValues
+         @property {Array.<Array>|Array.<{source: string, values: Array.<Array>}>} optionValues
          */
         optionValues: undefined,
 
@@ -1648,7 +1648,7 @@
             }
             catch (ex) {
                 if (ex instanceof TypeError) {
-                    throw new TypeError("'optionValues' must be of type {Array.<Array>|Array.<{name: string, values: Array.<Array>}>}");
+                    throw new TypeError("'optionValues' must be of type {Array.<Array>|Array.<{source: string, values: Array.<Array>}>}");
                 }
                 throw ex;
             }
@@ -1700,7 +1700,7 @@
            model: MyColumn
          }));
 
-         @cfg {string} [defaults.name] The default name of the model attribute.
+         @cfg {string} [defaults.source] The default source of the model attribute.
 
          @cfg {string} [defaults.label] The default label to show in the header.
 
@@ -1715,19 +1715,19 @@
 
          @cfg {boolean|string|function(): boolean} [defaults.sortable=true] Whether
          this column is sortable. If the value is a string, a method will the same
-         name will be looked up from the column instance to determine whether the
+         source will be looked up from the column instance to determine whether the
          column should be sortable. The method's signature must be `function
          (Backgrid.Column, Backbone.Model): boolean`.
 
          @cfg {boolean|string|function(): boolean} [defaults.editable=true] Whether
          this column is editable. If the value is a string, a method will the same
-         name will be looked up from the column instance to determine whether the
+         source will be looked up from the column instance to determine whether the
          column should be editable. The method's signature must be `function
          (Backgrid.Column, Backbone.Model): boolean`.
 
          @cfg {boolean|string|function(): boolean} [defaults.renderable=true]
          Whether this column is renderable. If the value is a string, a method will
-         the same name will be looked up from the column instance to determine
+         the same source will be looked up from the column instance to determine
          whether the column should be renderable. The method's signature must be
          `function (Backrid.Column, Backbone.Model): boolean`.
 
@@ -1740,7 +1740,7 @@
 
          @cfg {(function(Backbone.Model, string): *) | string} [defaults.sortValue]
          The function to use to extract a value from the model for comparison during
-         sorting. If this value is a string, a method with the same name will be
+         sorting. If this value is a string, a method with the same source will be
          looked up from the column instance.
 
          @cfg {"ascending"|"descending"|null} [defaults.direction=null] The initial
@@ -1767,7 +1767,7 @@
 
          @param {Object} attrs
 
-         @param {string} attrs.name The model attribute this column is responsible
+         @param {string} attrs.source The model attribute this column is responsible
          for.
 
          @param {string|Backgrid.Cell} attrs.cell The cell type to use to render
@@ -1792,7 +1792,7 @@
          @throws {TypeError} If attrs.cell or attrs.options are not supplied.
 
          @throws {ReferenceError} If formatter is a string but a formatter class of
-         said name cannot be found in the Backgrid module.
+         said source cannot be found in the Backgrid module.
 
          See:
 
@@ -2092,7 +2092,7 @@
                     }
                 });
             this.listenTo(column, "change:direction", this.setCellDirection);
-            this.listenTo(column, "change:name change:label", this.render);
+            this.listenTo(column, "change:source change:label", this.render);
 
             if (Backgrid.callByNeed(column.editable(), column, collection)) $el.addClass("editable");
             if (Backgrid.callByNeed(column.sortable(), column, collection)) $el.addClass("sortable");
@@ -2153,7 +2153,7 @@
         },
 
         /**
-         Renders a header cell with a sorter, a label, and a class name for this
+         Renders a header cell with a sorter, a label, and a class source for this
          column.
          */
         render: function () {
@@ -2719,7 +2719,7 @@
      call render().
 
      var grid = Backgrid.Grid({
-         columns: [{ name: "id", label: "ID", type: "string" },
+         columns: [{ source: "id", label: "ID", type: "string" },
           // ...
          ],
          collections: books
@@ -2733,7 +2733,7 @@
      See the documentation for Header and Footer for further details.
 
      var grid = Backgrid.Grid({
-         columns: [{ name: "id", label: "ID", type: "string" }],
+         columns: [{ source: "id", label: "ID", type: "string" }],
          collections: books,
          header: Backgrid.Header.extend({
               //...

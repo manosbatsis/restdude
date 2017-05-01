@@ -1916,7 +1916,7 @@ define(['jquery', 'underscore', 'backbone'], function ($, _, Backbone) {
         template: _.template('\
     <% _.each(items, function(item) { %>\
       <li>\
-        <input type="radio" name="<%= item.name %>" value="<%- item.value %>" id="<%= item.id %>" />\
+        <input type="radio" source="<%= item.source %>" value="<%- item.value %>" id="<%= item.id %>" />\
         <label for="<%= item.id %>"><% if (item.labelHTML){ %><%= item.labelHTML %><% }else{ %><%- item.label %><% } %></label>\
       </li>\
     <% }); %>\

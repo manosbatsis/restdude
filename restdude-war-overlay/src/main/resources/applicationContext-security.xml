@@ -127,8 +127,8 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <constructor-arg index="2" ref="usersConnectionRepository"/>
         <constructor-arg index="3" ref="connectionFactoryLocator"/>
 
-        <property name="signupUrl" pathFragment="/register" />
-        <property name="postLoginUrl" pathFragment="/manager/"/>
+        <propesourcename="signupUrl" pathFragment="/register" />
+        <propesourcename="postLoginUrl" pathFragment="/manager/"/>
         
         
     </bean> 

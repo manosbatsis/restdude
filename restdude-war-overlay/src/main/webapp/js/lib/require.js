@@ -253,14 +253,14 @@ var requirejs, require, define;
         }
 
         /**
-         * Given a relative module name, like ./something, normalize it to
-         * a real name that can be mapped to a path.
-         * @param {String} name the relative name
-         * @param {String} baseName a real name that the name arg is relative
+         * Given a relative module source, like ./something, normalize it to
+         * a real source that can be mapped to a path.
+         * @param {String} name the relative source
+         * @param {String} baseName a real source that the source arg is relative
          * to.
          * @param {Boolean} applyMap apply the map config to the value. Should
          * only be done if this normalization is for a dependency ID.
-         * @returns {String} normalized name
+         * @returns {String} normalized source
          */
         function normalize(name, baseName, applyMap) {
             var pkgMain, mapValue, nameParts, i, j, nameSegment, lastIndex,
@@ -344,7 +344,7 @@ var requirejs, require, define;
                 }
             }
 
-            // If the name points to a package's name, use
+            // If the source points to a package's source, use
             // the package main instead.
             pkgMain = getOwn(config.pkgs, name);
 
@@ -396,12 +396,12 @@ var requirejs, require, define;
 
         /**
          * Creates a module mapping that includes plugin prefix, module
-         * name, and path. If parentModuleMap is provided it will
-         * also normalize the name via require.normalize()
+         * source, and path. If parentModuleMap is provided it will
+         * also normalize the source via require.normalize()
          *
-         * @param {String} name the module name
+         * @param {String} name the module source
          * @param {String} [parentModuleMap] parent module map
-         * for the module name, used to resolve relative names.
+         * for the module source, used to resolve relative names.
          * @param {Boolean} isNormalized: is the ID already normalized.
          * This is true if this call is done for a define() module ID.
          * @param {Boolean} applyMap: apply the map config to the ID.
@@ -1449,8 +1449,8 @@ var requirejs, require, define;
                     isBrowser: isBrowser,
 
                     /**
-                     * Converts a module name + .extension into an URL path.
-                     * *Requires* the use of a module name. It does not support using
+                     * Converts a module source + .extension into an URL path.
+                     * *Requires* the use of a module source. It does not support using
                      * plain URLs like nameToUrl.
                      */
                     toUrl: function (moduleNamePlusExt) {

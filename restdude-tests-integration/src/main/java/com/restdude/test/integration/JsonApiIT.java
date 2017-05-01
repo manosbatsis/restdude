@@ -147,7 +147,7 @@ public class JsonApiIT extends AbstractControllerIT {
         // get a country document
         Response rs = given().spec(requestSpec)
                 .log().all()
-                .param("filter[country.name][prefix]", "G")
+                .param("filter[country.source][prefix]", "G")
                 .param("filter[country.callingCode][not][postfix]", "9")
                 .get(WEBCONTEXT_PATH + "/api/rest/countries");
 
@@ -155,7 +155,7 @@ public class JsonApiIT extends AbstractControllerIT {
         rs.then().log().all().assertThat()
                 .statusCode(200)
                 .body("data.id", equalTo("GR"))
-                .body("data.attributes.name", equalTo("Greece"));
+                .body("data.attributes.source", equalTo("Greece"));
 
     }
     */

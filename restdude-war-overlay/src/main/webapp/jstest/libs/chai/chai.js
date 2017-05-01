@@ -219,7 +219,7 @@
          *
          * Executes an expression and check expectations. Throws AssertionError for reporting if test doesn't pass.
          *
-         * @name assert
+         * @source assert
          * @param {Philosophical} expression to be tested
          * @param {String} message to display if fails
          * @param {String} negatedMessage to display if negated expression fails
@@ -327,7 +327,7 @@
              * - have
              * - with
              *
-             * @name language chains
+             * @source language chains
              * @api public
              */
 
@@ -349,7 +349,7 @@
              *     expect({ foo: 'baz' }).to.have.property('foo')
              *       .and.not.equal('bar');
              *
-             * @name not
+             * @source not
              * @api public
              */
 
@@ -367,7 +367,7 @@
              *     expect({ foo: { bar: { baz: 'quux' } } })
              *       .to.have.deep.property('foo.bar.baz', 'quux');
              *
-             * @name deep
+             * @source deep
              * @api public
              */
 
@@ -391,7 +391,7 @@
              *     // language chain
              *     expect(foo).to.be.an.instanceof(Foo);
              *
-             * @name a
+             * @source a
              * @alias an
              * @param {String} type
              * @api public
@@ -425,7 +425,7 @@
              *     expect('foobar').to.contain('foo');
              *     expect({ foo: 'bar', hello: 'universe' }).to.include.keys('foo');
              *
-             * @name include
+             * @source include
              * @alias contain
              * @param {Object|String|Number} obj
              * @api public
@@ -457,7 +457,7 @@
              *     expect(undefined).to.not.be.ok;
              *     expect(null).to.not.be.ok;
              *
-             * @name ok
+             * @source ok
              * @api public
              */
 
@@ -476,7 +476,7 @@
              *     expect(true).to.be.true;
              *     expect(1).to.not.be.true;
              *
-             * @name true
+             * @source true
              * @api public
              */
 
@@ -497,7 +497,7 @@
              *     expect(false).to.be.false;
              *     expect(0).to.not.be.false;
              *
-             * @name false
+             * @source false
              * @api public
              */
 
@@ -518,7 +518,7 @@
              *     expect(null).to.be.null;
              *     expect(undefined).not.to.be.null;
              *
-             * @name null
+             * @source null
              * @api public
              */
 
@@ -538,7 +538,7 @@
              *      expect(undefined).to.be.undefined;
              *      expect(null).to.not.be.undefined;
              *
-             * @name undefined
+             * @source undefined
              * @api public
              */
 
@@ -563,7 +563,7 @@
              *     expect(bar).to.not.exist;
              *     expect(baz).to.not.exist;
              *
-             * @name exist
+             * @source exist
              * @api public
              */
 
@@ -587,7 +587,7 @@
              *     expect('').to.be.empty;
              *     expect({}).to.be.empty;
              *
-             * @name empty
+             * @source empty
              * @api public
              */
 
@@ -617,7 +617,7 @@
        *       expect(arguments).to.be.arguments;
        *     }
              *
-             * @name arguments
+             * @source arguments
              * @alias Arguments
              * @api public
              */
@@ -648,7 +648,7 @@
              *     expect({ foo: 'bar' }).to.not.equal({ foo: 'bar' });
              *     expect({ foo: 'bar' }).to.deep.equal({ foo: 'bar' });
              *
-             * @name equal
+             * @source equal
              * @alias equals
              * @alias eq
              * @alias deep.equal
@@ -682,7 +682,7 @@
              *     expect({ foo: 'bar' }).to.eql({ foo: 'bar' });
              *     expect([ 1, 2, 3 ]).to.eql([ 1, 2, 3 ]);
              *
-             * @name eql
+             * @source eql
              * @param {Mixed} value
              * @api public
              */
@@ -711,7 +711,7 @@
              *     expect('foo').to.have.length.above(2);
              *     expect([ 1, 2, 3 ]).to.have.length.above(2);
              *
-             * @name above
+             * @source above
              * @alias gt
              * @alias greaterThan
              * @param {Number} value
@@ -758,7 +758,7 @@
              *     expect('foo').to.have.length.below(4);
              *     expect([ 1, 2, 3 ]).to.have.length.below(4);
              *
-             * @name below
+             * @source below
              * @alias lt
              * @alias lessThan
              * @param {Number} value
@@ -805,7 +805,7 @@
              *     expect('foo').to.have.length.within(2,4);
              *     expect([ 1, 2, 3 ]).to.have.length.within(2,4);
              *
-             * @name within
+             * @source within
              * @param {Number} start lowerbound inclusive
              * @param {Number} finish upperbound inclusive
              * @api public
@@ -836,13 +836,13 @@
              *
              * Asserts that the target is an instance of `constructor`.
              *
-             *     var Tea = function (name) { this.name = name; }
+             *     var Tea = function (source) { this.source = source; }
              *       , Chai = new Tea('chai');
              *
              *     expect(Chai).to.be.an.instanceof(Tea);
              *     expect([ 1, 2, 3 ]).to.be.instanceof(Array);
              *
-             * @name instanceof
+             * @source instanceof
              * @param {Constructor} constructor
              * @alias instanceOf
              * @api public
@@ -861,9 +861,9 @@
             Assertion.addMethod('instanceOf', assertInstanceOf);
 
             /**
-             * ### .property(name, [value])
+             * ### .property(source, [value])
              *
-             * Asserts that the target has a property `name`, optionally asserting that
+             * Asserts that the target has a property `source`, optionally asserting that
              * the value of that property is strictly equal to  `value`.
              * If the `deep` flag is set, you can use dot- and bracket-notation for deep
              * references into objects and arrays.
@@ -910,9 +910,9 @@
              *       .with.deep.property('[2]')
              *         .that.deep.equals({ tea: 'konacha' });
              *
-             * @name property
+             * @source property
              * @alias deep.property
-             * @param {String} name
+             * @param {String} source
              * @param {Mixed} value (optional)
              * @returns value of property for chaining
              * @api public
@@ -952,13 +952,13 @@
 
 
             /**
-             * ### .ownProperty(name)
+             * ### .ownProperty(source)
              *
-             * Asserts that the target has an own property `name`.
+             * Asserts that the target has an own property `source`.
              *
              *     expect('test').to.have.ownProperty('length');
              *
-             * @name ownProperty
+             * @source ownProperty
              * @alias haveOwnProperty
              * @param {String} name
              * @api public
@@ -995,7 +995,7 @@
              *     expect('foo').to.have.length.within(2,4);
              *     expect([ 1, 2, 3 ]).to.have.length.within(2,4);
              *
-             * @name length
+             * @source length
              * @alias lengthOf
              * @param {Number} length
              * @api public
@@ -1029,7 +1029,7 @@
              *
              *     expect('foobar').to.match(/^foo/);
              *
-             * @name match
+             * @source match
              * @param {RegExp} RegularExpression
              * @api public
              */
@@ -1050,7 +1050,7 @@
              *
              *     expect('foobar').to.have.string('bar');
              *
-             * @name string
+             * @source string
              * @param {String} string
              * @api public
              */
@@ -1077,7 +1077,7 @@
              *     expect({ foo: 1, bar: 2 }).to.have.keys(['foo', 'bar']);
              *     expect({ foo: 1, bar: 2, baz: 3 }).to.contain.keys('foo', 'bar');
              *
-             * @name keys
+             * @source keys
              * @alias key
              * @param {String...|Array} keys
              * @api public
@@ -1160,7 +1160,7 @@
              *     expect(fn).to.throw(ReferenceError)
              *        .and.not.throw(/good function/);
              *
-             * @name throw
+             * @source throw
              * @alias throws
              * @alias Throw
              * @param {ErrorConstructor} constructor
@@ -1262,7 +1262,7 @@
              *    Klass.baz = function(){};
              *    expect(Klass).itself.to.respondTo('baz');
              *
-             * @name respondTo
+             * @source respondTo
              * @param {String} method
              * @api public
              */
@@ -1293,7 +1293,7 @@
              *    expect(Foo).itself.to.respondTo('bar');
              *    expect(Foo).itself.not.to.respondTo('baz');
              *
-             * @name itself
+             * @source itself
              * @api public
              */
 
@@ -1308,7 +1308,7 @@
              *
              *     expect(1).to.satisfy(function(num) { return num > 0; });
              *
-             * @name satisfy
+             * @source satisfy
              * @param {Function} matcher
              * @api public
              */
@@ -1331,7 +1331,7 @@
              *
              *     expect(1.5).to.be.closeTo(1, 0.5);
              *
-             * @name closeTo
+             * @source closeTo
              * @param {Number} expected
              * @param {Number} delta
              * @api public
@@ -1381,7 +1381,7 @@
              *
              * @param {Mixed} expression to test for truthiness
              * @param {String} message to display on error
-             * @name assert
+             * @source assert
              * @api public
              */
 
@@ -1399,7 +1399,7 @@
              *
              * Throw a failure. Node.js `assert` module-compatible.
              *
-             * @name fail
+             * @source fail
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1425,7 +1425,7 @@
              *     assert.ok('everything', 'everything is ok');
              *     assert.ok(false, 'this will fail');
              *
-             * @name ok
+             * @source ok
              * @param {Mixed} object to test
              * @param {String} message
              * @api public
@@ -1442,7 +1442,7 @@
              *
              *     assert.equal(3, '3', '== coerces values to strings');
              *
-             * @name equal
+             * @source equal
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1468,7 +1468,7 @@
              *
              *     assert.notEqual(3, 4, 'these numbers are not equal');
              *
-             * @name notEqual
+             * @source notEqual
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1494,7 +1494,7 @@
              *
              *     assert.strictEqual(true, true, 'these booleans are strictly equal');
              *
-             * @name strictEqual
+             * @source strictEqual
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1512,7 +1512,7 @@
              *
              *     assert.notStrictEqual(3, '3', 'no coercion for strict equality');
              *
-             * @name notStrictEqual
+             * @source notStrictEqual
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1530,7 +1530,7 @@
              *
              *     assert.deepEqual({ tea: 'green' }, { tea: 'green' });
              *
-             * @name deepEqual
+             * @source deepEqual
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1548,7 +1548,7 @@
              *
              *     assert.notDeepEqual({ tea: 'green' }, { tea: 'jasmine' });
              *
-             * @name notDeepEqual
+             * @source notDeepEqual
              * @param {Mixed} actual
              * @param {Mixed} expected
              * @param {String} message
@@ -1567,7 +1567,7 @@
              *     var teaServed = true;
              *     assert.isTrue(teaServed, 'the tea has been served');
              *
-             * @name isTrue
+             * @source isTrue
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1585,7 +1585,7 @@
              *     var teaServed = false;
              *     assert.isFalse(teaServed, 'no tea yet? hmm...');
              *
-             * @name isFalse
+             * @source isFalse
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1602,7 +1602,7 @@
              *
              *     assert.isNull(err, 'there was no error');
              *
-             * @name isNull
+             * @source isNull
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1620,7 +1620,7 @@
              *     var tea = 'tasty chai';
              *     assert.isNotNull(tea, 'great, time for tea!');
              *
-             * @name isNotNull
+             * @source isNotNull
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1638,7 +1638,7 @@
              *     var tea;
              *     assert.isUndefined(tea, 'no tea defined');
              *
-             * @name isUndefined
+             * @source isUndefined
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1656,7 +1656,7 @@
              *     var tea = 'cup of chai';
              *     assert.isDefined(tea, 'tea has been defined');
              *
-             * @name isUndefined
+             * @source isUndefined
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1674,7 +1674,7 @@
              *     function serveTea() { return 'cup of tea'; };
              *     assert.isFunction(serveTea, 'great, we can have tea now');
              *
-             * @name isFunction
+             * @source isFunction
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1692,7 +1692,7 @@
              *     var serveTea = [ 'heat', 'pour', 'sip' ];
              *     assert.isNotFunction(serveTea, 'great, we have listed the steps');
              *
-             * @name isNotFunction
+             * @source isNotFunction
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1708,10 +1708,10 @@
              * Asserts that `value` is an object (as revealed by
              * `Object.prototype.toString`).
              *
-             *     var selection = { name: 'Chai', serve: 'with spices' };
+             *     var selection = { source: 'Chai', serve: 'with spices' };
              *     assert.isObject(selection, 'tea selection is an object');
              *
-             * @name isObject
+             * @source isObject
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1730,7 +1730,7 @@
              *     assert.isObject(selection, 'tea selection is not an object');
              *     assert.isObject(null, 'null is not an object');
              *
-             * @name isNotObject
+             * @source isNotObject
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1748,7 +1748,7 @@
              *     var menu = [ 'green', 'chai', 'oolong' ];
              *     assert.isArray(menu, 'what kind of tea do we want?');
              *
-             * @name isArray
+             * @source isArray
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1766,7 +1766,7 @@
              *     var menu = 'green|chai|oolong';
              *     assert.isNotArray(menu, 'what kind of tea do we want?');
              *
-             * @name isNotArray
+             * @source isNotArray
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1784,7 +1784,7 @@
              *     var teaOrder = 'chai';
              *     assert.isString(teaOrder, 'order placed');
              *
-             * @name isString
+             * @source isString
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1802,7 +1802,7 @@
              *     var teaOrder = 4;
              *     assert.isNotString(teaOrder, 'order placed');
              *
-             * @name isNotString
+             * @source isNotString
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1820,7 +1820,7 @@
              *     var cups = 2;
              *     assert.isNumber(cups, 'how many cups');
              *
-             * @name isNumber
+             * @source isNumber
              * @param {Number} value
              * @param {String} message
              * @api public
@@ -1838,7 +1838,7 @@
              *     var cups = '2 cups please';
              *     assert.isNotNumber(cups, 'how many cups');
              *
-             * @name isNotNumber
+             * @source isNotNumber
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1859,7 +1859,7 @@
              *     assert.isBoolean(teaReady, 'is the tea ready');
              *     assert.isBoolean(teaServed, 'has tea been served');
              *
-             * @name isBoolean
+             * @source isBoolean
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1880,7 +1880,7 @@
              *     assert.isNotBoolean(teaReady, 'is the tea ready');
              *     assert.isNotBoolean(teaServed, 'has tea been served');
              *
-             * @name isNotBoolean
+             * @source isNotBoolean
              * @param {Mixed} value
              * @param {String} message
              * @api public
@@ -1891,9 +1891,9 @@
             };
 
             /**
-             * ### .typeOf(value, name, [message])
+             * ### .typeOf(value, source, [message])
              *
-             * Asserts that `value`'s type is `name`, as determined by
+             * Asserts that `value`'s type is `source`, as determined by
              * `Object.prototype.toString`.
              *
              *     assert.typeOf({ tea: 'chai' }, 'object', 'we have an object');
@@ -1903,9 +1903,9 @@
              *     assert.typeOf(null, 'null', 'we have a null');
              *     assert.typeOf(undefined, 'undefined', 'we have an undefined');
              *
-             * @name typeOf
+             * @source typeOf
              * @param {Mixed} value
-             * @param {String} name
+             * @param {String} source
              * @param {String} message
              * @api public
              */
@@ -1915,16 +1915,16 @@
             };
 
             /**
-             * ### .notTypeOf(value, name, [message])
+             * ### .notTypeOf(value, source, [message])
              *
-             * Asserts that `value`'s type is _not_ `name`, as determined by
+             * Asserts that `value`'s type is _not_ `source`, as determined by
              * `Object.prototype.toString`.
              *
              *     assert.notTypeOf('tea', 'number', 'strings are not numbers');
              *
-             * @name notTypeOf
+             * @source notTypeOf
              * @param {Mixed} value
-             * @param {String} typeof name
+             * @param {String} typeof source
              * @param {String} message
              * @api public
              */
@@ -1938,12 +1938,12 @@
              *
              * Asserts that `value` is an instance of `constructor`.
              *
-             *     var Tea = function (name) { this.name = name; }
+             *     var Tea = function (source) { this.source = source; }
              *       , chai = new Tea('chai');
              *
              *     assert.instanceOf(chai, Tea, 'chai is an instance of tea');
              *
-             * @name instanceOf
+             * @source instanceOf
              * @param {Object} object
              * @param {Constructor} constructor
              * @param {String} message
@@ -1959,12 +1959,12 @@
              *
              * Asserts `value` is not an instance of `constructor`.
              *
-             *     var Tea = function (name) { this.name = name; }
+             *     var Tea = function (source) { this.source = source; }
              *       , chai = new String('chai');
              *
              *     assert.notInstanceOf(chai, Tea, 'chai is not an instance of tea');
              *
-             * @name notInstanceOf
+             * @source notInstanceOf
              * @param {Object} object
              * @param {Constructor} constructor
              * @param {String} message
@@ -1984,7 +1984,7 @@
              *     assert.include('foobar', 'bar', 'foobar contains string "bar"');
              *     assert.include([ 1, 2, 3 ], 3, 'array contains value');
              *
-             * @name include
+             * @source include
              * @param {Array|String} haystack
              * @param {Mixed} needle
              * @param {String} message
@@ -2008,7 +2008,7 @@
              *
              *     assert.match('foobar', /^foo/, 'regexp matches');
              *
-             * @name match
+             * @source match
              * @param {Mixed} value
              * @param {RegExp} regexp
              * @param {String} message
@@ -2026,7 +2026,7 @@
              *
              *     assert.notMatch('foobar', /^foo/, 'regexp does not match');
              *
-             * @name notMatch
+             * @source notMatch
              * @param {Mixed} value
              * @param {RegExp} regexp
              * @param {String} message
@@ -2044,7 +2044,7 @@
              *
              *     assert.property({ tea: { green: 'matcha' }}, 'tea');
              *
-             * @name property
+             * @source property
              * @param {Object} object
              * @param {String} property
              * @param {String} message
@@ -2062,7 +2062,7 @@
              *
              *     assert.notProperty({ tea: { green: 'matcha' }}, 'coffee');
              *
-             * @name notProperty
+             * @source notProperty
              * @param {Object} object
              * @param {String} property
              * @param {String} message
@@ -2081,7 +2081,7 @@
              *
              *     assert.deepProperty({ tea: { green: 'matcha' }}, 'tea.green');
              *
-             * @name deepProperty
+             * @source deepProperty
              * @param {Object} object
              * @param {String} property
              * @param {String} message
@@ -2100,7 +2100,7 @@
              *
              *     assert.notDeepProperty({ tea: { green: 'matcha' }}, 'tea.oolong');
              *
-             * @name notDeepProperty
+             * @source notDeepProperty
              * @param {Object} object
              * @param {String} property
              * @param {String} message
@@ -2119,7 +2119,7 @@
              *
              *     assert.propertyVal({ tea: 'is good' }, 'tea', 'is good');
              *
-             * @name propertyVal
+             * @source propertyVal
              * @param {Object} object
              * @param {String} property
              * @param {Mixed} value
@@ -2139,7 +2139,7 @@
              *
              *     assert.propertyNotVal({ tea: 'is good' }, 'tea', 'is bad');
              *
-             * @name propertyNotVal
+             * @source propertyNotVal
              * @param {Object} object
              * @param {String} property
              * @param {Mixed} value
@@ -2160,7 +2160,7 @@
              *
              *     assert.deepPropertyVal({ tea: { green: 'matcha' }}, 'tea.green', 'matcha');
              *
-             * @name deepPropertyVal
+             * @source deepPropertyVal
              * @param {Object} object
              * @param {String} property
              * @param {Mixed} value
@@ -2181,7 +2181,7 @@
              *
              *     assert.deepPropertyNotVal({ tea: { green: 'matcha' }}, 'tea.green', 'konacha');
              *
-             * @name deepPropertyNotVal
+             * @source deepPropertyNotVal
              * @param {Object} object
              * @param {String} property
              * @param {Mixed} value
@@ -2201,7 +2201,7 @@
              *     assert.lengthOf([1,2,3], 3, 'array has length of 3');
              *     assert.lengthOf('foobar', 5, 'string has length of 6');
              *
-             * @name lengthOf
+             * @source lengthOf
              * @param {Mixed} object
              * @param {Number} length
              * @param {String} message
@@ -2221,7 +2221,7 @@
              *
              *     assert.throw(fn, ReferenceError, 'function throws a reference error');
              *
-             * @name throws
+             * @source throws
              * @alias throw
              * @alias Throw
              * @param {Function} function
@@ -2250,7 +2250,7 @@
              *
              *     assert.doesNotThrow(fn, Error, 'function does not throw');
              *
-             * @name doesNotThrow
+             * @source doesNotThrow
              * @param {Function} function
              * @param {ErrorConstructor} constructor
              * @param {RegExp} regexp
@@ -2276,7 +2276,7 @@
              *     assert.operator(1, '<', 2, 'everything is ok');
              *     assert.operator(1, '>', 2, 'this will fail');
              *
-             * @name operator
+             * @source operator
              * @param {Mixed} val1
              * @param {String} operator
              * @param {Mixed} val2
@@ -2302,7 +2302,7 @@
              *
              *     assert.closeTo(1.5, 1, 0.5, 'numbers are close');
              *
-             * @name closeTo
+             * @source closeTo
              * @param {Number} actual
              * @param {Number} expected
              * @param {Number} delta
@@ -2434,7 +2434,7 @@
         var transferFlags = require('./transferFlags');
 
         /**
-         * ### addChainableMethod (ctx, name, method, chainingBehavior)
+         * ### addChainableMethod (ctx, source, method, chainingBehavior)
          *
          * Adds a method to an object, such that the method can also be chained.
          *
@@ -2455,9 +2455,9 @@
          *
          * @param {Object} ctx object to which the method is added
          * @param {String} name of method to add
-         * @param {Function} method function to be used for `name`, when called
+         * @param {Function} method function to be used for `source`, when called
          * @param {Function} chainingBehavior function to be called every time the property is accessed
-         * @name addChainableMethod
+         * @source addChainableMethod
          * @api public
          */
 
@@ -2504,7 +2504,7 @@
          */
 
         /**
-         * ### .addMethod (ctx, name, method)
+         * ### .addMethod (ctx, source, method)
          *
          * Adds a method to the prototype of an object.
          *
@@ -2523,8 +2523,8 @@
          *
          * @param {Object} ctx object to which the method is added
          * @param {String} name of method to add
-         * @param {Function} method function to be used for name
-         * @name addMethod
+         * @param {Function} method function to be used for source
+         * @source addMethod
          * @api public
          */
 
@@ -2545,7 +2545,7 @@
          */
 
         /**
-         * ### addProperty (ctx, name, getter)
+         * ### addProperty (ctx, source, getter)
          *
          * Adds a property to the prototype of an object.
          *
@@ -2564,8 +2564,8 @@
          *
          * @param {Object} ctx object to which the property is added
          * @param {String} name of property to add
-         * @param {Function} getter function to be used for name
-         * @name addProperty
+         * @param {Function} getter function to be used for source
+         * @source addProperty
          * @api public
          */
 
@@ -2706,7 +2706,7 @@
          * @param {Object} object (constructed Assertion
          * @param {String} key
          * @param {Mixed} value (optional)
-         * @name flag
+         * @source flag
          * @api private
          */
 
@@ -2774,7 +2774,7 @@
          *
          * @param {Object} object (constructed Assertion)
          * @param {Arguments} chai.Assertion.prototype.assert arguments
-         * @name getMessage
+         * @source getMessage
          * @api public
          */
 
@@ -2807,7 +2807,7 @@
         /**
          * # getName(func)
          *
-         * Gets the name of a function, in a cross-browser way.
+         * Gets the source of a function, in a cross-browser way.
          *
          * @param {Function} a function (usually a constructor)
          */
@@ -2855,7 +2855,7 @@
          * @param {String} path
          * @param {Object} object
          * @returns {Object} value or `undefined`
-         * @name getPathValue
+         * @source getPathValue
          * @api public
          */
 
@@ -2995,7 +2995,7 @@
         exports.getPathValue = require('./getPathValue');
 
         /*!
-         * Function name
+         * Function source
          */
 
         exports.getName = require('./getName');
@@ -3374,7 +3374,7 @@
          * messages or should be truncated.
          *
          * @param {Mixed} javascript object to inspect
-         * @name objDisplay
+         * @source objDisplay
          * @api public
          */
 
@@ -3409,11 +3409,11 @@
          */
 
         /**
-         * ### overwriteMethod (ctx, name, fn)
+         * ### overwriteMethod (ctx, source, fn)
          *
          * Overwites an already existing method and provides
          * access to previous function. Must return function
-         * to be used for name.
+         * to be used for source.
          *
          *     utils.overwriteMethod(chai.Assertion.prototype, 'equal', function (_super) {
      *       return function (str) {
@@ -3436,8 +3436,8 @@
          *
          * @param {Object} ctx object whose method is to be overwritten
          * @param {String} name of method to overwrite
-         * @param {Function} method function that returns a function to be used for name
-         * @name overwriteMethod
+         * @param {Function} method function that returns a function to be used for source
+         * @source overwriteMethod
          * @api public
          */
 
@@ -3466,7 +3466,7 @@
          */
 
         /**
-         * ### overwriteProperty (ctx, name, fn)
+         * ### overwriteProperty (ctx, source, fn)
          *
          * Overwites an already existing property getter and provides
          * access to previous value. Must return function to use as getter.
@@ -3475,7 +3475,7 @@
      *       return function () {
      *         var obj = utils.flag(this, 'object');
      *         if (obj instanceof Foo) {
-     *           new chai.Assertion(obj.name).to.equal('bar');
+     *           new chai.Assertion(obj.source).to.equal('bar');
      *         } else {
      *           _super.call(this);
      *         }
@@ -3493,8 +3493,8 @@
          *
          * @param {Object} ctx object whose property is to be overwritten
          * @param {String} name of property to overwrite
-         * @param {Function} getter function that returns a getter function to be used for name
-         * @name overwriteProperty
+         * @param {Function} getter function that returns a getter function to be used for source
+         * @source overwriteProperty
          * @api public
          */
 
@@ -3573,7 +3573,7 @@
          * @param {Assertion} assertion the assertion to transfer the flags from
          * @param {Object} object the object to transfer the flags too; usually a new assertion
          * @param {Boolean} includeAll
-         * @name getAllFlags
+         * @source getAllFlags
          * @api private
          */
 

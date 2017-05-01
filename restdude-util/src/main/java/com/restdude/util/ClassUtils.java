@@ -53,7 +53,7 @@ public class ClassUtils {
 	public static Class<?> getClass(String className) {
 		Class<?> clazz;
 		try {
-			clazz = org.apache.commons.lang.ClassUtils.getClass(className);
+			clazz = org.apache.commons.lang3.ClassUtils.getClass(className);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}

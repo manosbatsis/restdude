@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.users.controller;
 
-import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
 import com.restdude.domain.users.model.UserRegistrationCodeBatch;
 import com.restdude.domain.users.model.UserRegistrationCodeInfo;
 import com.restdude.domain.users.service.UserRegistrationCodeBatchService;
+import com.restdude.mdd.controller.AbstractNoDeletePersistableModelController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -53,7 +53,7 @@ public class UserRegistrationCodeBatchController extends AbstractNoDeletePersist
 	@ApiOperation(value = "Export batch to a spreadsheet (CSV) report", notes = "The filename will be [batch name]_[date: yyyyMMddHHmmss].csv")
     public List<UserRegistrationCodeInfo> exportToCsv(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, HttpServletResponse response) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        // get batch name ot name file
+        // get batch source ot source file
         String csvFileName = new StringBuffer(this.service.findBatchName(id))
 				.append('_')
 				.append(sdf.format(new Date()))

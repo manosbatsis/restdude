@@ -30,7 +30,7 @@ import javax.persistence.Table;
 public class License extends Resource{
 	
 	// Basic information common to every license
-	//private String name;             	// A unique name for this license
+	//private String source;             	// A unique source for this license
 	private String short_name;       	// A short textual representation of the license name
 	private String full_text;        	// A URI to the full text of this license
 	private String logo_uri;         	// An optional logo for this license

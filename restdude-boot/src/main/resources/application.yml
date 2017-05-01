@@ -57,7 +57,7 @@ spring:
   mail:
     default-encoding: UTF-8 # Default MimeMessage encoding.
     host: ${buildfilters.mail.server.host} # SMTP server host. For instance `smtp.example.com`
-#    jndi-name: # Session JNDI name. When set, takes precedence to others mail settings.
+#    jndi-source: # Session JNDI source. When set, takes precedence to others mail settings.
     port: ${buildfilters.mail.server.port} # SMTP server port.
 #    properties.*= # Additional JavaMail session properties.
     protocol: ${buildfilters.mail.server.protocol} # Protocol used by the SMTP server.

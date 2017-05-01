@@ -37,53 +37,53 @@
     <!--
 
 
-    <logger name="com.restdude.mdd.registry">
+    <logsourcename="com.restdude.mdd.registry">
         <level pathFragment="debug"/>
     </logger>
-    <logger name="com.restdude.domain.cases.service.impl.MembershipServiceImpl">
+    <logsourcename="com.restdude.domain.cases.service.impl.MembershipServiceImpl">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.cases.service.impl.MembershipRequestServiceImpl">
+    <logsourcename="com.restdude.domain.cases.service.impl.MembershipRequestServiceImpl">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.users.service.UserDataLoader">
+    <logsourcename="com.restdude.domain.users.service.UserDataLoader">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.users.service.RoleDataLoader">
+    <logsourcename="com.restdude.domain.users.service.RoleDataLoader">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.error.service.ErrorDataLoader">
+    <logsourcename="com.restdude.domain.error.service.ErrorDataLoader">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.users.service.impl.UserServiceImpl">
+    <logsourcename="com.restdude.domain.users.service.impl.UserServiceImpl">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.domain.cases">
+    <logsourcename="com.restdude.domain.cases">
         <level value="debug"/>
     </logger>
 
     -->
-    <!--logger name="com.restdude.domain.users.model.UserDTO">
+    <!--logsourcename="com.restdude.domain.users.model.UserDTO">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.util.audit.AuditorBean">
+    <logsourcename="com.restdude.util.audit.AuditorBean">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.auth.userdetails.util.SecurityUtil">
+    <logsourcename="com.restdude.auth.userdetails.util.SecurityUtil">
         <level value="debug"/>
     </logger>
 
-    <logger name="org.springframework.security">
+    <logsourcename="org.springframework.security">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.auth">
+    <logsourcename="com.restdude.auth">
         <level value="debug"/>
     </logger-->
 
-    <!--logger name="com.restdude.rsql">
+    <!--logsourcename="com.restdude.rsql">
         <level value="debug"/>
     </logger>
-    <logger name="com.restdude.specification">
+    <logsourcename="com.restdude.specification">
         <level value="debug"/>
     </logger-->
 

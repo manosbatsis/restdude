@@ -429,7 +429,7 @@
             }
         }
 
-        // Figure out the file name. If no file name is given we'll use the ID.
+        // Figure out the file source. If no file source is given we'll use the ID.
         // If there's no ID either we'll use a namespaced file name that's incremented
         // based on the calling order. As long as it doesn't change, drafts will be saved.
         if (!self.settings.file.name) {
@@ -1627,8 +1627,8 @@
 
     /**
      * Renames a file
-     * @param   {string} oldName The old file name
-     * @param   {string} newName The new file name
+     * @param   {string} oldName The old file source
+     * @param   {string} newName The new file source
      * @returns {object} EpicEditor will be returned
      */
     EpicEditor.prototype.rename = function (oldName, newName) {

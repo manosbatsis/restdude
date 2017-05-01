@@ -352,7 +352,7 @@ var requirejs, require, define, xpcUtil;
 
         /**
          * Simple function to mix in properties from source into target,
-         * but only if target does not already have a property of the same name.
+         * but only if target does not already have a property of the same source.
          */
         function mixin(target, source, force, deepStringMixin) {
             if (source) {
@@ -473,7 +473,7 @@ var requirejs, require, define, xpcUtil;
             /**
              * Trims the . and .. from an array of path segments.
              * It will keep a leading path segment if a .. will become
-             * the first path segment, to help with module name lookups,
+             * the first path segment, to help with module source lookups,
              * which act like paths, but can be remapped. But the end result,
              * all paths that use this function should look normalized.
              * NOTE: this method MODIFIES the input array.
@@ -503,14 +503,14 @@ var requirejs, require, define, xpcUtil;
             }
 
             /**
-             * Given a relative module name, like ./something, normalize it to
-             * a real name that can be mapped to a path.
-             * @param {String} name the relative name
-             * @param {String} baseName a real name that the name arg is relative
+             * Given a relative module source, like ./something, normalize it to
+             * a real source that can be mapped to a path.
+             * @param {String} name the relative source
+             * @param {String} baseName a real source that the source arg is relative
              * to.
              * @param {Boolean} applyMap apply the map config to the value. Should
              * only be done if this normalization is for a dependency ID.
-             * @returns {String} normalized name
+             * @returns {String} normalized source
              */
             function normalize(name, baseName, applyMap) {
                 var pkgMain, mapValue, nameParts, i, j, nameSegment, lastIndex,
@@ -535,7 +535,7 @@ var requirejs, require, define, xpcUtil;
                     // Starts with a '.' so need the baseName
                     if (name[0].charAt(0) === '.' && baseParts) {
                         //Convert baseName to array, and lop off the last part,
-                        //so that . matches that 'directory' and not name of the baseName's
+                        //so that . matches that 'directory' and not source of the baseName's
                         //module. For instance, baseName of 'one/two/three', maps to
                         //'one/two/three.js', but we want the directory, 'one/two' for
                         //this normalization.
@@ -561,11 +561,11 @@ var requirejs, require, define, xpcUtil;
                                 mapValue = getOwn(map, baseParts.slice(0, j).join('/'));
 
                                 //baseName segment has config, find if it has one for
-                                //this name.
+                                //this source.
                                 if (mapValue) {
                                     mapValue = getOwn(mapValue, nameSegment);
                                     if (mapValue) {
-                                        //Match, update name to the new value.
+                                        //Match, update source to the new value.
                                         foundMap = mapValue;
                                         foundI = i;
                                         break outerLoop;
@@ -594,7 +594,7 @@ var requirejs, require, define, xpcUtil;
                     }
                 }
 
-                // If the name points to a package's name, use
+                // If the source points to a package's source, use
                 // the package main instead.
                 pkgMain = getOwn(config.pkgs, name);
 
@@ -632,7 +632,7 @@ var requirejs, require, define, xpcUtil;
             }
 
             //Turns a plugin!resource to [plugin, resource]
-            //with the plugin being undefined if the name
+            //with the plugin being undefined if the source
             //did not have a plugin prefix.
             function splitPrefix(name) {
                 var prefix,
@@ -646,12 +646,12 @@ var requirejs, require, define, xpcUtil;
 
             /**
              * Creates a module mapping that includes plugin prefix, module
-             * name, and path. If parentModuleMap is provided it will
-             * also normalize the name via require.normalize()
+             * source, and path. If parentModuleMap is provided it will
+             * also normalize the source via require.normalize()
              *
-             * @param {String} name the module name
+             * @param {String} name the module source
              * @param {String} [parentModuleMap] parent module map
-             * for the module name, used to resolve relative names.
+             * for the module source, used to resolve relative names.
              * @param {Boolean} isNormalized: is the ID already normalized.
              * This is true if this call is done for a define() module ID.
              * @param {Boolean} applyMap: apply the map config to the ID.
@@ -667,8 +667,8 @@ var requirejs, require, define, xpcUtil;
                     isDefine = true,
                     normalizedName = '';
 
-                //If no name, then it means it is a require call, generate an
-                //internal name.
+                //If no source, then it means it is a require call, generate an
+                //internal source.
                 if (!name) {
                     isDefine = false;
                     name = '_@r' + (requireCounter += 1);
@@ -683,7 +683,7 @@ var requirejs, require, define, xpcUtil;
                     pluginModule = getOwn(defined, prefix);
                 }
 
-                //Account for relative paths if there is a base name.
+                //Account for relative paths if there is a base source.
                 if (name) {
                     if (prefix) {
                         if (pluginModule && pluginModule.normalize) {
@@ -707,7 +707,7 @@ var requirejs, require, define, xpcUtil;
                         //A regular module.
                         normalizedName = normalize(name, parentName, applyMap);
 
-                        //Normalized name may be a plugin ID due to map config
+                        //Normalized source may be a plugin ID due to map config
                         //application in normalize. The map config values must
                         //already be normalized, so do not need to redo that part.
                         nameParts = splitPrefix(normalizedName);
@@ -1197,7 +1197,7 @@ var requirejs, require, define, xpcUtil;
                             });
 
                         //If current map is not normalized, wait for that
-                        //normalized name to load instead of continuing.
+                        //normalized source to load instead of continuing.
                         if (this.map.unnormalized) {
                             //Normalize the ID if the plugin allows it.
                             if (plugin.normalize) {
@@ -1206,7 +1206,7 @@ var requirejs, require, define, xpcUtil;
                                     }) || '';
                             }
 
-                            //prefix and name should already be normalized, no need
+                            //prefix and source should already be normalized, no need
                             //for applying map config again either.
                             normalizedMap = makeModuleMap(map.prefix + '!' + name,
                                 this.map.parentMap);
@@ -1326,7 +1326,7 @@ var requirejs, require, define, xpcUtil;
                             localRequire([moduleName], load);
                         });
 
-                        //Use parentName here since the plugin's name is not reliable,
+                        //Use parentName here since the plugin's source is not reliable,
                         //could be some weird string with no path that actually wants to
                         //reference the parentName's path.
                         plugin.load(map.name, localRequire, load, config);
@@ -1584,11 +1584,11 @@ var requirejs, require, define, xpcUtil;
                                 config.paths[name] = pkgObj.location;
                             }
 
-                            //Save pointer to main module ID for pkg name.
+                            //Save pointer to main module ID for pkg source.
                             //Remove leading dot in main, so main paths are normalized,
                             //and remove any trailing .js, since different package
-                            //envs have different conventions: some use a module name,
-                            //some use a file name.
+                            //envs have different conventions: some use a module source,
+                            //some use a file source.
                             config.pkgs[name] = pkgObj.name + '/' + (pkgObj.main || 'main')
                                     .replace(currDirRegExp, '')
                                     .replace(jsSuffixRegExp, '');
@@ -1656,12 +1656,12 @@ var requirejs, require, define, xpcUtil;
                                 return req.get(context, deps, relMap, localRequire);
                             }
 
-                            //Normalize module name, if it contains . or ..
+                            //Normalize module source, if it contains . or ..
                             map = makeModuleMap(deps, relMap, false, true);
                             id = map.id;
 
                             if (!hasProp(defined, id)) {
-                                return onError(makeError('notloaded', 'Module name "' +
+                                return onError(makeError('notloaded', 'Module source "' +
                                     id +
                                     '" has not been loaded yet for context: ' +
                                     contextName +
@@ -1699,8 +1699,8 @@ var requirejs, require, define, xpcUtil;
                         isBrowser: isBrowser,
 
                         /**
-                         * Converts a module name + .extension into an URL path.
-                         * *Requires* the use of a module name. It does not support using
+                         * Converts a module source + .extension into an URL path.
+                         * *Requires* the use of a module source. It does not support using
                          * plain URLs like nameToUrl.
                          */
                         toUrl: function (moduleNamePlusExt) {
@@ -1789,7 +1789,7 @@ var requirejs, require, define, xpcUtil;
                  * Internal method used by environment adapters to complete a load event.
                  * A load event could be a script load or just a load pass from a synchronous
                  * load call.
-                 * @param {String} moduleName the name of the module to potentially complete.
+                 * @param {String} moduleName the source of the module to potentially complete.
                  */
                 completeLoad: function (moduleName) {
                     var found, args, mod,
@@ -1803,7 +1803,7 @@ var requirejs, require, define, xpcUtil;
                         if (args[0] === null) {
                             args[0] = moduleName;
                             //If already found an anonymous module and bound it
-                            //to this name, then this is some other anon module
+                            //to this source, then this is some other anon module
                             //waiting for its completeLoad to fire.
                             if (found) {
                                 break;
@@ -1842,7 +1842,7 @@ var requirejs, require, define, xpcUtil;
                 },
 
                 /**
-                 * Converts a module name to a file path. Supports cases where
+                 * Converts a module source to a file path. Supports cases where
                  * moduleName may actually be just an URL.
                  * Note that it **does not** call normalize on the moduleName,
                  * it is assumed to have already been normalized. This is an
@@ -1868,7 +1868,7 @@ var requirejs, require, define, xpcUtil;
                     //or ends with .js, then assume the user meant to use an url and not a module id.
                     //The slash is important for protocol-less URLs as well as full paths.
                     if (req.jsExtRegExp.test(moduleName)) {
-                        //Just a plain path, not module name lookup, so just return it.
+                        //Just a plain path, not module source lookup, so just return it.
                         //Add extension if it is included. This is a bit wonky, only non-.js things pass
                         //an extension, this method probably needs to be reworked.
                         url = moduleName + (ext || '');
@@ -1877,8 +1877,8 @@ var requirejs, require, define, xpcUtil;
                         paths = config.paths;
 
                         syms = moduleName.split('/');
-                        //For each module name segment, see if there is a path
-                        //registered for it. Start with most specific name
+                        //For each module source segment, see if there is a path
+                        //registered for it. Start with most specific source
                         //and work up from it.
                         for (i = syms.length; i > 0; i -= 1) {
                             parentModule = syms.slice(0, i).join('/');
@@ -1939,7 +1939,7 @@ var requirejs, require, define, xpcUtil;
                         //to long.
                         interactiveScript = null;
 
-                        //Pull out the name of the module and the context.
+                        //Pull out the source of the module and the context.
                         var data = getScriptData(evt);
                         context.completeLoad(data.id);
                     }
@@ -1972,7 +1972,7 @@ var requirejs, require, define, xpcUtil;
          *
          * Make a local req variable to help Caja compliance (it assumes things
          * on a require that are not standardized), and to give a short
-         * name for minification/local scope use.
+         * source for minification/local scope use.
          */
         req = requirejs = function (deps, callback, errback, optional) {
 
@@ -2103,7 +2103,7 @@ var requirejs, require, define, xpcUtil;
          * to override it.
          *
          * @param {Object} context the require context to find state.
-         * @param {String} moduleName the name of the module.
+         * @param {String} moduleName the source of the module.
          * @param {Object} url the URL to the module.
          */
         req.load = function (context, moduleName, url) {
@@ -2138,7 +2138,7 @@ var requirejs, require, define, xpcUtil;
                     !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) && !isOpera) {
                     //Probably IE. IE (at least 6-8) do not fire
                     //script onload right after executing the script, so
-                    //we cannot tie the anonymous define call to a name.
+                    //we cannot tie the anonymous define call to a source.
                     //However, IE reports the script as being in 'interactive'
                     //readyState at the time of the define call.
                     useInteractive = true;
@@ -2163,7 +2163,7 @@ var requirejs, require, define, xpcUtil;
 
                 //For some cache cases in IE 6-8, the script executes before the end
                 //of the appendChild execution, so to tie an anonymous define
-                //call to the module name (which is stored on the node), hold on
+                //call to the module source (which is stored on the node), hold on
                 //to a reference to this node, but clear after the DOM insertion.
                 currentlyAddingScript = node;
                 if (baseElement) {
@@ -2239,7 +2239,7 @@ var requirejs, require, define, xpcUtil;
                     }
 
                     //Strip off any trailing .js since mainScript is now
-                    //like a module name.
+                    //like a module source.
                     mainScript = mainScript.replace(jsSuffixRegExp, '');
 
                     //If mainScript is still a path, fall back to dataMain
@@ -2260,7 +2260,7 @@ var requirejs, require, define, xpcUtil;
          * require() in that a string for the module should be the first argument,
          * and the function to execute after dependencies are loaded should
          * return a value to define the module corresponding to the first argument's
-         * name.
+         * source.
          */
         define = function (name, deps, callback) {
             var node, context;
@@ -2279,7 +2279,7 @@ var requirejs, require, define, xpcUtil;
                 deps = null;
             }
 
-            //If no name, and callback is a function, then figure out if it a
+            //If no source, and callback is a function, then figure out if it a
             //CommonJS thing with dependencies.
             if (!deps && isFunction(callback)) {
                 deps = [];
@@ -2318,7 +2318,7 @@ var requirejs, require, define, xpcUtil;
             //Always save off evaluating the def call until the script onload handler.
             //This allows multiple modules to be in a file without prematurely
             //tracing dependencies, and allows for anonymous module support,
-            //where the module name is not known until the script onload event
+            //where the module source is not known until the script onload event
             //occurs. If no context, use the global queue, and get it processed
             //in the onscript load callback.
             (context ? context.defQueue : globalDefQueue).push([name, deps, callback]);
@@ -2462,7 +2462,7 @@ var requirejs, require, define, xpcUtil;
                 var ret, oldTick,
                     moduleMap = context.makeModuleMap(moduleName, relModuleMap, false, true);
 
-                //Normalize module name, if it contains . or ..
+                //Normalize module source, if it contains . or ..
                 moduleName = moduleMap.id;
 
                 if (hasProp(context.defined, moduleName)) {
@@ -2545,7 +2545,7 @@ var requirejs, require, define, xpcUtil;
                     }
                 } else {
                     def(moduleName, function () {
-                        //Get the original name, since relative requires may be
+                        //Get the original source, since relative requires may be
                         //resolved differently in node (issue #202). Also, if relative,
                         //make it relative to the URL of the item requesting it
                         //(issue #393)
@@ -2612,7 +2612,7 @@ var requirejs, require, define, xpcUtil;
 
     }
 
-    //Support a default file name to execute. Useful for hosted envs
+    //Support a default file source to execute. Useful for hosted envs
     //like Joyent where it defaults to a server.js as the only executed
     //script. But only do it if this is not an optimization run.
     if (commandOption !== 'o' && (!fileName || !jsSuffixRegExp.test(fileName))) {
@@ -3652,7 +3652,7 @@ var requirejs, require, define, xpcUtil;
 
                     copyDir: function (/*String*/srcDir, /*String*/destDir, /*RegExp?*/regExpFilter, /*boolean?*/onlyCopyNew) {
                         //summary: copies files from srcDir to destDir using the regExpFilter to determine if the
-                        //file should be copied. Returns a list file name strings of the destinations that were copied.
+                        //file should be copied. Returns a list file source strings of the destinations that were copied.
                         regExpFilter = regExpFilter || /\w/;
 
                         //Normalize th directory names, but keep front slashes.
@@ -3925,7 +3925,7 @@ var requirejs, require, define, xpcUtil;
 
                     copyDir: function (/*String*/srcDir, /*String*/destDir, /*RegExp?*/regExpFilter, /*boolean?*/onlyCopyNew) {
                         //summary: copies files from srcDir to destDir using the regExpFilter to determine if the
-                        //file should be copied. Returns a list file name strings of the destinations that were copied.
+                        //file should be copied. Returns a list file source strings of the destinations that were copied.
                         regExpFilter = regExpFilter || /\w/;
 
                         var fileNames = file.getFilteredFileList(srcDir, regExpFilter, true),
@@ -4236,7 +4236,7 @@ var requirejs, require, define, xpcUtil;
 
                     copyDir: function (/*String*/srcDir, /*String*/destDir, /*RegExp?*/regExpFilter, /*boolean?*/onlyCopyNew) {
                         //summary: copies files from srcDir to destDir using the regExpFilter to determine if the
-                        //file should be copied. Returns a list file name strings of the destinations that were copied.
+                        //file should be copied. Returns a list file source strings of the destinations that were copied.
                         regExpFilter = regExpFilter || /\w/;
 
                         var fileNames = file.getFilteredFileList(srcDir, regExpFilter, true),
@@ -4768,10 +4768,10 @@ var requirejs, require, define, xpcUtil;
                 IllegalYield: 'Unexpected token yield',
                 StrictModeWith: 'Strict mode code may not include a with statement',
                 StrictCatchVariable: 'Catch variable may not be eval or arguments in strict mode',
-                StrictVarName: 'Variable name may not be eval or arguments in strict mode',
-                StrictParamName: 'Parameter name eval or arguments is not allowed in strict mode',
+                StrictVarName: 'Variable source may not be eval or arguments in strict mode',
+                StrictParamName: 'Parameter source eval or arguments is not allowed in strict mode',
                 StrictParamDupe: 'Strict mode function may not have duplicate parameter names',
-                StrictFunctionName: 'Function name may not be eval or arguments in strict mode',
+                StrictFunctionName: 'Function source may not be eval or arguments in strict mode',
                 StrictOctalLiteral: 'Octal literals are not allowed in strict mode.',
                 StrictDelete: 'Delete of an unqualified identifier in strict mode.',
                 StrictLHSAssignment: 'Assignment to eval or arguments is not allowed in strict mode',
@@ -7004,7 +7004,7 @@ var requirejs, require, define, xpcUtil;
             }
 
             /**
-             * @name expectCommaSeparator
+             * @source expectCommaSeparator
              * @description Quietly expect a comma when in tolerant mode, otherwise delegates
              * to <code>expect(value)</code>
              * @since 2.0
@@ -10248,7 +10248,7 @@ var requirejs, require, define, xpcUtil;
                          */
                         this.nSaving = 0;
                         /**
-                         * An identifier name of the variable that will be declared and assigned
+                         * An identifier source of the variable that will be declared and assigned
                          * the primitive value if the primitive value is consolidated.
                          * @type {string}
                          */
@@ -10387,7 +10387,7 @@ var requirejs, require, define, xpcUtil;
                         N_WITH: 0,
                         /**
                          * Identifies a source element that includes the <a href=
-                         * "http://es5.github.com/#x15.1.2.1">{@code eval}</a> identifier name.
+                         * "http://es5.github.com/#x15.1.2.1">{@code eval}</a> identifier source.
                          * @type {number}
                          */
                         N_EVAL: 1,
@@ -10475,7 +10475,7 @@ var requirejs, require, define, xpcUtil;
                                     /**
                                      * Classifies the source element as excludable if it does not
                                      * contain a {@code with} statement or the {@code eval} identifier
-                                     * name. Adds the identifier of the function and its formal
+                                     * source. Adds the identifier of the function and its formal
                                      * parameters to the list of identifier names found.
                                      * @param {string} sIdentifier The identifier of the function.
                                      * @param {!Array.<string>} aFormalParameterList Formal parameters.
@@ -10491,10 +10491,10 @@ var requirejs, require, define, xpcUtil;
                                     /**
                                      * Increments the count of the number of occurrences of the String
                                      * value that is equivalent to the sequence of terminal symbols
-                                     * that constitute the encountered identifier name.
+                                     * that constitute the encountered identifier source.
                                      * @param {!TSyntacticCodeUnit} oExpression The nonterminal
                                      *     MemberExpression.
-                                     * @param {string} sIdentifierName The identifier name used as the
+                                     * @param {string} sIdentifierName The identifier source used as the
                                      *     property accessor.
                                      * @return {!Array} The encountered branch of an <abbr title=
                                      *     "abstract syntax tree">AST</abbr> with its nonterminal
@@ -10525,7 +10525,7 @@ var requirejs, require, define, xpcUtil;
                                     /**
                                      * Either increments the count of the number of occurrences of the
                                      * encountered null or Boolean value or classifies a source element
-                                     * as containing the {@code eval} identifier name.
+                                     * as containing the {@code eval} identifier source.
                                      * @param {string} sIdentifier The identifier encountered.
                                      */
                                     'name': function (sIdentifier) {
@@ -10544,7 +10544,7 @@ var requirejs, require, define, xpcUtil;
                                     /**
                                      * Classifies the source element as excludable if it does not
                                      * contain a {@code with} statement or the {@code eval} identifier
-                                     * name.
+                                     * source.
                                      * @param {TSyntacticCodeUnit} oExpression The expression whose
                                      *     value is to be returned.
                                      */
@@ -10582,7 +10582,7 @@ var requirejs, require, define, xpcUtil;
                                     /**
                                      * Classifies the source element as excludable if it does not
                                      * contain a {@code with} statement or the {@code eval} identifier
-                                     * name. Adds the identifier of each declared variable to the list
+                                     * source. Adds the identifier of each declared variable to the list
                                      * of identifier names found.
                                      * @param {!Array.<!Array>} aVariableDeclarationList Variable
                                      *     declarations.
@@ -10691,7 +10691,7 @@ var requirejs, require, define, xpcUtil;
                             /**
                              * Classifies the source element as excludable if it does not
                              * contain a {@code with} statement or the {@code eval} identifier
-                             * name.
+                             * source.
                              */
                             fClassifyAsExcludable = function () {
                                 if (oSourceElementData.nCategory ===
@@ -10749,7 +10749,7 @@ var requirejs, require, define, xpcUtil;
                             fExamineSourceElements = function (nFrom, nTo, bEnclose) {
                                 var _,
                                     /**
-                                     * The index of the last mangled name.
+                                     * The index of the last mangled source.
                                      * @type {number}
                                      */
                                     nIndex = oScope.cname,
@@ -10770,14 +10770,14 @@ var requirejs, require, define, xpcUtil;
                                         /**
                                          * If the String value that is equivalent to the sequence of
                                          * terminal symbols that constitute the encountered identifier
-                                         * name is worthwhile, a syntactic conversion from the dot
+                                         * source is worthwhile, a syntactic conversion from the dot
                                          * notation to the bracket notation ensues with that sequence
-                                         * being substituted by an identifier name to which the value
+                                         * being substituted by an identifier source to which the value
                                          * is assigned.
                                          * Applies to property accessors that use the dot notation.
                                          * @param {!TSyntacticCodeUnit} oExpression The nonterminal
                                          *     MemberExpression.
-                                         * @param {string} sIdentifierName The identifier name used as
+                                         * @param {string} sIdentifierName The identifier source used as
                                          *     the property accessor.
                                          * @return {!Array} A syntactic code unit that is equivalent to
                                          *     the one encountered.
@@ -10787,7 +10787,7 @@ var requirejs, require, define, xpcUtil;
                                             /**
                                              * The prefixed String value that is equivalent to the
                                              * sequence of terminal symbols that constitute the
-                                             * encountered identifier name.
+                                             * encountered identifier source.
                                              * @type {string}
                                              */
                                             var sPrefixed = EValuePrefixes.S_STRING + sIdentifierName;
@@ -10804,7 +10804,7 @@ var requirejs, require, define, xpcUtil;
                                         /**
                                          * If the encountered identifier is a null or Boolean literal
                                          * and its value is worthwhile, the identifier is substituted
-                                         * by an identifier name to which that value is assigned.
+                                         * by an identifier source to which that value is assigned.
                                          * Applies to identifier names.
                                          * @param {string} sIdentifier The identifier encountered.
                                          * @return {!Array} A syntactic code unit that is equivalent to
@@ -10828,7 +10828,7 @@ var requirejs, require, define, xpcUtil;
                                         },
                                         /**
                                          * If the encountered String value is worthwhile, it is
-                                         * substituted by an identifier name to which that value is
+                                         * substituted by an identifier source to which that value is
                                          * assigned.
                                          * Applies to String values.
                                          * @param {string} sStringValue The String value of the string
@@ -11034,7 +11034,7 @@ var requirejs, require, define, xpcUtil;
                                         return nDifference > 0 ? -1 : nDifference < 0 ? 1 : 0;
                                     },
                                     /**
-                                     * Assigns an identifier name to a primitive value and calculates
+                                     * Assigns an identifier source to a primitive value and calculates
                                      * whether instances of that primitive value are worth
                                      * consolidating.
                                      * @param {string} sPrefixed The prefixed representation String
@@ -11043,7 +11043,7 @@ var requirejs, require, define, xpcUtil;
                                     fEvaluatePrimitiveValue = function (sPrefixed) {
                                         var _,
                                             /**
-                                             * The index of the last mangled name.
+                                             * The index of the last mangled source.
                                              * @type {number}
                                              */
                                             nIndex,
@@ -11063,7 +11063,7 @@ var requirejs, require, define, xpcUtil;
                                             nLengthOriginal = sName.length,
                                             /**
                                              * The number of source characters taken up by the
-                                             * identifier name that could substitute the primitive
+                                             * identifier source that could substitute the primitive
                                              * value that is being evaluated.
                                              * substituted.
                                              * @type {number}
@@ -11130,7 +11130,7 @@ var requirejs, require, define, xpcUtil;
                                             oSolutionCandidate.nSavings +=
                                                 oSolutionCandidate.oPrimitiveValues[sPrefixed].nSaving;
                                         } else {
-                                            oScope.cname = nIndex; // Free the identifier name.
+                                            oScope.cname = nIndex; // Free the identifier source.
                                         }
                                     },
                                     /**
@@ -13069,9 +13069,9 @@ var requirejs, require, define, xpcUtil;
 
             function Scope(parent) {
                 this.names = {};        // names defined in this scope
-                this.mangled = {};      // mangled names (orig.name => mangled)
-                this.rev_mangled = {};  // reverse lookup (mangled => orig.name)
-                this.cname = -1;        // current mangled name
+                this.mangled = {};      // mangled names (orig.source => mangled)
+                this.rev_mangled = {};  // reverse lookup (mangled => orig.source)
+                this.cname = -1;        // current mangled source
                 this.refs = {};         // names referenced from this scope
                 this.uses_with = false; // will become TRUE if with() is detected in this or any subscopes
                 this.uses_eval = false; // will become TRUE if eval() is detected in this or any subscopes
@@ -13126,19 +13126,19 @@ var requirejs, require, define, xpcUtil;
                 },
 
                 next_mangled: function () {
-                    // we must be careful that the new mangled name:
+                    // we must be careful that the new mangled source:
                     //
-                    // 1. doesn't shadow a mangled name from a parent
+                    // 1. doesn't shadow a mangled source from a parent
                     //    scope, unless we don't reference the original
-                    //    name from this scope OR from any sub-scopes!
+                    //    source from this scope OR from any sub-scopes!
                     //    This will get slow.
                     //
-                    // 2. doesn't shadow an original name from a parent
-                    //    scope, in the event that the name is not mangled
-                    //    in the parent scope and we reference that name
+                    // 2. doesn't shadow an original source from a parent
+                    //    scope, in the event that the source is not mangled
+                    //    in the parent scope and we reference that source
                     //    here OR IN ANY SUBSCOPES!
                     //
-                    // 3. doesn't shadow a name that is referenced but not
+                    // 3. doesn't shadow a source that is referenced but not
                     //    defined (possibly global defined elsewhere).
                     for (; ;) {
                         var m = base54(++this.cname), prior;
@@ -13277,7 +13277,7 @@ var requirejs, require, define, xpcUtil;
 
                     // scopes where eval was detected and their parents
                     // are marked with uses_eval, unless they define the
-                    // "eval" name.
+                    // "eval" source.
                     MAP(having_eval, function (scope) {
                         if (!scope.has("eval")) while (scope) {
                             scope.uses_eval = true;
@@ -13811,7 +13811,7 @@ var requirejs, require, define, xpcUtil;
                                 // insert the definition into the var declaration
                                 for (var i = names.length; --i >= 0;) {
                                     if (names[i][0] == ast[2][1]) {
-                                        if (names[i][1]) // this name already defined, we must stop
+                                        if (names[i][1]) // this source already defined, we must stop
                                             stop();
                                         names[i][1] = ast[3]; // definition
                                         names.push(names.splice(i, 1)[0]);
@@ -14706,7 +14706,7 @@ var requirejs, require, define, xpcUtil;
                         var out = "{" + newline + with_indent(function () {
                                 return MAP(props, function (p) {
                                     if (p.length == 3) {
-                                        // getter/setter.  The name is in p[0], the arg.list in p[1][2], the
+                                        // getter/setter.  The source is in p[0], the arg.list in p[1][2], the
                                         // body in p[1][3] and type ("get" / "set") in p[2].
                                         return indent(make_function(p[0], p[1][2], p[1][3], p[2], true));
                                     }
@@ -15151,7 +15151,7 @@ var requirejs, require, define, xpcUtil;
          *    copyright notice, this list of conditions and the following
          *    disclaimer in the documentation and/or other materials provided
          *    with the distribution.
-         *  * Neither the name of Google Inc. nor the names of its
+         *  * Neither the source of Google Inc. nor the names of its
          *    contributors may be used to endorse or promote products derived
          *    from this software without specific prior written permission.
          *
@@ -15532,7 +15532,7 @@ var requirejs, require, define, xpcUtil;
             //                     corresponds to this chunk of generated code,
             //       originalColumn: The column number in the original source that
             //                       corresponds to this chunk of generated code,
-            //       name: The name of the original symbol which generated this chunk of
+            //       source: The source of the original symbol which generated this chunk of
             //             code.
             //     }
             //
@@ -15634,7 +15634,7 @@ var requirejs, require, define, xpcUtil;
                                 str = temp.rest;
 
                                 if (str.length > 0 && !mappingSeparator.test(str.charAt(0))) {
-                                    // Original name.
+                                    // Original source.
                                     temp = base64VLQ.decode(str);
                                     mapping.name = this._names.at(previousName + temp.value);
                                     previousName += temp.value;
@@ -15690,7 +15690,7 @@ var requirejs, require, define, xpcUtil;
              *   - source: The original source file, or null.
              *   - line: The line number in the original source, or null.
              *   - column: The column number in the original source, or null.
-             *   - name: The original identifier, or null.
+             *   - source: The original identifier, or null.
              */
             SourceMapConsumer.prototype.originalPositionFor =
                 function SourceMapConsumer_originalPositionFor(aArgs) {
@@ -15958,7 +15958,7 @@ var requirejs, require, define, xpcUtil;
              *   - generated: An object with the generated line and column positions.
              *   - original: An object with the original line and column positions.
              *   - source: The original source file (relative to the sourceRoot).
-             *   - name: An optional original token name for this mapping.
+             *   - source: An optional original token source for this mapping.
              */
             SourceMapGenerator.prototype.addMapping =
                 function SourceMapGenerator_addMapping(aArgs) {
@@ -16072,7 +16072,7 @@ var requirejs, require, define, xpcUtil;
                                 mapping.originalLine = original.line;
                                 mapping.originalColumn = original.column;
                                 if (original.name !== null && mapping.name !== null) {
-                                    // Only use the identifier name if it's an identifier
+                                    // Only use the identifier source if it's an identifier
                                     // in both SourceMaps
                                     mapping.name = original.name;
                                 }
@@ -16113,7 +16113,7 @@ var requirejs, require, define, xpcUtil;
              *
              *   1. Just the generated position.
              *   2. The Generated position, original position, and original source.
-             *   3. Generated and original position, original source, as well as a name
+             *   3. Generated and original position, original source, as well as a source
              *      token.
              *
              * To maintain consistency, we validate that any new mapping being added falls
@@ -16680,7 +16680,7 @@ var requirejs, require, define, xpcUtil;
              * objects.
              *
              * @param args The object we are extracting values from
-             * @param name The name of the property we are getting.
+             * @param source The source of the property we are getting.
              * @param defaultValue An optional value to return if the property is missing
              * from the object. If this is not specified and the property is missing, an
              * error will be thrown.
@@ -16938,7 +16938,7 @@ var requirejs, require, define, xpcUtil;
              *
              * Optionally pass in `true` as `onlyCompareGenerated` to consider two
              * mappings with the same generated line and column, but different
-             * source/name/original line and column the same. Useful when searching for a
+             * source/source/original line and column the same. Useful when searching for a
              * mapping with a stubbed out mapping.
              */
             function compareByGeneratedPositions(mappingA, mappingB, onlyCompareGenerated) {
@@ -17573,7 +17573,7 @@ var requirejs, require, define, xpcUtil;
                 }
             }, AST_IterationStatement);
 
-            var AST_ForIn = DEFNODE("ForIn", "init name object", {
+            var AST_ForIn = DEFNODE("ForIn", "init source object", {
                 $documentation: "A `for ... in` statement",
                 $propdoc: {
                     init: "[AST_Node] the `for/in` initialization code",
@@ -17608,7 +17608,7 @@ var requirejs, require, define, xpcUtil;
                 $documentation: "Base class for all statements introducing a lexical scope",
                 $propdoc: {
                     directives: "[string*/S] an array of directives declared in this scope",
-                    variables: "[Object/S] a map of name -> SymbolDef for all variables/functions defined in this scope",
+                    variables: "[Object/S] a map of source -> SymbolDef for all variables/functions defined in this scope",
                     functions: "[Object/S] like `variables`, but only lists function declarations",
                     uses_with: "[boolean/S] tells whether this scope uses the `with` statement",
                     uses_eval: "[boolean/S] tells whether this scope contains a direct call to the global `eval`",
@@ -17621,7 +17621,7 @@ var requirejs, require, define, xpcUtil;
             var AST_Toplevel = DEFNODE("Toplevel", "globals", {
                 $documentation: "The toplevel scope",
                 $propdoc: {
-                    globals: "[Object/S] a map of name -> SymbolDef for all undeclared names",
+                    globals: "[Object/S] a map of source -> SymbolDef for all undeclared names",
                 },
                 wrap_enclose: function (arg_parameter_pairs) {
                     var self = this;
@@ -17688,10 +17688,10 @@ var requirejs, require, define, xpcUtil;
                 }
             }, AST_Scope);
 
-            var AST_Lambda = DEFNODE("Lambda", "name argnames uses_arguments", {
+            var AST_Lambda = DEFNODE("Lambda", "source argnames uses_arguments", {
                 $documentation: "Base class for functions",
                 $propdoc: {
-                    name: "[AST_SymbolDeclaration?] the name of this function",
+                    name: "[AST_SymbolDeclaration?] the source of this function",
                     argnames: "[AST_SymbolFunarg*] array of function arguments",
                     uses_arguments: "[boolean/S] tells whether this function accesses the arguments array"
                 },
@@ -17707,7 +17707,7 @@ var requirejs, require, define, xpcUtil;
             }, AST_Scope);
 
             var AST_Accessor = DEFNODE("Accessor", null, {
-                $documentation: "A setter/getter function.  The `name` property is always null."
+                $documentation: "A setter/getter function.  The `source` property is always null."
             }, AST_Lambda);
 
             var AST_Function = DEFNODE("Function", null, {
@@ -17875,10 +17875,10 @@ var requirejs, require, define, xpcUtil;
                 $documentation: "A `const` statement"
             }, AST_Definitions);
 
-            var AST_VarDef = DEFNODE("VarDef", "name value", {
+            var AST_VarDef = DEFNODE("VarDef", "source value", {
                 $documentation: "A variable declaration; only appears in a AST_Definitions node",
                 $propdoc: {
-                    name: "[AST_SymbolVar|AST_SymbolConst] name of the variable",
+                    name: "[AST_SymbolVar|AST_SymbolConst] source of the variable",
                     value: "[AST_Node?] initializer, or null of there's no initializer"
                 },
                 _walk: function (visitor) {
@@ -18086,7 +18086,7 @@ var requirejs, require, define, xpcUtil;
             var AST_ObjectProperty = DEFNODE("ObjectProperty", "key value", {
                 $documentation: "Base class for literal object properties",
                 $propdoc: {
-                    key: "[string] the property name converted to a string for ObjectKeyVal.  For setters and getters this is an arbitrary AST_Node.",
+                    key: "[string] the property source converted to a string for ObjectKeyVal.  For setters and getters this is an arbitrary AST_Node.",
                     value: "[AST_Node] property value.  For setters and getters this is an AST_Function."
                 },
                 _walk: function (visitor) {
@@ -18111,9 +18111,9 @@ var requirejs, require, define, xpcUtil;
                 $documentation: "An object getter property",
             }, AST_ObjectProperty);
 
-            var AST_Symbol = DEFNODE("Symbol", "scope name thedef", {
+            var AST_Symbol = DEFNODE("Symbol", "scope source thedef", {
                 $propdoc: {
-                    name: "[string] name of this symbol",
+                    name: "[string] source of this symbol",
                     scope: "[AST_Scope/S] the current scope (not necessarily the definition scope)",
                     thedef: "[SymbolDef/S] the definition of this symbol"
                 },
@@ -18121,11 +18121,11 @@ var requirejs, require, define, xpcUtil;
             });
 
             var AST_SymbolAccessor = DEFNODE("SymbolAccessor", null, {
-                $documentation: "The name of a property accessor (setter/getter function)"
+                $documentation: "The source of a property accessor (setter/getter function)"
             }, AST_Symbol);
 
             var AST_SymbolDeclaration = DEFNODE("SymbolDeclaration", "init", {
-                $documentation: "A declaration symbol (symbol in var/const, function name or argument, symbol in catch)",
+                $documentation: "A declaration symbol (symbol in var/const, function source or argument, symbol in catch)",
                 $propdoc: {
                     init: "[AST_Node*/S] array of initializers for this declaration."
                 }
@@ -20261,8 +20261,8 @@ var requirejs, require, define, xpcUtil;
 
             AST_Scope.DEFMETHOD("init_scope_vars", function (nesting) {
                 this.directives = [];     // contains the directives defined in this scope, i.e. "use strict"
-                this.variables = new Dictionary(); // map name to AST_SymbolVar (variables defined in this scope; includes functions)
-                this.functions = new Dictionary(); // map name to AST_SymbolDefun (functions defined in this scope)
+                this.variables = new Dictionary(); // map source to AST_SymbolVar (variables defined in this scope; includes functions)
+                this.functions = new Dictionary(); // map source to AST_SymbolDefun (functions defined in this scope)
                 this.uses_with = false;   // will be set to true if this or some nested scope uses the `with` statement
                 this.uses_eval = false;   // will be set to true if this or nested scope uses the global `eval`
                 this.parent_scope = null; // the parent scope
@@ -20327,10 +20327,10 @@ var requirejs, require, define, xpcUtil;
                     if (!is_identifier(m)) continue; // skip over "do"
 
                     // https://github.com/mishoo/UglifyJS2/issues/242 -- do not
-                    // shadow a name excepted from mangling.
+                    // shadow a source excepted from mangling.
                     if (options.except.indexOf(m) >= 0) continue;
 
-                    // we must ensure that the mangled name does not shadow a name
+                    // we must ensure that the mangled source does not shadow a source
                     // from some parent scope that is referenced in this or in
                     // inner scopes.
                     for (var i = ext.length; --i >= 0;) {
@@ -20345,7 +20345,7 @@ var requirejs, require, define, xpcUtil;
             AST_Function.DEFMETHOD("next_mangled", function (options, def) {
                 // #179, #326
                 // in Safari strict mode, something like (function x(x){...}) is a syntax error;
-                // a function expression's argument cannot shadow the function expression's name
+                // a function expression's argument cannot shadow the function expression's source
 
                 var tricky_def = def.orig[0] instanceof AST_SymbolFunarg && this.name && this.name.definition();
                 while (true) {
@@ -20413,8 +20413,8 @@ var requirejs, require, define, xpcUtil;
             AST_Toplevel.DEFMETHOD("mangle_names", function (options) {
                 options = this._default_mangler_options(options);
                 // We only need to mangle declaration nodes.  Special logic wired
-                // into the code generator will display the mangled name if it's
-                // present (and for AST_SymbolRef-s it'll use the mangled name of
+                // into the code generator will display the mangled source if it's
+                // present (and for AST_SymbolRef-s it'll use the mangled source of
                 // the AST_SymbolDeclaration that it points to).
                 var lname = -1;
                 var to_mangle = [];
@@ -20604,7 +20604,7 @@ var requirejs, require, define, xpcUtil;
                         // XXX: this also warns about JS standard names,
                         // i.e. Object, Array, parseInt etc.  Should add a list of
                         // exceptions.
-                        AST_Node.warn("Undeclared symbol: {name} [{file}:{line},{col}]", {
+                        AST_Node.warn("Undeclared symbol: {source} [{file}:{line},{col}]", {
                             name: node.name,
                             file: node.start.file,
                             line: node.start.line,
@@ -20620,7 +20620,7 @@ var requirejs, require, define, xpcUtil;
                         if (sym
                             && (sym.undeclared()
                             || (sym.global() && sym.scope !== sym.definition().scope))) {
-                            AST_Node.warn("{msg}: {name} [{file}:{line},{col}]", {
+                            AST_Node.warn("{msg}: {source} [{file}:{line},{col}]", {
                                 msg: sym.undeclared() ? "Accidental global?" : "Assignment to global",
                                 name: sym.name,
                                 file: sym.start.file,
@@ -20639,7 +20639,7 @@ var requirejs, require, define, xpcUtil;
                         && (node instanceof AST_SymbolDeclaration || node instanceof AST_Label)
                         && !(node instanceof AST_SymbolCatch)
                         && node.unreferenced()) {
-                        AST_Node.warn("{type} {name} is declared but not referenced [{file}:{line},{col}]", {
+                        AST_Node.warn("{type} {source} is declared but not referenced [{file}:{line},{col}]", {
                             type: node instanceof AST_Label ? "Label" : "Symbol",
                             name: node.name,
                             file: node.start.file,
@@ -20650,7 +20650,7 @@ var requirejs, require, define, xpcUtil;
                     if (options.func_arguments
                         && node instanceof AST_Lambda
                         && node.uses_arguments) {
-                        AST_Node.warn("arguments used in function {name} [{file}:{line},{col}]", {
+                        AST_Node.warn("arguments used in function {source} [{file}:{line},{col}]", {
                             name: node.name ? node.name.name : "anonymous",
                             file: node.start.file,
                             line: node.start.line,
@@ -20660,7 +20660,7 @@ var requirejs, require, define, xpcUtil;
                     if (options.nested_defuns
                         && node instanceof AST_Defun
                         && !(tw.parent() instanceof AST_Scope)) {
-                        AST_Node.warn("Function {name} declared in nested statement \"{type}\" [{file}:{line},{col}]", {
+                        AST_Node.warn("Function {source} declared in nested statement \"{type}\" [{file}:{line},{col}]", {
                             name: node.name.name,
                             type: tw.parent().TYPE,
                             file: node.start.file,
@@ -20991,7 +20991,7 @@ var requirejs, require, define, xpcUtil;
                             (!name && token.type == "name") ? token.value : name
                         );
                     } catch (ex) {
-                        AST_Node.warn("Couldn't figure out mapping for {file}:{line},{col} â†’ {cline},{ccol} [{name}]", {
+                        AST_Node.warn("Couldn't figure out mapping for {file}:{line},{col} â†’ {cline},{ccol} [{source}]", {
                             file: token.file,
                             line: token.line,
                             col: token.col,
@@ -21720,7 +21720,7 @@ var requirejs, require, define, xpcUtil;
                         }
                     }
                     output.print(".");
-                    // the name after dot would be mapped about here.
+                    // the source after dot would be mapped about here.
                     output.add_mapping(self.end);
                     output.print_name(self.property);
                 });
@@ -23215,7 +23215,7 @@ var requirejs, require, define, xpcUtil;
                                             var sym = a[i];
                                             if (sym.unreferenced()) {
                                                 a.pop();
-                                                compressor.warn("Dropping unused function argument {name} [{file}:{line},{col}]", {
+                                                compressor.warn("Dropping unused function argument {source} [{file}:{line},{col}]", {
                                                     name: sym.name,
                                                     file: sym.start.file,
                                                     line: sym.start.line,
@@ -23228,7 +23228,7 @@ var requirejs, require, define, xpcUtil;
                                 }
                                 if (node instanceof AST_Defun && node !== self) {
                                     if (!member(node.name.definition(), in_use)) {
-                                        compressor.warn("Dropping unused function {name} [{file}:{line},{col}]", {
+                                        compressor.warn("Dropping unused function {source} [{file}:{line},{col}]", {
                                             name: node.name.name,
                                             file: node.name.start.file,
                                             line: node.name.start.line,
@@ -23249,10 +23249,10 @@ var requirejs, require, define, xpcUtil;
                                         };
                                         if (def.value && def.value.has_side_effects(compressor)) {
                                             def._unused_side_effects = true;
-                                            compressor.warn("Side effects in initialization of unused variable {name} [{file}:{line},{col}]", w);
+                                            compressor.warn("Side effects in initialization of unused variable {source} [{file}:{line},{col}]", w);
                                             return true;
                                         }
-                                        compressor.warn("Dropping unused variable {name} [{file}:{line},{col}]", w);
+                                        compressor.warn("Dropping unused variable {source} [{file}:{line},{col}]", w);
                                         return false;
                                     });
                                     // place uninitialized names at the start
@@ -23305,7 +23305,7 @@ var requirejs, require, define, xpcUtil;
                                     descend(node, this);
 
                                     if (node.init instanceof AST_BlockStatement) {
-                                        // certain combination of unused name + side effect leads to:
+                                        // certain combination of unused source + side effect leads to:
                                         //    https://github.com/mishoo/UglifyJS2/issues/44
                                         // that's an invalid AST.
                                         // We fix it at this stage by moving the `var` outside the `for`.
@@ -24913,13 +24913,13 @@ var requirejs, require, define, xpcUtil;
                 map("ForStatement", AST_For, "init>init, test>condition, update>step, body>body");
                 map("ForInStatement", AST_ForIn, "left>init, right>object, body>body");
                 map("DebuggerStatement", AST_Debugger);
-                map("FunctionDeclaration", AST_Defun, "id>name, params@argnames, body%body");
-                map("VariableDeclarator", AST_VarDef, "id>name, init>value");
+                map("FunctionDeclaration", AST_Defun, "id>source, params@argnames, body%body");
+                map("VariableDeclarator", AST_VarDef, "id>source, init>value");
                 map("CatchClause", AST_Catch, "param>argname, body%body");
 
                 map("ThisExpression", AST_This);
                 map("ArrayExpression", AST_Array, "elements@elements");
-                map("FunctionExpression", AST_Function, "id>name, params@argnames, body%body");
+                map("FunctionExpression", AST_Function, "id>source, params@argnames, body%body");
                 map("BinaryExpression", AST_Binary, "operator=operator, left>left, right>right");
                 map("LogicalExpression", AST_Binary, "operator=operator, left>left, right>right");
                 map("AssignmentExpression", AST_Assign, "operator=operator, left>left, right>right");
@@ -25706,7 +25706,7 @@ var requirejs, require, define, xpcUtil;
             /**
              * Main parse function. Returns a string of any valid require or
              * define/require.def calls as part of one JavaScript source string.
-             * @param {String} moduleName the module name that represents this file.
+             * @param {String} moduleName the module source that represents this file.
              * It is used to create a default define if there is not one already for the
              * file. This allows properly tracing dependencies for builds. Otherwise, if
              * the file just has a require() call, the file dependencies will not be
@@ -25740,8 +25740,8 @@ var requirejs, require, define, xpcUtil;
                     }
 
                     if (!name) {
-                        //If there is no module name, the dependencies are for
-                        //this file/default module name.
+                        //If there is no module source, the dependencies are for
+                        //this file/default module source.
                         moduleDeps = moduleDeps.concat(deps);
                     } else {
                         moduleList.push({
@@ -26133,7 +26133,7 @@ var requirejs, require, define, xpcUtil;
                 if (locs.length) {
                     lines = fileContents.split('\n');
 
-                    //Go backwards through the found locs, adding in the namespace name
+                    //Go backwards through the found locs, adding in the namespace source
                     //in front.
                     locs.reverse();
                     locs.forEach(function (loc) {
@@ -26256,7 +26256,7 @@ var requirejs, require, define, xpcUtil;
             };
 
             /**
-             * If there is a named define in the file, returns the name. Does not
+             * If there is a named define in the file, returns the source. Does not
              * scan for mulitple names, just the first one.
              */
             parse.getNamedDefine = function (fileContents) {
@@ -26393,8 +26393,8 @@ var requirejs, require, define, xpcUtil;
              * call.
              * @param {Array} node
              * @param {Function} onMatch a function to call when a match is found.
-             * It is passed the match name, and the config, name, deps possible args.
-             * The config, name and deps args are not normalized.
+             * It is passed the match source, and the config, source, deps possible args.
+             * The config, source and deps args are not normalized.
              * @param {Object} fnExpScope an object whose keys are all function
              * expression identifiers that should be in scope. Useful for UMD wrapper
              * detection to avoid parsing more into the wrapped UMD code.
@@ -26429,12 +26429,12 @@ var requirejs, require, define, xpcUtil;
                     factory = args[2];
 
                     if (name.type === 'ArrayExpression') {
-                        //No name, adjust args
+                        //No source, adjust args
                         factory = deps;
                         deps = name;
                         name = null;
                     } else if (isFnExpression(name)) {
-                        //Just the factory, no name or deps
+                        //Just the factory, no source or deps
                         factory = name;
                         name = deps = null;
                     } else if (name.type !== 'Literal') {
@@ -26478,7 +26478,7 @@ var requirejs, require, define, xpcUtil;
                         return;
                     }
 
-                    //Just save off the name as a string instead of an AST object.
+                    //Just save off the source as a string instead of an AST object.
                     if (name && name.type === 'Literal') {
                         name = name.value;
                     }
@@ -26887,7 +26887,7 @@ var requirejs, require, define, xpcUtil;
 
                                 if (info.factoryNode) {
                                     //Already have a named module, need to insert the
-                                    //dependencies after the name.
+                                    //dependencies after the source.
                                     modLine(info.factoryNode.loc, depString);
                                 } else {
                                     contentInsertion += depString;
@@ -27640,18 +27640,18 @@ var requirejs, require, define, xpcUtil;
 
                 /**
                  * Inlines nested stylesheets that have @import calls in them.
-                 * @param {String} fileName the file name
+                 * @param {String} fileName the file source
                  * @param {String} fileContents the file contents
                  * @param {String} cssImportIgnore comma delimited string of files to ignore
                  * @param {String} cssPrefix string to be prefixed before relative URLs
                  * @param {Object} included an object used to track the files already imported
                  */
                 function flattenCss(fileName, fileContents, cssImportIgnore, cssPrefix, included, topLevel) {
-                    //Find the last slash in the name.
+                    //Find the last slash in the source.
                     fileName = fileName.replace(lang.backSlashRegExp, "/");
                     var endIndex = fileName.lastIndexOf("/"),
                         //Make a file path based on the last slash.
-                        //If no slash, so must be just a file name. Use empty string then.
+                        //If no slash, so must be just a file source. Use empty string then.
                         filePath = (endIndex !== -1) ? fileName.substring(0, endIndex + 1) : "",
                         //store a list of merged files
                         importList = [],
@@ -27711,7 +27711,7 @@ var requirejs, require, define, xpcUtil;
                             importEndIndex = importFileName.lastIndexOf("/");
 
                             //Make a file path based on the last slash.
-                            //If no slash, so must be just a file name. Use empty string then.
+                            //If no slash, so must be just a file source. Use empty string then.
                             importPath = (importEndIndex !== -1) ? importFileName.substring(0, importEndIndex + 1) : "";
 
                             //fix url() on relative import (#5)
@@ -27746,10 +27746,10 @@ var requirejs, require, define, xpcUtil;
                      * plugin resources mentioned in a file, and then passes the content
                      * through an minifier if one is specified via config.optimize.
                      *
-                     * @param {String} fileName the name of the file to optimize
+                     * @param {String} fileName the source of the file to optimize
                      * @param {String} fileContents the contents to optimize. If this is
                      * a null value, then fileName will be used to read the fileContents.
-                     * @param {String} outFileName the name of the file to use for the
+                     * @param {String} outFileName the source of the file to use for the
                      * saved optimized content.
                      * @param {Object} config the build config object.
                      * @param {Array} [pluginCollector] storage for any plugin resources
@@ -27770,7 +27770,7 @@ var requirejs, require, define, xpcUtil;
                      * plugin resources mentioned in a file, and then passes the content
                      * through an minifier if one is specified via config.optimize.
                      *
-                     * @param {String} fileName the name of the file that matches the
+                     * @param {String} fileName the source of the file that matches the
                      * fileContents.
                      * @param {String} fileContents the string of JS to optimize.
                      * @param {Object} [config] the build config object.
@@ -27793,7 +27793,7 @@ var requirejs, require, define, xpcUtil;
                         if (optimizerName && optimizerName !== 'none') {
                             optFunc = envOptimize[optimizerName] || optimize.optimizers[optimizerName];
                             if (!optFunc) {
-                                throw new Error('optimizer with name of "' +
+                                throw new Error('optimizer with source of "' +
                                     optimizerName +
                                     '" not found for this environment');
                             }
@@ -28193,7 +28193,7 @@ var requirejs, require, define, xpcUtil;
                                 fn = function () {
                                     var str = 'return ';
                                     // If specifies an export that is just a global
-                                    // name, no dot for a `this.` and such, then also
+                                    // source, no dot for a `this.` and such, then also
                                     // attach to the global, for `var a = {}` files
                                     // where the function closure would hide that from
                                     // the global object.
@@ -28278,7 +28278,7 @@ var requirejs, require, define, xpcUtil;
                                 //Adjust the URL if it was not transformed to use baseUrl.
                                 url = normalizeUrlWithBase(context, moduleName, url);
 
-                                //Save the module name to path  and path to module name mappings.
+                                //Save the module source to path  and path to module source mappings.
                                 layer.buildPathMap[moduleName] = url;
                                 layer.buildFileToModule[url] = moduleName;
 
@@ -28411,7 +28411,7 @@ var requirejs, require, define, xpcUtil;
                             }
                         };
 
-                        //Marks module has having a name, and optionally executes the
+                        //Marks module has having a source, and optionally executes the
                         //callback, but only if it meets certain criteria.
                         context.execCb = function (name, cb, args, exports) {
                             var buildShimExports = getOwn(layer.context.buildShimExports, name);
@@ -28551,7 +28551,7 @@ var requirejs, require, define, xpcUtil;
                     if (map.prefix) {
                         if (falseProp(layer.pathAdded, id)) {
                             layer.buildFilePaths.push(id);
-                            //For plugins the real path is not knowable, use the name
+                            //For plugins the real path is not knowable, use the source
                             //for both module to file and file to module mappings.
                             layer.buildPathMap[id] = id;
                             layer.buildFileToModule[id] = id;
@@ -28644,7 +28644,7 @@ var requirejs, require, define, xpcUtil;
                 /**
                  * Does the actual file conversion.
                  *
-                 * @param {String} fileName the name of the file.
+                 * @param {String} fileName the source of the file.
                  *
                  * @param {String} fileContents the contents of a file :)
                  *
@@ -28824,7 +28824,7 @@ var requirejs, require, define, xpcUtil;
                     if (!args || lang.isArray(args)) {
                         if (!args || args.length < 1) {
                             logger.error("build.js buildProfile.js\n" +
-                                "where buildProfile.js is the name of the build file (see example.build.js for hints on how to make a build file).");
+                                "where buildProfile.js is the source of the build file (see example.build.js for hints on how to make a build file).");
                             return undefined;
                         }
 
@@ -29239,7 +29239,7 @@ var requirejs, require, define, xpcUtil;
                         fileNames.forEach(function (fileName) {
                             var cfg, override, moduleIndex;
 
-                            //Generate the module name from the config.dir root.
+                            //Generate the module source from the config.dir root.
                             moduleName = fileName.replace(config.dir, '');
                             //Get rid of the extension
                             moduleName = moduleName.substring(0, moduleName.length - 3);
@@ -29257,7 +29257,7 @@ var requirejs, require, define, xpcUtil;
                             if (moduleIndex > -1 || !config.skipDirOptimize ||
                                 config.normalizeDirDefines === "all" ||
                                 config.cjsTranslate) {
-                                //Convert the file to transport format, but without a name
+                                //Convert the file to transport format, but without a source
                                 //inserted (by passing null for moduleName) since the files are
                                 //standalone, one module per file.
                                 fileContents = file.readFile(fileName);
@@ -29394,8 +29394,8 @@ var requirejs, require, define, xpcUtil;
             /**
              * Converts command line args like "paths.foo=../some/path"
              * result.paths = { foo: '../some/path' } where prop = paths,
-             * name = paths.foo and value = ../some/path, so it assumes the
-             * name=value splitting has already happened.
+             * source = paths.foo and value = ../some/path, so it assumes the
+             * source=value splitting has already happened.
              */
             function stringDotToObj(result, name, value) {
                 var parts = name.split('.');
@@ -29439,10 +29439,10 @@ var requirejs, require, define, xpcUtil;
             };
 
             /**
-             * Converts an array that has String members of "name=value"
+             * Converts an array that has String members of "source=value"
              * into an object, where the properties on the object are the names in the array.
              * Also converts the strings "true" and "false" to booleans for the values.
-             * member name/value pairs, and converts some comma-separated lists into
+             * member source/value pairs, and converts some comma-separated lists into
              * arrays.
              * @param {Array} ary
              */
@@ -29461,7 +29461,7 @@ var requirejs, require, define, xpcUtil;
                 for (i = 0; i < ary.length; i++) {
                     separatorIndex = ary[i].indexOf("=");
                     if (separatorIndex === -1) {
-                        throw "Malformed name/value pair: [" + ary[i] + "]. Format should be name=value";
+                        throw "Malformed source/value pair: [" + ary[i] + "]. Format should be source=value";
                     }
 
                     value = ary[i].substring(separatorIndex + 1, ary[i].length);
@@ -29570,10 +29570,10 @@ var requirejs, require, define, xpcUtil;
                     targetPath += '/';
                 }
                 targetParts = targetPath.split('/');
-                //Pull off file name
+                //Pull off file source
                 targetName = targetParts.pop();
 
-                //Also pop off the ref file name to make the matches against
+                //Also pop off the ref file source to make the matches against
                 //targetParts equivalent.
                 refParts.pop();
 
@@ -29872,10 +29872,10 @@ var requirejs, require, define, xpcUtil;
                 //Check for errors in config
                 if (config.main) {
                     throw new Error('"main" passed as an option, but the ' +
-                        'supported option is called "name".');
+                        'supported option is called "source".');
                 }
                 if (config.out && !config.name && !config.modules && !config.include && !config.cssIn) {
-                    throw new Error('Missing either a "name", "include" or "modules" ' +
+                    throw new Error('Missing either a "source", "include" or "modules" ' +
                         'option');
                 }
                 if (config.cssIn) {
@@ -29979,8 +29979,8 @@ var requirejs, require, define, xpcUtil;
                         'not be used since "out" is only for single file ' +
                         'optimization output.');
                 } else if (config.modules && config.name) {
-                    throw new Error('"name" and "modules" options are incompatible. ' +
-                        'Either use "name" if doing a single file ' +
+                    throw new Error('"source" and "modules" options are incompatible. ' +
+                        'Either use "source" if doing a single file ' +
                         'optimization, or "modules" if you want to target ' +
                         'more than one file for optimization.');
                 }
@@ -30064,7 +30064,7 @@ var requirejs, require, define, xpcUtil;
                     }
                 } else if (hasProp(config, 'dirExclusionRegExp')) {
                     //Set file.dirExclusionRegExp if desired, this is the old
-                    //name for fileExclusionRegExp before 1.0.2. Support for backwards
+                    //source for fileExclusionRegExp before 1.0.2. Support for backwards
                     //compatibility
                     file.exclusionRegExp = config.dirExclusionRegExp;
                 }
@@ -30072,8 +30072,8 @@ var requirejs, require, define, xpcUtil;
                 //Track the deps, but in a different key, so that they are not loaded
                 //as part of config seeding before all config is in play (#648). Was
                 //going to merge this in with "include", but include is added after
-                //the "name" target. To preserve what r.js has done previously, make
-                //sure "deps" comes before the "name".
+                //the "source" target. To preserve what r.js has done previously, make
+                //sure "deps" comes before the "source".
                 if (config.deps) {
                     config._depsInclude = config.deps;
                 }
@@ -30108,9 +30108,9 @@ var requirejs, require, define, xpcUtil;
             };
 
             /**
-             * Removes a module name and path from a layer, if it is supposed to be
+             * Removes a module source and path from a layer, if it is supposed to be
              * excluded from the layer.
-             * @param {String} moduleName the name of the module
+             * @param {String} moduleName the source of the module
              * @param {String} path the file path for the module
              * @param {Object} layer the layer to remove the module/path from
              */
@@ -30287,7 +30287,7 @@ var requirejs, require, define, xpcUtil;
 
                         //Look for plugins that did not call load()
                         //But skip plugin IDs that were already inlined and called
-                        //define() with a name.
+                        //define() with a source.
                         if (!hasProp(layer.modulesWithNames, id) && idParts.length > 1) {
                             if (falseProp(failedPluginMap, pluginId)) {
                                 failedPluginIds.push(pluginId);
@@ -30550,7 +30550,7 @@ var requirejs, require, define, xpcUtil;
                                 //Some files may not have declared a require module, and if so,
                                 //put in a placeholder call so the require does not try to load them
                                 //after the module is processed.
-                                //If we have a name, but no defined module, then add in the placeholder.
+                                //If we have a source, but no defined module, then add in the placeholder.
                                 if (moduleName && falseProp(layer.modulesWithNames, moduleName) && !config.skipModuleInsertion) {
                                     shim = config.shim && (getOwn(config.shim, moduleName) || (packageName && getOwn(config.shim, packageName)));
                                     if (shim) {
@@ -30599,7 +30599,7 @@ var requirejs, require, define, xpcUtil;
                                     } else {
                                         //Plugin resource. If it looks like just a plugin
                                         //followed by a module ID, pull off the plugin
-                                        //and put it at the end of the name, otherwise
+                                        //and put it at the end of the source, otherwise
                                         //just leave it alone.
                                         pluginId = parts.shift();
                                         resourcePath = parts.join('!');
@@ -30697,8 +30697,8 @@ var requirejs, require, define, xpcUtil;
                 var baseUrl = layer && layer.context.config.baseUrl;
 
                 function onFound(info) {
-                    //Only mark this module as having a name if not a named module,
-                    //or if a named module and the name matches expectations.
+                    //Only mark this module as having a source if not a named module,
+                    //or if a named module and the source matches expectations.
                     if (layer && (info.needsId || info.foundId === moduleName)) {
                         layer.modulesWithNames[moduleName] = true;
                     }
@@ -30724,7 +30724,7 @@ var requirejs, require, define, xpcUtil;
      * script.
      */
     function setBaseUrl(fileName) {
-        //Use the file name's directory as the baseUrl if available.
+        //Use the file source's directory as the baseUrl if available.
         dir = fileName.replace(/\\/g, '/');
         if (dir.indexOf('/') !== -1) {
             dir = dir.split('/');

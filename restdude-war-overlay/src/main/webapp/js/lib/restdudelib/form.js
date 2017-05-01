@@ -518,7 +518,7 @@ define(
             template: _.template('\
 				<% _.each(items, function(item) { %>\
 				 <label class="list-group-item" for="<%= item.id %>">\
-							<input type="radio" name="<%= item.name %>" value="<%- item.value %>" id="<%= item.id %>"\
+							<input type="radio" source="<%= item.source %>" value="<%- item.value %>" id="<%= item.id %>"\
 							 <% if (!_.isUndefined(this.value) && this.value == item.value){ %> checked="checked" <% } %>  />\
 							&nbsp;<% if (item.labelHTML){ %><%= item.labelHTML %><% }else{ %><%- item.label %><% } %>\
 						</label>\

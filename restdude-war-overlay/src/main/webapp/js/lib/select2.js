@@ -61,12 +61,12 @@
                         }
 
                         /**
-                         * Given a relative module name, like ./something, normalize it to
-                         * a real name that can be mapped to a path.
-                         * @param {String} name the relative name
-                         * @param {String} baseName a real name that the name arg is relative
+                         * Given a relative module source, like ./something, normalize it to
+                         * a real source that can be mapped to a path.
+                         * @param {String} name the relative source
+                         * @param {String} baseName a real source that the source arg is relative
                          * to.
-                         * @returns {String} normalized name
+                         * @returns {String} normalized source
                          */
                         function normalize(name, baseName) {
                             var nameParts, nameSegment, mapValue, foundMap, lastIndex,
@@ -237,7 +237,7 @@
                         }
 
                         /**
-                         * Makes a name map, normalizing the name, and using a plugin
+                         * Makes a source map, normalizing the source, and using a plugin
                          * for normalization if necessary. Grabs a ref to plugin
                          * too, as an optimization.
                          */

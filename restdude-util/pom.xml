@@ -53,6 +53,11 @@
             <artifactId>restdude-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-util-classes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

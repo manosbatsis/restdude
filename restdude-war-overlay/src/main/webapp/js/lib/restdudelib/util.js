@@ -1195,8 +1195,8 @@ define(
 
             });
         /**
-         * Get the name of this class
-         * @returns the class name as a string
+         * Get the source of this class
+         * @returns the class source as a string
          */
         Restdude.collection.GenericCollection.getTypeName = function (instance) {
             return "Restdude.collection.GenericCollection";
@@ -1350,8 +1350,8 @@ define(
             });
 
         /**
-         * Get the name of this class
-         * @returns the class name as a string
+         * Get the source of this class
+         * @returns the class source as a string
          */
         Restdude.collection.PollingCollection.getTypeName = function (instance) {
             return "Restdude.collection.PollingCollection";

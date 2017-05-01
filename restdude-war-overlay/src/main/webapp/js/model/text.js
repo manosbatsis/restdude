@@ -66,8 +66,8 @@ define(['restdude', 'model/resource'],
         TextModel.prototype.getGridSchema = function () {
             var superSchema = ResourceModel.prototype.getGridSchema();
             var localSchema = [/*{
-             name : "name",
-             label : "name",
+             source : "source",
+             label : "source",
              cell : "string"
              }*/];
             // return merged schemas

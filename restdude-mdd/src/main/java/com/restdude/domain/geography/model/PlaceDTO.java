@@ -31,13 +31,13 @@ public class PlaceDTO {
     administrative_area_level_3
     administrative_area_level_4
     administrative_area_level_5
-    colloquial_area indicates a commonly-used alternative name for the entity.
+    colloquial_area indicates a commonly-used alternative source for the entity.
     locality
     ward indicates a specific type of Japanese locality, to facilitate distinction between multiple locality components within a Japanese address.
     sublocality indicates a first-order civil entity below a locality. For some locations may receive one of the additional types: sublocality_level_1 to sublocality_level_5. Each sublocality level is a civil entity. Larger numbers indicate a smaller geographic area.
     neighborhood indicates a named neighborhood
-    premise indicates a named location, usually a building or collection of buildings with a common name
-    subpremise indicates a first-order entity below a named location, usually a singular building within a collection of buildings with a common name
+    premise indicates a named location, usually a building or collection of buildings with a common source
+    subpremise indicates a first-order entity below a named location, usually a singular building within a collection of buildings with a common source
     postal_code indicates a postal code as used to address postal mail within the country.
     natural_feature indicates a prominent natural feature.
     airport indicates an airport.
