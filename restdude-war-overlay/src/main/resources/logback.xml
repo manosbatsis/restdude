@@ -28,7 +28,7 @@
     </appender>
 
     <logger name="com.restdude.test">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
     <logger name="springfox.documentation.schema.property.CachingModelPropertiesProvider">
         <level value="error"/>
