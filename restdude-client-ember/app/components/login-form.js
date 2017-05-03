@@ -1,15 +1,19 @@
 // app/components/login-form.js
 import Ember from 'ember';
+
 export default Ember.Component.extend({
-     //session: Ember.inject.service(),
-    authenticator: 'authenticator:oauth2',
-    actions: {
-        session: Ember.inject.service('session'),
-        authenticate: function() {
-            var credentials = this.getProperties('identification', 'password');
-            this.get('session').authenticate('authenticator:oauth2', credentials).catch((message) => {
-                this.set('errorMessage', message);
-            });
-        }
-    }
+        auth: Ember.inject.service('session'),
+        identification: null,
+        password: null,
+        actions: {
+        authenticate() {
+        this.get('auth').authenticate('authenticator:jwt',
+        this.get('identification'),this.get('password')).then(() => {
+        alert('Thanks for logging in!');
+        this.get('transition')();
+        }, () => {
+        alert('Wrong user name or password!');
+        });
+   }
+ }
 });

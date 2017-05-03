@@ -24,6 +24,25 @@ module.exports = function(environment) {
     }
   };
 
+  ENV['ember-simple-auth'] = {
+  authorizer: 'authorizer:token'
+};
+ENV['ember-simple-auth-token'] = {
+  serverTokenEndpoint: '/api/token-auth/',
+  identificationField: 'username',
+  passwordField: 'password',
+  tokenPropertyName: 'token',
+  refreshTokenPropertyName: 'refresh_token',
+  authorizationPrefix: 'Bearer ',
+  authorizationHeaderName: 'Authorization',
+  headers: {},
+  refreshAccessTokens: true,
+  serverTokenRefreshEndpoint: '/api/token-refresh/',
+  tokenExpireName: 'exp',
+  refreshLeeway: 0,
+};
+
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;

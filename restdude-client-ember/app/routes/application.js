@@ -19,3 +19,5 @@ export default Ember.Route.extend(ApplicationRouteMixin);
     }
   }
 });*/
+
+// app/routes/application.js
