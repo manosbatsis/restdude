@@ -1,38 +1,41 @@
 {{signup-form user=model}}
 {{login-js-inject}}
-        
-   
-    
 
-       
-     
+
+
+
+
+
         <div class="container">
             <div class="row">
                 <div class="col-md-5 m-x-auto pull-xs-none vamiddle">
                     <div class="card">
                         <div class="card-block p-a-2">
                             <h1>Register</h1>
+                            <form {{action 'save' on="submit"}}>
                             <p class="text-muted">Create your account</p>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
-                                
-                                 {{input value=user.name type="text" class="form-control" placeholder="Username"}}
+
+                                 {{input value=username type="text" class="form-control" placeholder="Username"}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon">@<i></i>
                                 </span>
-                                <input type="text" class="form-control" placeholder="Email">
+
+                                {{ input value=email type="text" class="form-control" type="email" class="form-control" placeholder="Email"}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                {{ input value=user.password type="password" class="form-control" placeholder="Password"}}
+                                {{ input value=password type="password" class="form-control" placeholder="Password"}}
                             </div>
                             <div class="input-group m-b-2">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                {{input value=user.passwordConfirmation type="password" class="form-control" placeholder="Repeat password"}}
-                                                                
+                                {{input value=passwordConfirmation type="password" class="form-control" placeholder="Repeat password"}}
+
                             </div>
-                            <button type="button" class="btn btn-block btn-success">Create Account</button>
+                            <button {{action "save"}} type="submit" class="btn btn-block btn-success">Create Account</button>
+                          </form>
                         </div>
                          {{#if errorMessage}}
                            {{errorMessage}}

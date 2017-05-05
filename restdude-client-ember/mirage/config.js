@@ -66,6 +66,58 @@ export default function() {
     return { data: rentals.find((rental) => request.params.id === rental.id) };
   });
 
+
+  // POST /token
+  this.post('/token-auth', (db, request) => {
+    let json = JSON.parse(request.requestBody);
+
+    //let { models } = db.user.where({ username: json.username, password: json.password });
+
+    if (json.username === "admin" && json.password === "12"){
+
+      return{
+        "access_token":"PA$$WORD",
+        "token_type": "bearer"
+      };
+    }else {
+
+      var body = { errors: 'Email or password is invalid'};
+      return new Mirage.Response(401,{},body);
+    }
+
+    /*if (models.length > 0) {
+      return {
+        // token encoded at https://jwt.io/
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkIiwidXNlcm5hbWUiOiJvd25lckBjb2RlY29ycHMub3JnIiwidXNlcl9pZCI6MSwiZXhwIjo3MjAwMDAwMH0.LxkkKMcQoccAA0pphgRfXPSLdyaCawlK1gB3yPCht2s',
+        user_id: models[0].id
+      };
+    } else {
+      let errorDetail = `Your password doesn't match the email ${json.username}.`;
+      return new Mirage.Response(401, {}, {
+        errors: [
+          {
+            id: 'UNAUTHORIZED',
+            title: '401 Unauthorized',
+            detail: errorDetail,
+            status: 401
+          }
+        ]
+      });
+    }*/
+});
+
+this.get('/users/:id');
+
+// PATCH /users/:id
+this.patch('/users/:id', function(db) {
+  let attrs = this.normalizedRequestAttrs();
+  let userId = attrs.id;
+  let user = db.users.find(userId);
+
+
+  return user.update(attrs);
+});
+
   // this.urlPrefix = '';    // make this `http://localhost:8080`, for example, if your API is on a different server
   // this.timing = 400;      // delay for each request, automatically set to 0 during testing
 

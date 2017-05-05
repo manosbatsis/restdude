@@ -28,29 +28,29 @@ test('If a user is not logged in, they see a login form', function(assert) {
 
 test('if a user is logged in, they see a logout form', function(assert) {
   authenticateSession(this.application);
-  visit('/');
+  visit('/user');
 
   andThen(function() {
-    assert.equal(currentURL(), '/');
+    assert.equal(currentURL(), '/user');
     const logoutBtnPresent = this.$('.logoutBtn').length > 0 ? true : false;
     assert.equal(
       logoutBtnPresent,
       true,
-      'An authed user should see the logout button'
+      'An authenticated user should see the logout button'
     );
 
     const loginFormPresent = find('#loginForm').length > 0 ? true : false;
     assert.equal(
       loginFormPresent,
       false,
-      'An authed user not should see the login form'
+      'An authenticated user should not see the login form'
     );
   });
 });
 
 test('user can logout', function(assert) {
   authenticateSession(this.application);
-  visit('/');
+  visit('/user');
   click('.logoutBtn');
 
   andThen(() => {
@@ -67,9 +67,9 @@ test('user can logout', function(assert) {
 
 test('user can login', function(assert) {
   invalidateSession(this.application);
-  visit('/');
+  visit('/login');
 
-  fillIn('#identification', 'lester@test.com');
+  fillIn('#identification', 'restdude@test.com');
   fillIn('#password', 'test1234');
   click('#login-btn');
 
@@ -95,9 +95,9 @@ test('If a user puts in the wrong login credentials, they see a login error', fu
   invalidateSession(this.application);
   visit('/');
 
-  fillIn('.username-field', 'lester@test.com');
-  fillIn('.password-field', 'wrongPassword');
-  click('.login-btn');
+  fillIn('#identification', 'lester@test.com');
+  fillIn('#password', 'wrongPassword');
+  click('#login-btn');
 
   andThen(() => {
     const sesh = currentSession(this.application);
@@ -106,13 +106,6 @@ test('If a user puts in the wrong login credentials, they see a login error', fu
       isAuthed,
       false,
       'User submits bad username and password, fails'
-    );
-
-    const isShowingLoginFails = find('.login-err').length > 0 ? true : false;
-    assert.equal(
-      isShowingLoginFails,
-      true,
-      'Shows user an error when they put in bad deets'
     );
 
     const loginFormPresent = find('#loginForm').length > 0 ? true : false;

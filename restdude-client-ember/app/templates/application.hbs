@@ -12,13 +12,16 @@
       {{#link-to 'contact'}}
         Contact
       {{/link-to}}
+      {{#if session.isAuthenticated}}
+          <a {{action 'invalidateSession'}}>Logout</a>
+        {{else}}
        {{#link-to 'login'}}
         Login
       {{/link-to}}
+      {{/if}}
     </div>
   </div>
   <div class="body">
     {{outlet}}
   </div>
 </div>
-
