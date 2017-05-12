@@ -51,6 +51,42 @@ export default function() {
     }
   ];
 
+  let users = [
+    {
+      type: 'users',
+      id: 'restdude1',
+      attributes: {
+        username: "nick",
+        email: "nick@restdude",
+        password: "12",
+        passwordConfirmation: "12",
+        permissions: 777
+      }
+    },
+    {
+      type: 'users',
+      id: 'restdude2',
+      attributes: {
+        username: "manos",
+        email: "manos@restdude",
+        password: "123",
+        passwordConfirmation: "123",
+        permissions: 777
+      }
+    },
+    {
+      type: 'users',
+      id: 'restdude2',
+      attributes: {
+        username: "erik",
+        email: "erik@restdude",
+        password: "1234",
+        passwordConfirmation: "1234",
+        permissions: 777
+      }
+    }
+  ];
+
   this.get('/rentals', function(db, request) {
     if (request.queryParams.city !== undefined) {
       let filteredRentals = rentals.filter(function (i) {
@@ -64,6 +100,23 @@ export default function() {
 
   this.get('/rentals/:id', function (db, request) {
     return { data: rentals.find((rental) => request.params.id === rental.id) };
+  });
+
+  ///////////////////
+
+  this.get('/users', function(db, request) {
+    if (request.queryParams.email !== undefined) {
+      let filteredUsers = users.filter(function (i) {
+        return i.attributes.email.toLowerCase().indexOf(request.queryParams.email.toLowerCase()) !== -1;
+      });
+      return { data: filteredUsers };
+    } else {
+      return { data: users };
+    }
+  });
+
+  this.get('/users/:id', function (db, request) {
+    return { data: users.find((user) => request.params.id === user.id) };
   });
 
 

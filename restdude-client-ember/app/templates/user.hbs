@@ -1,6 +1,36 @@
-<h2>Users</h2>
-{{#each model as |user|}}
-<h3>User: {{user.username}} </h3>
-<h3>Age: {{user.password}} </h3>
-{{/each}}
-<button class="logoutBtn" {{action 'logout'}}>Log Out</button>
+
+<div class="jumbo">
+  
+  <h2>Welcome User!</h2>
+  <p>Here you can find the users.</p>
+  {{#link-to 'about' class="button"}}
+    About Us
+  {{/link-to}}
+  
+    <br>
+    <br>
+  
+
+{{slack-search-input
+  placeholder='search for objects'
+  inputValue='' 
+  isPopupHidden=false
+  maxlength=250
+  enter=(action 'filterByUser')
+  
+}}
+   <div class="jumbo">
+
+    {{#each model as |user|}}
+      <h3>User: {{user.username}} </h3>
+      <h3>Email: {{user.email}} </h3>
+
+    {{/each}}
+   </div>
+ 
+</div>
+
+  <button class="logoutBtn" {{action 'logout'}}>Log Out</button>
+{{outlet}}
+
+

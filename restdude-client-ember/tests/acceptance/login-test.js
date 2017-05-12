@@ -18,7 +18,7 @@ moduleForAcceptance('Acceptance | login ');
 
 test('If a user is not logged in, they see a login form', function(assert) {
   invalidateSession(this.application);
-  visit('/login');
+  visit('/auth/login');
 
   andThen(function() {
     const loginFormPresent = find('#loginForm').length > 0 ? true : false;
@@ -26,7 +26,7 @@ test('If a user is not logged in, they see a login form', function(assert) {
   });
 });
 
-test('if a user is logged in, they see a logout form', function(assert) {
+test('if a user is logged in, they see a logout button', function(assert) {
   authenticateSession(this.application);
   visit('/user');
 
@@ -67,10 +67,10 @@ test('user can logout', function(assert) {
 
 test('user can login', function(assert) {
   invalidateSession(this.application);
-  visit('/login');
+  visit('/auth/login');
 
-  fillIn('#identification', 'restdude@test.com');
-  fillIn('#password', 'test1234');
+  fillIn('#identification', 'admin');
+  fillIn('#password', '123');
   click('#login-btn');
 
   andThen(() => {
@@ -93,7 +93,7 @@ test('user can login', function(assert) {
 
 test('If a user puts in the wrong login credentials, they see a login error', function(assert) {
   invalidateSession(this.application);
-  visit('/');
+  visit('/auth/login');
 
   fillIn('#identification', 'lester@test.com');
   fillIn('#password', 'wrongPassword');
@@ -116,10 +116,36 @@ test('If a user puts in the wrong login credentials, they see a login error', fu
     );
   });
 });
+test('When authenticated, redirects from login', function(assert) {
+  assert.expect(1);
+
+  let user = server.create('user');
+  authenticateSession(this.application, { user_id: user.id });
+
+  visit('/auth/login');
+
+  andThen(() => {
+    assert.equal(currentURL(), '/user');
+  });
+});
+
+test('When authenticated, redirects from signup', function(assert) {
+  assert.expect(1);
+
+  let user = server.create('user');
+  authenticateSession(this.application, { user_id: user.id });
+
+  visit('/auth/register');
+
+  andThen(() => {
+    assert.equal(currentURL(), '/projects');
+  });
+});
+
 test('visiting /login', function(assert) {
-  visit('/login');
+  visit('/auth/login');
 
   andThen(function() {
-    assert.equal(currentURL(), '/login');
+    assert.equal(currentURL(), '/auth/login');
   });
 });

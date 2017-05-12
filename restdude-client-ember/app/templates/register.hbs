@@ -12,7 +12,7 @@
                     <div class="card">
                         <div class="card-block p-a-2">
                             <h1>Register</h1>
-                            <form {{action 'save' on="submit"}}>
+                            <form {{action 'save' model on="submit"}}> 
                             <p class="text-muted">Create your account</p>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
@@ -34,7 +34,7 @@
                                 {{input value=passwordConfirmation type="password" class="form-control" placeholder="Repeat password"}}
 
                             </div>
-                            <button {{action "save"}} type="submit" class="btn btn-block btn-success">Create Account</button>
+                             <button id='register-btn' {{action "save" model}} type="submit" class="btn btn-block btn-success">Create Account</button>
                           </form>
                         </div>
                          {{#if errorMessage}}

@@ -16,11 +16,13 @@ Router.map(function() {
   this.route('server-error', { path: '/auth/500' });
   this.route('login', { path: '/auth/login' });
   this.route('register', { path: '/auth/register' });
-  this.route('user');
+  this.route('user', function() {
+    this.route('api/user', { path: '/:user_id' });
+  });
   this.route('forgot-password');
   this.route('protected');
   this.route('profile', { path: '/accounts/profile' });
-  
+
 });
 
 export default Router;
