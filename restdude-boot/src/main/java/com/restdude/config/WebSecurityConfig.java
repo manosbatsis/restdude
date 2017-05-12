@@ -109,7 +109,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //
                 // .addFilterAfter(new CsrfValidatorFilter(), CsrfFilter.class)
                 // .csrf().csrfTokenRepository(csrfTokenRepository).ignoringAntMatchers(new String[]{}).and().authorizeRequests()
-                .cors().disable()
+                .cors()
                 .rememberMe().disable()
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), AnonymousAuthenticationFilter.class)
 

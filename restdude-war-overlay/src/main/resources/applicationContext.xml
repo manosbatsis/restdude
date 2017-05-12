@@ -158,6 +158,11 @@
     <!--     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/> -->
     <mvc:resources mapping="/webjars/**" location="/webjars/"/>
 
+
+    <mvc:cors>
+        <mvc:mapping path="/**" />
+    </mvc:cors>
+
     <!-- Include a swagger configuration-->
     <!-- 	<bean name="applicationSwaggerConfig" class="gr.abiss.restdude.web.spring.ApplicationSwaggerConfig"/> -->
 
