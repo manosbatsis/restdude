@@ -28,7 +28,7 @@ module.exports = function(environment) {
   authorizer: 'authorizer:token'
 };
 ENV['ember-simple-auth-token'] = {
-  serverTokenEndpoint: '/api/token-auth/',
+  serverTokenEndpoint: 'http://localhost:8080/restdude/api/auth/jwt/access',
   identificationField: 'username',
   passwordField: 'password',
   tokenPropertyName: 'token',
@@ -37,9 +37,10 @@ ENV['ember-simple-auth-token'] = {
   authorizationHeaderName: 'Authorization',
   headers: {},
   refreshAccessTokens: true,
-  serverTokenRefreshEndpoint: '/api/token-refresh/',
+  serverTokenRefreshEndpoint: 'http://localhost:8080/restdude/api/auth/jwt/refresh',
   tokenExpireName: 'exp',
   refreshLeeway: 0,
+  //serverTokenEndpoint: 'http://localhost:8080/api/auth/jwt/access',
 };
 
 

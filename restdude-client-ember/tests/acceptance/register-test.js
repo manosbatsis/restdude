@@ -6,7 +6,7 @@ import moduleForAcceptance from 'super-rentals/tests/helpers/module-for-acceptan
 moduleForAcceptance('Acceptance | Signup');
 
 
-test('Successful signup', function(assert) {
+/*test('Successful signup', function(assert) {
   assert.expect(6);
 
   visit('/auth/register');
@@ -58,7 +58,7 @@ test('Successful signup', function(assert) {
     assert.equal(currentURL(), '/about');
   });
 });
-
+*/
 test('Failed signup due to invalid data stays on same page', function(assert) {
   assert.expect(1);
 
