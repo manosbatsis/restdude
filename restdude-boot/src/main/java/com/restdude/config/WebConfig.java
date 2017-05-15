@@ -41,6 +41,7 @@ import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
@@ -68,6 +69,18 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
     @Bean
     public javax.validation.Validator localValidatorFactoryBean() {
         return new LocalValidatorFactoryBean();
+    }
+
+    // TODO: refactor to programmatic CORS control
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/auth/jwt/**")
+                .allowCredentials(true)
+                .allowedOrigins("*")
+                //.allowedHeaders("*")
+                //.exposedHeaders("*")
+                .allowedMethods("HEAD", "GET", "OPTIONS", "PUT", "PATCH", "POST")
+                .maxAge(3600);
     }
 
     @Bean
