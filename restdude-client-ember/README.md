@@ -22,8 +22,30 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-* `ember server`
+* `ember s  --proxy http://localhost:8080`
+* By default, Mirage is disabled in production, and also in development when using the -proxy option.
 * Visit your app at [http://localhost:4200](http://localhost:4200).
+* Visit the login page at [http://localhost:4200/auth/login](http://localhost:4200/auth/login).
+* Visit the register page at [http://localhost:4200/auth/register](http://localhost:4200/auth/register).
+* Visit the forgot-password page at [http://localhost:4200/forgot-password](http://localhost:4200/auth/forgot-password).
+* Visit the user page, if you are authenticated, at [http://localhost:4200/user](http://localhost:4200/auth/user).
+
+### Login
+
+The login is made with JWT authentication. If you want a custom JWT authentication, go on controllers/login.js and change it to authenticator = 'authenticator:custom'. Also go to components/login-form.js and change to authenticator:custom. From the app/adapters/application.js we can change the namespace and the host. If we want to use the custom authentication, we change the url on app/authenticators/custom.js
+
+### Register
+
+The register is made with JWT authenticator. In controllers/register.js, there are two different ways to register, save(user) and createUser. The first one uses JWT authenticator and the second one is a simpler way without JWT.
+
+### User
+
+The user page has a logout button that invalidates the session and a search bar for logged users that is slack-based and returns all the users that are registered.
+
+### Environment 
+
+At the config/environment.js we can change the login setting at   ENV['ember-simple-auth'] and ENV['ember-simple-auth-token'].
+
 
 ### Code Generators
 

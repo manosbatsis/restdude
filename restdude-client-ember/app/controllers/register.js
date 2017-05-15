@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
       })
       .then(()=>{
         this.get('session')
-        .authenticate('authenticator:jwt',
+        .authenticate('authenticator:jwt', //jwt
           newUser.get('email'), newUser.get('password'))
         .catch((reason) => {
           this.set('errorMessage', reason.error ||reason);
@@ -21,26 +21,6 @@ export default Ember.Controller.extend({
   this.transitionToRoute("/");
       });
     },
-    /*save() {
-     let self = this; // create a new variable called 'self' that points to the current 'this', which is the controller
-     Ember.$.ajax({
-       url: ENV.host + "/users",
-       type: "POST",
-       data: JSON.stringify({
-         "user": {
-           "name": this.get('nameInput'),
-           "email": this.get('emailInput'), // you're getting this property from the controller now
-           "password": this.get('passwordInput'),
-           "password_confirmation": this.get('passwordConfirmationInput'),
-         }
-       })
-     }).then(() => {
-       // Transition
-     }).catch(function(error) {
-       // self points at the OLD definition of 'this', aka the controller, which is what we want
-       self.set('errorMessage', error.error || error);
-     });
-   },*/
     createUser: function(){
       var username = this.get('username');
       var email = this.get('email');

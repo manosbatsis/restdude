@@ -7,7 +7,7 @@ export default Ember.Component.extend({
         password: null,
         actions: {
         authenticate() {
-        this.get('auth').authenticate('authenticator:jwt',
+        this.get('auth').authenticate('authenticator:jwt', //or custom
         this.get('identification'),this.get('password')).then(() => {
         alert('Thanks for logging in!');
         this.get('transition')();
