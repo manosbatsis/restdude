@@ -22,6 +22,26 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
+### Backend
+
+To use the Spring Boot backend for authentication:
+
+a) Fetch the latest
+ 
+```
+cd restdude
+git pull
+```
+
+b) Start the Spring Boot version of restdude:
+
+```
+cd restdude-boot
+mvn clean install spring-boot:run
+```
+
+### Frontend
+
 * `ember s  --proxy http://localhost:8080`
 * By default, Mirage is disabled in production, and also in development when using the -proxy option.
 * Visit your app at [http://localhost:4200](http://localhost:4200).
