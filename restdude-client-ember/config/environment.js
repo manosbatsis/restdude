@@ -1,6 +1,6 @@
 /* jshint node: true */
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   var ENV = {
     modulePrefix: 'super-rentals',
     environment: environment,
@@ -11,10 +11,10 @@ module.exports = function(environment) {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       },
-       EXTEND_PROTOTYPES: {
+      EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse
         Date: false
-        }
+      }
 
     },
 
@@ -25,26 +25,14 @@ module.exports = function(environment) {
   };
 
   ENV['ember-simple-auth'] = {
-  authorizer: 'authorizer:token'
-};
-ENV['ember-simple-auth-token'] = {
-  serverTokenEndpoint: 'http://localhost:8080/restdude/api/auth/jwt/access',
-  identificationField: 'username',
-  passwordField: 'password',
-  tokenPropertyName: 'token',
-  refreshTokenPropertyName: 'refresh_token',
-  authorizationPrefix: 'Bearer ',
-  authorizationHeaderName: 'Authorization',
-  headers: {},
-  refreshAccessTokens: true,
-  serverTokenRefreshEndpoint: 'http://localhost:8080/restdude/api/auth/jwt/refresh',
-  tokenExpireName: 'exp',
-  refreshLeeway: 0,
-  //serverTokenEndpoint: 'http://localhost:8080/api/auth/jwt/access',
-};
+    authorizer: 'authorizer:custom',
+    //  routeAfterAuthentication: '/'
+  };
 
 
   if (environment === 'development') {
+    ENV.host = 'http://localhost:8080';
+    ENV.namespace = 'restdude/api/rest';
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -61,9 +49,19 @@ ENV['ember-simple-auth-token'] = {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+
+
+    ENV.host = 'http://localhost:8080';
+    ENV.namespace = 'restdude/api/rest';
   }
 
   if (environment === 'production') {
+
+  }
+
+  // TODO: config options for "widget" mode
+  if (environment === 'embedded') {
+    ENV.APP.rootElement = '#restdude-embedded';
 
   }
 
