@@ -8,6 +8,16 @@ const { service } = Ember.inject;
 export default Ember.Route.extend(ApplicationRouteMixin, {
   sessionAccount: service('session-account'),
 
+
+
+  beforeModel() {
+    // widget mode?
+    if(document.getElementById("restdude-embedded")){
+      console.logout("Switching to embed mode...");
+      this.transitionTo('application-embed');
+    }
+  },
+
   beforeModel() {
     return this._loadCurrentUser();
   },
