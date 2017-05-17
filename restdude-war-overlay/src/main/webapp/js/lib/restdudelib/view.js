@@ -51,14 +51,17 @@ define(
 
         Restdude.view.AppRootView = Restdude.view.View.extend({
                 tagName: "body",
-                className: "navbar-fixed fixed-nav ",
+                className: "app header-fixed sidebar-fixed aside-menu-hidden footer-fixed",
                 template: Restdude.getTemplate('AppRootView'),
                 breadcrumbs: new Backbone.Collection([
                     {name: "foo", url: "#"},
                     {name: "bar", url: "#"},
                 ]),
                 regions: {
-                    headerRegion: "#restdudeHeaderRegion",
+                    headerRegion: {
+                        el: "#restdudeHeaderRegion",
+                        //replaceElement: true
+                    },
                     breadcrumbRegion: {
                         el: "#restdudeBreadcrumbRegion",
                         replaceElement: true

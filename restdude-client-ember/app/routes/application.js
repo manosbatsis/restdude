@@ -10,17 +10,19 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
 
 
-  beforeModel() {
+  beforeModel(transition) {
+
     // widget mode?
     if(document.getElementById("restdude-embedded")){
-      console.logout("Switching to embed mode...");
+      console.log("Switching to embed mode...");
       this.transitionTo('application-embed');
+    }
+    else{
+
+      return this._loadCurrentUser();
     }
   },
 
-  beforeModel() {
-    return this._loadCurrentUser();
-  },
 
   sessionAuthenticated() {
     this._loadCurrentUser().then(()=>{

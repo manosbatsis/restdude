@@ -23,26 +23,28 @@ module.exports = function (environment) {
       // when it is created
 
 
-    }
+    },
+    contentSecurityPolicy: {
+      'font-src': "'self' https://fonts.gstatic.com"
+    },
+    host: 'http://localhost:8080',
+    namespace: 'restdude/api/rest',
+    authorizer: 'authorizer:custom',
   };
 
   ENV['ember-simple-auth'] = {
-    authorizer: 'authorizer:custom',
+    authorizer: ENV.authorizer
     //  routeAfterAuthentication: '/'
   };
 
-
   if (environment === 'development') {
-    ENV.host = 'http://localhost:8080';
-    ENV.namespace = 'restdude/api/rest';
     // ENV.APP.LOG_RESOLVER = true;
     ENV.APP.LOG_ACTIVE_GENERATION = true;
     ENV.APP.LOG_TRANSITIONS = true;
     ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
-
-  if (environment === 'test') {
+  else if (environment === 'test') {
     // Testem prefers this...
     ENV.locationType = 'none';
 
@@ -51,26 +53,16 @@ module.exports = function (environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+  }
+  else if (environment === 'production') {
 
-
-    ENV.host = 'http://localhost:8080';
-    ENV.namespace = 'restdude/api/rest';
   }
   else{
 
     ENV.APP.rootElement = '#restdude-embedded, body';
-    ENV.locationType = 'auto';
+    ENV.locationType = 'none';
   }
 
-  if (environment === 'production') {
-
-  }
-
-  //  config options for "widget" mode
-
-  //if (environment === 'embedded') {
-
-  //}
 
   return ENV;
 };

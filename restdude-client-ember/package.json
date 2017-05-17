@@ -40,7 +40,6 @@
     "ember-lodash": "0.0.7",
     "ember-resolver": "^2.0.3",
     "ember-simple-auth": "1.2.0",
-    "ember-simple-auth-token": "2.1.0",
     "ember-slack-search-input": "1.0.6",
     "ember-source": "~2.11.1",
     "express": "^4.15.2",

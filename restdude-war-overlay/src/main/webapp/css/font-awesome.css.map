@@ -4,4 +4,4 @@
 "sources": ["../scss/_path.scss","../scss/_core.scss","../scss/_larger.scss","../scss/_fixed-width.scss","../scss/_list.scss","../scss/_variables.scss","../scss/_bordered-pulled.scss","../scss/_animated.scss","../scss/_rotated-flipped.scss","../scss/_mixins.scss","../scss/_stacked.scss","../scss/_icons.scss"],
 "names": [],
 "file": "font-awesome.css"
-
+}
