@@ -13,19 +13,14 @@
         Contact
       {{/link-to}}
       {{#if session.isAuthenticated}}
-          <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
-<<<<<<< HEAD
-	  {{#link-to 'user'}}
-      {{#if currentUser.user}}
-        <a>{{currentUser.user.username}}</a>
+        <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
+        {{#if currentUser.user}}
+          {{#link-to 'user'}}
+              <a>{{currentUser.user.username}}</a>
+          {{/link-to}}
         {{/if}}
-    {{/link-to}}
-=======
->>>>>>> origin/master
-        {{else}}
-       {{#link-to 'login'}}
-        Login
-      {{/link-to}}
+      {{else}}
+        {{#link-to 'login'}}Login{{/link-to}}
       {{/if}}
     </div>
   </div>
