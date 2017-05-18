@@ -13,27 +13,6 @@
 @import url("simple-line-icons.css");
 @import url("../js/alpaca/alpaca.css");
 
-/* Sticky footer styles
--------------------------------------------------- */
-body, html {
-    height: 100%;
-
-}
-
-body.full-height-column {
-    display: table;
-    height: 100%;
-    width: 100%;
-}
-
-.full-height-row {
-    display: table-row;
-    height: 1px;
-}
-
-.full-height-row-expanded {
-    display: table-row;
-}
 
 div#restdudeMainContentRegion {
 }
@@ -84,20 +63,6 @@ button[class^="btn-cancel-search-"], button[class*=" btn-cancel-search-"] {
     display: none;
 }
 
-/* responsive main navbar */
-@media (max-width: 544px) {
-    .navbar-brand {
-        display: none;
-    }
-
-    .navbar-nav .nav-item {
-        float: none;
-    }
-
-    .navbar-nav .nav-item + .nav-item {
-        margin-left: 0;
-    }
-}
 
 /* Responsive table */
 @media screen and (max-width: 620px) {

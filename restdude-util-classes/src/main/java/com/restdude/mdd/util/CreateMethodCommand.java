@@ -30,6 +30,7 @@ public class CreateMethodCommand {
 
     @Getter @Setter
     String name;
+    @Getter @Setter
     Map<Class<?>, Map<String, Object>> methodAnotations;
 
     public CreateMethodCommand(String name) {

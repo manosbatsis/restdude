@@ -91,8 +91,8 @@ test('If a user puts in the wrong login credentials, they see a login error', fu
   invalidateSession(this.application);
   visit('/auth/login');
 
-  fillIn('#identification.input', 'lester@test.com');
-  fillIn('#password.input', 'wrongPassword');
+  fillIn('#identification', 'lester@test.com');
+  fillIn('#password', 'wrongPassword');
   click('#login-btn');
 
   andThen(() => {

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restdude</title>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/docs.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script>
+</head>
+
+<body>
+<!-- Main navigation
+=========================================== -->
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <div class="container">
+        <div class="navbar-header" role="banner">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index.html">Restdude</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                
+                
+                
+                
+                
+                <li >
+                    <a href="/client_stack.html">Client Stack</a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="active">
+                    <a href="/howto_build.html">Server Stack</a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="active">
+                    <a href="/server_stack.html">Server Stack</a>
+                </li>
+                
+                
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li>
+                    <a href="https://github.com/manosbatsis/restdude">GitHub</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<!-- Header
+=========================================== -->
+
+<div class="bs-docs-header" id="content">
+    <div class="container">
+        <h1>Server Stack</h1>
+        <p>Documentation on the Restdude Hub server stack</p>
+    </div>
+</div>
+
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <!-- Content
+        =========================================== -->
+        <div class="col-md-9" role="main">
+            <section class="bs-docs-section">
+    <h1 id="build-and-run" class="page-header">Quick Build and Run</h1>
+    <p>Follow the steps bellow to build.</p>
+    <p>a) Clone the repository:</p>
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"> git clone https://github.com/manosbatsis/restdude.git </code></pre></figure>
+    <p>b) Copy HOWTO.txt to dev.properties:</p>
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"> cp HOWTO.txt dev.properties </code></pre></figure>
+    <p>
+        c) Build and install (
+        <code>-U</code>
+        forces the download of updated snapshot dependencies):
+    </p>
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"> mvn -U clean install </code></pre></figure>
+    <p>d) run embedded Jetty container:</p>
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    <span class="nb">cd </span>restdude-hub-webapp
+    mvn jetty:run
+    </code></pre></figure>
+    <p>
+        e) Browse the app client: <a
+            href="http://localhost:8080/restdude/client">http://localhost:8080/restdude/client</a>
+        or the API reference: <a href="http://localhost:8080/restdude/apidoc">http://localhost:8080/restdude/apidoc</a>.
+        See also the <a href="#api-reference">Swagger API Reference</a> section bellow.
+    </p>
+    <p>
+        If you are using chrome, ensure you have enabled <a
+            href="http://www.alphadevx.com/a/454-Google-Chrome-and-localhost-cookies">cookies for localhost</a>.
+    </p>
+    <h2 id="optimize_profile">Optimize Profile</h2>
+    <p>
+        If have [node](https://nodejs.org) installed, you can use the
+        <code>optimize</code>
+        profile and
+        <code>jetty:run-war</code>
+        to optimize client-side code:
+    </p>
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    <span class="nb">cd </span>restdude-war-overlay
+    mvn -P optimize clean jetty:run-war
+    </code></pre></figure>
+    <h2 id="ci_profile">Integration Testing Profile</h2>
+    <p>
+        To run integration tests simply activate the
+        <code>ci</code>
+        profile:
+    </p>
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    mvn -P ci clean install
+    </code></pre></figure>
+    <p>
+        See also <a href="#tests">Tests</a>.
+    </p>
+</section>
+        </div>
+
+        <!-- Page navigation
+        =========================================== -->
+        <div class="col-md-3" role="complementary">
+            <div class="bs-docs-sidebar hidden-print">
+                <!--ul class="nav">
+                    <li>
+                        <a href="https://travis-ci.org/abissgr/restdude-hub">
+                            <img src="https://travis-ci.org/abissgr/restdude-hub.svg?branch=master" />
+                        </a>
+                    </li>
+                </ul-->
+                <ul class="nav bs-docs-sidenav">
+                </ul>
+                <a class="back-to-top" href="#top">
+                    <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer
+=========================================== -->
+<footer class="bs-docs-footer" role="contentinfo">
+    <div class="container">
+        <div class="bs-docs-social">
+            <ul class="bs-docs-social-buttons">
+                
+                <li>
+                    <iframe class="github-btn"
+                            src="http://ghbtns.com/github-btn.html?user=manosbatsis&amp;repo=restdude&amp;type=watch&amp;count=true"
+                            width="90" height="20" title="Star on GitHub"></iframe>
+                </li>
+                <li>
+                    <iframe class="github-btn"
+                            src="http://ghbtns.com/github-btn.html?user=manosbatsis&amp;repo=restdude&amp;type=fork&amp;count=true"
+                            width="90" height="20" title="Fork on GitHub"></iframe>
+                </li>
+                
+                
+                
+                
+                
+            </ul>
+        </div>
+
+        <p>
+            Licensed under <a href="https://opensource.org/licenses/LGPL-3.0" target="_blank">LGPLv3</a>,
+            documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+        </p>
+        <p>
+            Documentation template by <a href="http://getbootstrap.com">Bootstrap team</a>,
+            generated with <a href="https://github.com/mistic100/jekyll-bootstrap-doc">Jekyll Bootstrap Doc</a>
+        </p>
+
+        <ul class="bs-docs-footer-links muted">
+            <li>Currently v2.1.2-SNAPSHOT</li>
+            
+            <li>&middot;</li>
+            <li><a href="https://github.com/manosbatsis/restdude">GitHub</a></li>
+            
+            <li>&middot;</li>
+            <li><a href="https://github.com/manosbatsis/restdude/issues?state=open">Issues</a></li>
+            
+        </ul>
+    </div>
+</footer>
+
+
+<!-- Async scripts
+=========================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.2/trianglify.min.js"></script>
+<script>trianglify('#080331', '#673051');</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

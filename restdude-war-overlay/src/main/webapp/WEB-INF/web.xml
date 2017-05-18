@@ -136,4 +136,9 @@
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.adoc.html</welcome-file>
     </welcome-file-list>
+
+    <mime-mapping>
+        <extension>hbs</extension>
+        <mime-type>text/html</mime-type>
+    </mime-mapping>
 </web-app>

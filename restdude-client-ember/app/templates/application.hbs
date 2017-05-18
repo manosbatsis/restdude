@@ -13,14 +13,11 @@
         Contact
       {{/link-to}}
       {{#if session.isAuthenticated}}
-        <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
-        {{#if currentUser.user}}
-          {{#link-to 'user'}}
-              <a>{{currentUser.user.username}}</a>
-          {{/link-to}}
-        {{/if}}
-      {{else}}
-        {{#link-to 'login'}}Login{{/link-to}}
+          <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
+        {{else}}
+       {{#link-to 'login'}}
+        Login
+      {{/link-to}}
       {{/if}}
     </div>
   </div>

@@ -1,6 +1,6 @@
 /* jshint node: true */
-module.exports = function (environment) {
 
+module.exports = function (environment) {
   var ENV = {
     modulePrefix: 'super-rentals',
     environment: environment,
@@ -54,7 +54,14 @@ module.exports = function (environment) {
 
     ENV.APP.rootElement = '#ember-testing';
   }
+  else if (environment === 'production') {
 
+  }
+  else{
+
+    ENV.APP.rootElement = '#restdude-embedded, body';
+    ENV.locationType = 'none';
+  }
 
 
   return ENV;

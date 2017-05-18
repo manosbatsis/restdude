@@ -6,13 +6,5 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
 
   host: `${config.host}`,
   namespace: `${config.namespace}`,
-  authorizer: `${config.authorizer}`,
-
-  urlForQueryRecord(query) {
-    if (query.me) {
-      delete query.me;
-      return `${this._super(...arguments)}/me`;
-    }
-    return this._super(...arguments);
-  }
+  authorizer: `${config.authorizer}`
 });
