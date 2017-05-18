@@ -7,12 +7,18 @@ const { service } = Ember.inject;
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   sessionAccount: service('session-account'),
+<<<<<<< HEAD
   //metrics: service(),
   currentUser: service(),
 
 
 
 
+=======
+
+
+
+>>>>>>> origin/master
   beforeModel(transition) {
 
     // widget mode?
@@ -28,6 +34,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
 
   sessionAuthenticated() {
+<<<<<<< HEAD
     /*this._loadCurrentUser().then(()=>{
       this.transitionTo('/');
     }).catch(() => this.get('session').invalidate());*/
@@ -38,6 +45,15 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   _loadCurrentUser() {
     //return this.get('sessionAccount').loadCurrentUser();
     return this.get('currentUser').load();//.catch(() => this.get('session').invalidate());
+=======
+    this._loadCurrentUser().then(()=>{
+      this.transitionTo('/');
+    }).catch(() => this.get('session').invalidate());
+  },
+
+  _loadCurrentUser() {
+    return this.get('sessionAccount').loadCurrentUser();
+>>>>>>> origin/master
   },
 
   actions: {

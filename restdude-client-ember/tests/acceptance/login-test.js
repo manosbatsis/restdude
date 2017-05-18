@@ -65,8 +65,8 @@ test('user can login', function (assert) {
   invalidateSession(this.application);
   visit('/auth/login');
 
-  fillIn('#identification.input', 'admin');
-  fillIn('#password.input', 'admin');
+  fillIn('#identification', 'admin');
+  fillIn('#password', 'admin');
   click('#login-btn');
 
   andThen(() => {
