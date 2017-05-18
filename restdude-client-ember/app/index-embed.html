@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NoteBLOX Server</title>
+
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <link href="https://noteblox.github.io/Noteblox-Server/assets/css/docs.min.css" rel="stylesheet">
+  <link href="https://noteblox.github.io/Noteblox-Server/assets/css/style.css" rel="stylesheet">
+
+
+  {{content-for "head"}}
+
+  <link rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+  <link rel="stylesheet" href="{{rootURL}}assets/super-rentals.css">
+
+  {{content-for "head-footer"}}
+</head>
+
+<body>
+<!-- Main navigation
+=========================================== -->
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+  <div class="container">
+    <div class="navbar-header" role="banner">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">NoteBLOX Server</a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+
+
+
+
+
+
+
+
+
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+
+        <li>
+          <a href="https://github.com/Noteblox/Noteblox-Server">GitHub</a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+<!-- Header
+=========================================== -->
+
+<div class="bs-docs-masthead" id="content">
+  <div class="container">
+    <h1 class="home-title">NoteBLOX Server</h1>
+    <p class="lead">NoteBLOX is an on-page support and collaboration tool for websites.</p>
+    <p class="lead">
+      <a href="https://github.com/Noteblox/Noteblox-Server" class="btn btn-outline-inverse btn-lg">Download</a>
+    </p>
+    <p class="version">Currently v2.1.2-SNAPSHOT</p>
+  </div>
+</div>
+
+
+
+<div class="container bs-docs-container">
+  <div class="row">
+    <!-- Content
+    =========================================== -->
+    <div class="col-md-9" role="main">
+      <section class="bs-docs-section">
+        <h1 id="about" class="page-header">About</h1>
+        <p>NoteBLOX is an on-page support and collaboration tool for websites.</p>
+      </section>
+
+      <section class="bs-docs-section">
+        <h1 id="rest-doc" class="page-header">REST API</h1>
+
+        <p> See the <a href="restapi.html">REST API reference</a>.</p>
+      </section>
+
+      <section class="bs-docs-section">
+        <h1 id="buildnrun" class="page-header">Build and Run</h1>
+
+
+        <h2>Prerequisites</h2>
+
+        <ul>
+          <li>Java Development Kit 1.8 (either OpenJDK or Oracle)</li>
+          <li>Apache Maven 3.3.9</li>
+        </ul>
+
+
+        <h2>Checkout</h2>
+
+        <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    git clone https://github.com/Noteblox/Noteblox-Server.git
+    </code></pre></figure>
+
+        <h2>Build</h2>
+
+        <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    mvn  clean install
+    </code></pre></figure>
+
+        <h2>Run</h2>
+
+        <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    mvn  spring-boot:run
+    </code></pre></figure>
+
+        <img src="assets/images/run.png">
+
+        <h2>Run Integration Tests</h2>
+
+        <figure class="highlight"><pre><code class="language-bash" data-lang="bash">    mvn  clean install -P ci
+    </code></pre></figure>
+
+        <img src="assets/images/tests.png">
+
+      </section>
+
+      <section class="bs-docs-section">
+        <h1 id="architecture" class="page-header">Architecture</h1>
+
+        <pre>
+                    +-------------------------+   +---------------------+   +------------------+
+ Browser, App,      | RESTful SCRUD           |   | Content negotiation |   | Websockets       |
+ or other Client    +-------------+-----------+   +-----------+---------+   +-------+----------+
+                                  |                           |                     |
+--------------------------------- | ------------------------- | ------------------- | -----------
+                                  |                           |                     |
+                      JSON+HATEOAS or JSON-API 1.x            |                     |
+ Network              with RSQL/FIQL or URL params            |                   STOMP
+                                  |                           |                     |
+                                  |                           |                     |
+--------------------------------- | ------------------------- | ------------------- | -----------
+                                  |                           |                     |
+                    +-------------+---------------------------+----------+  +-------+----------+
+                    |     <strong>Controller</strong>                                     +--+ Message Broker   |
+                    +--------------------------+-------------------------+  +-------+----------+
+                                               |                                    |
+ Restdude                                      |                                    |
+                    +--------------------------+------------------------------------+----------+
+                    |                                    <strong>Service</strong>                               |
+                    +--------+--------------------+---------------------+---------------+------+
+                             |                    |                     |               |
+                             |                    |                     |               |
+                    +--------+-------+ +----------+-----------+ +-------+-------+ +-----+------+
+                    |     <strong>Repository</strong> | | FileService (FS, S3) | | EmailService  | | Misc Util  |
+                    +----------------+ +----------------------+ +---------------+ +------------+
+</pre>
+
+      </section>
+
+      <section class="bs-docs-section">
+        <h1 id="license" class="page-header">License</h1>
+
+        <p>NoteBLOX is distributed under the <a href="https://www.gnu.org/licenses/agpl-3.0-standalone.html">GNU Affero General Public License</a> <img style="float: right;" src="docs/assets/images/agplv3-155x51.png" alt="AGPL Logo" /></p>
+
+      </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </section>
+
+    </div>
+
+    <!-- Page navigation
+    =========================================== -->
+    <div class="col-md-3" role="complementary">
+      <div class="bs-docs-sidebar hidden-print">
+        <!--ul class="nav">
+            <li>
+                <a href="https://travis-ci.org/abissgr/restdude-hub">
+                    <img src="https://travis-ci.org/abissgr/restdude-hub.svg?branch=master" />
+                </a>
+            </li>
+        </ul-->
+        <ul class="nav bs-docs-sidenav">
+        </ul>
+        <a class="back-to-top" href="#top">
+          <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Footer
+=========================================== -->
+<footer class="bs-docs-footer" role="contentinfo">
+  <div class="container">
+    <div class="bs-docs-social">
+      <ul class="bs-docs-social-buttons">
+
+
+
+
+
+      </ul>
+    </div>
+
+    <p>
+      Licensed under <a href="https://opensource.org/licenses/AGPL-3.0" target="_blank">AGPLv3</a>,
+      documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+    </p>
+    <p>
+      Documentation template by <a href="http://getbootstrap.com">Bootstrap team</a>,
+      generated with <a href="https://github.com/mistic100/jekyll-bootstrap-doc">Jekyll Bootstrap Doc</a>
+    </p>
+
+    <ul class="bs-docs-footer-links muted">
+      <li>Currently v2.1.2-SNAPSHOT</li>
+
+      <li>&middot;</li>
+      <li><a href="https://github.com/Noteblox/Noteblox-Server">GitHub</a></li>
+
+      <li>&middot;</li>
+      <li><a href="https://github.com/Noteblox/Noteblox-Server/issues?state=open">Issues</a></li>
+
+    </ul>
+  </div>
+</footer>
+
+
+<div id="restdude-embedded">
+</div>
+
+<!-- Async scripts
+=========================================== -->
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.2/trianglify.min.js"></script>
+<script>trianglify('#080331', '#673051');</script>
+
+
+-->
+
+
+
+
+
+<script src="{{rootURL}}assets/vendor.js"></script>
+<script src="{{rootURL}}assets/super-rentals.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.22"></script>
+<!-- <script src="bower_components/jquery/dist/jquery.min.js"></script>-->
+<!--<script src="../../bower_components/tether/dist/js/tether.min.js"></script>-->
+<!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+<!--
+
+<script src="assets/js/annotator.js"></script>
+-->
+<script>
+</script>
+
+</body>
+</html>

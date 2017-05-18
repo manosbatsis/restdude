@@ -1,45 +1,52 @@
-import Ember  from 'ember';
-import ENV    from '../config/environment';
-import Base   from 'ember-simple-auth/authenticators/base';
+import Ember from "ember";
+import ENV from "../config/environment";
+import Base from "ember-simple-auth/authenticators/base";
+
+const { RSVP: { Promise }, $: { ajax }, run } = Ember;
 
 export default Base.extend({
-    tokenEndpoint: `${ENV.apiUrl}authenticate`,
-    restore(data) {
-        return new Ember.RSVP.Promise(function(resolve, reject) {
-            if (!Ember.isEmpty(data.token)) {
-                resolve(data);
-            } else {
-                reject();
-            }
+  tokenEndpoint: `${ENV.host}/restdude/api/auth/jwt/access`,
+
+  restore(data) {
+    return new Promise((resolve, reject) => {
+      // check for a valid user id
+      if (!Ember.isEmpty(data.pk) || !Ember.isEmpty(data.id)) {
+        resolve(data);
+      } else {
+        reject();
+      }
+    });
+  },
+  authenticate(credentials) {
+    // submitted credentials
+    const data = JSON.stringify({
+      username: (credentials.identification || credentials.username || credentials.email),
+      password: credentials.password
+    });
+    // login request
+    const requestOptions = {
+      url: this.tokenEndpoint,
+      type: 'POST',
+      data,
+      contentType: 'application/json;charset=utf-8',
+      dataType: 'json'
+    };
+    return new Promise((resolve, reject) => {
+      ajax(requestOptions).then((response) => {
+        // Wrapping aync operation in Ember.run
+        run(() => {
+          resolve(response);
         });
-    },
-    authenticate(credentials) {
-        return new Ember.RSVP.Promise((resolve, reject) => {
-            Ember.$.ajax({
-                url: 'http://localhost:8080/restdude/api/auth/jwt/access',
-                type: 'POST',
-                data: JSON.stringify({
-                    email: credentials.email,
-                    password: credentials.password
-                }),
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json'
-            }).then(function(response) {
-                Ember.run(function() {
-                    resolve({
-                        token: response.id_token
-                    });
-                });
-            }, function(xhr) {
-                let response = xhr.responseText;
-                Ember.run(function() {
-                    reject(response);
-                });
-            });
+      }, (error) => {
+        // Wrapping aync operation in Ember.run
+        run(() => {
+          reject(error);
         });
-    },
-    invalidate() {
-        console.log('invalidate...');
-        return Ember.RSVP.resolve();
-    }
+      });
+    });
+  },
+
+  invalidate(data) {
+    return Promise.resolve(data);
+  }
 });

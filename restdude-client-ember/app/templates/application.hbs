@@ -13,7 +13,12 @@
         Contact
       {{/link-to}}
       {{#if session.isAuthenticated}}
-          <a {{action 'invalidateSession'}}>Logout</a>
+          <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
+	  {{#link-to 'user'}}
+      {{#if currentUser.user}}
+        <a>{{currentUser.user.username}}</a>
+        {{/if}}
+    {{/link-to}}
         {{else}}
        {{#link-to 'login'}}
         Login

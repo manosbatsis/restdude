@@ -1,36 +1,19 @@
-import Ember from 'ember';
+import Ember from "ember";
+import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(UnauthenticatedRouteMixin, {
+
+//export default Ember.Route.extend({
   redirect: function () {
     var url = this.router.location.formatURL('/auth/login');
     if (window.location.pathname === url) {
       this.transitionTo('/auth/login');
     }
-  }
-});
+  },
 
-export default Ember.Route.extend({
-actions: {
-  signInViaTwitter: function() {
-    var route = this;
-    this.get('session').open('twitter').then(function() {
-      route.transitionTo('index');
-    }, function() {
-      console.log('auth failed');
-    });
+  beforeModel: function(){
+    let controller = this.controllerFor(this.routeName);
+    controller.set('errorMessage', null);
   }
-}
-});
 
-export default Ember.Route.extend({
-actions: {
-  signInViaFacebook: function() {
-    var route = this;
-    this.get('session').open('facebook').then(function() {
-      route.transitionTo('index');
-    }, function() {
-      console.log('auth failed');
-    });
-  }
-}
 });
