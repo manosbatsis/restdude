@@ -80,6 +80,35 @@ jspm_packages
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+*.java~
+*.iml
+.idea
+.settings
+.project
+.classpath
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# Exclude maven wrapper
+!/.mvn/wrapper/maven-wrapper.jar
+
 ### Maven template
 target/
 pom.xml.tag
@@ -90,13 +119,3 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-
-# Exclude maven wrapper
-!/.mvn/wrapper/maven-wrapper.jar
-
-*.java~
-*.iml
-.idea
-.settings
-.project
-.classpath
