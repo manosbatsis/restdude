@@ -1,38 +1,42 @@
 import Ember from 'ember';
-export default Ember.Controller.extend({
-  session: Ember.inject.service('session'),
+import ApplicationController from './application';
 
 
-
+export default ApplicationController.extend({
   actions: {
-    save(user){
-      let newUser = null;
-       newUser = user;
-      newUser.save().catch((error) => {
+
+    save(){
+      var credentials = this.getProperties('username', 'email', 'password', 'passwordConfirmation');
+
+
+      var account = this.store.createRecord('account', credentials);
+
+
+      account.save().catch((error) => {
         this.set('errorMessage', error);
       })
-      .then(()=>{
-        this.get('session')
-        .authenticate('authenticator:jwt', //jwt
-          newUser.get('email'), newUser.get('password'))
-        .catch((reason) => {
-          this.set('errorMessage', reason.error ||reason);
+        .then(() => {
+          this.get('session')
+            .authenticate('authenticator:custom',
+              account.get('email'), account.get('password', credentials))
+            .catch((reason) => {
+              this.set('errorMessage', reason.error || reason);
+            });
+          this.transitionToRoute("/");
         });
-  this.transitionToRoute("/");
-      });
     },
-    createUser: function(){
+    createUser: function () {
       var username = this.get('username');
       var email = this.get('email');
       var password = this.get('password');
       var passwordConfirmation = this.get('passwordConfirmation');
-      var user = this.store.createRecord('user', {
+      var user = this.store.createRecord('account', {
         username: username,
         email: email,
         password: password,
         passwordConfirmation: passwordConfirmation
       });
-        user.save();
+      user.save();
     }
   }
 });

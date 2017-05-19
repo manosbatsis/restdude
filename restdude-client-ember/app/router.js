@@ -19,6 +19,7 @@ Router.map(function() {
   this.route('profile', { path: '/accounts/profile' });
 
   this.route('application-embed');
+  this.route('account');
 });
 
 export default Router;

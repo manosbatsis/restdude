@@ -20,6 +20,7 @@
  */
 package com.restdude.auth.userAccount.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.restdude.auth.userAccount.model.EmailConfirmationOrPasswordResetRequest;
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
 import com.restdude.auth.userAccount.model.UsernameChangeRequest;
@@ -28,19 +29,27 @@ import com.restdude.auth.userdetails.model.UserDetailsImpl;
 import com.restdude.auth.userdetails.service.UserDetailsService;
 import com.restdude.auth.userdetails.util.SecurityUtil;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
+import com.restdude.domain.Model;
 import com.restdude.domain.UserDetails;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.service.UserService;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResource;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
+import com.restdude.hypermedia.util.HypermediaUtils;
+import com.restdude.hypermedia.util.JsonApiModelBasedDocumentBuilder;
+import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.util.ConfigurationFactory;
 import com.restdude.util.exception.http.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.NonNull;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,6 +84,28 @@ public class UserAccountController {
     @Autowired(required = false)
     public void setUserDetailsConfig(UserDetailsConfig userDetailsConfig) {
         this.userDetailsConfig = userDetailsConfig;
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Register new account", notes = "Register a new user")
+    public JsonApiModelResourceDocument<User, String> jsonApiPost(@NonNull @RequestBody JsonApiModelResourceDocument<UserAccountRegistration, String> document) {
+        JsonApiModelResourceDocument<User, String> doc = null;
+        // unwrap the submitted model, submit and obtain user
+        JsonApiModelResource<UserAccountRegistration, String> resource = document.getData();
+        if(resource != null ){
+            UserAccountRegistration  reg = resource.getAttributes();
+            User user = this.create(reg);
+
+
+            // repackage user and return as a JSON API Document
+            doc = new JsonApiModelBasedDocumentBuilder<User, String>("users")
+                    .withData(user)
+                    .buildModelDocument();
+        }
+
+        return doc;
     }
 
     @RequestMapping(method = RequestMethod.POST)

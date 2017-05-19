@@ -26,6 +26,7 @@ import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
 import com.restdude.domain.users.model.UserRegistrationCode;
+import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -37,7 +38,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @ApiModel(value = "UserAccountRegistration", description = "User registration")
-public class UserAccountRegistration implements Serializable {
+public class UserAccountRegistration extends AbstractSystemUuidPersistableModel {
 
 	private static final long serialVersionUID = 5206010308112791343L;
 

@@ -74,7 +74,7 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
     // TODO: refactor to programmatic CORS control
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/auth/jwt/**")
+        registry.addMapping("/api/auth/**")
                 .allowCredentials(true)
                 .allowedOrigins("*")
                 //.allowedHeaders("*")
