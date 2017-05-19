@@ -14,6 +14,11 @@
       {{/link-to}}
       {{#if session.isAuthenticated}}
           <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
+	 {{#link-to 'user'}}
+	{{#if sessionAccount.account}}
+         <a>{{sessionAccount.account.username}}</a>
+        {{/if}}
+       {{/link-to}}
         {{else}}
        {{#link-to 'login'}}
         Login
@@ -25,3 +30,5 @@
     {{outlet}}
   </div>
 </div>
+
+sessionAccount
