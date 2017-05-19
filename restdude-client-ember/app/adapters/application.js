@@ -7,6 +7,23 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
 
   host: `${config.host}`,
   namespace: `${config.namespace}`,
-  authorizer: `${config.authorizer}`
+  authorizer: `${config.authorizer}`,
+
+  // TODO: description  and param documentation
+  /**
+   * This method overrides DataAdapterMixin.urlForQueryRecord() to...
+   *
+   * @augments DataAdapterMixin
+   * @param query
+   * @returns {string}
+   */
+  urlForQueryRecord(query) {
+    if (query.me) {
+      delete query.me;
+      return `${this._super(...arguments)}/me`;
+    }
+
+    return this._super(...arguments);
+  }
 
 });
