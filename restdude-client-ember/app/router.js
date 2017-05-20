@@ -20,6 +20,7 @@ Router.map(function() {
 
   this.route('application-embed');
   this.route('account');
+  this.route('confirmationEmail');
 });
 
 export default Router;
