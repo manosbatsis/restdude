@@ -3,40 +3,33 @@ import ApplicationController from './application';
 
 
 export default ApplicationController.extend({
+
+  session: Ember.inject.service(),
   actions: {
 
+    /**
+     * Attempt to register the new user
+     */
     save(){
-      var credentials = this.getProperties('username', 'email', 'password', 'passwordConfirmation');
 
+      // keep a ref to form input
+      const registrationInfo = this.getProperties('username', 'email', 'password', 'passwordConfirmation');
 
-      var account = this.store.createRecord('account', credentials);
+      // create a model for POSTing to /api/auth/accounts
+      var account = this.store.createRecord('account', registrationInfo);
 
-
+      // save to register user account. the user will receive
+      // a confirmation email to complete the registration
       account.save().catch((error) => {
         this.set('errorMessage', error);
       })
-        .then(() => {
-          this.get('session')
-            .authenticate('authenticator:custom',
-              account.get('email'), account.get('password', credentials))
-            .catch((reason) => {
-              this.set('errorMessage', reason.error || reason);
-            });
-          this.transitionToRoute("/");
-        });
-    },
-    createUser: function () {
-      var username = this.get('username');
-      var email = this.get('email');
-      var password = this.get('password');
-      var passwordConfirmation = this.get('passwordConfirmation');
-      var user = this.store.createRecord('account', {
-        username: username,
-        email: email,
-        password: password,
-        passwordConfirmation: passwordConfirmation
+      .then(() => {
+
+        // TODO: transition to email confirmation code input form
+        this.transitionToRoute("/");
+
       });
-      user.save();
     }
+
   }
 });
