@@ -26,7 +26,7 @@ export default ApplicationController.extend({
       .then(() => {
 
         // TODO: transition to email confirmation code input form
-        this.transitionToRoute("/");
+        this.transitionToRoute("/confirmationEmail");
 
       });
     }
