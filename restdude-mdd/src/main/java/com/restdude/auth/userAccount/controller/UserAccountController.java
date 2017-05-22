@@ -108,6 +108,29 @@ public class UserAccountController {
         return doc;
     }
 
+    @RequestMapping(method = RequestMethod.PUT, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @ApiOperation(value = "Confirm registration email and/or update account password", notes = "Confirm registration email and/or update, reset, or request to reset an account password. The operation handles three cases. 1) When logged-in, provide " +
+            "currentPassword, password and passwordConfirmation to immediately change password. 2) when anonymous, provide resetPasswordToken, password and passwordConfirmation to immediately" +
+            "change password. 3) when anonymous, provide email or username to have a password reset token and link sent to your inbox.")
+    public JsonApiModelResourceDocument<UserDetails, String> jsonApiPut(@NonNull @RequestBody JsonApiModelResourceDocument<EmailConfirmationOrPasswordResetRequest, String> document,
+            HttpServletRequest request, HttpServletResponse response) {
+        JsonApiModelResourceDocument<UserDetails, String> doc = null;
+        // unwrap the submitted model, submit and obtain user
+        JsonApiModelResource<EmailConfirmationOrPasswordResetRequest, String> resource = document.getData();
+        if(resource != null ){
+            EmailConfirmationOrPasswordResetRequest  reg = resource.getAttributes();
+            UserDetails user = this.update(reg, request, response);
+
+
+            // repackage user and return as a JSON API Document
+            doc = new JsonApiModelBasedDocumentBuilder<UserDetails, String>("users")
+                    .withData(user)
+                    .buildModelDocument();
+        }
+
+        return doc;
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Register new account", notes = "Register a new user")
