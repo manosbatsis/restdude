@@ -114,7 +114,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     @FilePersistencePreview(maxWidth = 100, maxHeight = 100)
     @FilePersistencePreview(maxWidth = 50, maxHeight = 50)
     @Column(name = "avatar_url")
-    private String avatarUrl;
+        private String avatarUrl;
 
     @FilePersistence(maxWidth = 1920, maxHeight = 1080)
     @FilePersistencePreview(maxWidth = 1280, maxHeight = 720)

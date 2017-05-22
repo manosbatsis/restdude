@@ -21,15 +21,17 @@
 package com.restdude.auth.userAccount.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restdude.domain.PersistableModel;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.PrePersist;
 import java.io.Serializable;
 
 @ApiModel(value = "EmailConfirmationOrPasswordResetRequest", description = "Submitting a password reset request triggers a reset token and email if resetPasswordToken is null, updates the password if resetPasswordToken is not null and valid, ")
-public class EmailConfirmationOrPasswordResetRequest implements Serializable {
+public class EmailConfirmationOrPasswordResetRequest implements PersistableModel<String> {
 
     private static final long serialVersionUID = 5206010308112791343L;
 
@@ -110,5 +112,43 @@ public class EmailConfirmationOrPasswordResetRequest implements Serializable {
 
     public void setResetPasswordToken(String resetPasswordToken) {
         this.resetPasswordToken = resetPasswordToken;
+    }
+
+    /**
+     * Equivalent of a method annotated with @{@link PrePersist} and/or
+     *
+     * @{@link javax.persistence.PreUpdate}, only applied before validation
+     */
+    @Override
+    public void preSave() {
+
+    }
+
+    /**
+     * Equivalent of {@link }org.springframework.data.domain.Persistable#isNew()}
+     */
+    @Override
+    public boolean isNew() {
+        return false;
+    }
+
+    /**
+     * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getPk()}
+     * only without conflict with {@link ResourceSupport#getId()}
+     */
+    @Override
+    public String getPk() {
+        return null;
+    }
+
+    /**
+     * Set the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#setPk()}
+     * only without conflict with the getter {@link ResourceSupport#getId()}
+     *
+     * @param s the pk to set
+     */
+    @Override
+    public void setPk(String s) {
+
     }
 }
