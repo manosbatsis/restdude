@@ -76,6 +76,7 @@ logging:
       test: WARN
       mdd: WARN
       jsonapi: WARN
+      util.email.service.AbstractEmailService: DEBUG
 
 #        repository: DEBUG
 #        validation: DEBUG
