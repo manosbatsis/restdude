@@ -30,6 +30,7 @@ module.exports = function (environment) {
     host: 'http://localhost:8080',
     namespace: 'restdude/api/rest',
     namespaceAuth: 'restdude/api/auth',
+    namespaceConfirm: 'restdude/api/auth/account',
     authorizer: 'authorizer:custom',
   };
 
