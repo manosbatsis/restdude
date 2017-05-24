@@ -9,5 +9,11 @@ module.exports = {
   "launch_in_dev": [
     "PhantomJS",
     "Chrome"
-  ]
+  ],
+  "proxies": {
+    "/api": {
+      "target": "http://localhost:8080/restdude/api/auth/jwt/access",
+      "onlyContentTypes": ["xml", "json"]
+    }
+  }
 };

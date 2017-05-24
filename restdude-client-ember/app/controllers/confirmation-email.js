@@ -6,16 +6,18 @@ export default Ember.Controller.extend({
 
   actions: {
     continue: function() {
-      var resetPasswordToken = this.getProperties('resetPasswordToken');
-      var email = this.getProperties('email');
+      var putInfo = this.getProperties('resetPasswordToken','email');
+      //var email = this.getProperties('email');
 
    return new Ember.RSVP.Promise((resolve, reject) => {
     Ember.$.ajax({
       url: 'http://localhost:8080/restdude/api/auth/account',//this.serverTokenEndpoint, //`${config.namespaceConfirm}`
       type: 'PUT',
       data: JSON.stringify({
-        resetPasswordToken,
-        email
+        //resetPasswordToken: resetPasswordToken,
+        //email: email
+        putInfo : putInfo
+
       }),
       contentType: 'application/json;charset=utf-8',
       dataType: 'json'
