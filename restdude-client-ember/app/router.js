@@ -43,6 +43,13 @@ Router.map(function() {
       path: ':user_id'
     });
   });
+  this.route('home');
+  this.route('accountandprofile');
+  this.route('configureapps');
+  this.route('statistics');
+  this.route('systemsettings');
+  this.route('clientplans');
+  this.route('billing');
 });
 
 export default Router;
