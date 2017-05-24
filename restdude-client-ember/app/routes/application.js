@@ -9,7 +9,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   sessionAccount: service('session-account'),
 
 
-
   beforeModel(transition) {
 
     // widget mode?

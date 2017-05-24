@@ -1,34 +1,67 @@
-<div class="container">
-  <div class="menu">
-    {{#link-to 'index'}}
-      <h1 class="left">
-        <em>SuperRentals</em>
-      </h1>
-    {{/link-to}}
-    <div class="left links">
-      {{#link-to 'about'}}
-        About
-      {{/link-to}}
-      {{#link-to 'contact'}}
-        Contact
-      {{/link-to}}
-      {{#if session.isAuthenticated}}
-          <a class="logoutBtn" {{action 'invalidateSession'}}>Logout</a>
-	 {{#link-to 'user'}}
-	{{#if sessionAccount.account}}
-         <a>{{sessionAccount.account.username}}</a>
-        {{/if}}
-       {{/link-to}}
-        {{else}}
-       {{#link-to 'login'}}
-        Login
-      {{/link-to}}
-      {{/if}}
-    </div>
-  </div>
-  <div class="body">
-    {{outlet}}
-  </div>
-</div>
 
-sessionAccount
+{{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+   {{#toolbar.tools}}
+   {{#paper-sidenav-toggle name="left" as |toggleAction|}}
+     {{#paper-button  classNames="hide-gt-sm" onClick=(action toggleAction)}}
+      {{paper-icon "menu"}}
+     {{/paper-button}}
+   {{/paper-sidenav-toggle}}
+   <h3 class="logo">noteblox</h3>
+   <span class="flex"></span>
+    {{layout.authorization-ui}}
+     {{#paper-button mini=true aria-label="Favorite"}}
+      {{paper-icon "favorite"}}
+     {{/paper-button}}
+   {{/toolbar.tools}}
+ {{/paper-toolbar}}
+
+ {{#paper-sidenav-container  class="site-sidenav"}}
+   {{#paper-sidenav class="md-sidenav-left " name="left" open=leftSideBarOpen onToggle=(action (mut leftSideBarOpen)) }}
+
+     {{#paper-card as |card|}}
+       {{#card.header as |header|}}
+         {{#header.avatar}}
+           <img src="http://www.gravatar.com/avatar/b701fb8a351a8a30adf58380edf2317c?s=60&d=identicon" >
+         {{/header.avatar}}
+         {{#header.text as |text|}}
+           {{#text.subhead}} Signed in as {{/text.subhead}}
+           {{#text.title}} {{sessionAccount.account.name}}  {{/text.title}}
+         {{/header.text}}
+       {{/card.header}}
+       {{#card.actions class="layout-column"}}
+       {{#paper-button iconButton=true}}
+               {{paper-icon "more_vert"}}
+             {{/paper-button}}
+       {{/card.actions}}
+     {{/paper-card}}
+
+     {{#paper-list}}
+       {{#paper-item }}
+         {{#link-to 'organizations' }}
+                   {{paper-icon "icon-briefcase"}}
+                   Organizations
+         {{/link-to}}
+       {{/paper-item}}
+       {{#paper-item }}
+         {{#link-to 'users' }}
+                   {{paper-icon "icon-briefcase"}}
+                   Users
+         {{/link-to}}
+       {{/paper-item}}
+     {{/paper-list}}
+
+
+       {{#paper-content padding=true}}
+         <div>
+            <div>
+                here will be dragons :-)
+            </div>
+         </div>
+       {{/paper-content}}
+   {{/paper-sidenav}}
+   <div class="flex">
+
+
+  {{outlet}}
+  </div>
+{{/paper-sidenav-container}}

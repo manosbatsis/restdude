@@ -40,6 +40,14 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
+
+    //TODO:  disable mirage so that it won’t intercept Ember
+    // requests to other servers
+    //ENV['ember-cli-mirage'] = {enabled: false};
+
+
+    // Debugging settings
+    // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_RESOLVER = true;
     ENV.APP.LOG_ACTIVE_GENERATION = true;
     ENV.APP.LOG_TRANSITIONS = true;

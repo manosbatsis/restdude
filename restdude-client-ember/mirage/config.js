@@ -1,4 +1,14 @@
 export default function() {
+this.get('/users');
+this.get('/users/:id');
+this.post('/users');
+this.del('/users/:id');
+this.patch('/users/:id');
+this.get('/organizations');
+this.get('/organizations/:id');
+this.post('/organizations');
+this.del('/organizations/:id');
+this.patch('/organizations/:id');
 
   // These comments are here to help you get started. Feel free to delete them.
 
@@ -6,76 +16,10 @@ export default function() {
     Config (with defaults).
 
     Note: these only affect routes defined *after* them!
-   */
-  this.passthrough();
-  let users = [
-    {
-      type: 'users',
-      id: 'restdude1',
-      attributes: {
-        username: "nick",
-        email: "nick@restdude",
-        password: "12",
-        passwordConfirmation: "12",
-        permissions: 777
-      }
-    },
-    {
-      type: 'users',
-      id: 'restdude2',
-      attributes: {
-        username: "manos",
-        email: "manos@restdude",
-        password: "123",
-        passwordConfirmation: "123",
-        permissions: 777
-      }
-    },
-    {
-      type: 'users',
-      id: 'restdude2',
-      attributes: {
-        username: "erik",
-        email: "erik@restdude",
-        password: "1234",
-        passwordConfirmation: "1234",
-        permissions: 777
-      }
-    }
-  ];
+  */
 
-
-  ///////////////////
-/*
-  this.get('/users', function(db, request) {
-    if (request.queryParams.email !== undefined) {
-      let filteredUsers = users.filter(function (i) {
-        return i.attributes.email.toLowerCase().indexOf(request.queryParams.email.toLowerCase()) !== -1;
-      });
-      return { data: filteredUsers };
-    } else {
-      return { data: users };
-    }
-  });
-
-  this.get('/users/:id', function (db, request) {
-    return { data: users.find((user) => request.params.id === user.id) };
-  });
-
-
-this.get('/users/:id');
-
-// PATCH /users/:id
-this.patch('/users/:id', function(db) {
-  let attrs = this.normalizedRequestAttrs();
-  let userId = attrs.id;
-  let user = db.users.find(userId);
-
-
-  return user.update(attrs);
-});
-*/
   // this.urlPrefix = '';    // make this `http://localhost:8080`, for example, if your API is on a different server
+  // this.namespace = '';    // make this `api`, for example, if your API is namespaced
   // this.timing = 400;      // delay for each request, automatically set to 0 during testing
 
   /*
@@ -86,5 +30,7 @@ this.patch('/users/:id', function(db) {
     this.get('/posts/:id');
     this.put('/posts/:id'); // or this.patch
     this.del('/posts/:id');
+
+    http://www.ember-cli-mirage.com/docs/v0.2.0-beta.7/shorthands/
   */
-};
+}

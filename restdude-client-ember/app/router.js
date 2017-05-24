@@ -21,6 +21,28 @@ Router.map(function() {
   this.route('application-embed');
   this.route('account');
   this.route('confirmationEmail');
+  this.route('organizations', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':organization_id/edit'
+    });
+
+    this.route('show', {
+      path: ':organization_id'
+    });
+  });
+  this.route('users', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':user_id/edit'
+    });
+
+    this.route('show', {
+      path: ':user_id'
+    });
+  });
 });
 
 export default Router;
