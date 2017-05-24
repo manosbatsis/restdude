@@ -73,10 +73,11 @@ logging:
     org.springframework: WARN
     springfox.documentation.schema.property.CachingModelPropertiesProvider: ERROR
     com.restdude:
-      test: WARN
+      test: debug
       mdd: WARN
       jsonapi: WARN
-      util.email.service.AbstractEmailService: DEBUG
+      util.email.service.AbstractEmailService: WARN
+      web.filters.RestRequestNormalizerFilter: WARN
 
 #        repository: DEBUG
 #        validation: DEBUG

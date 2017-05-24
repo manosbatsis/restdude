@@ -114,6 +114,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), AnonymousAuthenticationFilter.class)
 
                 .authorizeRequests()
+                // tmp
+                .antMatchers("/api/rest/**").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/apiauth/**").permitAll()
                 .antMatchers("/login").permitAll()

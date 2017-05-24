@@ -54,9 +54,9 @@
                     <dependenciesToScan>
                         <dependency>com.restdude:restdude-tests-integration</dependency>
                     </dependenciesToScan>
-                    <!--excludes>
+                    <excludes>
                         <exclude>**/SwaggerStaticExporterIT.class</exclude>
-                    </excludes-->
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -133,7 +133,8 @@
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
-                            <skip>${it.skip}</skip>
+                            <skip>true</skip>
+                            <!--skip>${it.skip}</skip-->
                             <sourceDirectory>target/swagger2asciidoc</sourceDirectory>
                             <outputDirectory>target/swagger2html</outputDirectory>
                             <backend>html5</backend>

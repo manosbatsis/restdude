@@ -65,9 +65,19 @@ public class JsonApiIT extends AbstractControllerIT {
                 .body("data.attributes.name", equalTo("Greece"));
 
     }
-
     @Test(description = "Test search filters etc.", priority = 40 )
     public void testSearch() throws Exception {
+
+        String[] mimes = {
+                "application/vnd.api+json",
+                "application/vnd.api+json;charset=UTF-8",
+                "application/vnd.api+json;version=1;charset=UTF-8"};
+        for(String mime : mimes){
+            this.search(mime);
+        }
+
+    }
+    private void search(String contentType) throws Exception {
 
         // --------------------------------
         // Login

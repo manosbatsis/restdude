@@ -75,7 +75,7 @@ public class RestRequestNormalizerFilter extends OncePerRequestFilter {
 
         LOGGER.debug("doFilterInternal, requestMethodOverride: " + requestMethodOverride +
                 ", authorizationHeader: " + authorizationHeader + ", cookieToken: " + cookieToken);
-        response.setContentType(JSON_UTF8);
+        //response.setContentType(JSON_UTF8);
         if (LOGGER.isDebugEnabled()) {
             String method = requestMethodOverride != null ? requestMethodOverride : request.getMethod();
             LOGGER.debug("doFilterInternal, method: " + method + ", pathFragment: " + request.getRequestURL() + ", contextPath: " + request.getContextPath() + ", method override: " + requestMethodOverride + ", authToken: " + cookieToken);

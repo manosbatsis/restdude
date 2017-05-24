@@ -186,7 +186,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @RequestParam(value = PARAM_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
-
+        LOGGER.debug("plainJsonGetPage");
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
         return this.toHateoasPagedResources(super.findPaginated(pageable, null), "_pn");
     }
@@ -204,6 +204,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
 
+        LOGGER.debug("jsonApiGetPage");
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
         return toPageDocument(super.findPaginated(pageable, null));
     }

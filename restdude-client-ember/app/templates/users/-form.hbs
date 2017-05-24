@@ -1,0 +1,47 @@
+<form {{action "save" on="submit"}}>
+  <div>
+    <label>
+      Pk
+      {{input type="text" value=model.pk}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Username
+      {{input type="text" value=model.username}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Firstname
+      {{input type="text" value=model.firstName}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Lastname
+      {{input type="text" value=model.lastName}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Email
+      {{input type="text" value=model.email}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Password
+      {{input type="text" value=model.password}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Passwordconfirmation
+      {{input type="text" value=model.passwordConfirmation}}
+    </label>
+  </div>
+  <div>
+    <input type="submit" value="Save">
+  </div>
+</form>
