@@ -8,6 +8,17 @@
    {{/paper-sidenav-toggle}}
    <h3 class="logo">noteblox</h3>
    <span class="flex"></span>
+	{{#paper-item }}
+	{{#if session.isAuthenticated}}
+	  {{paper-icon "icon-briefcase"}}
+	 <button class="logoutBtn" {{action 'invalidateSession'}}>Logout</button>
+        {{else}}
+       {{#link-to 'login'}}
+        {{paper-icon "icon-briefcase"}}
+        Login
+      {{/link-to}}
+      {{/if}}
+     {{/paper-item}}
     {{layout.authorization-ui}}
      {{#paper-button mini=true aria-label="Favorite"}}
       {{paper-icon "favorite"}}
@@ -48,7 +59,28 @@
                    Users
          {{/link-to}}
        {{/paper-item}}
-     {{/paper-list}}
+	{{#paper-item }}
+         {{#link-to 'about' }}
+                   {{paper-icon "icon-briefcase"}}
+                   About
+         {{/link-to}}
+       {{/paper-item}}
+     {{#paper-item }}
+         {{#link-to 'contact' }}
+                   {{paper-icon "icon-briefcase"}}
+                   Contact
+         {{/link-to}}
+       {{/paper-item}}
+       {{#paper-item }}
+	{{#link-to 'user'}}
+	{{#if sessionAccount.account}}
+         {{paper-icon "icon-briefcase"}}
+         {{sessionAccount.account.username}}
+        {{/if}}
+       {{/link-to}}
+       {{/paper-item }}
+     {{/paper-list}} 
+ 
 
 
        {{#paper-content padding=true}}

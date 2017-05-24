@@ -21,16 +21,46 @@
 }}
    <div class="jumbo">
 
-    {{#each model as |user|}}
-      <h3>User: {{user.username}} </h3>
-      <h3>Email: {{user.email}} </h3>
+            
+<p>
+  <strong>Pk:</strong>
+  <span>{{sessionAccount.account.pk}}</span>
+</p>
 
-    {{/each}}
+<p>
+  <strong>Username:</strong>
+  <span>{{sessionAccount.account.username}}</span>
+</p>
+
+<p>
+  <strong>Firstname:</strong>
+  <span>{{sessionAccount.account.firstName}}</span>
+</p>
+
+<p>
+  <strong>Lastname:</strong>
+  <span>{{sessionAccount.account.lastName}}</span>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <span>{{sessionAccount.account.email}}</span>
+</p>
+
+<p>
+  <strong>Password:</strong>
+  <span>{{sessionAccount.account.password}}</span>
+</p>
+
+<p>
+  <strong>Passwordconfirmation:</strong>
+  <span>{{sessionAccount.account.passwordConfirmation}}</span>
+</p>
+
    </div>
  
 </div>
 
-  <button class="logoutBtn" {{action 'logout'}}>Log Out</button>
 {{outlet}}
 
 
