@@ -1,4 +1,4 @@
-
+{{#if session.isAuthenticated}}
 {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
    {{#toolbar.tools}}
    {{#paper-sidenav-toggle name="left" as |toggleAction|}}
@@ -33,7 +33,7 @@
      {{#paper-card as |card|}}
        {{#card.header as |header|}}
          {{#header.avatar}}
-         <img src="http://www.gravatar.com/avatar/b701fb8a351a8a30adf58380edf2317c?s=60&d=identicon">
+<img src="http://www.gravatar.com/avatar/b701fb8a351a8a30adf58380edf2317c?s=60&d=identicon">
          {{/header.avatar}}
 
          {{#header.text as |text|}}
@@ -43,7 +43,7 @@
 
          {{/header.text}}
        {{/card.header}}
-       	{{#if session.isAuthenticated}}
+       {{#if session.isAuthenticated}}
        {{#card.actions class="layout-column"}}
        <div aria-labelledby="simple-dropdown" class="dropdown-menu dropdown-menu-right" dropdownmenu="">
 
@@ -89,7 +89,7 @@
               {{/link-to }}
           </div>
        {{/card.actions}}
-        {{/if}}
+       {{/if}}
      {{/paper-card}}
    </li>
    </ul>
@@ -144,3 +144,8 @@
   {{outlet}}
   </div>
 {{/paper-sidenav-container}}
+{{/if}}
+{{#unless session.isAuthenticated}}
+   {{outlet}}
+{{/unless}}
+

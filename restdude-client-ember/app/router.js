@@ -50,6 +50,14 @@ Router.map(function() {
   this.route('systemsettings');
   this.route('clientplans');
   this.route('billing');
+
+
+
+  this.route('auth', function() {
+    this.route('login');
+    this.route('register');
+    this.route('forgot-password');
+  });
 });
 
 export default Router;
