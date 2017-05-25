@@ -1,65 +1,64 @@
 {{signup-form user=model}}
 {{login-js-inject}}
 
-
-
-
-
-
         <div class="container">
             <div class="row">
                 <div class="col-md-5 m-x-auto pull-xs-none vamiddle">
                     <div class="card">
                         <div class="card-block p-a-2">
                             <h1>Register</h1>
-                            <form {{action 'save' model on="submit"}}>
+                          <!--  <form {{action 'save' model on="submit"}}> -->
+                              {{#paper-form onSubmit=(action "save" model) as |form|}}
                             <p class="text-muted">Create your account</p>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
 
-                                 {{input value=username type="text" class="form-control" placeholder="Username"}}
+
+                                 {{form.input label="Username" value=username onChange=(action (mut Username)) required=true}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon">@<i></i>
                                 </span>
 
-                                {{ input value=email type="text" class="form-control" type="email" class="form-control" placeholder="Email"}}
+
+                                 {{form.input label="Email" type="email" value=email onChange=(action (mut Email)) required=true}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                {{ input value=password type="password" class="form-control" placeholder="Password"}}
+
+                                 {{form.input label="Password"  type='password' onChange=(action (mut passWord)) required=true}}
                             </div>
                             <div class="input-group m-b-2">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                {{input value=passwordConfirmation type="password" class="form-control" placeholder="Repeat password"}}
+
+                                {{form.input label="Repeat password"  value=passwordConfirmation type="password" onChange=(action (mut passWord)) required=true}}
 
                             </div>
-                             <button id='register-btn' {{action "save" model}} type="submit" class="btn btn-block btn-success">Create Account</button>
-                          </form>
+                            <div class="layout-row">
+                          {{#form.submit-button raised=true id='register-btn'onSubmit=(action "save" model) primary=true}}Create Account{{/form.submit-button}}
+                           </div>
+
+                           <br>
+                        <!--  </form>-->
+                          {{/paper-form}}
                         </div>
                          {{#if errorMessage}}
                            {{errorMessage}}
                         {{/if}}
                         <div class="card-footer p-a-2">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <button class="btn btn-block btn-facebook" type="button">
-                                        <span>facebook</span>
-                                    </button>
-                                </div>
-                                <div class="col-xs-6">
-                                    <button class="btn btn-block btn-twitter" type="button">
-                                        <span>twitter</span>
-                                    </button>
-                                </div>
-                                <div class="col-xs-6">
-                                     {{#link-to 'login'}}
-                                    <button class="btn btn-primary active m-t-1" type="button">
-                                        <span>Login</span>
-                                    </button>
+
+
+                                    {{#paper-button raised=true action="targetButton" target=component}}Facebook{{/paper-button}}
+
+
+                                    {{#paper-button raised=true action="targetButton" target=component}}Twitter{{/paper-button}}
+
+
+                                     {{#link-to 'auth.login'}}
+                                      {{#paper-button raised=true action="targetButton" target=component}}Login{{/paper-button}}
                                     {{/link-to}}
-                                </div>
-                            </div>
+
+
                         </div>
                     </div>
                 </div>

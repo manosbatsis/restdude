@@ -27,125 +27,157 @@
  {{/paper-toolbar}}
 
  {{#paper-sidenav-container  class="site-sidenav"}}
+
    {{#paper-sidenav class="md-sidenav-left " name="left" open=leftSideBarOpen onToggle=(action (mut leftSideBarOpen)) }}
-   <ul>
-     <li class="nav-item dropdown open" dropdown="">
+
      {{#paper-card as |card|}}
+
        {{#card.header as |header|}}
+
          {{#header.avatar}}
-<img src="http://www.gravatar.com/avatar/b701fb8a351a8a30adf58380edf2317c?s=60&d=identicon">
+
+         <img src="http://www.gravatar.com/avatar/b701fb8a351a8a30adf58380edf2317c?s=60&d=identicon">
+
          {{/header.avatar}}
 
          {{#header.text as |text|}}
 
            {{#text.subhead}} Signed in as {{/text.subhead}}
+
            {{#text.title}} {{sessionAccount.account.name}}  {{/text.title}}
 
          {{/header.text}}
+
        {{/card.header}}
-       {{#if session.isAuthenticated}}
+
+        {{#if session.isAuthenticated}}
+
        {{#card.actions class="layout-column"}}
-       <div aria-labelledby="simple-dropdown" class="dropdown-menu dropdown-menu-right" dropdownmenu="">
 
-              {{#link-to 'home' }}
-              <div class="dropdown-header text-xs-center">
-              <a class="dropdown-item" href="#">{{fa-icon "home" fixedWidth=true}}Home</a>
-              </div>
-              {{/link-to }}
-              {{#link-to 'accountandprofile' }}
-              <div class="dropdown-header text-xs-center">
-              <a class="dropdown-item" href="#">{{fa-icon "user-o" fixedWidth=true}} Account & Profile</a>
-              </div>
-              {{/link-to }}
-              {{#link-to 'configureapps' }}
-              <div class="dropdown-header text-xs-center">
-              <a class="dropdown-item" href="#">{{fa-icon "plug" fixedWidth=true}} Configure Apps</a>
-              </div>
-              {{/link-to }}
-              {{#link-to 'organizations' }}
-              <div class="dropdown-header text-xs-center">
-              <a class="dropdown-item" href="#">{{fa-icon "address-book-o" fixedWidth=true}}Organizations</a>
-              </div>
-              {{/link-to }}
-              {{#link-to 'statistics' }}
-              <div class="dropdown-header text-xs-center">
-              <a class="dropdown-item" href="#">{{fa-icon "line-chart" fixedWidth=true}}Statistics</a>
-              </div>
-              {{/link-to }}
+       <button class="logoutBtn" {{action 'invalidateSession'}}>Logout</button>
 
-              <br>
-              <div class="dropdown-header text-xs-center"><strong>Administration</strong></div>
-              {{#link-to 'systemsettings' }}
-              <div class="dropdown-header text-xs-center">System Settings</div>
-              {{/link-to }}
-              {{#link-to 'users' }}
-              <div class="dropdown-header text-xs-center">User Accounts</div>
-              {{/link-to }}
-              {{#link-to 'clientplans' }}
-              <div class="dropdown-header text-xs-center">Client Plans</div>
-              {{/link-to }}
-              {{#link-to 'billing' }}
-              <div class="dropdown-header text-xs-center">Billing</div>
-              {{/link-to }}
-          </div>
        {{/card.actions}}
-       {{/if}}
-     {{/paper-card}}
-   </li>
-   </ul>
-     {{#paper-list}}
-       {{#paper-item }}
-         {{#link-to 'organizations' }}
-                   {{paper-icon "icon-briefcase"}}
-                   Organizations
-         {{/link-to}}
-       {{/paper-item}}
-       {{#paper-item }}
-         {{#link-to 'users' }}
-                   {{paper-icon "icon-briefcase"}}
-                   Users
-         {{/link-to}}
-       {{/paper-item}}
-	{{#paper-item }}
-         {{#link-to 'about' }}
-                   {{paper-icon "icon-briefcase"}}
-                   About
-         {{/link-to}}
-       {{/paper-item}}
-     {{#paper-item }}
-         {{#link-to 'contact' }}
-                   {{paper-icon "icon-briefcase"}}
-                   Contact
-         {{/link-to}}
-       {{/paper-item}}
-       {{#paper-item }}
-	{{#link-to 'user'}}
-	{{#if sessionAccount.account}}
-         {{paper-icon "icon-briefcase"}}
-         {{sessionAccount.account.username}}
+
         {{/if}}
-       {{/link-to}}
+
+     {{/paper-card}}
+
+     {{#paper-list}}
+
+       {{#paper-item }}
+
+         {{#link-to 'home' }}
+
+                   {{paper-icon "home"}}
+
+                   Home
+
+         {{/link-to}}
+
+       {{/paper-item}}
+
+       {{#paper-item }}
+
+         {{#link-to 'accountandprofile' }}
+
+                   {{paper-icon "account-box"}}
+
+                   Account
+
+         {{/link-to}}
+
+       {{/paper-item}}
+
+       {{#paper-item }}
+
+         {{#link-to 'configureapps' }}
+
+                   {{paper-icon "folder"}}
+
+                   Configure Apps
+
+         {{/link-to}}
+
+       {{/paper-item}}
+
+       {{#paper-item }}
+
+         {{#link-to 'spaces' }}
+
+                   {{paper-icon "folder"}}
+
+                   Spaces
+
+         {{/link-to}}
+
+       {{/paper-item}}
+
+       {{#paper-item }}
+
+         {{#link-to 'statistics' }}
+
+                   {{paper-icon "timeline"}}
+
+                   Statistics
+
+         {{/link-to}}
+
+       {{/paper-item}}
+
+       {{#paper-subheader}}3Administration{{/paper-subheader}}
+
+       {{#paper-item }}
+
+        {{#link-to 'systemsettings'}}
+
+           System Settings
+
+        {{/link-to}}
+
        {{/paper-item }}
+
+       {{#paper-item }}
+
+        {{#link-to 'users'}}
+
+           User Accounts
+
+        {{/link-to}}
+
+       {{/paper-item }}
+
+       {{#paper-item }}
+
+        {{#link-to 'clientplans'}}
+
+           Client Plans
+
+        {{/link-to}}
+
+       {{/paper-item }}
+
+       {{#paper-item }}
+
+        {{#link-to 'billing'}}
+
+           Billing
+
+        {{/link-to}}
+
+       {{/paper-item }}
+
      {{/paper-list}}
 
-
-
-       {{#paper-content padding=true}}
-         <div>
-            <div>
-                here will be dragons :-)
-            </div>
-         </div>
-       {{/paper-content}}
    {{/paper-sidenav}}
+
    <div class="flex">
 
-
   {{outlet}}
+
   </div>
+
 {{/paper-sidenav-container}}
 {{/if}}
 {{#unless session.isAuthenticated}}
    {{outlet}}
 {{/unless}}
-

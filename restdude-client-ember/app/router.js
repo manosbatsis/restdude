@@ -58,6 +58,7 @@ Router.map(function() {
     this.route('register');
     this.route('forgot-password');
   });
+  this.route('spaces');
 });
 
 export default Router;
