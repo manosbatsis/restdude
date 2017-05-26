@@ -14,19 +14,23 @@
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
 
 
-                                 {{form.input label="Name" value=name onChange=(action (mut name)) required=true}}
+                                 {{form.input id="name" label="Name" value=name onChange=(action (mut name)) required=true}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon">@<i></i>
                                 </span>
-                                 {{form.input label="Email" type="email" value=email onChange=(action (mut email)) required=true}}
+                                 {{form.input id="email" label="Email" type="email" value=email onChange=(action (mut email)) required=true}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
 
-                                 {{form.input label="Password"  type='password' value=password  onChange=(action (mut password)) required=true}}
+                                 {{form.input id="password" label="Password"  type='password' value=password  onChange=(action (mut password)) required=true}}
                             </div>
-                          
+                             <div class="input-group m-b-1">
+                                <span class="input-group-addon"><i class="icon-lock"></i></span>
+
+                                 {{form.input id="passwordConfirmation" label="Password Confirmation"  type='password' value=passwordConfirmation  onChange=(action (mut passwordConfirmation)) required=true}}
+                            </div>
                             <div class="layout-row">
                           {{#form.submit-button raised=true id='register-btn'onSubmit=(action "save" model) primary=true}}Sign Up{{/form.submit-button}}
                            </div>

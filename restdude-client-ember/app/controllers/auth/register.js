@@ -13,7 +13,7 @@ export default ApplicationController.extend({
     save(){
 
       // keep a ref to form input
-      const registrationInfo = this.getProperties('name', 'email', 'password');
+      const registrationInfo = this.getProperties('name', 'email', 'password','passwordConfirmation');
 
       // create a model for POSTing to /api/auth/accounts
       var account = this.store.createRecord('account', registrationInfo);
