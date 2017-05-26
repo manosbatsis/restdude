@@ -1,47 +1,40 @@
-<form {{action "save" on="submit"}}>
+ {{#paper-form onSubmit=(action "save" ) as |form|}}
   <div>
     <label>
-      Pk
-      {{input type="text" value=model.pk}}
+       {{form.input id="pk" label=" Pk" type="text" value=model.pk onChange=(action (mut model.pk)) required=true}}
     </label>
   </div>
   <div>
     <label>
-      Username
-      {{input type="text" value=model.username}}
+      {{form.input id="username" label=" Username" type="text" value=model.username onChange=(action (mut model.username)) required=true}}
     </label>
   </div>
   <div>
     <label>
-      Firstname
-      {{input type="text" value=model.firstName}}
+      {{form.input id="firstname" label=" Firstname" type="text" value=model.firstName onChange=(action (mut model.firstName)) required=true}}
     </label>
   </div>
   <div>
     <label>
-      Lastname
-      {{input type="text" value=model.lastName}}
+       {{form.input id="''lastname''" label=" Lastname" type="text" value=model.lastName onChange=(action (mut model.lastName)) required=true}}
     </label>
   </div>
   <div>
     <label>
-      Email
-      {{input type="text" value=model.email}}
+      {{form.input id="email" label=" Email" type="text" value=model.email onChange=(action (mut model.email)) required=true}}
     </label>
   </div>
   <div>
     <label>
-      Password
-      {{input type="text" value=model.password}}
+       {{form.input id="password" label=" Password" type="password" value=model.password onChange=(action (mut model.password)) required=true}}
     </label>
   </div>
   <div>
     <label>
-      Passwordconfirmation
-      {{input type="text" value=model.passwordConfirmation}}
+       {{form.input id="passwordconfirmation" label=" Passwordconfirmation" type="password" value=model.passwordConfirmation onChange=(action (mut model.passwordConfirmation)) required=true}}
     </label>
   </div>
   <div>
-    <input type="submit" value="Save">
+    {{#form.submit-button type="submit" raised=true id='save-btn' value="Save" primary=true}}Save{{/form.submit-button}}
   </div>
-</form>
+{{/paper-form}}

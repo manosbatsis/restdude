@@ -7,29 +7,25 @@
     </i>
     Email Confirmation Code
   </h4>
-  
+  {{#paper-form onSubmit=(action "continue" model) as |form|}}
   <div style="display:;" id="form-olvidado">
-    <form accept-charset="UTF-8" role="form" id="login-recordar" method="post">
-      <fieldset>
         <span class="help-block">
           Check your email for confirmation code and enter the code below
         </span>
         <div class="form-group input-group">
           <span class="input-group-addon"><i class="icon-lock"></i></span>
-	  {{input id="resetPasswordToken" class="form-control" value=resetPasswordToken type="code" placeholder="Email Confirmation Code" required=""}}
+    {{form.input id="resetPasswordToken" label="Email Confirmation Code" type="email" value=resetPasswordToken onChange=(action (mut resetPasswordToken)) required=true}}
         </div>
         <div class="form-group input-group">
           <span class="input-group-addon">
             @
           </span>
-         {{input id="email" class="form-control" placeholder="Email" value=email type="email" required=""}}
+          {{form.input label="Email" type="email" value=email onChange=(action (mut email)) required=true}}
         </div>
-        <button type="submit" {{action "continue" model}}  class="btn btn-primary btn-block" id="btn-olvidado">
-          Continue
-        </button>
-      </fieldset>
-    </form>
+        
+        {{#form.submit-button type="submit" onSubmit=(action "continue" model) raised=true id='continue-btn' primary=true}}Continue{{/form.submit-button}}
   </div>
+   {{/paper-form}}
 </div>
 	</div>
 </div>

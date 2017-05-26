@@ -17,13 +17,13 @@
                                     <span class="input-group-addon"><i class="icon-user"></i></span>
                                    <label for="identification"></label>
 
-                                     {{form.input id="identification" label="Username"  value=identification onChange=(action (mut userName)) required=true}}
+                                     {{form.input id="identification" label="Username" type="text" value=identification onChange=(action (mut identification)) required=true}}
                                 </div>
                                 <div class="input-group m-b-2">
                                     <span class="input-group-addon"><i class="icon-lock"></i></span>
                                     <label for="password" ></label>
 
-                                     {{form.input id="password" label="Password"  type='password' onChange=(action (mut passWord)) required=true}}
+                                     {{form.input id="password" label="Password"  type='password' value=password onChange=(action (mut password)) required=true}}
                                 </div>
                                 <br>
                                 <div class="row">

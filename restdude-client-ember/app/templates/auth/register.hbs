@@ -7,35 +7,28 @@
                     <div class="card">
                         <div class="card-block p-a-2">
                             <h1>Register</h1>
-                          <!--  <form {{action 'save' model on="submit"}}> -->
+                    
                               {{#paper-form onSubmit=(action "save" model) as |form|}}
                             <p class="text-muted">Create your account</p>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
 
 
-                                 {{form.input label="Username" value=username onChange=(action (mut Username)) required=true}}
+                                 {{form.input label="Name" value=name onChange=(action (mut name)) required=true}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon">@<i></i>
                                 </span>
-
-
-                                 {{form.input label="Email" type="email" value=email onChange=(action (mut Email)) required=true}}
+                                 {{form.input label="Email" type="email" value=email onChange=(action (mut email)) required=true}}
                             </div>
                             <div class="input-group m-b-1">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
 
-                                 {{form.input label="Password"  type='password' onChange=(action (mut passWord)) required=true}}
+                                 {{form.input label="Password"  type='password' value=password  onChange=(action (mut password)) required=true}}
                             </div>
-                            <div class="input-group m-b-2">
-                                <span class="input-group-addon"><i class="icon-lock"></i></span>
-
-                                {{form.input label="Repeat password"  value=passwordConfirmation type="password" onChange=(action (mut passWord)) required=true}}
-
-                            </div>
+                          
                             <div class="layout-row">
-                          {{#form.submit-button raised=true id='register-btn'onSubmit=(action "save" model) primary=true}}Create Account{{/form.submit-button}}
+                          {{#form.submit-button raised=true id='register-btn'onSubmit=(action "save" model) primary=true}}Sign Up{{/form.submit-button}}
                            </div>
 
                            <br>
