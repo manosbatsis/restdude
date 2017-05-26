@@ -202,4 +202,12 @@ public class UserAccountController {
     }
 
 
+    @ApiOperation(value = "Logout",
+            notes = "Logout and forget user")
+    @RequestMapping(method = RequestMethod.DELETE, consumes = {"application/json", HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON}, produces = {"application/json", HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(HttpServletRequest request, HttpServletResponse response) {
+        // logout
+        SecurityUtil.logout(request, response, userDetailsConfig);
+    }
 }

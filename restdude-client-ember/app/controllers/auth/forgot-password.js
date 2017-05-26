@@ -1,5 +1,6 @@
 // app/controllers/forgot-password.js
 import Ember from "ember";
+import config from '../../config/environment';
 
 export default Ember.Controller.extend({
   session: Ember.inject.service(),
@@ -11,13 +12,9 @@ export default Ember.Controller.extend({
 
    return new Ember.RSVP.Promise((resolve, reject) => {
     Ember.$.ajax({
-      url: 'http://localhost:8080/restdude/api/auth/account',//this.serverTokenEndpoint, //`${config.namespaceConfirm}`
+      url: `${config.host}/${config.namespaceConfirm}`,
       type: 'PUT',
-      data: JSON.stringify({
-        
-        email : email
-
-      }),
+      data: JSON.stringify(email ),
       contentType: 'application/json;charset=utf-8',
       dataType: 'json'
     }).then(function(response) {

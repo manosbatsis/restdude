@@ -76,6 +76,9 @@ public class SecurityUtil {
 	public static void logout(HttpServletRequest request, HttpServletResponse response, UserDetailsConfig userDetailsConfig) {
 		CookieUtil.addCookie(request, response, userDetailsConfig.getCookiesBasicAuthTokenName(), null, true, userDetailsConfig);
 		CookieUtil.addCookie(request, response, COOKIE_NAME_SESSION, null, true, userDetailsConfig);
+		// JWT
+		CookieUtil.addCookie(request, response, "access_token", null, true, userDetailsConfig);
+		CookieUtil.addCookie(request, response, "refresh_token", null, true, userDetailsConfig);
 		HttpSession session = request.getSession();
 		if (session == null) {
 			LOGGER.debug("logout, no session to clear");

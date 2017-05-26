@@ -21,6 +21,8 @@
 package com.restdude.domain.misc.model;
 
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.annotation.model.CurrentPrincipal;
+import com.restdude.mdd.annotation.model.CurrentPrincipalField;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractPersistableModelController;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
@@ -48,6 +50,7 @@ public class Organization extends AbstractSystemUuidPersistableModel {
     @Getter @Setter
     private String description;
 
+    @CurrentPrincipal
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "owner", referencedColumnName = "pk")
     @Getter @Setter

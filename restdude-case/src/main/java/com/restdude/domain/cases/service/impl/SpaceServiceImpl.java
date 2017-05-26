@@ -58,6 +58,13 @@ public class SpaceServiceImpl
 							.visibility(ContextVisibilityType.SECRET)
 							.build());
 
+			Space geekologue = this.create(new Space.Builder()
+					.owner(systemUser)
+					.name("GKLG")
+					.title("Geekologue, EOOD")
+					.description("Root business space for Geekologue, EOOD")
+					.visibility(ContextVisibilityType.CLOSED)
+					.build());
 		}
 
 	}

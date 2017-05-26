@@ -1,4 +1,14 @@
 export default function() {
+this.get('/spaces');
+this.get('/spaces/:id');
+this.post('/spaces');
+this.del('/spaces/:id');
+this.patch('/spaces/:id');
+this.get('/testmodels');
+this.get('/testmodels/:id');
+this.post('/testmodels');
+this.del('/testmodels/:id');
+this.patch('/testmodels/:id');
 this.get('/users');
 this.get('/users/:id');
 this.post('/users');

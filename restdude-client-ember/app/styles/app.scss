@@ -3,6 +3,7 @@
 
 
 
+
 html {
 
   font-family: 'Lato', sans-serif;
@@ -51,3 +52,70 @@ md-sidenav > md-card {
   padding: 0;
   box-sizing: border-box;
 }
+
+/* ------------------------- breadcrumb ------------------------- */
+.breadcrumb {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: inline-block;
+  list-style: none;
+  counter-reset: flag;
+}
+.breadcrumb > li {
+  float: left;
+  display: block;;
+  position: relative;
+  list-style: none;
+}
+.breadcrumb > li > a {
+  text-decoration: none;
+  outline: none;
+}
+
+.breadcrumb > li:last-child {
+  border-radius: 0 5px 5px 0;
+  padding-right: 20px;
+  font-weight: bold;
+}
+
+.breadcrumb > li::before {
+  float: left;
+  display: block;;
+  position: relative;
+  padding-left:10px;
+  padding-right:10px;
+  content: '/';
+}
+.breadcrumb > li:first-child::before {
+  content: none;
+}
+/*
+.flat > li > a,
+.flat > li > a::after {
+  background: #fff;
+  color: #ec407a;
+  transition: background 0.5s;
+}
+.flat > li > a::before {
+  background: #fff;
+  box-shadow: 0 0 0 1px #ec407a;
+}
+.flat > li > a:hover,
+.flat > li > a.active,
+.flat > li > a:hover::after,
+.flat > li > a.active::after {
+  background: #ec407a;
+}
+.flat > li > a.active:hover {
+  background: #d81b60;
+}
+.flat > li > a:hover,
+.flat > li > a.active {
+  color: #fff;
+}
+.flat > li > a:hover::before,
+.flat > li > a.active::before {
+  color: #ec407a;
+}
+*/

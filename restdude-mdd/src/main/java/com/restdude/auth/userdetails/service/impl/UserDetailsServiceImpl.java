@@ -55,6 +55,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Service("userDetailsService")
@@ -172,7 +173,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserDetails userDetails = this.getPrincipal();
         User u = null;
         // Case 1: if authorized as current user and in an attempt to directly change password, require current password
-        if (userDetails != null && userDetails.getPk() != null && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
+        if (!isAnonymous(userDetails) && StringUtils.isNoneBlank(passwordResetRequest.getPassword(), passwordResetRequest.getPasswordConfirmation())) {
             u = this.userService.changePassword(
                     userDetails.getUsername(),
                     passwordResetRequest.getCurrentPassword(),
@@ -191,14 +192,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         // Case 3: forgotten password
         else {
-            String usernameOrEmail = userDetails != null ? userDetails.getUsername() : passwordResetRequest.getEmailOrUsername();
+            String usernameOrEmail = !isAnonymous(userDetails) ? userDetails.getUsername() : passwordResetRequest.getEmailOrUsername();
             this.handlePasswordResetRequest(usernameOrEmail);
             userDetails = new UserDetailsImpl();
         }
+
         userDetails = u != null ? UserDetailsImpl.fromUser(u) : new UserDetailsImpl();
-        userDetails.setPassword(u.getCredentials().getPassword());
+        if(!Objects.isNull(u) && !Objects.isNull(u.getCredentials())){
+            userDetails.setPassword(u.getCredentials().getPassword());
+        }
 
         return userDetails;
+    }
+
+    private boolean isAnonymous(UserDetails userDetails) {
+        return userDetails == null || userDetails.getPk() == null;
     }
 
     @Override
