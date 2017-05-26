@@ -21,7 +21,8 @@ module.exports = function (environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-
+      usingCors: true,
+      corsWithCreds: true
 
     },
     contentSecurityPolicy: {
@@ -32,6 +33,26 @@ module.exports = function (environment) {
     namespaceAuth: 'restdude/api/auth',
     namespaceConfirm: 'restdude/api/auth/account',
     authorizer: 'authorizer:custom',
+    // moment js
+    moment: {
+      // If null, undefined, or an empty string are passed as a date to any of the moment helpers
+      // then you will get Invalid Date in the output. To avoid this issue globally, you can set
+      // the option allowEmpty which all of the helpers respect and will result in nothing being
+      // rendered instead of Invalid Date.
+      allowEmpty: true, // default: false
+      // To cherry-pick specific locale support into your application.
+      // Full list of locales: https://github.com/moment/moment/tree/2.10.3/locale
+      //includeLocales: ['gr'],
+      // This will output _all_ locale scripts to assets/moment-locales
+      // this option does not respect includeLocales
+      // User locale is loaded by session-account service
+      localeOutputPath: 'assets/moment-locales',
+      // Timezone options:
+      // 'all' - all years, all timezones
+      // '2010-2020' - 2010-2020, all timezones
+      // 'none' - no data, just timezone API
+      includeTimezone: 'all'
+    }
   };
 
   ENV['ember-simple-auth'] = {

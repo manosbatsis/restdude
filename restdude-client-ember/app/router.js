@@ -58,7 +58,17 @@ Router.map(function() {
     this.route('register');
     this.route('forgot-password');
   });
-  this.route('spaces');
+  this.route('spaces', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':space_id/edit'
+    });
+
+    this.route('show', {
+      path: ':space_id'
+    });
+  });
 });
 
 export default Router;

@@ -24,12 +24,16 @@ export default Base.extend({
       password: credentials.password
     });
     // login request
+
     const requestOptions = {
       url: this.tokenEndpoint,
       type: 'POST',
       data,
       contentType: 'application/json;charset=utf-8',
-      dataType: 'json'
+      dataType: 'json',
+      crossDomain: true,
+      xhrFields: { withCredentials: true }
+
     };
     return new Promise((resolve, reject) => {
       ajax(requestOptions).then((response) => {

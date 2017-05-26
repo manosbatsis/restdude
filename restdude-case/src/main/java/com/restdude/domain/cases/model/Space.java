@@ -93,7 +93,7 @@ public class Space extends BaseContext {
 		super(name, title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests);
 	}
 
-
+//sudo ember generate scaffold space name:string title:string description:string avatarUrl:string visibility:string
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())

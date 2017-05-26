@@ -1,4 +1,5 @@
 import Ember from "ember";
+import moment from 'moment';
 
 const { inject: { service }, RSVP } = Ember;
 
@@ -21,6 +22,23 @@ export default Ember.Service.extend({
           this.set('account', user);
           resolve();
         }, reject);*/
+
+        // moment config
+        /*
+        const moment = this.get('moment');
+        // update the global locale?
+        if(sessionDataAuthenticated.locale && sessionDataAuthenticated.locale !== moment.locale()){
+          // load the locale if needed
+          if(moment.locales().indexOf(sessionDataAuthenticated.locale) === -1){
+            Ember.$.getScript(`/assets/moment-locales/${sessionDataAuthenticated.locale}.js`);
+          }
+          // update locale
+          moment.setLocale(sessionDataAuthenticated.locale);
+          // Globally set Timezone
+          // moment.setTimeZone('America/Los_Angeles');
+        }
+*/
+
         resolve();
       } else {
         resolve();

@@ -1,0 +1,72 @@
+<h1>Spaces list</h1>
+
+<p>
+  {{link-to "New Space" "spaces.new" }}
+</p>
+
+{{#if model.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Title
+        </th>
+        <th>
+          Description
+        </th>
+        <th>
+          Avatarurl
+        </th>
+        <th>
+          Bannerurl
+        </th>
+        <th>
+          Visibility
+        </th>
+        <th colspan="3">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |space|}}
+        <tr>
+          <td>
+            {{space.name}}
+          </td>
+          <td>
+            {{space.title}}
+          </td>
+          <td>
+            {{space.description}}
+          </td>
+          <td>
+            {{space.avatarUrl}}
+          </td>
+          <td>
+            {{space.bannerUrl}}
+          </td>
+          <td>
+            {{space.visibility}}
+          </td>
+          <td>
+            {{link-to "Edit" "spaces.edit" space}}
+          </td>
+          <td>
+            {{link-to "Show" "spaces.show" space}}
+          </td>
+          <td>
+            <a href="#" {{action "remove" space}}>Remove</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p id="blankslate">
+    No Spaces found
+  </p>
+{{/if}}

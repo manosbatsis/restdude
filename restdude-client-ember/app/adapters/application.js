@@ -2,14 +2,13 @@
 import Ember from "ember";
 import DS from "ember-data";
 import DataAdapterMixin from "ember-simple-auth/mixins/data-adapter-mixin";
-import config from "../config/environment";
+import ENV from "../config/environment";
 
 export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
 
-  host: `${config.host}`,
-  namespace: `${config.namespace}`,
-  authorizer: `${config.authorizer}`,
-  corsWithCredentials: true,
+  host: `${ENV.host}`,
+  namespace: `${ENV.namespace}`,
+  authorizer: `${ENV.authorizer}`,
   headers: {
     'Accept': 'application/vnd.api+json;charset=UTF-8',
     'Content-type': 'application/vnd.api+json;charset=UTF-8',
@@ -17,6 +16,17 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
    // 'x-vendor-secret': '12345'
   },
   ajax: function(url, type, hash) {
+
+    if (ENV.APP.usingCors) {
+      if (hash === undefined) { hash = {}; }
+
+      hash.crossDomain = true;
+
+      if (ENV.APP.corsWithCreds) {
+        hash.xhrFields = { withCredentials: true };
+      }
+    }
+
     console.log("ajax custom headers");
     if (this.headers !== undefined) {
       var headers = this.headers;
