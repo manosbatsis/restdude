@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+//@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 
 // Define desired color palettes.
 $primary: "indigo";
@@ -6,14 +8,13 @@ $accent: "grey";
 $warn: "red";
 @import "color-palette";
 @import 'ember-paper';
-@import "ember-paper-tabs";
 
 
 
 
 html {
 
-  font-family: 'Lato', sans-serif;
+  font-family: 'Roboto', 'Lato', sans-serif;
 }
 img.avatar {
   vertical-align: middle;
