@@ -58,9 +58,15 @@ Router.map(function() {
     this.route('show', {
       path: ':space_id'
     });
-    this.route('settings');
-    this.route('members');
-    this.route('billing');
+     this.route('settings', {
+      path: ':space_id/settings'
+    });
+    this.route('members', {
+      path: ':space_id/members'
+    });
+     this.route('billing', {
+      path: ':space_id/billing'
+    });
   });
 });
 
