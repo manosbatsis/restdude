@@ -4,12 +4,12 @@ import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-
 export default Ember.Route.extend(UnauthenticatedRouteMixin, {
 
 //export default Ember.Route.extend({
-  redirect: function () {
-    var url = this.router.location.formatURL('/auth/login');
+  /*redirect: function () {
+    var url = this.router.location.formatURL('auth.login');
     if (window.location.pathname === url) {
-      this.transitionTo('/auth/login');
+      this.transitionTo('auth.login');
     }
-  },
+  },*/
 
   beforeModel: function(){
     let controller = this.controllerFor(this.routeName);
