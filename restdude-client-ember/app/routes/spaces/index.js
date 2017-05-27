@@ -6,7 +6,7 @@ export default BaseAuthenticated.extend( {
       if(confirm('Are you sure?')) {
         model.destroyRecord();
       }
-    }
+    } 
   },
   model: function() {
     return this.store.findAll('space');
