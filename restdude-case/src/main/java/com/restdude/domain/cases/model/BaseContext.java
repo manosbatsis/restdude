@@ -75,7 +75,7 @@ public class BaseContext extends AbstractPersistableNamedModel implements IBaseC
 	@Column(name = "avatar_url")
 	@Getter @Setter
 	@ApiModelProperty(value = "The avatar URL")
-	private String avatarUrl = Constants.DEFAULT_AVATAR_URL;
+	private String avatarUrl;// = Constants.DEFAULT_AVATAR_URL;
 
 	@FilePersistence(maxWidth = 1920, maxHeight = 1080)
 	@FilePersistencePreview(maxWidth = 1280, maxHeight = 720)
@@ -157,8 +157,8 @@ public class BaseContext extends AbstractPersistableNamedModel implements IBaseC
 		private String name;
 		private String title;
 		private String description;
-		private String avatarUrl = Constants.DEFAULT_AVATAR_URL;
-		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
+		private String avatarUrl;
+		private String bannerUrl;
 		private User owner;
 		private ContextVisibilityType visibility;
 		private Set<Membership> memberships;

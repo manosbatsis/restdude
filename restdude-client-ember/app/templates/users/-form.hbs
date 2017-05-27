@@ -1,4 +1,4 @@
- {{#paper-form onSubmit=(action "save" ) as |form|}}
+ {{#paper-form onSubmit=(route-action "save" ) as |form|}}
   <div>
     <label>
        {{form.input id="pk" label=" Pk" type="text" value=model.pk onChange=(action (mut model.pk)) required=true}}

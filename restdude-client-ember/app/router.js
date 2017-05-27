@@ -21,17 +21,6 @@ Router.map(function() {
   this.route('application-embed');
   this.route('account');
   this.route('confirmationEmail');
-  this.route('organizations', function() {
-    this.route('new');
-
-    this.route('edit', {
-      path: ':organization_id/edit'
-    });
-
-    this.route('show', {
-      path: ':organization_id'
-    });
-  });
   this.route('users', function() {
     this.route('new');
 
@@ -58,6 +47,7 @@ Router.map(function() {
     this.route('register');
     this.route('forgot-password');
   });
+
   this.route('spaces', function() {
     this.route('new');
 

@@ -1,10 +1,6 @@
-import Ember from 'ember';
-import Base from '../application';
-
+import BaseAuthenticated  from '../base-authenticated';
 import SaveModelMixin from 'super-rentals/mixins/users/save-model-mixin';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-
-
-export default Base.extend(SaveModelMixin,AuthenticatedRouteMixin, {
+export default BaseAuthenticated.extend(SaveModelMixin, {
+  modelTitleProperty: 'username',
 });

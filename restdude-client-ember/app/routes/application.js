@@ -8,13 +8,19 @@ const { service } = Ember.inject;
 export default Ember.Route.extend(ApplicationRouteMixin, {
   sessionAccount: service('session-account'),
   modelTitleProperty: 'name',
-  breadCrumb : {},
-  afterModel(model) {
-    const modelName = model ? model.get(this.get('modelTitleProperty')) : false;
-    if(modelName){
-      this.set('breadCrumb.title', modelName);
+
+  breadCrumb: Ember.computed(`controller.model.${this.modelTitleProperty}`, {
+    get() {
+
+      let breadCrumb;
+      const modelName = this.get(`controller.model.${this.modelTitleProperty}`) || false;
+      if(modelName){
+        breadCrumb = {};
+        breadCrumb.title = modelName;
+      }
+      return breadCrumb;
     }
-  },
+  }),
   beforeModel(transition) {
     //this._super(transition, queryParams);
     // widget mode?

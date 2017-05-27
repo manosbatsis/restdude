@@ -107,8 +107,8 @@ public class Space extends BaseContext {
 		private String name;
 		private String title;
 		private String description;
-		private String avatarUrl = Constants.DEFAULT_AVATAR_URL;
-		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
+		private String avatarUrl;
+		private String bannerUrl;
 		private User owner;
 		private ContextVisibilityType visibility;
 		private Set<Membership> memberships;

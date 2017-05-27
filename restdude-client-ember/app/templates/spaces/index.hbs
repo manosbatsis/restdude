@@ -4,6 +4,33 @@
   {{link-to "New Space" "spaces.new" }}
 </p>
 
+{{#paper-list}}
+  {{#paper-subheader}}3 line item{{/paper-subheader}}
+  {{#each model as |space|}}
+    {{#paper-item class="md-3-line"}}
+
+      {{#if space.avatarUrl}}
+        <img src={{space.avatarUrl}} alt={{space.name}} class="md-avatar">
+      {{else}}
+        {{ember-initials class="md-avatar"
+          size=50
+          name=sessionAccount.account.name
+          seedText=sessionAccount.account.name
+          defaultName="?"
+          textColor="white"
+          fontSize=55
+          fontWeight=100
+          fontFamily="Helvetica Neue Light, Arial, sans-serif"
+        }}
+      {{/if}}
+      <div class="md-list-item-text">
+      <h3>{{space.name}}</h3>
+      <h4>{{space.title}}</h4>
+      <p>{{space.description}}</p>
+      </div>
+    {{/paper-item}}
+  {{/each}}
+{{/paper-list}}
 {{#if model.length}}
   <table>
     <thead>

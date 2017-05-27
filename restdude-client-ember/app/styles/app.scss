@@ -1,4 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
+
+// Define desired color palettes.
+$primary: "indigo";
+$accent: "grey";
+$warn: "red";
+@import "color-palette";
 @import 'ember-paper';
 
 
@@ -10,9 +16,10 @@ html {
 }
 img.avatar {
   vertical-align: middle;
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-right:8px;
 }
 
 .ember-application > .ember-view, .site-sidenav {

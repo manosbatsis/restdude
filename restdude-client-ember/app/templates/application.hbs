@@ -29,38 +29,29 @@
  {{#paper-sidenav-container  class="site-sidenav"}}
 
    {{#paper-sidenav class="md-sidenav-left " name="left" open=leftSideBarOpen onToggle=(action (mut leftSideBarOpen)) }}
-
-     {{#paper-card as |card|}}
-
-       {{#card.header as |header|}}
-
-         {{#header.avatar}}
-
-         <img src="http://www.gravatar.com/avatar/b701fb8a351a8a30adf58380edf2317c?s=60&d=identicon">
-
-         {{/header.avatar}}
-
-         {{#header.text as |text|}}
-
-           {{#text.subhead}} Signed in as {{/text.subhead}}
-
-           {{#text.title}} {{sessionAccount.account.name}}  {{/text.title}}
-
-         {{/header.text}}
-
-       {{/card.header}}
-
-        {{#if session.isAuthenticated}}
-
-       {{#card.actions class="layout-column"}}
-
-       <button class="logoutBtn" {{action 'invalidateSession'}}>Logout</button>
-
-       {{/card.actions}}
-
+    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+      {{#toolbar.tools}}
+        {{#if sessionAccount.account.avatarUrl}}
+          <img class="avatar" src="{{sessionAccount.account.avatarUrl}}">
+        {{else}}
+          {{ember-initials class="avatar"
+            size=50
+            name=sessionAccount.account.name
+            seedText=sessionAccount.account.name
+            defaultName="?"
+            textColor="white"
+            fontSize=55
+            fontWeight=100
+            fontFamily="Helvetica Neue Light, Arial, sans-serif"
+          }}
         {{/if}}
-
-     {{/paper-card}}
+        <h4><small>Signed in as</small><br>{{sessionAccount.account.name}}</h4>
+        <span class="flex"></span>
+        {{#paper-button  onClick=(route-action "invalidateSession") aria-label="Logout"}}
+         {{paper-icon "settings-power"}}
+        {{/paper-button}}
+      {{/toolbar.tools}}
+    {{/paper-toolbar}}
 
      {{#paper-list}}
 
@@ -171,12 +162,20 @@
    {{/paper-sidenav}}
 
    <div class="flex">
+   {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+         {{#toolbar.tools}}
+          {{bread-crumbs tagName="ol" outputStyle="bootstrap" linkable=true}}
+         {{/toolbar.tools}}
+       {{/paper-toolbar}}
+
 
   {{outlet}}
 
   </div>
 
 {{/paper-sidenav-container}}
+
+
 {{/if}}
 {{#unless session.isAuthenticated}}
    {{outlet}}
