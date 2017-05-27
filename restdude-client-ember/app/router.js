@@ -59,13 +59,13 @@ Router.map(function() {
       path: ':space_id'
     });
      this.route('settings', {
-      path: ':settings_space_id/settings'
+      path: ':space_id/settings'
     });
     this.route('members', {
-      path: ':members_space_id/members'
+      path: ':space_id/members'
     });
      this.route('billing', {
-      path: ':billing_space_id/billing'
+      path: ':space_id/billing'
     });
   });
 });

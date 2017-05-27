@@ -1,6 +1,4 @@
-//@import url('https://fonts.googleapis.com/css?family=Lato');
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
+@import url('https://fonts.googleapis.com/css?family=Lato');
 
 // Define desired color palettes.
 $primary: "indigo";
@@ -15,7 +13,7 @@ $warn: "red";
 
 html {
 
-  font-family: 'Roboto', 'Lato', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 img.avatar {
   vertical-align: middle;
