@@ -80,7 +80,7 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
                 .allowedOrigins("*")
                 //.allowedHeaders("*")
                 //.exposedHeaders("*")
-                .allowedMethods("HEAD", "GET", "OPTIONS", "PUT", "PATCH", "POST")
+                .allowedMethods("HEAD", "GET", "OPTIONS", "PUT", "PATCH", "POST", "DELETE")
                 .maxAge(3600);
         registry.addMapping("/api/rest/**")
                 .allowCredentials(true)
