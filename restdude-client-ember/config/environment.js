@@ -56,7 +56,8 @@ module.exports = function (environment) {
   };
 
   ENV['ember-simple-auth'] = {
-    authorizer: ENV.authorizer
+    authorizer: ENV.authorizer,
+    authenticationRoute: 'auth.login'
     //  routeAfterAuthentication: '/'
   };
 
