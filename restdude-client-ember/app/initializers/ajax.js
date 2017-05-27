@@ -2,13 +2,14 @@ import ENV from '../config/environment';
 
 export function initialize(/* application */) {
   if (ENV.APP.usingCors) {
+    /*
     (function($) {
       console.log("Patching jQuery ajax...");
       var _old = $.ajax;
       $.ajax = function() {
         var url, settings, apiURL = `${ENV.host}/${ENV.namespace}`;
 
-        /* Handle the different function signatures available for $.ajax() */
+        // Handle the different function signatures available for $.ajax()
         if (arguments.length === 2) {
           url = arguments[0];
           settings = arguments[1];
@@ -26,14 +27,14 @@ export function initialize(/* application */) {
           url = settings.url;
         }
 
-        /* If we still don't have an URL, execute the request and let jQuery handle it */
+        // If we still don't have an URL, execute the request and let jQuery handle it
         if (!url) {
           return _old.apply(this, [settings]);
         }
 
-        /* combine the apiURL and the url request if necessary */
+        // combine the apiURL and the url request if necessary
         if (!url.includes(apiURL)) {
-          /* Do we need a '/'? */
+          // Do we need a '/'?
           if (url[0] !== '/' && apiURL[apiURL.length-1] !== '/') {
             url = '/' + url;
           }
@@ -44,6 +45,7 @@ export function initialize(/* application */) {
         return _old.apply(this, [settings]);
       };
     })(jQuery);
+    */
   }
 }
 

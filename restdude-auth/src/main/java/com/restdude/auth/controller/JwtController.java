@@ -27,7 +27,9 @@ import com.restdude.auth.model.SimpleLoginRequest;
 import com.restdude.auth.userdetails.integration.UserDetailsConfig;
 import com.restdude.auth.userdetails.util.SimpleUserDetailsConfig;
 import com.restdude.domain.UserDetails;
+import com.restdude.hypermedia.util.HypermediaUtils;
 import com.restdude.util.CookieUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +44,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
 @Slf4j
 @RestController
 public class JwtController {
+    private static final String COOKIE_NAME_SESSION = "JSESSIONID";
 
     private UserDetailsConfig userDetailsConfig = new SimpleUserDetailsConfig();
     private AuthenticationManager authenticationManager;
@@ -97,6 +101,28 @@ public class JwtController {
         UserDetails userDetails = jwtRawAccessTokenToUserDetailsConverter.convert(request);
 
         return this.jwtTokenService.createRefreshToken(userDetails);
+    }
+
+
+
+    @ApiOperation(value = "Logout",
+            notes = "Logout and forget user")
+    @RequestMapping(value="/api/auth/jwt/access", method = RequestMethod.DELETE, consumes = {"application/json", HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON}, produces = {"application/json", HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(HttpServletRequest request, HttpServletResponse response) {
+
+        CookieUtil.addCookie(request, response, userDetailsConfig.getCookiesBasicAuthTokenName(), null, true, userDetailsConfig);
+        CookieUtil.addCookie(request, response, COOKIE_NAME_SESSION, null, true, userDetailsConfig);
+        // JWT
+        CookieUtil.addCookie(request, response, "access_token", null, true, userDetailsConfig);
+        CookieUtil.addCookie(request, response, "refresh_token", null, true, userDetailsConfig);
+        HttpSession session = request.getSession();
+        if (session == null) {
+            log.debug("logout, no session to clear");
+        } else {
+            log.debug("logout, invalidating session");
+            session.invalidate();
+        }
     }
 
     @Autowired(required = false)

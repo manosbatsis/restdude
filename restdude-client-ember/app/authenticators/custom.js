@@ -7,7 +7,6 @@ const { RSVP: { Promise }, $: { ajax }, run } = Ember;
 
 export default Base.extend({
   tokenEndpoint: `${ENV.host}/restdude/api/auth/jwt/access`,
-  accountEndpoint: `${ENV.host}/restdude/api/auth/account`,
 
   restore(data) {
     return new Promise((resolve, reject) => {
@@ -54,7 +53,7 @@ export default Base.extend({
 
   invalidate(data) {
      const requestOptions = {
-      url: this.accountEndpoint,
+      url: this.tokenEndpoint,
       type: 'DELETE',
       data,
       contentType: 'application/json;charset=utf-8',
@@ -77,5 +76,5 @@ export default Base.extend({
       });
     });
 
-} 
+}
 });
