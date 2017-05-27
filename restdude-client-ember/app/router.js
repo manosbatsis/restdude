@@ -58,6 +58,9 @@ Router.map(function() {
     this.route('show', {
       path: ':space_id'
     });
+    this.route('settings');
+    this.route('members');
+    this.route('billing');
   });
 });
 

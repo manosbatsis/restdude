@@ -1,0 +1,17 @@
+{{#paper-form onSubmit=(action "delete") as |form|}}
+
+<h2> Profile </h2>
+  <div class="layout-row">
+    <div class="layout-column flex-50">
+      {{form.input id="name" label="Name" value=name onChange=(action (mut name)) required=true}}
+      {{form.input id="email" label="Email" value=email onChange=(action (mut email))}}
+    </div>
+  </div>
+<br>
+ Delete Organization
+ <br>
+ Deleting an organization is irreversible. All associated apps will also be removed
+  <div class="layout-row">
+    {{#form.submit-button id="delete" raised=true warn=true primary=true}}Delete...{{/form.submit-button}}
+  </div>
+{{/paper-form}}
