@@ -2,10 +2,12 @@ import Ember from "ember";
 import ENV from "../config/environment";
 import Base from "ember-simple-auth/authenticators/base";
 
+
 const { RSVP: { Promise }, $: { ajax }, run } = Ember;
 
 export default Base.extend({
   tokenEndpoint: `${ENV.host}/restdude/api/auth/jwt/access`,
+  accountEndpoint: `${ENV.host}/restdude/api/auth/account`,
 
   restore(data) {
     return new Promise((resolve, reject) => {
@@ -51,6 +53,29 @@ export default Base.extend({
   },
 
   invalidate(data) {
-    return Promise.resolve(data);
-  }
+     const requestOptions = {
+      url: this.accountEndpoint,
+      type: 'DELETE',
+      data,
+      contentType: 'application/json;charset=utf-8',
+      dataType: 'json',
+      crossDomain: true,
+      xhrFields: { withCredentials: true }
+
+    };
+    return new Promise((resolve, reject) => {
+      ajax(requestOptions).then((response) => {
+        // Wrapping aync operation in Ember.run
+        run(() => {
+          resolve(response);
+        });
+      }, (error) => {
+        // Wrapping aync operation in Ember.run
+        run(() => {
+          reject(error);
+        });
+      });
+    });
+
+} 
 });
