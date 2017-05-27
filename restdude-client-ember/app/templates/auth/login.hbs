@@ -1,59 +1,43 @@
-{{login-js-inject}}
 
-        <div id="loginForm" class="container">
-            <div class="row">
-                <div class="col-md-8 m-x-auto pull-xs-none vamiddle">
-                    <div class="card-group ">
-                        <div class="card p-a-2">
-                            <div class="card-block">
-                              <h2>
-                              <em>Noteblox</em>
-                              </h2>
-                               <!--<form {{action 'authenticate' on='submit'}}>-->
-                               {{#paper-form onSubmit=(action "authenticate") as |form|}}
-                                <div class="layout-column flex-50">
-                                <p class="text-muted">Sign In to your account</p>
-                                <div class="input-group m-b-1">
-                                    <span class="input-group-addon"><i class="icon-user"></i></span>
-                                   <label for="identification"></label>
 
-                                     {{form.input id="identification" label="Username" type="text" value=identification onChange=(action (mut identification)) required=true}}
-                                </div>
-                                <div class="input-group m-b-2">
-                                    <span class="input-group-addon"><i class="icon-lock"></i></span>
-                                    <label for="password" ></label>
+<div class="layout-row layout-align-center-center">
+{{#paper-card as |card|}}
+  {{#card.title as |title|}}
+    {{#title.text as |text|}}
+      {{#text.headline}}noteblox{{/text.headline}}
+      {{#text.subhead}}Enter your credential bellow to login{{/text.subhead}}
+    {{/title.text}}
+  {{/card.title}}
+  {{#card.content class="layout-row layout-align-space-between"}}
+    {{#paper-form onSubmit=(action "authenticate") as |form|}}
 
-                                     {{form.input id="password" label="Password"  type='password' value=password onChange=(action (mut password)) required=true}}
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-xs-6">
+      <div class="layout-column">
+        {{#if errorMessage}}
+        <p>
+            <strong>Login failed:</strong>
+          <code>{{errorMessage}}</code>
+        </p>
+        {{/if}}
+      </div>
+      <div class="layout-column">
+        {{form.input id="identification" label="Username" type="text" value=identification onChange=(action (mut identification)) required=true}}
+        {{form.input id="password" label="Password"  type='password' value=password onChange=(action (mut password)) required=true}}
+      </div>
 
-                                        {{#form.submit-button raised=true id='login-btn' primary=true}}Login{{/form.submit-button}}
-                                       <!-- {{input value=identification placeholder='Enter Login' class='form-control'}} -->
-                                    </div>
-                                    <br>
-                                    <div class="col-xs-6 text-xs-right">
-                                        {{#link-to 'auth.forgot-password'}}
-                                        {{#paper-button raised=true primary=true action="targetButton" target=component}}Forgot password?{{/paper-button}}
-                                         {{/link-to}}
-                                         {{#link-to 'auth.register'}}
-                                           {{#paper-button raised=true primary=true action="targetButton" target=component}}Register Now!{{/paper-button}}
-                                         {{/link-to}}
-                                    </div>
-                                </div>
-                                <!--</form>-->
-                              </div>
-                                {{/paper-form}}
-                                {{#if errorMessage}}
-                                <p>
-                                    <strong>Login failed:</strong>
-                                  <code>{{errorMessage}}</code>
-                                </p>
-                                {{/if}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="layout-row">
+
+        {{#form.submit-button raised=true id='login-btn' primary=true}}Login{{/form.submit-button}}
+      </div>
+
+    {{/paper-form}}
+  {{/card.content}}
+  {{#card.actions}}
+    {{#paper-button onClick=(action (transition-to "auth.forgot-password")) }}
+      Forgot your password?
+    {{/paper-button}}
+    {{#paper-button  onClick=(action (transition-to "auth.register")) }}
+      Quick signup
+    {{/paper-button}}
+  {{/card.actions}}
+{{/paper-card}}
+</div>

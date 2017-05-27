@@ -1,64 +1,39 @@
 {{signup-form user=model}}
 {{login-js-inject}}
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5 m-x-auto pull-xs-none vamiddle">
-                    <div class="card">
-                        <div class="card-block p-a-2">
-                            <h1>Register</h1>
-                    
-                              {{#paper-form onSubmit=(action "save" model) as |form|}}
-                            <p class="text-muted">Create your account</p>
-                            <div class="input-group m-b-1">
-                                <span class="input-group-addon"><i class="icon-user"></i></span>
+<div class="layout-row layout-align-center-center">
+{{#paper-card as |card|}}
+  {{#card.title as |title|}}
+    {{#title.text as |text|}}
+      {{#text.headline}}noteblox{{/text.headline}}
+      {{#text.subhead}}Register{{/text.subhead}}
+    {{/title.text}}
+  {{/card.title}}
+  {{#card.content class="layout-row layout-align-space-between"}}
+     {{#paper-form onSubmit=(action "save" model) as |form|}}
+
+      <div class="layout-column">
+        {{form.input id="name" label="Name" value=name onChange=(action (mut name)) required=true}}
+        {{form.input id="email" label="Email" type="email" value=email onChange=(action (mut email)) required=true}}
+        {{form.input id="password" label="Password"  type='password' value=password  onChange=(action (mut password)) required=true}}
+         {{form.input id="passwordConfirmation" label="Password Confirmation"  type='password' value=passwordConfirmation  onChange=(action (mut passwordConfirmation)) required=true}}
+      </div>
+
+      <div class="layout-row">
+
+       {{#form.submit-button raised=true id='register-btn'onSubmit=(action "save" model) primary=true}}Sign Up{{/form.submit-button}}
+      </div>
+
+    {{/paper-form}}
+  {{/card.content}}
+  {{#card.actions}}
+             {{#paper-button raised=true action="targetButton" target=component}}Facebook{{/paper-button}}
+            {{#paper-button raised=true action="targetButton" target=component}}Twitter{{/paper-button}}
 
 
-                                 {{form.input id="name" label="Name" value=name onChange=(action (mut name)) required=true}}
-                            </div>
-                            <div class="input-group m-b-1">
-                                <span class="input-group-addon">@<i></i>
-                                </span>
-                                 {{form.input id="email" label="Email" type="email" value=email onChange=(action (mut email)) required=true}}
-                            </div>
-                            <div class="input-group m-b-1">
-                                <span class="input-group-addon"><i class="icon-lock"></i></span>
-
-                                 {{form.input id="password" label="Password"  type='password' value=password  onChange=(action (mut password)) required=true}}
-                            </div>
-                             <div class="input-group m-b-1">
-                                <span class="input-group-addon"><i class="icon-lock"></i></span>
-
-                                 {{form.input id="passwordConfirmation" label="Password Confirmation"  type='password' value=passwordConfirmation  onChange=(action (mut passwordConfirmation)) required=true}}
-                            </div>
-                            <div class="layout-row">
-                          {{#form.submit-button raised=true id='register-btn'onSubmit=(action "save" model) primary=true}}Sign Up{{/form.submit-button}}
-                           </div>
-
-                           <br>
-                        <!--  </form>-->
-                          {{/paper-form}}
-                        </div>
-                         {{#if errorMessage}}
-                           {{errorMessage}}
-                        {{/if}}
-                        <div class="card-footer p-a-2">
-
-
-                                    {{#paper-button raised=true action="targetButton" target=component}}Facebook{{/paper-button}}
-
-
-                                    {{#paper-button raised=true action="targetButton" target=component}}Twitter{{/paper-button}}
-
-
-                                     {{#link-to 'auth.login'}}
-                                      {{#paper-button raised=true action="targetButton" target=component}}Login{{/paper-button}}
-                                    {{/link-to}}
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- {{signup-form user=model triggerSave=(action "save") errorMessage=errorMessage}}-->
+             {{#link-to 'auth.login'}}
+                {{#paper-button raised=true action="targetButton" target=component}}Login{{/paper-button}}
+            {{/link-to}}
+  {{/card.actions}}
+{{/paper-card}}
+</div>
