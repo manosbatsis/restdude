@@ -31,7 +31,7 @@
    {{#paper-sidenav class="md-sidenav-left " name="left" open=leftSideBarOpen onToggle=(action (mut leftSideBarOpen)) }}
     {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
       {{#toolbar.tools}}
-        {{#if sessionAccount.account.avatarUrl}}
+        {{#if false }}
           <img class="avatar" src="{{sessionAccount.account.avatarUrl}}">
         {{else}}
           {{ember-initials class="avatar"
@@ -55,107 +55,46 @@
 
      {{#paper-list}}
 
-       {{#paper-item }}
-
-         {{#link-to 'home' }}
-
-                   {{paper-icon "home"}}
-
-                   Home
-
-         {{/link-to}}
-
+       {{#paper-item  onClick=(action (transition-to "home"))}}
+        {{paper-icon "home"}}
+        <p>Home</p>
        {{/paper-item}}
-
-       {{#paper-item }}
-
-         {{#link-to 'accountandprofile' }}
-
-                   {{paper-icon "account-box"}}
-
-                   Account
-
-         {{/link-to}}
-
+       {{#paper-item  onClick=(action (transition-to "accountandprofile"))}}
+        {{paper-icon "account-box"}}
+        <p>Account</p>
        {{/paper-item}}
-
-       {{#paper-item }}
-
-         {{#link-to 'configureapps' }}
-
-                   {{paper-icon "folder"}}
-
-                   Configure Apps
-
-         {{/link-to}}
-
+       {{#paper-item  onClick=(action (transition-to "configureapps"))}}
+        {{paper-icon "folder"}}
+        <p>Configure Apps</p>
        {{/paper-item}}
-
-       {{#paper-item }}
-
-         {{#link-to 'spaces' }}
-
-                   {{paper-icon "folder"}}
-
-                   Spaces
-
-         {{/link-to}}
-
+       {{#paper-item  onClick=(action (transition-to "spaces"))}}
+        {{paper-icon "folder"}}
+        <p>Spaces</p>
        {{/paper-item}}
-
-       {{#paper-item }}
-
-         {{#link-to 'statistics' }}
-
-                   {{paper-icon "timeline"}}
-
-                   Statistics
-
-         {{/link-to}}
-
+       {{#paper-item  onClick=(action (transition-to "statistics"))}}
+        {{paper-icon "timeline"}}
+        <p>Statistics</p>
        {{/paper-item}}
 
        {{#paper-subheader}}3Administration{{/paper-subheader}}
 
-       {{#paper-item }}
+       {{#paper-item  onClick=(action (transition-to "systemsettings"))}}
+        {{paper-icon "timeline"}}
+        <p>System Settings</p>
+       {{/paper-item}}
+       {{#paper-item  onClick=(action (transition-to "users"))}}
+        {{paper-icon "timeline"}}
+        <p>User Accounts</p>
+       {{/paper-item}}
+       {{#paper-item  onClick=(action (transition-to "clientplans"))}}
+        {{paper-icon "timeline"}}
+        <p>Client Plans</p>
+       {{/paper-item}}
 
-        {{#link-to 'systemsettings'}}
-
-           System Settings
-
-        {{/link-to}}
-
-       {{/paper-item }}
-
-       {{#paper-item }}
-
-        {{#link-to 'users'}}
-
-           User Accounts
-
-        {{/link-to}}
-
-       {{/paper-item }}
-
-       {{#paper-item }}
-
-        {{#link-to 'clientplans'}}
-
-           Client Plans
-
-        {{/link-to}}
-
-       {{/paper-item }}
-
-       {{#paper-item }}
-
-        {{#link-to 'billing'}}
-
-           Billing
-
-        {{/link-to}}
-
-       {{/paper-item }}
+       {{#paper-item  onClick=(action (transition-to "billing"))}}
+        {{paper-icon "timeline"}}
+        <p>Billing</p>
+       {{/paper-item}}
 
      {{/paper-list}}
 
@@ -164,7 +103,7 @@
    <div class="flex">
    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
          {{#toolbar.tools}}
-          {{bread-crumbs tagName="ol" outputStyle="bootstrap" linkable=true}}
+          {{bread-crumbs tagName="ol"  linkable=true}}
          {{/toolbar.tools}}
        {{/paper-toolbar}}
 

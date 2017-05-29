@@ -1,6 +1,6 @@
 
 
-<div class="layout-row layout-align-center-center">
+<div class="layout-fill layout-row layout-align-center-center flex">
 {{#paper-card as |card|}}
   {{#card.title as |title|}}
     {{#title.text as |text|}}
@@ -8,6 +8,17 @@
       {{#text.subhead}}Enter your credential bellow to login{{/text.subhead}}
     {{/title.text}}
   {{/card.title}}
+
+  {{#card.actions}}
+    {{#paper-button onClick=(action (transition-to "auth.forgot-password")) }}
+      Forgot password
+    {{/paper-button}}
+    {{#paper-button  onClick=(action (transition-to "auth.register")) }}
+      Quick signup
+    {{/paper-button}}
+  {{/card.actions}}
+
+
   {{#card.content class="layout-row layout-align-space-between"}}
     {{#paper-form onSubmit=(action "authenticate") as |form|}}
 
@@ -26,18 +37,13 @@
 
       <div class="layout-row">
 
-        {{#form.submit-button raised=true id='login-btn' primary=true}}Login{{/form.submit-button}}
+        {{#form.submit-button raised=true id='login-btn'  primary=true disabled=form.isInvalid}}Login{{/form.submit-button}}
       </div>
 
     {{/paper-form}}
   {{/card.content}}
-  {{#card.actions}}
-    {{#paper-button onClick=(action (transition-to "auth.forgot-password")) }}
-      Forgot your password?
-    {{/paper-button}}
-    {{#paper-button  onClick=(action (transition-to "auth.register")) }}
-      Quick signup
-    {{/paper-button}}
-  {{/card.actions}}
+  <#md-card-footer>
+      cta-button | cta-button
+  </md-card-footer>
 {{/paper-card}}
 </div>

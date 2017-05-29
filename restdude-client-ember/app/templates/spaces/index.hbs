@@ -4,105 +4,41 @@
   {{link-to "New Space" "spaces.new" }}
 </p>
 
-{{#paper-list}}
-  {{#paper-subheader}}3 line item{{/paper-subheader}}
-  {{#each model as |space|}}
-    {{#paper-item class="md-3-line"}}
-
-      {{#if space.avatarUrl}}
-        <img src={{space.avatarUrl}} alt={{space.name}} class="md-avatar">
-      {{else}}
-        {{ember-initials class="md-avatar"
-          size=50
-          name=sessionAccount.account.name
-          seedText=sessionAccount.account.name
-          defaultName="?"
-          textColor="white"
-          fontSize=55
-          fontWeight=100
-          fontFamily="Helvetica Neue Light, Arial, sans-serif"
-        }}
-      {{/if}}
-      <div class="md-list-item-text">
-      <h3>{{space.name}}</h3>
-      <h4>{{space.title}}</h4>
-      <p>{{space.description}}</p>
-      </div>
-    {{/paper-item}}
-  {{/each}}
-{{/paper-list}}
 {{#if model.length}}
-  <table>
-    <thead>
-      <tr>
-        <th>
-          Name
-        </th>
-        <th>
-          Title
-        </th>
-        <th>
-          Description
-        </th>
-        <th>
-          Avatarurl
-        </th>
-        <th>
-          Bannerurl
-        </th>
-        <th>
-          Visibility
-        </th>
-        <th colspan="3">
-          Actions
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each model as |space|}}
-        <tr>
-          <td>
-            {{space.name}}
-          </td>
-          <td>
-            {{space.title}}
-          </td>
-          <td>
-            {{space.description}}
-          </td>
-          <td>
-            {{space.avatarUrl}}
-          </td>
-          <td>
-            {{space.bannerUrl}}
-          </td>
-          <td>
-            {{space.visibility}}
-          </td>
-          <td>
-            {{link-to "Edit" "spaces.edit" space}}
-          </td>
-          <td>
-            {{link-to "Show" "spaces.show" space}}
-          </td>
-           <td>
-            {{link-to "Members" "spaces.members" space}}
-          </td>
-          <td>
-            {{link-to "Billing" "spaces.billing" space}}
-          </td>
-           <td>
-            {{link-to "Settings" "spaces.settings" space}}
-          </td>
-          <td>
-            <a href="#" {{action "remove" space}}>Remove</a>
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+
+  {{#paper-list}}
+    {{#paper-subheader}}3 line item{{/paper-subheader}}
+    {{#each model as |space|}}
+      {{#paper-item class="md-3-line md-long-text" onClick=(action (transition-to "spaces.members" space)) as |controls| }}
+
+        {{#if space.avatarUrl}}
+          <img src={{space.avatarUrl}} alt={{space.name}} class="md-avatar">
+        {{else}}
+          {{ember-initials class="md-avatar"
+            size=50
+            name=sessionAccount.account.name
+            seedText=sessionAccount.account.name
+            defaultName="?"
+            textColor="white"
+            fontSize=55
+            fontWeight=100
+            fontFamily="Helvetica Neue Light, Arial, sans-serif" }}
+        {{/if}}
+        <div class="md-list-item-text">
+          <h3>{{space.name}}</h3>
+          <h4>{{space.title}}</h4>
+          <p>{{space.description}}</p>
+        </div>
+        {{paper-icon "settings"}}
+      {{/paper-item}}
+    {{/each}}
+  {{/paper-list}}
+
 {{else}}
+
   <p id="blankslate">
-    No Spaces found
+    No spaces found {{link-to "Add" "spaces.new" }}
   </p>
+
+
 {{/if}}

@@ -11,7 +11,10 @@ export default Ember.Controller.extend({
 
       this.get('session').authenticate(authenticator,
         credentials).catch((reason)=>{
-        this.set('errorMessage', reason.error || reason);
+        console.log("authentication error:");
+        console.log(reason);
+        let responseJson = reason.responseJSON;
+        this.set('errorMessage', responseJson.title || responseJson.message || reason.error || reason);
       });
     }
 
