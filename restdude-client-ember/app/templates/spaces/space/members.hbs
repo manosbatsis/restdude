@@ -1,1 +1,42 @@
-members content
+
+
+<h1>Members list</h1>
+
+{{#if model.length}}
+
+  {{#paper-list}}
+    {{#paper-subheader}}3 line item{{/paper-subheader}}
+    {{#each model as |context-membership|}}
+   {{#paper-item class="md-3-line" as |controls| }}
+        {{#if context-membership.user.avatarUrl}}
+          <img src={{context-membership.user.avatarUrl}} alt={{context-membership.user.name}} class="md-avatar">
+        {{else}}
+          {{ember-initials class="md-avatar"
+            size=50
+            name=context-membership.user.name
+            seedText=ser.name
+            defaultName="?"
+            textColor="white"
+            fontSize=55
+            fontWeight=100
+            fontFamily="Helvetica Neue Light, Arial, sans-serif"
+          }}
+        {{/if}}
+        <div class="md-list-item-text">
+        <h3>{{context-membership.admin}}</h3>
+        <h4>{{context-membership.user}}</h4>
+        <p>{{context-membership.space}}</p>
+        </div>
+        {{paper-icon "settings"}}
+     {{/paper-item}}
+    {{/each}}
+  {{/paper-list}}
+
+{{else}}
+
+  <p id="blankslate">
+    No Members found {{link-to "Add" "context-membership" }}
+  </p>
+
+{{/if}}
+
