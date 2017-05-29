@@ -32,6 +32,8 @@ module.exports = function (environment) {
     namespace: 'restdude/api/rest',
     namespaceAuth: 'restdude/api/auth',
     namespaceConfirm: 'restdude/api/auth/account',
+    namespaceMembers: 'restdude/api/rest/contextMemberships',
+    namespaceMembersReq: 'restdude/api/rest/contextMembershipRequests',
     authorizer: 'authorizer:custom',
     // moment js
     moment: {
