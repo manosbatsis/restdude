@@ -131,7 +131,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     }
 
     @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
-    @ApiOperation(value = "Patch (partially update) a resource", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
+    @ApiOperation(value = "Patch (partially update) a resource"/*, notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity."*/)
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
     public Resource<T> plainJsonPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T model) {

@@ -37,7 +37,6 @@ public class SpaceServiceImpl
 
 	private Space syetemSpace;
 
-
 	/**
 	 * {@inheritDoc}
 	 */

@@ -91,7 +91,6 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
                 .maxAge(3600);
     }
 
-    /*
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -101,7 +100,7 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }
-*/
+
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
@@ -139,7 +138,7 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer.favorPathExtension(false)
                 .favorParameter(true)
-                .defaultContentType(new MediaType("application", "vnd.api+json"))
+                //.defaultContentType(new MediaType("application", "vnd.api+json"))
                 .mediaType("json", MediaType.APPLICATION_JSON)
                 .mediaType("xml", MediaType.APPLICATION_XML);
     }

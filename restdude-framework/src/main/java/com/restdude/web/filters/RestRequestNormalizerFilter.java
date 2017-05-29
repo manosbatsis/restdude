@@ -39,7 +39,6 @@ import java.io.IOException;
 public class RestRequestNormalizerFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestRequestNormalizerFilter.class);
     private static final String X_HTTP_METHOD_OVERRIDE = "X-HTTP-Method-Override";
-    private static final String JSON_UTF8 = "application/json; charset=UTF-8";
 
     /** Default method parameter: {@code _method} */
     public static final String DEFAULT_METHOD_PARAM = "_method";

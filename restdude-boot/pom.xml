@@ -293,6 +293,11 @@
             <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.restdude</groupId>
+            <artifactId>restdude-util-spring</artifactId>
+            <version>2.1.2-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 

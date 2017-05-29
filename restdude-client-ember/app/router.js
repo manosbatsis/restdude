@@ -61,6 +61,7 @@ Router.map(function() {
       this.route('billing');
     });
   });
+  this.route('context-membership');
 });
 
 export default Router;

@@ -46,6 +46,7 @@
         <module>restdude-resources</module>
         <module>restdude-util</module>
         <module>restdude-util-classes</module>
+        <module>restdude-util-spring</module>
         <module>restdude-mdd</module>
         <module>restdude-case</module>
         <module>restdude-error</module>

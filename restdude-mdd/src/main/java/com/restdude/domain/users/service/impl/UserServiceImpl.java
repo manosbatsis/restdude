@@ -34,6 +34,7 @@ import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
 import com.restdude.domain.details.contact.service.EmailDetailService;
+import com.restdude.domain.users.event.UserCreatedEvent;
 import com.restdude.domain.users.model.*;
 import com.restdude.domain.users.repository.RoleRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -105,6 +107,12 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
     private PasswordEncoder passwordEncoder;
     private Validator validator;
 
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    @Autowired
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     @Autowired
     public void setValidator(Validator validator) {
@@ -299,7 +307,11 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         // force any errors to occur sooner rather than later
         this.repository.flush();
 
-        return initRoles(resource);
+        resource = initRoles(resource);
+
+        applicationEventPublisher.publishEvent(new UserCreatedEvent(resource));
+
+        return resource;
     }
 
     /**
