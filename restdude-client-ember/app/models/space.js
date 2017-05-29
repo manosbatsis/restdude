@@ -9,6 +9,6 @@ export default DS.Model.extend({
   visibility: DS.attr('string'),
   owner: DS.belongsTo('user'),
   memberships: DS.hasMany('context-membership'),
-  membershipRequests: DS.hasMany('context-membership-request`')
+  membershipRequests: DS.hasMany('context-membership-request')
 
 });
