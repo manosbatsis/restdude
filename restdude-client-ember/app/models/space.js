@@ -6,5 +6,8 @@ export default DS.Model.extend({
   description: DS.attr('string'),
   avatarUrl: DS.attr('string'),
   bannerUrl: DS.attr('string'),
-  visibility: DS.attr('string')
+  visibility: DS.attr('string'),
+  owner: DS.belongsTo('user'),
+  memberships: DS.hasMany('context-membership')
+
 });

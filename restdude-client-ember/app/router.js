@@ -59,9 +59,11 @@ Router.map(function() {
       this.route('settings');
       this.route('members');
       this.route('billing');
+      this.route('membership-requests');
     });
   });
   this.route('context-membership');
+  this.route('context-membership-request');
 });
 
 export default Router;
