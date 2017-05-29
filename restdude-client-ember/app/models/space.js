@@ -8,6 +8,7 @@ export default DS.Model.extend({
   bannerUrl: DS.attr('string'),
   visibility: DS.attr('string'),
   owner: DS.belongsTo('user'),
-  memberships: DS.hasMany('context-membership')
+  memberships: DS.hasMany('context-membership'),
+  membershipRequests: DS.hasMany('context-membership-request`')
 
 });
