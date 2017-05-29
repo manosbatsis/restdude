@@ -11,7 +11,8 @@
   </div>
   <div>
     <label>
-       {{form.input id="description" label=" Description" type="text" value=model.description onChange=(action (mut model.description)) required=true}}
+        {{paper-input textarea=true id="description" label=" Description" type="text" value=model.description onChange=(action (mut model.description)) required=true}}
+
     </label>
   </div>
   <div>
@@ -25,9 +26,18 @@
     </label>
   </div>
   <div>
-    <label>
-      {{form.input id="visibility" label=" Visibility" type="text" value=model.visibility onChange=(action (mut model.visibility)) required=true}}
-    </label>
+    {{#paper-select
+      disabled=disableSelect
+      label="Visibility"
+      options= options
+      value=model.visibility
+      selected=optionsState
+      onChange=(action (mut model.visibility))
+      as |option|}}
+      {{option.abbrev}}
+    {{/paper-select}}
+
+
   </div>
   <div>
      {{#form.submit-button type="submit" raised=true id='save-btn' value="Save" primary=true}}Save{{/form.submit-button}}
