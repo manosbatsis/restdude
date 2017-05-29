@@ -1,5 +1,5 @@
   {{#paper-tabs class='md-no-tab-content' centerTabs=true borderBottom=true as |tabs|}}
-     {{tabs.tab label="Settings" onSelect=(action (transition-to "spaces.space.index" model))}}
+     {{tabs.tab label="Settings" onSelect=(action (transition-to "spaces.space.settings" model))}}
      {{tabs.tab label="Members" onSelect=(action (transition-to "spaces.space.members" model))}}
      {{tabs.tab label="Billing" onSelect=(action (transition-to "spaces.space.billing" model))}}
    {{/paper-tabs}}
