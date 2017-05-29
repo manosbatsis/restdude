@@ -25,16 +25,16 @@
        {{form.input id="bannerurl" label=" Bannerurl" type="text" value=model.bannerUrl onChange=(action (mut model.bannerUrl)) required=true}}
     </label>
   </div>
+
   <div>
     {{#paper-select
       disabled=disableSelect
       label="Visibility"
-      options= options
+      options=(options 'SECRET' 'CLOSED' 'OPEN' 'PUBLIC')
       value=model.visibility
-      selected=optionsState
       onChange=(action (mut model.visibility))
       as |option|}}
-      {{option.abbrev}}
+      {{option}}
     {{/paper-select}}
 
 
