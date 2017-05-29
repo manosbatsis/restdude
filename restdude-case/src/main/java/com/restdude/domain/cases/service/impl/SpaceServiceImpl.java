@@ -160,9 +160,14 @@ public class SpaceServiceImpl
 		friends.put("Ecnassianer", "OrangeFa1ry");
 
 		// add more friends
+		User admin = this.userService.findActiveByUsername("admin");
+		log.debug("createTestFriendships admin: {}", admin);
 
 		for (String username : friends.keySet()) {
 			User one = testUsers.get(username);
+
+			createFriendship(one, admin);
+
 			Collection<String> inverseFriends = friends.get(username);
 			log.debug("createTestFriendships username: {}, user: {}, friends: {}", username, one.getUsername(),
 					inverseFriends);
@@ -170,13 +175,17 @@ public class SpaceServiceImpl
 
 				User other = testUsers.get(sOther);
 
-				Friendship f = new Friendship(one, other);
-				if (!friendshipService.exists(f)) {
-					log.debug("createTestFriendships friendship: {}", f);
-					f = this.friendshipService.createTest(f);
-				}
+				createFriendship(one, other);
 			}
 		}
+	}
+
+	private void createFriendship(User one, User other) {
+		Friendship f = new Friendship(one, other);
+		if (!friendshipService.exists(f)) {
+            log.debug("createTestFriendships friendship: {}", f);
+            f = this.friendshipService.createTest(f);
+        }
 	}
 
 	protected Map<String, User> createTestSpaceUsers() {

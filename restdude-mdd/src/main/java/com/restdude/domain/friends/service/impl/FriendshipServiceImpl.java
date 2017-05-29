@@ -69,7 +69,7 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
     @Override
     @Transactional(readOnly = false)
     public Friendship createTest(Friendship resource) {
-        LOGGER.debug("createTest, resource: {}, left: {}, right: {}", resource, resource.getPk().getLeft().getUsername(), resource.getPk().getRight().getUsername());
+        LOGGER.debug("createTest, resource: {}, left: {}, right: {}", resource, resource.getPk().getLeft(), resource.getPk().getRight().getUsername());
         if (this.repository.exists(resource.getPk())) {
             throw new RuntimeException("Friendship pk already exists: " + resource.getPk());
         }
