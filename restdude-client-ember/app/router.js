@@ -56,6 +56,7 @@ Router.map(function() {
     this.route('new');
 
     this.route('space', {path: ':space_id'}, function() {
+      this.route('settings');
       this.route('members');
       this.route('billing');
     });
