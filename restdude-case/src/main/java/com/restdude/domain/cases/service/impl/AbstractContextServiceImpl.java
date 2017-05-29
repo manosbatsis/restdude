@@ -51,8 +51,8 @@ import java.util.Set;
 public abstract class AbstractContextServiceImpl<T extends Space, R extends ContextRepository<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R> implements ContextService<T> {
 
-    MembershipService membershipService;
-    FriendshipRepository friendshipRepository;
+    protected MembershipService membershipService;
+    protected FriendshipRepository friendshipRepository;
 
     @Autowired
     public void setMembershipService(MembershipService membershipService) {

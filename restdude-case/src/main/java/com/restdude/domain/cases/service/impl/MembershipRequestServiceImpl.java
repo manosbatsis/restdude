@@ -43,6 +43,7 @@ import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.exception.http.UnauthorizedException;
 import com.restdude.websocket.message.ActivityNotificationMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -235,12 +236,17 @@ public class MembershipRequestServiceImpl
 
 		log.debug("create, friends: {}, inverse: {}", friends, friendsInv);
 		log.debug("create, memberships:");
-		for(Membership m : resource.getContext().getMemberships()){
-			log.debug("create, context membership: {}, ", m);
+		if(CollectionUtils.isNotEmpty(resource.getContext().getMemberships())){
+
+			for(Membership m : resource.getContext().getMemberships()){
+				log.debug("create, context membership: {}, ", m);
+			}
 		}
 		log.debug("create, memberships requests:");
-		for(MembershipRequest m : resource.getContext().getMembershipRequests()){
-			log.debug("create, context membership request: {}, ", m);
+		if(CollectionUtils.isNotEmpty(resource.getContext().getMembershipRequests())) {
+			for (MembershipRequest m : resource.getContext().getMembershipRequests()) {
+				log.debug("create, context membership request: {}, ", m);
+			}
 		}
 		if (!skipValidation) {
 			// request mode

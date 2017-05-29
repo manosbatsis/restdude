@@ -21,6 +21,9 @@
 package com.restdude.domain.cases.repository;
 
 import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.users.model.User;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Calipso JPA repository for the Space entity.
@@ -28,5 +31,7 @@ import com.restdude.domain.cases.model.Space;
  */
 public interface SpaceRepository extends ContextRepository<Space> {
 
+    @Query(value = "select context from Space context  where context.owner = :#{#user}  and context.name = :#{#user.username} ")
+    Space getUserSpace(@Param("user") User user);
 
 }

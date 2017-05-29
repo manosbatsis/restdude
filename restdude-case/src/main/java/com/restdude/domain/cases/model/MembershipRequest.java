@@ -33,6 +33,7 @@ import com.restdude.mdd.util.EntityUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -140,17 +141,17 @@ public class MembershipRequest extends AbstractSystemUuidPersistableModel implem
 			return this;
 		}
 
-		public Builder status(MembershipRequestStatus status) {
+		public Builder status(@NonNull MembershipRequestStatus status) {
 			this.status = status;
 			return this;
 		}
 
-		public Builder context(Space context) {
+		public Builder context(@NonNull Space context) {
 			this.context = context;
 			return this;
 		}
 
-		public Builder user(User user) {
+		public Builder user(@NonNull User user) {
 			this.user = user;
 			return this;
 		}
