@@ -48,24 +48,16 @@ Router.map(function() {
     this.route('forgot-password');
   });
 
+  this.route('photo', { path: '/photo/:photo_id' }, function() {
+    this.route('comment', { path: '/comment/:comment_id' });
+  });
+
   this.route('spaces', function() {
     this.route('new');
 
-    this.route('edit', {
-      path: ':space_id/edit'
-    });
-
-    this.route('show', {
-      path: ':space_id'
-    });
-     this.route('settings', {
-      path: ':space_id/settings'
-    });
-    this.route('members', {
-      path: ':space_id/members'
-    });
-     this.route('billing', {
-      path: ':space_id/billing'
+    this.route('space', {path: ':space_id'}, function() {
+      this.route('members');
+      this.route('billing');
     });
   });
 });

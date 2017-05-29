@@ -9,7 +9,7 @@
   {{#paper-list}}
     {{#paper-subheader}}3 line item{{/paper-subheader}}
     {{#each model as |space|}}
-      {{#paper-item class="md-3-line md-long-text" onClick=(action (transition-to "spaces.members" space)) as |controls| }}
+      {{#paper-item class="md-3-line md-long-text" onClick=(action (transition-to "spaces.space" space)) as |controls| }}
 
         {{#if space.avatarUrl}}
           <img src={{space.avatarUrl}} alt={{space.name}} class="md-avatar">

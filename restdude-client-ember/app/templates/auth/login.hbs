@@ -9,14 +9,6 @@
     {{/title.text}}
   {{/card.title}}
 
-  {{#card.actions}}
-    {{#paper-button onClick=(action (transition-to "auth.forgot-password")) }}
-      Forgot password
-    {{/paper-button}}
-    {{#paper-button  onClick=(action (transition-to "auth.register")) }}
-      Quick signup
-    {{/paper-button}}
-  {{/card.actions}}
 
 
   {{#card.content class="layout-row layout-align-space-between"}}
@@ -43,7 +35,15 @@
     {{/paper-form}}
   {{/card.content}}
   <#md-card-footer>
-      cta-button | cta-button
+
+  {{#card.actions}}
+    {{#paper-button onClick=(action (transition-to "auth.forgot-password")) }}
+      Forgot password
+    {{/paper-button}}
+    {{#paper-button  onClick=(action (transition-to "auth.register")) }}
+      Quick signup
+    {{/paper-button}}
+  {{/card.actions}}
   </md-card-footer>
 {{/paper-card}}
 </div>
