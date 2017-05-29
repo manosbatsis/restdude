@@ -1,6 +1,7 @@
 // app/adapters/application.js
 import Ember from "ember";
 import DS from "ember-data";
+import {singularize, pluralize} from 'ember-inflector';
 import DataAdapterMixin from "ember-simple-auth/mixins/data-adapter-mixin";
 import ENV from "../config/environment";
 
@@ -14,6 +15,13 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
     'Content-type': 'application/vnd.api+json;charset=UTF-8',
    // 'x-vendor-appid': '123',
    // 'x-vendor-secret': '12345'
+  },
+
+  pathForType: function(type) {
+    console.log("pathForType, type: " + type);
+    const newType = Ember.String.camelize(type);
+    console.log("pathForType newType: " + newType);
+    return pluralize(newType);
   },
   ajax: function(url, type, hash) {
 
