@@ -1,8 +1,11 @@
 
   {{#paper-card as |card|}}
+
     {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
-      {{#toolbar.tools}}
+      {{#toolbar.tools class="layout-row"}}
+        <span class="flex"></span>
         <h2>Space Settings</h2>
+        <span class="flex"></span>
       {{/toolbar.tools}}
     {{/paper-toolbar}}
 

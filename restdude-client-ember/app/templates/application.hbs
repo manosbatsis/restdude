@@ -7,22 +7,7 @@
      {{/paper-button}}
    {{/paper-sidenav-toggle}}
    <h3 class="logo">noteblox</h3>
-   <span class="flex"></span>
-	{{#paper-item }}
-	{{#if session.isAuthenticated}}
-	  {{paper-icon "icon-briefcase"}}
-	 <button class="logoutBtn" {{action 'invalidateSession'}}>Logout</button>
-        {{else}}
-       {{#link-to 'login'}}
-        {{paper-icon "icon-briefcase"}}
-        Login
-      {{/link-to}}
-      {{/if}}
-     {{/paper-item}}
-    {{layout.authorization-ui}}
-     {{#paper-button mini=true aria-label="Favorite"}}
-      {{paper-icon "favorite"}}
-     {{/paper-button}}
+
    {{/toolbar.tools}}
  {{/paper-toolbar}}
 
@@ -116,7 +101,7 @@
           {{bread-crumbs tagName="ol"  linkable=true}}
         {{/toolbar.tools}}
       {{/paper-toolbar}}
-      {{#paper-content class="flex md-padding md-scroll-y main-content"}}
+      {{#paper-content class=" md-padding md-scroll-y main-content"}}
         {{outlet}}
       {{/paper-content}}
     </div>
