@@ -40,9 +40,7 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Named;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Named("spaceService")
@@ -190,19 +188,19 @@ public class SpaceServiceImpl
 
 	protected Map<String, User> createTestSpaceUsers() {
 		Map<String, User> testUsers = new HashMap<String, User>();
-		Map<String, String> userAvatars = new HashMap<String, String>();
-		userAvatars.put("No-Tec", "/img/avatars/user/evil-trump.jpeg");
-		userAvatars.put("Squeeek", "/img/avatars/user/squirrel-girl.jpg");
-		userAvatars.put("Chapperwocky", "/img/avatars/user/slim-pickens.jpg");
-		userAvatars.put("DKang0002", "/img/avatars/user/pow.jpg");
-		userAvatars.put("Ecnassianer", "/img/avatars/user/squirrel-revolution.jpg");
-		userAvatars.put("ITakeRequests", "/img/avatars/user/wolverine.jpg");
-		userAvatars.put("TotallyTroy", "/img/avatars/user/zap.jpg");
-		userAvatars.put("HiBame", "/img/avatars/user/dr-doom.jpg");
-		userAvatars.put("OrangeFa1ry", "/img/avatars/user/homer-wall.jpg");
-		userAvatars.put("GreenFa1ry", null);
+		List<String> userAvatars = new LinkedList<>();
+		userAvatars.add("No-Tec");
+		userAvatars.add("Squeeek");
+		userAvatars.add("Chapperwocky");
+		userAvatars.add("DKang0002");
+		userAvatars.add("Ecnassianer");
+		userAvatars.add("ITakeRequests");
+		userAvatars.add("TotallyTroy");
+		userAvatars.add("HiBame");
+		userAvatars.add("OrangeFa1ry");
+		userAvatars.add("GreenFa1ry");
 
-		for (String username : userAvatars.keySet()) {
+		for (String username : userAvatars) {
 			User u = new User.Builder().username(username)
 					.credentials(new UserCredentials.Builder().active(true).password(username).build())
 					.contactDetails(new ContactDetails.Builder()

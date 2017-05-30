@@ -4,7 +4,7 @@ export default DS.Model.extend({
 
   // SENT_REQUEST, SENT_INVITE, CONFIRMED, BLOCK_REQUEST, BLOCK_INVITE
   status: DS.attr('string'),
-  user: DS.belongsTo('user'),
+  user: DS.attr(),//DS.internalModel('user'),
   space: DS.belongsTo('space'),
 
 });

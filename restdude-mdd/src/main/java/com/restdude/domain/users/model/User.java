@@ -267,7 +267,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
         // fallback to gravatar
         if (StringUtils.isBlank(this.getAvatarUrl())) {
             LOGGER.debug("#preSave, avatar URL: ", this.getAvatarUrl());
-            initDefaultAvatarUrl();
+            //initDefaultAvatarUrl();
         }
         // default banner
         if (StringUtils.isBlank(this.getBannerUrl())) {
