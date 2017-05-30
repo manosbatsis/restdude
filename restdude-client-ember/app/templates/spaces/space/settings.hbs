@@ -1,10 +1,10 @@
 
   {{#paper-card as |card|}}
-    {{#card.title as |title|}}
-      {{#title.text as |text|}}
-        {{#text.headline}}Space Settings{{/text.headline}}
-      {{/title.text}}
-    {{/card.title}}
+    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+      {{#toolbar.tools}}
+        <h2>Space Settings</h2>
+      {{/toolbar.tools}}
+    {{/paper-toolbar}}
 
     {{#card.content class="layout-row layout-align-space-between"}}
       {{partial "spaces/form"}}

@@ -6,7 +6,7 @@ import Base from "ember-simple-auth/authenticators/base";
 const { RSVP: { Promise }, $: { ajax }, run } = Ember;
 
 export default Base.extend({
-  tokenEndpoint: `${ENV.host}/restdude/api/auth/jwt/access`,
+  tokenEndpoint: `${ENV.host}/${ENV.namespaceAuth}/jwt/access`,
 
   restore(data) {
     return new Promise((resolve, reject) => {

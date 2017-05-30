@@ -31,25 +31,34 @@
    {{#paper-sidenav class="md-sidenav-left " name="left" open=leftSideBarOpen onToggle=(action (mut leftSideBarOpen)) }}
     {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
       {{#toolbar.tools}}
-        {{#if false }}
-          <img class="avatar" src="{{sessionAccount.account.avatarUrl}}">
-        {{else}}
-          {{ember-initials class="avatar"
-            size=50
-            name=sessionAccount.account.name
-            seedText=sessionAccount.account.name
-            defaultName="?"
-            textColor="white"
-            fontSize=55
-            fontWeight=100
-            fontFamily="Helvetica Neue Light, Arial, sans-serif"
-          }}
-        {{/if}}
-        <h4><small>Signed in as</small><br>{{sessionAccount.account.name}}</h4>
-        <span class="flex"></span>
-        {{#paper-button  onClick=(route-action "invalidateSession") aria-label="Logout"}}
-         {{paper-icon "settings-power"}}
-        {{/paper-button}}
+        {{#paper-list}}
+          {{#paper-item class="md-2-line" as |controls| }}
+        {{#if sessionAccount.account.avatarUrl}}
+           <img src={{sessionAccount.account.avatarUrl}} alt={{sessionAccount.account.name}} class="md-avatar user-avatar">
+         {{else}}
+           {{ember-initials class="md-avatar"
+               size=50
+               name=sessionAccount.account.name
+               seedText=sessionAccount.account.name
+               defaultName='?'
+               textColor="white"
+               fontSize=55
+               fontWeight=100
+               fontFamily="Helvetica Neue Light, Arial, sans-serif"
+           }}
+         {{/if}}
+         <div class="md-list-item-text">
+           <h3>{{sessionAccount.account.name}} <span class="username">({{sessionAccount.account.username}})</span></h3>
+           <p>Joined {{moment-to-now sessionAccount.account.createdDate}} </p>
+         </div>
+       {{/paper-item}}
+       {{/paper-list}}
+         <div class="flex">
+           &nbsp;
+          </div>
+         {{#paper-button  onClick=(route-action "invalidateSession") aria-label="Logout"}}
+          {{paper-icon "settings-power"}}
+         {{/paper-button}}
       {{/toolbar.tools}}
     {{/paper-toolbar}}
 
@@ -60,7 +69,7 @@
         <p>Home</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "accountandprofile"))}}
-        {{paper-icon "account-box"}}
+        {{paper-icon "person"}}
         <p>Account</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "configureapps"))}}
@@ -68,7 +77,7 @@
         <p>Configure Apps</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "spaces"))}}
-        {{paper-icon "business-center"}}
+        {{paper-icon "work"}}
         <p>Spaces</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "statistics"))}}
@@ -100,16 +109,17 @@
 
    {{/paper-sidenav}}
 
-   <div class="flex" style="overflow-X: scroll">
-   {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
-         {{#toolbar.tools}}
+  <div class="layout-row flex">
+    <div class="layout-column flex">
+      {{#paper-toolbar class="hide-sm md-menu-toolbar" as |toolbar|}}
+        {{#toolbar.tools}}
           {{bread-crumbs tagName="ol"  linkable=true}}
-         {{/toolbar.tools}}
-       {{/paper-toolbar}}
-
-
-  {{outlet}}
-
+        {{/toolbar.tools}}
+      {{/paper-toolbar}}
+      {{#paper-content class="flex md-padding md-scroll-y main-content"}}
+        {{outlet}}
+      {{/paper-content}}
+    </div>
   </div>
 
 {{/paper-sidenav-container}}

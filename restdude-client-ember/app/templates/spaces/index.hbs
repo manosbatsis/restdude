@@ -3,15 +3,17 @@
 
 {{#paper-card as |card|}}
   {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
-    {{#toolbar.tools}}
-      <h2>My Spaces</h2>
+    {{#toolbar.tools class="layout-row"}}
+      <span class="flex"></span>
+      <h2 class="">My Spaces</h2>
+      <span class="flex"></span>
     {{/toolbar.tools}}
   {{/paper-toolbar}}
 
     {{#if model.length}}
       {{#paper-list}}
         {{#each model as |item|}}
-          {{#paper-item class="md-3-line md-long-text" onClick=(action (transition-to "spaces.space" item)) as |controls| }}
+          {{#paper-item class="md-3-line md-long-text" borderBottom=true onClick=(action (transition-to "spaces.space" item)) as |controls| }}
 
             {{#if item.avatarUrl}}
               <img src={{item.avatarUrl}} alt={{item.name}} class="md-avatar">
@@ -36,7 +38,7 @@
            <div class="flex">
             &nbsp;
            </div>
-            {{paper-icon "settings"}}
+            {{paper-icon "keyboard-arrow-right"}}
           {{/paper-item}}
         {{/each}}
       {{/paper-list}}

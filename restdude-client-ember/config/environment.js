@@ -29,9 +29,9 @@ module.exports = function (environment) {
       'font-src': "'self' https://fonts.gstatic.com"
     },
     host: 'http://localhost:8080',
-    namespace: 'restdude/api/rest',
-    namespaceAuth: 'restdude/api/auth',
-    namespaceConfirm: 'restdude/api/auth/account',
+    namespace: 'noteblox/api/rest',
+    namespaceAuth: 'noteblox/api/auth',
+    namespaceConfirm: 'noteblox/api/auth/account',
     authorizer: 'authorizer:custom',
     // moment js
     moment: {

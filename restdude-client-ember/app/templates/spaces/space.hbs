@@ -1,9 +1,9 @@
-  {{#paper-tabs class='md-no-tab-content' centerTabs=true borderBottom=true as |tabs|}}
-     {{tabs.tab label="Settings" onSelect=(action (transition-to "spaces.space.settings" model))}}
-     {{tabs.tab label="Members" onSelect=(action (transition-to "spaces.space.members" model))}}
-     {{tabs.tab label="Requests" onSelect=(action (transition-to "spaces.space.membership-requests" model))}}
-     {{tabs.tab label="Billing" onSelect=(action (transition-to "spaces.space.billing" model))}}
-   {{/paper-tabs}}
+{{#paper-tabs class='md-no-tab-content' centerTabs=true borderBottom=true as |tabs|}}
+   {{tabs.tab label="Settings" onSelect=(action (transition-to "spaces.space.settings" model))}}
+   {{tabs.tab label="Members" onSelect=(action (transition-to "spaces.space.members" model))}}
+   {{tabs.tab label="Requests" onSelect=(action (transition-to "spaces.space.membership-requests" model))}}
+   {{tabs.tab label="Billing" onSelect=(action (transition-to "spaces.space.billing" model))}}
+ {{/paper-tabs}}
  <md-tabs-content-wrapper style="display:none"/>
 
 <div class="layout-fill layout-row layout-align-center-start ">

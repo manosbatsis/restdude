@@ -86,10 +86,14 @@ md-card {
   display: block;;
   position: relative;
   list-style: none;
+  color: #888;
+  font-size: 14px;
 }
 .breadcrumb > li > a {
   text-decoration: none;
   outline: none;
+  color: #888;
+  font-style: italic;
 }
 
 .breadcrumb > li:last-child {
