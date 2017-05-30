@@ -53,7 +53,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(description = MembershipRequest.API_MODEL_DESCRIPTION)
 public class MembershipRequest extends AbstractSystemUuidPersistableModel implements IMembershipRequest {
 
-	public static final String API_PATH_FRAGMENT = "contextMembershipsRequests";
+	public static final String API_PATH_FRAGMENT = "contextMembershipRequests";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a user request or invitation to join a Website.";
 
 	@NotNull
