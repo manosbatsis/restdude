@@ -188,7 +188,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
         LOGGER.debug("plainJsonGetPage");
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
-        return this.toHateoasPagedResources(super.findPaginated(pageable, null), "_pn");
+        return this.toHateoasPagedResources(super.<T>findPaginated(pageable, null), "_pn");
     }
 
     @RequestMapping(method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
@@ -206,7 +206,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
         LOGGER.debug("jsonApiGetPage");
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
-        return toPageDocument(super.findPaginated(pageable, null));
+        return toPageDocument(super.<T>findPaginated(pageable, null));
     }
 
     @RequestMapping(value = "{pk}", method = RequestMethod.GET)

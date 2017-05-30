@@ -1,38 +1,50 @@
+{{#paper-card  as |card|}}
+  {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+    {{#toolbar.tools}}
+      <h3>Membership Requests</h3>
+    {{/toolbar.tools}}
+  {{/paper-toolbar}}
 
+    {{#if model.length}}
+      {{#paper-list}}
+       {{#each model as |item|}}
+         {{#paper-item class="md-2-line" as |controls| }}
+           {{#if item.user.avatarUrl}}
+             <img src={{item.user.avatarUrl}} alt={{item.user.name}} class="md-avatar">
+           {{else}}
+             {{ember-initials class="md-avatar"
+                 size=50
+                 name=item.user.name
+                 seedText=item.user.name
+                 defaultName='?'
+                 textColor="white"
+                 fontSize=55
+                 fontWeight=100
+                 fontFamily="Helvetica Neue Light, Arial, sans-serif"
+             }}
+           {{/if}}
+           <div class="md-list-item-text">
+             <h3>{{item.user.name}} <span class="username">({{item.user.username}})</span></h3>
+             <p>{{item.status}} {{moment-to-now item.createdDate}}</p>
+           </div>
+         {{/paper-item}}
+       {{/each}}
+      {{/paper-list}}
+      {{#if model.meta.documentLinks}}
+        {{#card.actions class="layout-row"}}
+          {{#each-in model.meta.documentLinks as |key value|}}
+            {{#paper-button href=value.href}}{{key}}{{/paper-button}}
+          {{/each-in}}
+        {{/card.actions}}
+      {{/if}}
 
-{{#if model.length}}
+    {{else}}
+      {{#card.content}}
+        <p>
+          This space has no pending membership requestss.
+        </p>
+      {{/card.content}}
+    {{/if}}
 
-  {{#paper-list}}
-    {{#each model as |contextMembershipRequest|}}
-      {{#paper-item class="md-3-line" as |controls| }}
-        {{#if contextMembershipRequest.user.avatarUrl}}
-          <img src={{contextMembershipRequest.user.avatarUrl}} alt={{contextMembershipRequest.user.name}} class="md-avatar">
-        {{else}}
-          {{ember-initials class="md-avatar"
-              size=50
-              name=contextMembershipRequest.user.name
-              seedText=contextMembershipRequest.user.name
-              defaultName='?'
-              textColor="white"
-              fontSize=55
-              fontWeight=100
-              fontFamily="Helvetica Neue Light, Arial, sans-serif"
-          }}
-        {{/if}}
-        <div class="md-list-item-text">
-          <h4>{{contextMembershipRequest.status}}</h4>
-          <h4>{{contextMembershipRequest.user.name}}</h4>
-          <p>{{contextMembershipRequest.user.username}}  {{#if contextMembershipRequest.admin}}admin{{/if}} </p>
-        </div>
-        {{paper-icon "settings"}}
-      {{/paper-item}}
-    {{/each}}
-  {{/paper-list}}
+{{/paper-card}}
 
-{{else}}
-
-  <p id="blankslate">
-    No Members found {{link-to "Add" "contextMembershipRequest" }}
-  </p>
-
-{{/if}}

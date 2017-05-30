@@ -64,11 +64,11 @@
         <p>Account</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "configureapps"))}}
-        {{paper-icon "folder"}}
+        {{paper-icon "apps"}}
         <p>Configure Apps</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "spaces"))}}
-        {{paper-icon "folder"}}
+        {{paper-icon "business-center"}}
         <p>Spaces</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "statistics"))}}
@@ -79,20 +79,20 @@
        {{#paper-subheader}}3Administration{{/paper-subheader}}
 
        {{#paper-item  onClick=(action (transition-to "systemsettings"))}}
-        {{paper-icon "timeline"}}
+        {{paper-icon "settings"}}
         <p>System Settings</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "users"))}}
-        {{paper-icon "timeline"}}
+        {{paper-icon "people"}}
         <p>User Accounts</p>
        {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "clientplans"))}}
-        {{paper-icon "timeline"}}
+        {{paper-icon "shopping-basket"}}
         <p>Client Plans</p>
        {{/paper-item}}
 
        {{#paper-item  onClick=(action (transition-to "billing"))}}
-        {{paper-icon "timeline"}}
+        {{paper-icon "payment"}}
         <p>Billing</p>
        {{/paper-item}}
 
@@ -114,8 +114,6 @@
 
 {{/paper-sidenav-container}}
 
-
-{{/if}}
-{{#unless session.isAuthenticated}}
+{{else}}
    {{outlet}}
-{{/unless}}
+{{/if}}

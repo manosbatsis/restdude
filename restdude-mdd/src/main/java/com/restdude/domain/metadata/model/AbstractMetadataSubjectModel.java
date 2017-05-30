@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.restdude.domain.MetadataSubjectModel;
 import com.restdude.domain.MetadatumModel;
+import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import com.restdude.domain.metadata.binding.MetadataMapDeserializer;
 import com.restdude.domain.metadata.binding.MetadatumToStringValueSerializer;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
@@ -46,7 +47,7 @@ import java.util.Map;
  */
 @MappedSuperclass
 public abstract class AbstractMetadataSubjectModel<M extends MetadatumModel>
-        extends AbstractSystemUuidPersistableModel implements MetadataSubjectModel<M> {
+        extends AbstractBasicAuditedModel implements MetadataSubjectModel<M> {
 
 	private static final long serialVersionUID = -1468517690700208260L;
 

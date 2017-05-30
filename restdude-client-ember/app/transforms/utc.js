@@ -7,6 +7,8 @@ export default DS.Transform.extend({
   },
 
   deserialize: function(value) {
-    return this.get('moment').utc(value);
+    const newValue = moment.utc(value);
+    console.log("deserialize value: " + value + ", newValue: " + newValue);
+    return newValue;
   }
 });

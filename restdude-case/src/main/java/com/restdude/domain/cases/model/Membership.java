@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.cases.model;
 
+import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import com.restdude.domain.cases.IMembership;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
@@ -46,7 +47,7 @@ import javax.validation.constraints.NotNull;
 	apiName = "Context Memberships",
 	apiDescription = "Operations about context memberships")
 @ApiModel(description = Membership.API_MODEL_DESCRIPTION)
-public class Membership extends AbstractSystemUuidPersistableModel implements IMembership {
+public class Membership extends AbstractBasicAuditedModel implements IMembership {
 
 	public static final String API_PATH_FRAGMENT = "contextMemberships";
 	public static final String API_MODEL_DESCRIPTION = "An entity model representing a membership to some context";

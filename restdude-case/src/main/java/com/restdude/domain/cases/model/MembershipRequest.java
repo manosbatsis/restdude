@@ -23,6 +23,7 @@ package com.restdude.domain.cases.model;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import com.restdude.domain.cases.IMembershipRequest;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
 import com.restdude.domain.users.model.User;
@@ -51,7 +52,7 @@ import javax.validation.constraints.NotNull;
 		apiName = "Membership Requests",
 		apiDescription = "Requests to join a BusinessContext")
 @ApiModel(description = MembershipRequest.API_MODEL_DESCRIPTION)
-public class MembershipRequest extends AbstractSystemUuidPersistableModel implements IMembershipRequest {
+public class MembershipRequest extends AbstractBasicAuditedModel implements IMembershipRequest {
 
 	public static final String API_PATH_FRAGMENT = "contextMembershipRequests";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a user request or invitation to join a Website.";

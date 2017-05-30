@@ -3,15 +3,7 @@ import Ember from 'ember';
 export default Ember.Route.extend({
 
   model: function() {
-    return this.store.findAll('context-membership');
+    var spaceId = this.paramsFor('spaces.space').space_id;
+    return this.store.query('context-membership', {'context': spaceId});
   }
-  /*queryParams: {
-     space_id: {
-       refreshModel: true
-     }
-   },
-
-  model(params) {
-    return this.get('store').findRecord('context-membership', params.space_id);
-}*/
 });

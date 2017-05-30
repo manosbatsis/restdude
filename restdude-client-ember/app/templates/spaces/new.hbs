@@ -1,6 +1,19 @@
-<p>
-  {{link-to "Space list" "spaces.index" }}
-</p>
 
-<h1>New Space</h1>
-{{partial "spaces/form"}}
+<div class="layout-fill layout-row layout-align-center-start ">
+  {{#paper-card as |card|}}
+    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+      {{#toolbar.tools}}
+        <h3>New Space</h3>
+        <span class="flex"></span>
+        {{#paper-button onClick=(action (transition-to "spaces.index")) aria-label="Back to Spaces"}}
+         {{paper-icon "navigate-before"}} Back
+        {{/paper-button}}
+      {{/toolbar.tools}}
+    {{/paper-toolbar}}
+
+    {{#card.content class="layout-row layout-align-space-between"}}
+      {{partial "spaces/form"}}
+    {{/card.content}}
+
+  {{/paper-card}}
+</div>

@@ -20,6 +20,7 @@
  */
 package com.restdude.mdd.model;
 
+import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 import javax.persistence.Column;
@@ -30,7 +31,7 @@ import javax.persistence.MappedSuperclass;
  * A base class for value-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
-public abstract class AbstractPersistableNamedModel extends AbstractSystemUuidPersistableModel {
+public abstract class AbstractPersistableNamedModel extends AbstractBasicAuditedModel {
 
 
 	private static final long serialVersionUID = 1L;

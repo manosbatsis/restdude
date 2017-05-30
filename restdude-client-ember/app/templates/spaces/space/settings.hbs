@@ -1,2 +1,13 @@
 
-{{partial "spaces/form"}}
+  {{#paper-card as |card|}}
+    {{#card.title as |title|}}
+      {{#title.text as |text|}}
+        {{#text.headline}}Space Settings{{/text.headline}}
+      {{/title.text}}
+    {{/card.title}}
+
+    {{#card.content class="layout-row layout-align-space-between"}}
+      {{partial "spaces/form"}}
+    {{/card.content}}
+
+  {{/paper-card}}

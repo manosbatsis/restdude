@@ -258,6 +258,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
                 .withData(page)
                 .buildModelCollectionDocument();
         List<Link> tmp = HypermediaUtils.buileHateoasLinks(page, request, pageNumberParamName);
+        LOGGER.debug("toPageDocument, pageLinks: {}", tmp);
         if(CollectionUtils.isNotEmpty(tmp)){
             for(Link l : tmp){
                 doc.add(l.getRel(), l.getHref());
