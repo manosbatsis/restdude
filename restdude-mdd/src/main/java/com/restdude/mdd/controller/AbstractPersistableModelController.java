@@ -183,7 +183,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_PAGE_NUMBER, value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = PARAM_PAGE_NUMBER, required = false, defaultValue = "0") Integer page,
             @ApiParam(name = PARAM_PAGE_SIZE, value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
-            @RequestParam(value = PARAM_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = PARAM_PAGE_SIZE, required = false, defaultValue = "30") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
         LOGGER.debug("plainJsonGetPage");
@@ -200,7 +200,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_JSONAPI_PAGE_NUMBER, value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = PARAM_JSONAPI_PAGE_NUMBER, required = false, defaultValue = "0") Integer page,
             @ApiParam(name = PARAM_JSONAPI_PAGE_SIZE, value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
-            @RequestParam(value = PARAM_JSONAPI_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = PARAM_JSONAPI_PAGE_SIZE, required = false, defaultValue = "30") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
             @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
 
