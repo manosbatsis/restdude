@@ -1,7 +1,6 @@
 import DS from 'ember-data';
-import Space from "./space";
 
-export default Space.extend({
+export default DS.Model.extend({
   name: DS.attr('string'),
   title: DS.attr('string')
 });
