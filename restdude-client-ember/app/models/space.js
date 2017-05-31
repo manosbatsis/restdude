@@ -1,9 +1,7 @@
 import DS from 'ember-data';
+import BaseContext from "./base-context";
 
-export default DS.Model.extend({
-  name: DS.attr('string'),
-  title: DS.attr('string'),
-  description: DS.attr('string'),
+export default BaseContext.extend({
   avatarUrl: DS.attr('string'),
   bannerUrl: DS.attr('string'),
   visibility: DS.attr('string', { defaultValue: "CLOSED" }),
