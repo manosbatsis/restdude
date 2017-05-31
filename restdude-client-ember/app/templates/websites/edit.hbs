@@ -1,0 +1,16 @@
+
+  {{#paper-card as |card|}}
+
+    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+      {{#toolbar.tools class="layout-row"}}
+        <span class="flex"></span>
+        <h2>Website Settings</h2>
+        <span class="flex"></span>
+      {{/toolbar.tools}}
+    {{/paper-toolbar}}
+
+    {{#card.content class="layout-row layout-align-space-between"}}
+      {{partial "spaces/form"}}
+    {{/card.content}}
+
+  {{/paper-card}}

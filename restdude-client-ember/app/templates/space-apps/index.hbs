@@ -1,0 +1,48 @@
+<h1>Space-apps list</h1>
+
+<p>
+  {{link-to "New Space-app" "space-apps.new" }}
+</p>
+
+{{#if model.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Description
+        </th>
+        <th colspan="3">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |space-app|}}
+        <tr>
+          <td>
+            {{space-app.name}}
+          </td>
+          <td>
+            {{space-app.description}}
+          </td>
+          <td>
+            {{link-to "Edit" "space-apps.edit" space-app}}
+          </td>
+          <td>
+            {{link-to "Show" "space-apps.show" space-app}}
+          </td>
+          <td>
+            <a href="#" {{action "remove" space-app}}>Remove</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p id="blankslate">
+    No Space-apps found
+  </p>
+{{/if}}

@@ -1,0 +1,48 @@
+<h1>Websites list</h1>
+
+<p>
+  {{link-to "New Website" "websites.new" }}
+</p>
+
+{{#if model.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Title
+        </th>
+        <th colspan="3">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |website|}}
+        <tr>
+          <td>
+            {{website.name}}
+          </td>
+          <td>
+            {{website.title}}
+          </td>
+          <td>
+            {{link-to "Edit" "websites.edit" website}}
+          </td>
+          <td>
+            {{link-to "Show" "websites.show" website}}
+          </td>
+          <td>
+            <a href="#" {{action "remove" website}}>Remove</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p id="blankslate">
+    No Websites found
+  </p>
+{{/if}}

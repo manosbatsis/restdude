@@ -1,0 +1,48 @@
+<h1>Hosts list</h1>
+
+<p>
+  {{link-to "New Host" "hosts.new" }}
+</p>
+
+{{#if model.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Description
+        </th>
+        <th colspan="3">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |host|}}
+        <tr>
+          <td>
+            {{host.name}}
+          </td>
+          <td>
+            {{host.description}}
+          </td>
+          <td>
+            {{link-to "Edit" "hosts.edit" host}}
+          </td>
+          <td>
+            {{link-to "Show" "hosts.show" host}}
+          </td>
+          <td>
+            <a href="#" {{action "remove" host}}>Remove</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p id="blankslate">
+    No Hosts found
+  </p>
+{{/if}}

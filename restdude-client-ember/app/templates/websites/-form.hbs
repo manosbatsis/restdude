@@ -1,0 +1,23 @@
+
+
+{{#paper-form onSubmit=(route-action "save" ) as |form|}}
+  <div class="layout-md-row">
+      {{form.input flex-md=40 id="name" label="Name" type="text" value=model.name onChange=(action (mut model.name)) required=true}}
+      {{form.input flex-md=60 id="title" label="Title" type="text" value=model.title onChange=(action (mut model.title)) required=true}}
+  </div>
+  {{paper-input block=true textarea=true id="description" label="Description" type="text" value=model.description onChange=(action (mut model.description)) required=true}}
+  {{form.input block=true id="avatarurl" label="Avatar URL" type="text" value=model.avatarUrl onChange=(action (mut model.avatarUrl)) required=false}}
+  {{form.input block=true id="bannerurl" label="Banner URL" type="text" value=model.bannerUrl onChange=(action (mut model.bannerUrl)) required=false}}
+  {{#paper-select block=true
+    label="Visibility"
+    options=(array 'SECRET' 'CLOSED' 'OPEN' 'PUBLIC')
+    value=model.visibility
+    selected=model.visibility
+    onChange=(action (mut model.visibility))
+    as |selectedOption|}}
+    {{selectedOption}}
+  {{/paper-select}}
+  <div class="layout-row">
+     {{#form.submit-button type="submit" raised=true id='save-btn' value="Save" primary=true}}Save{{/form.submit-button}}
+  </div>
+{{/paper-form}}

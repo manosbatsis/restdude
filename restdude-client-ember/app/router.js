@@ -64,6 +64,40 @@ Router.map(function() {
   });
   this.route('context-membership');
   this.route('context-membership-request');
+  this.route('website');
+  this.route('hosts', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':host_id/edit'
+    });
+
+    this.route('show', {
+      path: ':host_id'
+    });
+  });
+  this.route('space-apps', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':space-app_id/edit'
+    });
+
+    this.route('show', {
+      path: ':space-app_id'
+    });
+  });
+  this.route('websites', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':website_id/edit'
+    });
+
+    this.route('show', {
+      path: ':website_id'
+    });
+  });
 });
 
 export default Router;

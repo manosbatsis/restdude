@@ -1,0 +1,20 @@
+
+<div class="layout-fill layout-row layout-align-center-start ">
+  {{#paper-card as |card|}}
+    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+    {{#toolbar.tools class="layout-row"}}
+      <span class="flex"></span>
+      <h2 class="">New Space</h2>
+      <span class="flex"></span>
+      {{#paper-button onClick=(action (transition-to "spaces.index")) aria-label="Back to Spaces"}}
+       {{paper-icon "navigate-before"}} Back
+      {{/paper-button}}
+    {{/toolbar.tools}}
+  {{/paper-toolbar}}
+
+    {{#card.content class="layout-row layout-align-space-between"}}
+      {{partial "spaces/form"}}
+    {{/card.content}}
+
+  {{/paper-card}}
+</div>

@@ -1,4 +1,19 @@
 export default function() {
+this.get('/websites');
+this.get('/websites/:id');
+this.post('/websites');
+this.del('/websites/:id');
+this.patch('/websites/:id');
+this.get('/space-apps');
+this.get('/space-apps/:id');
+this.post('/space-apps');
+this.del('/space-apps/:id');
+this.patch('/space-apps/:id');
+this.get('/hosts');
+this.get('/hosts/:id');
+this.post('/hosts');
+this.del('/hosts/:id');
+this.patch('/hosts/:id');
 this.get('/spaces');
 this.get('/spaces/:id');
 this.post('/spaces');
