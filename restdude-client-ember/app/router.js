@@ -60,6 +60,8 @@ Router.map(function() {
       this.route('members');
       this.route('billing');
       this.route('membership-requests');
+      this.route('apps');
+      this.route('websites');
     });
   });
   this.route('context-membership');
