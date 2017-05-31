@@ -15,7 +15,7 @@ export default Ember.Service.extend({
       const sessionDataAuthenticated = this.get('session.data.authenticated');
       console.log("loadCurrentUser, sessionDataAuthenticated: ");
       console.log(sessionDataAuthenticated);
-      const userId = sessionDataAuthenticated.id || sessionDataAuthenticated.pk;
+      const userId = sessionDataAuthenticated.id || sessionDataAuthenticated.id;
       if (!Ember.isEmpty(userId)) {
         this.set('account', sessionDataAuthenticated);
         /*return this.get('store').findRecord('user', 'current-user').then((user) => {

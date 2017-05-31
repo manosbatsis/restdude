@@ -11,7 +11,7 @@ export default Base.extend({
   restore(data) {
     return new Promise((resolve, reject) => {
       // check for a valid user id
-      if (!Ember.isEmpty(data.pk) || !Ember.isEmpty(data.id)) {
+      if (!Ember.isEmpty(data.id) || !Ember.isEmpty(data.id)) {
         resolve(data);
       } else {
         reject();
