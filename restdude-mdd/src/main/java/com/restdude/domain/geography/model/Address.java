@@ -57,7 +57,7 @@ public class Address extends AbstractSystemUuidPersistableModel {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "city_id", referencedColumnName = "pk", nullable = false)
+    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
     private LocalRegion city;
 
 

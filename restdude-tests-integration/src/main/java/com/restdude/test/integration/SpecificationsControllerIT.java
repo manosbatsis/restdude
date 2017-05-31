@@ -73,14 +73,14 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200).
-                body("content[0].parent.pk", equalTo("AS"));
+                body("content[0].parent.id", equalTo("AS"));
     }
 
 
     @Test(description = "Test related entity IDs")
     public void testRelatedEntityId() throws Exception {
         LOGGER.debug("testRelatedEntityId");
-        for(String parentIdPath : new String[]{"parent", "parent.pk"}){
+        for(String parentIdPath : new String[]{"parent", "parent.id"}){
             given().spec(adminRequestSpec)
                     .param(parentIdPath, "AS")
                     .log().all()
@@ -90,7 +90,7 @@ public class SpecificationsControllerIT extends AbstractControllerIT {
                     .assertThat()
                     .statusCode(200)
                     .assertThat()
-                    .body("content[0].parent.pk", equalTo("AS"));
+                    .body("content[0].parent.id", equalTo("AS"));
         }
     }
 

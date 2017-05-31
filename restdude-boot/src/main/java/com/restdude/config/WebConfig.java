@@ -138,7 +138,7 @@ public class WebConfig extends WebMvcConfigurerAdapter /*implements WebMvcRegist
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer.favorPathExtension(false)
                 .favorParameter(true)
-                //.defaultContentType(new MediaType("application", "vnd.api+json"))
+                .defaultContentType(MediaType.APPLICATION_JSON)
                 .mediaType("json", MediaType.APPLICATION_JSON)
                 .mediaType("xml", MediaType.APPLICATION_XML);
     }

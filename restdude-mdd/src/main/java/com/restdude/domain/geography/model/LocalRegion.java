@@ -39,7 +39,7 @@ public class LocalRegion<P extends LocalRegion>
 	private static final long serialVersionUID = 1735385884991197359L;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "country_id", referencedColumnName = "pk")
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
 
 	public Country getCountry() {

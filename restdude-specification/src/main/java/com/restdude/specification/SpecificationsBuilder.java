@@ -101,7 +101,7 @@ public class SpecificationsBuilder<T extends PersistableModel<PK>, PK extends Se
         while (keyIterator.hasNext()) {
             propertyName = keyIterator.next();
             newPropertyName = propertyName;
-            if (propertyName.endsWith(".pk")) {
+            if (propertyName.endsWith(".id")) {
                 newPropertyName = propertyName.substring(0, propertyName.length() - 3);
             }
             normalizedSearchTerms.put(newPropertyName, searchTerms.get(propertyName));

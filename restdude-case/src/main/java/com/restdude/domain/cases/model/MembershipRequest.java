@@ -29,7 +29,6 @@ import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.util.EntityUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -73,7 +72,7 @@ public class MembershipRequest extends AbstractBasicAuditedModel implements IMem
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "pk", nullable = false, updatable = false)
+	@JoinColumn(referencedColumnName = "id", nullable = false, updatable = false)
 	@ApiModelProperty(value = "The User this membership is appointed to", required = true)
 	private User user;
 
@@ -163,7 +162,7 @@ public class MembershipRequest extends AbstractBasicAuditedModel implements IMem
 	}
 
 	private MembershipRequest(Builder builder) {
-		this.setPk(builder.id);
+		this.setId(builder.id);
 		this.status = builder.status;
 		this.context = builder.context;
 		this.user = builder.user;

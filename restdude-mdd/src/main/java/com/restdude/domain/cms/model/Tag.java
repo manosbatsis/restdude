@@ -53,7 +53,7 @@ public class Tag extends AbstractPersistableCategoryModel<Tag> {
 			return false;
 		}
 		Tag that = (Tag) obj;
-        return null == this.getPk() ? false : this.getPk().equals(that.getPk());
+        return null == this.getId() ? false : this.getId().equals(this.getId());
     }
 
 }

@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface StompSessionRepository extends ModelRepository<StompSession, String> {
 
-    @Query("select count(*) from StompSession s where s.user.pk = ?1")
+    @Query("select count(*) from StompSession s where s.user.id = ?1")
     public Long countForUser(String userId);
 
 }

@@ -101,7 +101,7 @@ public class BaseContextInfo extends MessageResource<String> {
 	}
 
 	private BaseContextInfo(BaseContext resource) {
-		this(resource.getPk(), resource.getName(), resource.getTitle(), resource.getDescription(), resource.getAvatarUrl(), resource.getBannerUrl(), UserDTO.fromUser(resource.getOwner()),
+		this(resource.getId(), resource.getName(), resource.getTitle(), resource.getDescription(), resource.getAvatarUrl(), resource.getBannerUrl(), UserDTO.fromUser(resource.getOwner()),
 				resource.getVisibility(), null);
 	}
 	

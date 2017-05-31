@@ -37,35 +37,35 @@ import java.util.List;
 //@JaversSpringDataAuditable
 public interface FriendshipRepository extends ModelRepository<Friendship, FriendshipIdentifier> {
 
-    static final String SELECT_FRIEND_AS_USERDTO = "select new com.restdude.domain.users.model.UserDTO(friendship.pk.right.pk, "
-            + "		friendship.pk.right.firstName, "
-            + "		friendship.pk.right.lastName, "
-            + "		friendship.pk.right.username, "
-            + "		friendship.pk.right.contactDetails.primaryEmail.email, "
-            + "		friendship.pk.right.emailHash, "
-            + "		friendship.pk.right.avatarUrl, "
-            + "		friendship.pk.right.bannerUrl, "
-            + "		friendship.pk.right.stompSessionCount"
+    static final String SELECT_FRIEND_AS_USERDTO = "select new com.restdude.domain.users.model.UserDTO(friendship.id.right.id, "
+            + "		friendship.id.right.firstName, "
+            + "		friendship.id.right.lastName, "
+            + "		friendship.id.right.username, "
+            + "		friendship.id.right.contactDetails.primaryEmail.email, "
+            + "		friendship.id.right.emailHash, "
+            + "		friendship.id.right.avatarUrl, "
+            + "		friendship.id.right.bannerUrl, "
+            + "		friendship.id.right.stompSessionCount"
             + ") ";
 
 
-    static final String IS_FRIEND = " (friendship.pk.left.pk =  ?1 "
+    static final String IS_FRIEND = " (friendship.id.left.id =  ?1 "
             + "and friendship.status = com.restdude.domain.friends.model.FriendshipStatus.CONFIRMED) ";
 
 
     static final String FROM__FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND;
     //
-    static final String FROM__STOMPONLINE_FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND + " and friendship.pk.right.stompSessionCount > 0 ";
+    static final String FROM__STOMPONLINE_FRIENDS_BY_USERID = " from Friendship friendship where " + IS_FRIEND + " and friendship.id.right.stompSessionCount > 0 ";
 
-    static final String QUERY_FRIEND_USERNAMES_BY_USERID = "select friendship.pk.right.username " + FROM__FRIENDS_BY_USERID;
-    static final String QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID = "select friendship.pk.right.username " + FROM__STOMPONLINE_FRIENDS_BY_USERID;
+    static final String QUERY_FRIEND_USERNAMES_BY_USERID = "select friendship.id.right.username " + FROM__FRIENDS_BY_USERID;
+    static final String QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID = "select friendship.id.right.username " + FROM__STOMPONLINE_FRIENDS_BY_USERID;
 
     static final String QUERY_FRIENDS_BY_USERID = SELECT_FRIEND_AS_USERDTO + FROM__FRIENDS_BY_USERID;
 
     @Query(QUERY_STOMPONLINE_FRIEND_USERNAMES_BY_USERID)
     List<String> findAllStompOnlineFriendUsernames(String userId);
 
-    @Query("select f.status from Friendship f where f.pk = ?1 ")
+    @Query("select f.status from Friendship f where f.id = ?1 ")
     FriendshipStatus getCurrentStatus(FriendshipIdentifier id);
 
     @Query(QUERY_FRIEND_USERNAMES_BY_USERID)

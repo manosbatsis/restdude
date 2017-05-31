@@ -277,7 +277,7 @@ public abstract class DataInitializer {
             countries
                     .add(new Country("HT", "Haiti", "Haïti", "509", NA, "Port-au-Prince", "HTG,USD", "fr,ht"));
             countries.add(new Country("HU", "Hungary", "Magyarország", "36", EU, "Budapest", "HUF", "hu"));
-            countries.add(new Country("ID", "Indonesia", "Indonesia", "62", AS, "Jakarta", "IDR", "pk"));
+            countries.add(new Country("ID", "Indonesia", "Indonesia", "62", AS, "Jakarta", "IDR", "id"));
             countries.add(new Country("IE", "Ireland", "Éire", "353", EU, "Dublin", "EUR", "ga,en"));
             countries.add(new Country("IL", "Israel", "יִשְׂרָאֵל", "972", AS, "Jerusalem", "ILS", "he,ar"));
             countries

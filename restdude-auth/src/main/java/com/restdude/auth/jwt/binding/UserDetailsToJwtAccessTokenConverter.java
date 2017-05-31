@@ -56,7 +56,7 @@ public class UserDetailsToJwtAccessTokenConverter extends AbstractJwtConverter i
             throw new IllegalArgumentException("User doesn't have any privileges");
 
         // create claims object, add subject
-        Claims claims = Jwts.claims().setSubject("users/" + userDetails.getPk());
+        Claims claims = Jwts.claims().setSubject("users/" + userDetails.getId());
         // add name
         claims.put(JwtSettings.CLAIM_NAME, userDetails.getName());
         claims.put(JwtSettings.CLAIM_FIRST_NAME, userDetails.getFirstName());

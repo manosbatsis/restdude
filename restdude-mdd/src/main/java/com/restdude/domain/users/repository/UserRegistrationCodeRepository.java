@@ -30,7 +30,7 @@ import java.io.Serializable;
 @Repository
 public interface UserRegistrationCodeRepository extends ModelRepository<UserRegistrationCode, String> {
 
-    @Query("select case when (count(regCode) > 0) then true else false end  from UserRegistrationCode regCode where regCode.pk = ?1  and regCode.available = true")
+    @Query("select case when (count(regCode) > 0) then true else false end  from UserRegistrationCode regCode where regCode.id = ?1  and regCode.available = true")
     Boolean isAvailable(Serializable id);
 
 }

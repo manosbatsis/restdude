@@ -67,34 +67,13 @@ public abstract class AbstractPersistableModel<PK extends Serializable> implemen
         super();
     }
 
-    public AbstractPersistableModel(PK pk) {
-        this.setPk(pk);
+    public AbstractPersistableModel(PK id) {
+        this.setId(id);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(PK_FIELD_NAME, this.getPk()).toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public abstract PK getPk();
-
-    /**
-     * {@inheritDoc}
-     */
-    public abstract void setPk(PK pk);
-
-    // TODO: tmp hack to bridge entity/DTO till ID names are reverted back to "id"
-    @JsonSetter("id")
-    public void setId(PK id) {
-        this.setPk(id);
-    }
-    @JsonGetter("id")
-    public PK getId() {
-        return this.getPk();
+        return new ToStringBuilder(this).append(PK_FIELD_NAME, this.getId()).toString();
     }
 
     /**
@@ -114,7 +93,7 @@ public abstract class AbstractPersistableModel<PK extends Serializable> implemen
         }
         AbstractPersistableModel other = (AbstractPersistableModel) obj;
         return new EqualsBuilder()
-                .append(this.getPk(), other.getPk())
+                .append(this.getId(), this.getId())
                 .isEquals();
     }
 
@@ -124,7 +103,7 @@ public abstract class AbstractPersistableModel<PK extends Serializable> implemen
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(this.getPk())
+                .append(this.getId())
                 .toHashCode();
     }
 

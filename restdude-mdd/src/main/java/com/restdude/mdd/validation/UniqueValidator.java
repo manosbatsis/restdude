@@ -89,7 +89,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, PersistableM
                     constraintValidatorContext.disableDefaultConstraintViolation();
 
                     for (PersistableModel match : resultSet) {
-                        if (!match.getPk().equals(value.getPk())) {
+                        if (!match.getId().equals(value.getId())) {
                             for (String propertyName : uniqueFieldNames) {
                                 Object newValue = PropertyUtils.getProperty(value, propertyName);
                                 Object existingValue = PropertyUtils.getProperty(match, propertyName);

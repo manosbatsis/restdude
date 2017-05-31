@@ -197,7 +197,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .body("content[0].caseIndex", notNullValue())
                 .body("content[1].title", notNullValue())
                 .extract().as(JsonNode.class);
-        String errorId = errorsPage.get("content").get(0).get("pk").asText();
+        String errorId = errorsPage.get("content").get(0).get("id").asText();
 
         LOGGER.debug("testCaseIndexAndComments, found error case id: {}", errorId);
         JsonNode comments = given().spec(adminRequestSpec)

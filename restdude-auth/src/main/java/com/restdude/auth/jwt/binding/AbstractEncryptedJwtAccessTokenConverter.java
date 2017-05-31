@@ -81,7 +81,7 @@ public abstract class AbstractEncryptedJwtAccessTokenConverter extends AbstractJ
                     // ensure non-empty authorities
                     if(CollectionUtils.isNotEmpty(authorities)){
                         userDetails = new BasicUserDetailsImpl();
-                        userDetails.setPk(subject.substring(JWT_SUBJECT_PREFIX.length()));
+                        userDetails.setId(subject.substring(JWT_SUBJECT_PREFIX.length()));
                         userDetails.setUsername(claims.getBody().get(JwtSettings.CLAIM_USERNAME, String.class));
                         userDetails.setName(claims.getBody().get(JwtSettings.CLAIM_NAME, String.class));
                         userDetails.setFirstName(claims.getBody().get(JwtSettings.CLAIM_FIRST_NAME, String.class));

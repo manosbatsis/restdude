@@ -68,7 +68,7 @@ public class MembershipRequestInfo extends MessageResource<String> {
 	}
 
 	private MembershipRequestInfo(MembershipRequest request) {
-		this(request.getPk(), request.getContext().getPk(), request.getContext().getTitle(), request.getContext().getDescription(), request.getUser().getPk(), request.getStatus());
+		this(request.getId(), request.getContext().getId(), request.getContext().getTitle(), request.getContext().getDescription(), request.getUser().getId(), request.getStatus());
 	}
 
 

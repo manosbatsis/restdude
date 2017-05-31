@@ -62,7 +62,7 @@ import java.util.*;
  * SCRUD service handling a specific type of {@link PersistableModel} using a {@link ModelRepository}
  *
  * @param <T>  Your resource class to manage, usually an entity class
- * @param <PK> Resource pk type, usually Long or String
+ * @param <PK> Resource id type, usually Long or String
  * @param <R>  The repository class to automatically inject
  */
 @Slf4j
@@ -252,12 +252,12 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
      * {@inheritDoc}
      */
     @Override
-    public PersistableModel findRelatedSingle(@NonNull PK pk, @NonNull FieldInfo fieldInfo) {
+    public PersistableModel findRelatedSingle(@NonNull PK id, @NonNull FieldInfo fieldInfo) {
         // throw error if not valid or linkable relationship
         if(!fieldInfo.isLinkableResource() || !fieldInfo.isToOne()){
             throw new IllegalArgumentException("Related must be linkable and *ToOne");
         }
-        return repository.findRelatedEntityByOwnId(pk, fieldInfo);
+        return repository.findRelatedEntityByOwnId(id, fieldInfo);
     }
 
     /**
@@ -356,7 +356,7 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     /**
      * Get the entity's file uploads for this propert
      *
-     * @param subjectId    the entity pk
+     * @param subjectId    the entity id
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */

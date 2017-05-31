@@ -58,7 +58,7 @@ public class LinksIT extends AbstractControllerIT {
         LOGGER.debug("testSimpleTypeProperty, simple JSON");
         JsonNode eu = this.getCountryParent(adminRequestSpec);
 
-        Assert.assertEquals(eu.get("pk").asText(), "EU");
+        Assert.assertEquals(eu.get("id").asText(), "EU");
         Assert.assertEquals(eu.get("name").asText(), "Europe");
 
 
@@ -94,10 +94,10 @@ public class LinksIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("content[0].parent.pk", equalTo("EU"))
-                .body("content[1].parent.pk", equalTo("EU"))
-                .body("content[2].parent.pk", equalTo("EU"))
-                .body("content[3].parent.pk", equalTo("EU"));
+                .body("content[0].parent.id", equalTo("EU"))
+                .body("content[1].parent.id", equalTo("EU"))
+                .body("content[2].parent.id", equalTo("EU"))
+                .body("content[3].parent.id", equalTo("EU"));
 
         given().spec(adminRequestSpec)
                 .log().all()
@@ -107,7 +107,7 @@ public class LinksIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("content[0].parent.pk", equalTo("EU"))
+                .body("content[0].parent.id", equalTo("EU"))
                 .body("content[0].name", equalTo("Greece"));
 
         LOGGER.debug("testRelatedPaging, JSON API");
@@ -132,10 +132,10 @@ public class LinksIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("data[0].attributes.parent.pk", equalTo("EU"))
-                .body("data[1].attributes.parent.pk", equalTo("EU"))
-                .body("data[2].attributes.parent.pk", equalTo("EU"))
-                .body("data[3].attributes.parent.pk", equalTo("EU"));
+                .body("data[0].attributes.parent.id", equalTo("EU"))
+                .body("data[1].attributes.parent.id", equalTo("EU"))
+                .body("data[2].attributes.parent.id", equalTo("EU"))
+                .body("data[3].attributes.parent.id", equalTo("EU"));
         given().spec(adminJsonApiRequestSpec)
                 .log().all()
                 .param("name", "Greec%")
@@ -144,7 +144,7 @@ public class LinksIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("data[0].attributes.parent.pk", equalTo("EU"))
+                .body("data[0].attributes.parent.id", equalTo("EU"))
                 .body("data[0].attributes.name", equalTo("Greece"));
 
     }

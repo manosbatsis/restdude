@@ -56,7 +56,7 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     public static final String CLASS_DESCRIPTION = "Used to persist error stacktraces using the corresponding hash as the ID. "
             + "The generated hash ignores line numbers (in case of SystemError) and is thus tolerant of small code changes, like adding a comment line.";
 
-    @Formula(" (pk) ")
+    @Formula(" (id) ")
     private String name;
 
     @ApiModelProperty(value = "The root cause title.")
@@ -71,7 +71,7 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     @Column(name = "last_occurred")
     private LocalDateTime lastOccurred;
 
-    @Formula(" (select count(*) from error_base err_base where err_base.error_log_id = pk) ")
+    @Formula(" (select count(*) from error_base err_base where err_base.error_log_id = id) ")
     @ApiModelProperty(value = "The number of errors corresponding to this stacktrace.")
     private Integer errorCount = 0;
 
@@ -104,8 +104,8 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     public void preSave() {
 
         // set PK if needed
-        if (this.getPk() == null && StringUtils.isNotEmpty(this.stacktrace)) {
-            this.setPk(HashUtils.buildHash(this.stacktrace));
+        if (this.getId() == null && StringUtils.isNotEmpty(this.stacktrace)) {
+            this.setId(HashUtils.buildHash(this.stacktrace));
         }
 
         // trim  title if needed
@@ -124,7 +124,7 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("pk", this.getPk())
+                .append("id", this.getId())
                 .append("rootCauseMessage", this.getRootCauseMessage())
                 .append("stacktrace", StringUtils.abbreviate(this.getStacktrace(), 120))
                 .toString();

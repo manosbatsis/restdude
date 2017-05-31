@@ -36,7 +36,7 @@ public class JsonSchemaControllerIT extends AbstractControllerIT {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonSchemaControllerIT.class);
 
     @Test(priority = 20, description = "Test JSON schema retreival")
-    public void testPatch() throws Exception {
+    public void testSchema() throws Exception {
 
         // --------------------------------
         // Login
@@ -49,7 +49,7 @@ public class JsonSchemaControllerIT extends AbstractControllerIT {
         // --------------------------------
         JsonNode schema = given().spec(adminRequestSpec)
                 .log().all()
-                .get(WEBCONTEXT_PATH + "/api/rest/users/jsonschema")
+                .get(WEBCONTEXT_PATH + "/api/rest/hosts/jsonschema")
                 .then()
                 .log().all()
                 .assertThat()

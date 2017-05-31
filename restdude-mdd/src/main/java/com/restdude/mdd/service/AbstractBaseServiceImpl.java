@@ -112,8 +112,8 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
     public UserModel getPrincipalLocalUser() {
         UserDetails principal = getPrincipal();
         User user = null;
-        if (principal != null && principal.getPk() != null) {
-            user = this.userRepository.getOne(principal.getPk());
+        if (principal != null && principal.getId() != null) {
+            user = this.userRepository.getOne(principal.getId());
             initRoles(user);
         }
 

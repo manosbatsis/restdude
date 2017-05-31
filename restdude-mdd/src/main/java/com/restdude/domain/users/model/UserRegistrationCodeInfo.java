@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@JsonPropertyOrder({"pk", "available", "username", "batchId", "batchName"})
+@JsonPropertyOrder({"id", "available", "username", "batchId", "batchName"})
 public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableModel {
 
     private static final long serialVersionUID = 1L;
@@ -43,7 +43,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableModel
     }
 
     public UserRegistrationCodeInfo(UserRegistrationCode code) {
-        this(code.getPk(), code.getAvailable(), code.getCredentials(), code.getBatch());
+        this(code.getId(), code.getAvailable(), code.getCredentials(), code.getBatch());
 
     }
 
@@ -62,7 +62,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableModel
             this.username = credentials.getUser().getUsername();
         }
         if (batch != null) {
-            this.batchId = batch.getPk();
+            this.batchId = this.getId();
             this.batchName = batch.getName();
         }
     }
@@ -70,7 +70,7 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableModel
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("pk", this.id)
+                .append("id", this.id)
                 .append("available", this.available)
                 .append("username", this.username)
                 .append("batchId", this.batchId)
@@ -78,11 +78,11 @@ public class UserRegistrationCodeInfo extends AbstractSystemUuidPersistableModel
                 .toString();
     }
 
-    public String getPk() {
+    public String getId() {
         return id;
     }
 
-    public void setPk(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 

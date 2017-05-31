@@ -35,9 +35,9 @@ import java.util.Map;
 public interface UserDetails extends SocialUserDetails, Principal, PersistableModel<String> {
 
 
-    public String getPk();
+    public String getId();
 
-    public void setPk(String id);
+    public void setId(String id);
 
     public String getFirstName();
 

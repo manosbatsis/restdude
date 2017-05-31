@@ -62,7 +62,7 @@ public class UserCredentials extends AbstractPersistableModel<String> {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String pk;
+    private String id;
 
     @NotNull
     @Column(name = "active", nullable = false)
@@ -155,16 +155,16 @@ public class UserCredentials extends AbstractPersistableModel<String> {
      * {@inheritDoc}
      */
     @Override
-    public String getPk() {
-        return pk;
+    public String getId() {
+        return id;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setPk(String pk) {
-        this.pk = pk;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -172,7 +172,7 @@ public class UserCredentials extends AbstractPersistableModel<String> {
      */
     @Override
     public boolean isNew() {
-        return null == getPk();
+        return null == this.getId();
     }
 
     public void setActive(Boolean active) {

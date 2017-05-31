@@ -56,11 +56,11 @@ public class AnyToOnePredicateFactory<T extends PersistableModel<PK>, PK extends
 	public Predicate buildPredicate(Root<?> root, CriteriaBuilder cb, String propertyName, Class<T> fieldType, ConversionService conversionService, PredicateOperator operator, List<String> propertyValues) {
 		// TODO: move to required constructor
 		if (this.idType == null) {
-			this.idType = (Class<PK>) ClassUtils.getBeanPropertyType(fieldType, "pk", false);
+			this.idType = (Class<PK>) ClassUtils.getBeanPropertyType(fieldType, "id", false);
 		}
 		List<PK> convertedValues = this.convertValues(propertyValues, conversionService, this.idType);
 		Path<T> basePath = this.<T>getPath(root, propertyName, fieldType);
-		Path<PK> path = basePath.<PK>get("pk");
+		Path<PK> path = basePath.<PK>get("id");
 		return buildPredicate(root, cb, path, operator, convertedValues);
 	}
 

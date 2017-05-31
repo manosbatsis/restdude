@@ -44,8 +44,8 @@ public interface SystemErrorRepository extends AbstractCaseModelRepository<Syste
 
 
     String SELECT_NEW_ERROR_COMMENT_INFOS = "select new com.restdude.domain.cases.model.dto.CaseCommenttInfo";
-    String NEW_ERROR_COMMENT_INFO_PARAMS = "e.pk, e.content, e.createdDate, " +
-            "e.createdBy.pk, e.createdBy.firstName, e.createdBy.lastName, e.createdBy.username, e.createdBy.emailHash, e.createdBy.avatarUrl ";
+    String NEW_ERROR_COMMENT_INFO_PARAMS = "e.id, e.content, e.createdDate, " +
+            "e.createdBy.id, e.createdBy.firstName, e.createdBy.lastName, e.createdBy.username, e.createdBy.emailHash, e.createdBy.avatarUrl ";
 
     String GET_ERROR_COMMENTS = SELECT_NEW_ERROR_COMMENT_INFOS + "(" + NEW_ERROR_COMMENT_INFO_PARAMS + ") from ErrorComment e where e.subject = :#{#subject}  order by e.createdDate ASC";
 

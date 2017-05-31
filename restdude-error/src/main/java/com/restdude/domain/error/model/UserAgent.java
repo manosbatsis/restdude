@@ -59,15 +59,15 @@ public class UserAgent extends AbstractAssignedIdPersistableModel<String> {
         super();
     }
 
-    public UserAgent(String pk, String value) {
-        super(pk);
+    public UserAgent(String id, String value) {
+        super(id);
         this.value = value;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("pk", this.getPk())
+                .append("id", this.getId())
                 .append("pathFragment", this.getValue())
                 .toString();
     }
@@ -76,8 +76,8 @@ public class UserAgent extends AbstractAssignedIdPersistableModel<String> {
     @Override
     public void preSave() {
         if (StringUtils.isNotEmpty(this.value)) {
-            if (this.getPk() == null) {
-                this.setPk(HashUtils.buildHash(this.value));
+            if (this.getId() == null) {
+                this.setId(HashUtils.buildHash(this.value));
             }
             if (this.value.length() > UserAgent.MAX_VALUE_LENGTH) {
                 this.value = StringUtils.abbreviate(this.value, UserAgent.MAX_VALUE_LENGTH);

@@ -45,7 +45,7 @@ public abstract class AbstractNoDeletePersistableModelController<T extends Persi
 
 
     @Override
-    public void delete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK id) {
+    public void delete(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id) {
         throw new NotImplementedException("Method is unsupported.");
     }
 

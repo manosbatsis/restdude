@@ -64,8 +64,8 @@ public abstract class AbstractFormalRegionModel<P extends AbstractFormalRegionMo
 	}
 
 
-    public AbstractFormalRegionModel(PK pk, String name, P parent) {
-        this.setPk(pk);
+    public AbstractFormalRegionModel(PK id, String name, P parent) {
+        this.setId(id);
 		this.name = name;
 		this.parent = parent;
 	}

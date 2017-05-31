@@ -50,7 +50,7 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
      */
     @Override
     public Boolean exists(Friendship resource) {
-        return this.repository.exists(resource.getPk());
+        return this.repository.exists(resource.getId());
     }
 
     /**
@@ -69,21 +69,21 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
     @Override
     @Transactional(readOnly = false)
     public Friendship createTest(Friendship resource) {
-        LOGGER.debug("createTest, resource: {}, left: {}, right: {}", resource, resource.getPk().getLeft(), resource.getPk().getRight().getUsername());
-        if (this.repository.exists(resource.getPk())) {
-            throw new RuntimeException("Friendship pk already exists: " + resource.getPk());
+        LOGGER.debug("createTest, resource: {}, left: {}, right: {}", resource, resource.getId().getLeft(), resource.getId().getRight().getUsername());
+        if (this.repository.exists(resource.getId())) {
+            throw new RuntimeException("Friendship id already exists: " + resource.getId());
         }
         resource.setStatus(FriendshipStatus.CONFIRMED);
         FriendshipIdentifier InverseId = resource.getInverseId();
         if (InverseId == null) {
             throw new RuntimeException("Could not inverse friendship: " + resource);
         }
-        if (resource.getPk().getLeft().getPk().equals(resource.getPk().getRight().getPk())) {
+        if (resource.getId().getLeft().getId().equals(resource.getId().getRight().getId())) {
             throw new RuntimeException("Friendships with oneself is not allowed");
         }
         resource = this.repository.persist(resource);
         Friendship inverse = new Friendship(InverseId);
-        LOGGER.debug("createAsConfirmed, inverse: {}, left: {}, right: {}", inverse, inverse.getPk().getLeft().getUsername(), inverse.getPk().getRight().getUsername());
+        LOGGER.debug("createAsConfirmed, inverse: {}, left: {}, right: {}", inverse, inverse.getId().getLeft().getUsername(), inverse.getId().getRight().getUsername());
         inverse.setStatus(FriendshipStatus.CONFIRMED);
         inverse = this.repository.persist(inverse);
         this.repository.flush();
@@ -126,26 +126,26 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
         LOGGER.debug("validateSender resource: {}", resource);
 
         // get current principal
-        String userDetailsId = this.getPrincipal().getPk();
+        String userDetailsId = this.getPrincipal().getId();
 
         // set current user as sender if the latter is empty
-        if (resource.getPk().getLeft() == null) {
-            resource.getPk().setLeft(new User(userDetailsId));
+        if (resource.getId().getLeft() == null) {
+            resource.getId().setLeft(new User(userDetailsId));
         }
 
         // verify principal == owner
-        if (!userDetailsId.equals(resource.getPk().getLeft().getPk())) {
+        if (!userDetailsId.equals(resource.getId().getLeft().getId())) {
             throw new BadRequestException("Invalid friendship owner.");
         }
 
         // verify friend is set
-        User friend = resource.getPk().getRight();
-        if (friend == null || !StringUtils.isNotBlank(friend.getPk())) {
-            throw new BadRequestException("A (friend) pk is required");
+        User friend = resource.getId().getRight();
+        if (friend == null || !StringUtils.isNotBlank(friend.getId())) {
+            throw new BadRequestException("A (friend) id is required");
         }
 
         // verify not friend-to-self
-        if (resource.getPk().getLeft().getPk().equals(resource.getPk().getRight().getPk())) {
+        if (resource.getId().getLeft().getId().equals(resource.getId().getRight().getId())) {
             throw new BadRequestException("Friendships with oneself are not allowed");
         }
         LOGGER.debug("validateSender returns resource: {}", resource);
@@ -156,7 +156,7 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
         validateSender(resource);
 
         // get the persisted record, if any, null otherwise
-        FriendshipStatus currentStatus = this.repository.getCurrentStatus(resource.getPk());
+        FriendshipStatus currentStatus = this.repository.getCurrentStatus(resource.getId());
 
         // validate next status
         boolean allowedNext = FriendshipStatus.isAllowedNext(currentStatus, resource.getStatus());
@@ -184,7 +184,7 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
             this.repository.delete(resource);
         } else {
             // persist changes
-            resource = this.repository.exists(resource.getPk()) ? this.repository.save(resource) : this.repository.persist(resource);
+            resource = this.repository.exists(resource.getId()) ? this.repository.save(resource) : this.repository.persist(resource);
 
         }
 
@@ -194,9 +194,9 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
             // notify this side of pending request
             String username = this.userRepository.findUsernameById(
                     resource
-                            .getPk()
+                            .getId()
                             .getLeft()
-                            .getPk());
+                            .getId());
             LOGGER.debug("Sending friendship DTO to " + username);
             this.messagingTemplate.convertAndSendToUser(username, Destinations.USERQUEUE_FRIENDSHIPS,
                     new FriendshipDTO(resource));
@@ -206,14 +206,14 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
 
     @Override
     public Iterable<UserDTO> findAllMyFriends() {
-        return repository.findAllFriends(this.getPrincipal().getPk());
+        return repository.findAllFriends(this.getPrincipal().getId());
     }
 
     @Override
     public void sendStompActivityMessageToOnlineFriends(ActivityNotificationMessage msg) {
 
         // get online friends
-        Iterable<String> useernames = this.repository.findAllStompOnlineFriendUsernames(this.getPrincipal().getPk());
+        Iterable<String> useernames = this.repository.findAllStompOnlineFriendUsernames(this.getPrincipal().getId());
 
         this.sendStompActivityMessage(msg, useernames);
     }

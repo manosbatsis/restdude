@@ -56,7 +56,7 @@ public class CaseStatustInfo extends MessageResource<String> {
 
 
 	private CaseStatustInfo(CaseStatus resource) {
-		this(resource.getPk(), resource.getName());
+		this(resource.getId(), resource.getName());
 	}
 	
 

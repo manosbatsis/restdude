@@ -89,7 +89,7 @@ public class JsonApiIT extends AbstractControllerIT {
         // get a country document
         Response rs = given().spec(requestSpec)
                 .log().all()
-                .param("parent.pk", "EU")
+                .param("parent.id", "EU")
                 .param("name", "Greece")
                 .get(WEBCONTEXT_PATH + "/api/rest/countries");
 

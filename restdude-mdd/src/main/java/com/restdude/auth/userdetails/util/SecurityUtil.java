@@ -58,7 +58,7 @@ public class SecurityUtil {
 	public static void login(HttpServletRequest request, HttpServletResponse response, UserDetails userDetails,
 			UserDetailsConfig userDetailsConfig, UserDetailsService userDetailsService) {
 
-        if (userDetails != null && StringUtils.isNoneBlank(userDetails.getPk(), userDetails.getUsername(), userDetails.getPassword())) {
+        if (userDetails != null && StringUtils.isNoneBlank(userDetails.getId(), userDetails.getUsername(), userDetails.getPassword())) {
             String token = new String(Base64.encode((userDetails.getUsername()
 					+ ":" + userDetails.getPassword()).getBytes()));
 			CookieUtil.addCookie(request, response, userDetailsConfig.getCookiesBasicAuthTokenName(), token, false, userDetailsConfig);

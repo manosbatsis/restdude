@@ -48,6 +48,6 @@ public interface MembershipRepository extends ModelRepository<Membership, String
     @Query("select membership.user.username from Membership membership where membership.context = ?1 AND membership.user.stompSessionCount > 0 ")
     Set<String> findOnlineMemberUsernames(Space context);
 
-    @Query("select case when (count(contextMembership) > 0)  then true else false end from Membership contextMembership where contextMembership.context.pk = :#{#context.pk} AND contextMembership.user.pk = :#{#user.pk}")
+    @Query("select case when (count(contextMembership) > 0)  then true else false end from Membership contextMembership where contextMembership.context.id = :#{#context.id} AND contextMembership.user.id = :#{#user.id}")
     Boolean exists(@Param("context") Space context, @Param("user") User user);
 }

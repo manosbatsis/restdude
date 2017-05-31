@@ -53,7 +53,7 @@ public class BasicUserDetailsImpl implements UserDetails {
 
 
 
-	private String pk;
+	private String id;
 
 	private String username;
 
@@ -123,7 +123,7 @@ public class BasicUserDetailsImpl implements UserDetails {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-			.append("pk", pk)
+			.append("id", id)
 			.append("username", username)
 			.append("firstName", firstName)
 			.append("lastName", lastName)
@@ -134,19 +134,19 @@ public class BasicUserDetailsImpl implements UserDetails {
 	}
 
 	/**
-	 * @see UserDetails#getPk()
+	 * @see UserDetails#getId()
 	 */
 	@Override
-	public String getPk() {
-		return pk;
+	public String getId() {
+		return id;
 	}
 
 	/**
-	 * @see UserDetails#setPk(String)
+	 * @see UserDetails#setId(String)
 	 */
 	@Override
-	public void setPk(String pk) {
-		this.pk = pk;
+	public void setId(String id) {
+		this.id = id;
 	}
 
     @Override
@@ -627,7 +627,7 @@ public class BasicUserDetailsImpl implements UserDetails {
      */
 	@Override
 	public String getUserId() {
-		return this.pk;
+		return this.id;
 	}
 
 	@Override

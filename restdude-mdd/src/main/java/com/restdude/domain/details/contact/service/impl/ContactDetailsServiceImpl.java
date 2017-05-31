@@ -101,7 +101,7 @@ public class ContactDetailsServiceImpl extends AbstractPersistableModelServiceIm
     @Override
     @Transactional(readOnly = false)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") EmailDetail detail) {
-        ContactDetails contactDetails = this.repository.getOne(resource.getPk());
+        ContactDetails contactDetails = this.repository.getOne(resource.getId());
         if (detail.getPrimary() || resource.getPrimaryEmail() == null) {
             contactDetails.setPrimaryEmail(detail);
             User u = contactDetails.getUser();
@@ -118,7 +118,7 @@ public class ContactDetailsServiceImpl extends AbstractPersistableModelServiceIm
     @Override
     @Transactional(readOnly = false)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") CellphoneDetail detail) {
-        ContactDetails contactDetails = this.repository.getOne(resource.getPk());
+        ContactDetails contactDetails = this.repository.getOne(resource.getId());
         if (detail.getPrimary() || resource.getPrimaryCellphone() == null) {
             contactDetails.setPrimaryCellphone(detail);
             contactDetails = this.repository.save(contactDetails);
@@ -132,7 +132,7 @@ public class ContactDetailsServiceImpl extends AbstractPersistableModelServiceIm
     @Override
     @Transactional(readOnly = false)
     public ContactDetails setPrimary(@P("resource") ContactDetails resource, @P("detail") PostalAddressDetail detail) {
-        ContactDetails contactDetails = this.repository.getOne(resource.getPk());
+        ContactDetails contactDetails = this.repository.getOne(resource.getId());
         if (detail.getPrimary() || resource.getPrimaryCellphone() == null) {
             contactDetails.setPrimaryAddress(detail);
             contactDetails = this.repository.save(contactDetails);

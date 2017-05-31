@@ -54,7 +54,7 @@ public class Friendship extends AbstractPersistableModel<FriendshipIdentifier> {
     @NotNull
     @ApiModelProperty(required = true)
     @EmbeddedId
-    private FriendshipIdentifier pk;
+    private FriendshipIdentifier id;
 
     @ApiModelProperty(required = true, allowableValues = "NEW, CONFIRMED, BLOCK, DELETE")
     @NotNull
@@ -70,7 +70,7 @@ public class Friendship extends AbstractPersistableModel<FriendshipIdentifier> {
     }
 
     public Friendship(FriendshipIdentifier id) {
-        this.pk = id;
+        this.id = id;
     }
 
     public Friendship(FriendshipStatus status) {
@@ -84,15 +84,15 @@ public class Friendship extends AbstractPersistableModel<FriendshipIdentifier> {
 
     public Friendship(User sender, User recipient) {
 
-        this.pk = new FriendshipIdentifier();
-        this.pk.setLeft(sender);
-        this.pk.setRight(recipient);
+        this.id = new FriendshipIdentifier();
+        this.id.setLeft(sender);
+        this.id.setRight(recipient);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("pk", this.getPk())
+                .append("id", this.getId())
                 .append("status", this.getStatus())
                 .append("new", this.isNew())
                 .toString();
@@ -101,7 +101,7 @@ public class Friendship extends AbstractPersistableModel<FriendshipIdentifier> {
     @JsonIgnore
     public FriendshipIdentifier getInverseId() {
         FriendshipIdentifier inverse = null;
-        FriendshipIdentifier thisId = this.getPk();
+        FriendshipIdentifier thisId = this.getId();
         if (thisId != null) {
             inverse = new FriendshipIdentifier();
             inverse.setLeft(thisId.getRight());
@@ -122,15 +122,15 @@ public class Friendship extends AbstractPersistableModel<FriendshipIdentifier> {
     /**
      * {@inheritDoc}
      */
-    public FriendshipIdentifier getPk() {
-        return pk;
+    public FriendshipIdentifier getId() {
+        return id;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setPk(FriendshipIdentifier id) {
-        this.pk = id;
+    public void setId(FriendshipIdentifier id) {
+        this.id = id;
     }
 
     /**

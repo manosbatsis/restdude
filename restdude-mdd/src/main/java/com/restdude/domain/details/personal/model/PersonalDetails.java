@@ -41,7 +41,7 @@ import java.time.LocalDate;
 public class PersonalDetails extends AbstractPersistableModel<String> {
 
     @Id
-    private String pk;
+    private String id;
 
     @MapsId
     @OneToOne(optional = false, fetch = FetchType.LAZY)
@@ -61,17 +61,17 @@ public class PersonalDetails extends AbstractPersistableModel<String> {
      * @see org.springframework.data.domain.Persistable#getId()
      */
     @Override
-    public String getPk() {
-        return pk;
+    public String getId() {
+        return id;
     }
 
     /**
      * Set the entity's primary key
      *
-     * @param id the pk to set
+     * @param id the id to set
      */
-    public void setPk(String pk) {
-        this.pk = pk;
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PersonalDetails extends AbstractPersistableModel<String> {
      */
     @Override
     public boolean isNew() {
-        return null == getPk();
+        return null == this.getId();
     }
 
     public LocalDate getBirthDay() {

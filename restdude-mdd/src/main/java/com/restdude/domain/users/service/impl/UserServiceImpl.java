@@ -153,7 +153,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
     @Override
     @Transactional(readOnly = false)
     public void updateLastLogin(UserDetails u){
-        this.repository.updateLastLogin(u.getPk());
+        this.repository.updateLastLogin(u.getId());
     }
 
     /**
@@ -168,7 +168,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         user = this.findActiveByCredentials(userNameOrEmail, password);
         if (user != null) {
             if (!CollectionUtils.isEmpty(metadata)) {
-                List<MetadatumModel> saved = this.repository.addMetadata(user.getPk(), metadata);
+                List<MetadatumModel> saved = this.repository.addMetadata(user.getId(), metadata);
                 for (MetadatumModel meta : saved) {
                     user.addMetadatum((UserMetadatum) meta);
                 }
@@ -299,7 +299,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
 
 
         LOGGER.debug("create, update registration code: {}", contactDetails);
-        if (code != null && code.getPk() != null) {
+        if (code != null && code.getId() != null) {
             code.setCredentials(resource.getCredentials());
             this.userRegistrationCodeRepository.patch(code);
         }
@@ -326,8 +326,8 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
     protected UserRegistrationCode noteRegistrationCode(UserCredentials credentials) {
         UserRegistrationCode code = credentials.getRegistrationCode();
         credentials.setRegistrationCode(null);
-        if (code != null && code.getPk() != null) {
-            boolean available = this.userRegistrationCodeRepository.isAvailable(code.getPk());
+        if (code != null && code.getId() != null) {
+            boolean available = this.userRegistrationCodeRepository.isAvailable(code.getId());
             if (!available) {
                 throw new BadRequestException("Invalid registration code");
             }

@@ -168,7 +168,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 	public T patch(@P("resource") T delta) {
 		LOGGER.debug("patch, delta: {}", delta);
 		// load existing
-        T persisted = this.getOne(delta.getPk());
+        T persisted = this.getOne(delta.getId());
         LOGGER.debug("patch, delta: {}, persisted: {}", delta, persisted);
         // update it by copying all non-null properties from the given transient instance
         String[] nullPropertyNames = EntityUtil.getNullPropertyNames(delta);
@@ -317,7 +317,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 
 	/** 
 	 * Get the entity's file uploads for this property
-     * @param subjectId the entity pk
+     * @param subjectId the entity id
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */
@@ -326,7 +326,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 
 		CriteriaQuery<BinaryFile> query = cb.createQuery(BinaryFile.class);
 		Root<T> root = query.from(this.domainClass);
-        query.where(cb.equal(root.get("pk"), subjectId));
+        query.where(cb.equal(root.get("id"), subjectId));
         Selection<? extends BinaryFile> join = root.join(propertyName, JoinType.INNER);
         query.select(join);
         List<BinaryFile> results = this.entityManager.createQuery(query).getResultList();
@@ -350,7 +350,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
             for (int i = 0; i < metaArray.length; i++) {
                 MetadatumModel metadatum = metaArray[i];
                 subject.addMetadatum(this.addMetadatum(
-                        saved.getPk(), metadatum.getPredicate(),
+                        saved.getId(), metadatum.getPredicate(),
                         metadatum.getObject()));
             }
         }
@@ -407,7 +407,7 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 	}
 
 	@Override
-	public <RT extends PersistableModel> RT findRelatedEntityByOwnId(@NonNull PK pk, @NonNull FieldInfo fieldInfo) {
+	public <RT extends PersistableModel> RT findRelatedEntityByOwnId(@NonNull PK id, @NonNull FieldInfo fieldInfo) {
 		if(!fieldInfo.getFieldMappingType().isToOne()){
 			throw new IllegalArgumentException("Field " + fieldInfo.getFieldName() + " is not a relation to a single entity");
 		}
@@ -420,13 +420,13 @@ public class BaseRepositoryImpl<T extends PersistableModel<PK>, PK extends Seria
 		if(fieldInfo.isOneToOne() && reverseName.isPresent()){
 
 			Root root = query.from(fieldInfo.getFieldModelType());
-			query.where(cb.equal(root.<T>get(reverseName.get()).get("pk"), pk));
+			query.where(cb.equal(root.<T>get(reverseName.get()).get("id"), id));
 		}
 		// else match by join
 		else{
 
 			Root<T> root = query.from(this.domainClass);
-			query.where(cb.equal(root.get("pk"), pk));
+			query.where(cb.equal(root.get("id"), id));
 			// or maybe:
 			//CompoundSelection<Integer> selection = cb.construct(fieldInfo.getFieldType(), fieldInfo.getFieldName());
 			Selection selection = root.join(fieldInfo.getFieldName(),JoinType.INNER);

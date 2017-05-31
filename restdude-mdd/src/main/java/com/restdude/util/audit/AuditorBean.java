@@ -51,8 +51,8 @@ public class AuditorBean implements AuditorAware<User> {
         User currentAuditor = null;
 
         UserDetails userDetails = SecurityUtil.getPrincipal();
-        if (userDetails != null && userDetails.getPk() != null) {
-            currentAuditor = new User(userDetails.getPk());
+        if (userDetails != null && userDetails.getId() != null) {
+            currentAuditor = new User(userDetails.getId());
             currentAuditor.setUsername(userDetails.getUsername());
             currentAuditor.setFirstName(userDetails.getFirstName());
             currentAuditor.setLastName(userDetails.getLastName());

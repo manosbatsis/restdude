@@ -83,7 +83,7 @@ public class FriendsController implements InitializingBean {
             @RequestParam(value = "sort", required = false) String sort) {
         // validate status
         status = getValidatedStatus(status, new FriendshipStatus[]{FriendshipStatus.SENT, FriendshipStatus.PENDING, FriendshipStatus.CONFIRMED, FriendshipStatus.BLOCK});
-        return this.findFriendsPaginated(this.friendshipService.getPrincipal().getPk(), status, page, size, sort);
+        return this.findFriendsPaginated(this.friendshipService.getPrincipal().getId(), status, page, size, sort);
     }
 
     @RequestMapping(value = {"{friendId}"}, method = RequestMethod.GET)
@@ -120,7 +120,7 @@ public class FriendsController implements InitializingBean {
             @RequestParam(value = "sort", required = false) String sort) {
 
         Map<String, String[]> parameters = new HashMap<String, String[]>();
-        parameters.put("pk.left.pk", new String[]{targetId});
+        parameters.put("id.left.id", new String[]{targetId});
         parameters.put("status", status);
 
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
@@ -132,7 +132,7 @@ public class FriendsController implements InitializingBean {
         // TODO: move DTO selection to query
         List<UserDTO> frieds = new ArrayList<UserDTO>(friendshipPage.getNumberOfElements());
         for(Friendship friendship : friendshipPage){
-            frieds.add(UserDTO.fromUser(friendship.getPk().getRight()));
+            frieds.add(UserDTO.fromUser(friendship.getId().getRight()));
         }
 
         PageImpl<UserDTO> friends = new PageImpl<UserDTO>(frieds, pageable, friendshipPage.getTotalElements());

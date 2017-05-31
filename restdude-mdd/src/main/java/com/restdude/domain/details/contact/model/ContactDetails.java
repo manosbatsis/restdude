@@ -39,7 +39,7 @@ import java.util.List;
 public class ContactDetails implements PersistableModel<String> {
 
     @Id
-    private String pk;
+    private String id;
 
     @MapsId
     @OneToOne(optional = false, fetch = FetchType.LAZY)
@@ -83,17 +83,17 @@ public class ContactDetails implements PersistableModel<String> {
      * @see org.springframework.data.domain.Persistable#getId()
      */
     @Override
-    public String getPk() {
-        return pk;
+    public String getId() {
+        return id;
     }
 
     /**
      * Set the entity's primary key
      *
-     * @param id the pk to set
+     * @param id the id to set
      */
-    public void setPk(String id) {
-        this.pk = id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ContactDetails implements PersistableModel<String> {
      */
     @Override
     public boolean isNew() {
-        return null == getPk();
+        return null == getId();
     }
 
     public User getUser() {
@@ -203,7 +203,7 @@ public class ContactDetails implements PersistableModel<String> {
     }
 
     private ContactDetails(Builder builder) {
-        this.pk = builder.id;
+        this.id = builder.id;
         this.user = builder.user;
         this.primaryEmail = builder.primaryEmail;
         this.primaryCellphone = builder.primaryCellphone;

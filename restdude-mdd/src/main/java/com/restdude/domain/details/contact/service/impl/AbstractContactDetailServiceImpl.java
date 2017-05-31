@@ -64,7 +64,7 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<P
     public T create(@P("resource") T resource) {
         resource = super.create(resource);
         if (!resource.getVerified()) {
-            ConfirmationToken token = this.confirmationTokenReposirory.persist(new ConfirmationToken.Builder().targetId(resource.getPk().toString()).build());
+            ConfirmationToken token = this.confirmationTokenReposirory.persist(new ConfirmationToken.Builder().targetId(resource.getId().toString()).build());
         }
         return resource;
     }
@@ -88,7 +88,7 @@ public abstract class AbstractContactDetailServiceImpl<T extends ContactDetail<P
     public T patch(@P("resource") T resource) {
         // verify?
         String verificationCode = resource.getVerificationToken();
-        ConfirmationToken token = this.confirmationTokenReposirory.findByTokenValueAndRTargetId(resource.getVerificationToken(), resource.getPk().toString());
+        ConfirmationToken token = this.confirmationTokenReposirory.findByTokenValueAndRTargetId(resource.getVerificationToken(), resource.getId().toString());
         if (token != null) {
             this.confirmationTokenReposirory.delete(token);
             resource.setVerified(true);

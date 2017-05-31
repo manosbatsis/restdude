@@ -109,7 +109,7 @@ public abstract class AbstractModelServiceImpl<T extends Model<PK>, PK extends S
     /**
      * Delete an existing resource.
      *
-     * @param id Resource pk
+     * @param id Resource id
      */
     @Override
     public void delete(PK id) {
@@ -117,9 +117,9 @@ public abstract class AbstractModelServiceImpl<T extends Model<PK>, PK extends S
     }
 
     /**
-     * Find resource by pk.
+     * Find resource by id.
      *
-     * @param id Resource pk
+     * @param id Resource id
      * @return resource
      */
     @Override

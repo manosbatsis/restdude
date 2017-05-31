@@ -69,10 +69,10 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
      */
     @Transactional(readOnly = false)
     public T create(T resource) {
-        if(resource.getOwner() == null || resource.getOwner().getPk() == null){
+        if(resource.getOwner() == null || resource.getOwner().getId() == null){
             UserDetails ud = this.getPrincipal();
-            if(StringUtils.isNotBlank(ud.getPk())){
-                resource.setOwner(new User(ud.getPk()));
+            if(StringUtils.isNotBlank(ud.getId())){
+                resource.setOwner(new User(ud.getId()));
             }
         }
         // create the context
@@ -103,7 +103,7 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
     }
 
     private void ensureAuthorized(@P("resource") T resource) {
-        String principalId = this.getPrincipal().getPk();
+        String principalId = this.getPrincipal().getId();
         // ensure request was made by owner
         if (principalId == null || !this.repository.isOwner(resource, new User(principalId))) {
             throw new UnauthorizedException("Unauthorized (non-owner) or not found");
@@ -159,9 +159,9 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
 
     private T ensureAuthorizedAndGetPersisted(String id) {
         T resource = this.repository.getOne(id);
-        String principalId = this.getPrincipal().getPk();
+        String principalId = this.getPrincipal().getId();
         // ensure request was made by owner
-        if (principalId == null || !resource.getOwner().getPk().equals(principalId)) {
+        if (principalId == null || !resource.getOwner().getId().equals(principalId)) {
             throw new ForbiddenException("Unauthorized (non-owner) or not found");
         }
         return resource;
@@ -175,7 +175,7 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
 
         // if context is public, add friends, let the set filter out dupes
         if(ContextVisibilityType.PUBLIC.equals(resource.getVisibility())){
-            recepientUsernames.addAll(this.friendshipRepository.findAllStompOnlineFriendUsernames(activityUser.getPk()));
+            recepientUsernames.addAll(this.friendshipRepository.findAllStompOnlineFriendUsernames(activityUser.getId()));
         }
         return recepientUsernames;
     }

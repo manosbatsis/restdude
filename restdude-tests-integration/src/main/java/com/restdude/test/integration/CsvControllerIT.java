@@ -79,7 +79,7 @@ public class CsvControllerIT extends AbstractControllerIT {
                     .then().assertThat()
                     .log().all()
                     .statusCode(201)
-                    .body("pk", notNullValue())
+                    .body("id", notNullValue())
                     .log().all()
                     .extract().as(UserRegistrationCodeBatch.class);
 
@@ -87,7 +87,7 @@ public class CsvControllerIT extends AbstractControllerIT {
             //=========================
             RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, "text/csv", "text/csv");
             String csv = RestAssured.given().spec(reqSpec)
-                    .log().all().get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches/" + batch.getPk() + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
+                    .log().all().get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches/" + batch.getId() + "/csv").then().log().all().statusCode(200).extract().response().getBody().print();
             CsvMapper mapper = new CsvMapper();
             CsvSchema schema = mapper.schemaFor(UserRegistrationCodeInfo.class).withHeader();
             MappingIterator<Map<String, String>> it = mapper.readerFor(Map.class)
@@ -108,7 +108,7 @@ public class CsvControllerIT extends AbstractControllerIT {
                                 .firstName("Firstname")
                                 .lastName("LastName")
                                 .email("BetaCodeBatch_" + i + "_" + (j++) + "@" + this.getClass().getSimpleName() + ".com")
-                                .registrationCode(rowAsMap.get("pk"))
+                                .registrationCode(rowAsMap.get("id"))
                                 .build())
                         .post(WEBCONTEXT_PATH + "/api/auth/account")
                         .then()
@@ -116,7 +116,7 @@ public class CsvControllerIT extends AbstractControllerIT {
                         .assertThat()
                         .statusCode(201)
                         // test assertions
-                        .body("pk", notNullValue())
+                        .body("id", notNullValue())
                         // get model
                         .extract().as(User.class);
             }
@@ -131,15 +131,15 @@ public class CsvControllerIT extends AbstractControllerIT {
         // login as admin
         Loggedincontext lctx = this.getLoggedinContext("admin", "admin");
 
-        // get initial data batch pk
+        // get initial data batch id
         JsonNode batches = given().spec(lctx.requestSpec)
                 .log().all()
                 .get(WEBCONTEXT_PATH + "/api/rest/registrationCodeBatches")
                 .then().log().all().assertThat()
                 .statusCode(200)
-                .body("content[0].pk", notNullValue())
+                .body("content[0].id", notNullValue())
                 .extract().as(JsonNode.class);
-        String id = batches.get("content").get(0).get("pk").asText();
+        String id = batches.get("content").get(0).get("id").asText();
 
         // export code batch to CSV
         RequestSpecification reqSpec = this.getRequestSpec(lctx.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, "text/csv", "text/csv");

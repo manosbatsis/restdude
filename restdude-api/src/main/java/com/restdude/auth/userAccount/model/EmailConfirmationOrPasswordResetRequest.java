@@ -133,22 +133,22 @@ public class EmailConfirmationOrPasswordResetRequest implements PersistableModel
     }
 
     /**
-     * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getPk()}
+     * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getId()}
      * only without conflict with {@link ResourceSupport#getId()}
      */
     @Override
-    public String getPk() {
+    public String getId() {
         return null;
     }
 
     /**
-     * Set the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#setPk()}
+     * Set the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#setId()}
      * only without conflict with the getter {@link ResourceSupport#getId()}
      *
-     * @param s the pk to set
+     * @param id the id to set
      */
     @Override
-    public void setPk(String s) {
+    public void setId(String id) {
 
     }
 }

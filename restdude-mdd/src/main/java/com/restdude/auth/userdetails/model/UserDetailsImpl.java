@@ -59,11 +59,8 @@ public class UserDetailsImpl extends BasicUserDetailsImpl {
 		if (user != null) {
 			details = new UserDetailsImpl();
 			BeanUtils.copyProperties(user, details);
-			if (user.getPk() != null) {
-				details.setPk(user.getPk().toString());
-			}
 			if (user.getCredentials() != null) {
-				BeanUtils.copyProperties(user.getCredentials(), details, "pk");
+				BeanUtils.copyProperties(user.getCredentials(), details, "id");
 			}
 
 			// init global roles

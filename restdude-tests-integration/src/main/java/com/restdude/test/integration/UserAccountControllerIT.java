@@ -99,12 +99,12 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(200)
                 .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
-                .body("pk", equalTo(loginContext.userId))
+                .body("id", equalTo(loginContext.userId))
                 .body("username", equalTo(usernameChangeRequest.getUsername()))
                 // get model
                 .extract().response();
 
-        // Get result cookie and user pk
+        // Get result cookie and user id
         loginContext.ssoToken = rs.getCookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME);
 
         RequestSpecification requestSpec = getRequestSpec(loginContext.ssoToken);
@@ -150,7 +150,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(201)
                 // test assertions
-                .body("pk", notNullValue())
+                .body("id", notNullValue())
                 .body("emailHash", equalTo(HashUtils.md5Hex(email)))
                 // get model
                 .extract().as(User.class);
@@ -175,7 +175,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(200)
                 // test assertions
-                .body("pk", notNullValue())
+                .body("id", notNullValue())
                 .body("emailHash", equalTo(HashUtils.md5Hex(email)))
                 .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
                 // get model
@@ -211,7 +211,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(201)
                 // test assertions
-                .body("pk", notNullValue())
+                .body("id", notNullValue())
                 .body("emailHash", equalTo(HashUtils.md5Hex(email)))
                 // get model
                 .extract().as(User.class);
@@ -237,7 +237,7 @@ public class UserAccountControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(200)
                 // test assertions
-                .body("pk", notNullValue())
+                .body("id", notNullValue())
                 .body("emailHash", equalTo(HashUtils.md5Hex(email)))
                 .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, notNullValue())
                 // get model

@@ -146,7 +146,7 @@ public class SystemError extends BaseError {
     @JsonGetter("errorLogId")
     @ApiModelProperty(name = "errorLogId", value = "The corresponding log/stacktrace ID, if any")
     public String getStackTraceId() {
-        return this.getErrorLog() != null ? this.getErrorLog().getPk() : null;
+        return this.getErrorLog() != null ? this.getId() : null;
     }
 
 

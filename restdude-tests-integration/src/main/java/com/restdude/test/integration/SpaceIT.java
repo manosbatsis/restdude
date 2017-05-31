@@ -72,7 +72,7 @@ public abstract class SpaceIT extends AbstractControllerIT {
 				.assertThat()
 				// test assertions
 				.statusCode(201)
-				.body("pk", notNullValue())
+				.body("id", notNullValue())
 				// get model
 				.extract().as(Space.class);
 		return businessContext;
@@ -85,12 +85,12 @@ public abstract class SpaceIT extends AbstractControllerIT {
 				.param("owner", ownerLoginContext.userId)
 				.get(WEBCONTEXT_PATH + "/api/rest/" + Space.API_PATH_FRAGMENT + "/my").then()
 				.assertThat()
-				.body("content[0].pk", notNullValue())
+				.body("content[0].id", notNullValue())
 				.statusCode(200)
-				.extract().path("content[0].pk");
+				.extract().path("content[0].id");
 		// use the public Space
 		Space publicSpace = new Space();
-		publicSpace.setPk(contextId);
+		publicSpace.setId(contextId);
 		return publicSpace;
 	}
 
@@ -126,7 +126,7 @@ public abstract class SpaceIT extends AbstractControllerIT {
 
 	protected SpaceInvitationsResult createSpaceMembershipBatchInvitation(Loggedincontext ownerLoginContext, Space ownedSpace, Iterable<String> cc) {
 		SpaceInvitations.Builder b = new SpaceInvitations.Builder()
-				.businessContextId(ownedSpace.getPk());
+				.businessContextId(ownedSpace.getId());
 		for (String ccItem : cc){
 			b.cc(ccItem);
 		}
@@ -160,7 +160,7 @@ public abstract class SpaceIT extends AbstractControllerIT {
 		SpaceInvitationsResult invitationsResult = given()
 				.spec(ownerLoginContext.requestSpec)
 				.body(new SpaceInvitations.Builder()
-						.businessContextId(ownedSpace.getPk())
+						.businessContextId(ownedSpace.getId())
 						.cc(notecEmail)
 						.build())
 				.post(WEBCONTEXT_PATH + "/api/rest/" + MembershipRequest.API_PATH_FRAGMENT + "/cc")
@@ -172,14 +172,14 @@ public abstract class SpaceIT extends AbstractControllerIT {
 			String invitationId = given()
 					.spec(memberLoginContext.requestSpec)
 					.log().all()
-					.param("context", ownedSpace.getPk())
+					.param("context", ownedSpace.getId())
 					.param("user", memberLoginContext.userId)
 					.get(WEBCONTEXT_PATH + "/api/rest/" + MembershipRequest.API_PATH_FRAGMENT)
 					.then()
 					.log().all()
 					.statusCode(200)
 					.body("content[0].status", equalTo(MembershipRequestStatus.SENT_INVITE.name()))
-					.extract().path("content[0].pk");
+					.extract().path("content[0].id");
 			// Accept invitationSpaceMembershipRequestServiceImpl
 			MembershipRequest confirmedMembershipRequest = given()
 					.spec(memberLoginContext.requestSpec)

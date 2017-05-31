@@ -42,7 +42,7 @@ public class SpaceCasesApp<C extends AbstractCaseModel> extends SpaceApp {
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "pk", nullable = false, updatable = false)
+	@JoinColumn(referencedColumnName = "id", nullable = false, updatable = false)
 	@Getter @Setter
 	@ApiModelProperty(value = "The workflow for this business context")
 	private CaseWorkflow workflow;
@@ -80,9 +80,14 @@ public class SpaceCasesApp<C extends AbstractCaseModel> extends SpaceApp {
 		private String avatarUrl = Constants.DEFAULT_AVATAR_URL;
 		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
 		private User owner;
+		private Space space;
 		private ContextVisibilityType visibility;
 		private Set<Membership> memberships;
 
+		public Builder space(Space space) {
+			this.space = space;
+			return this;
+		}
 		public Builder name(String name) {
 			this.name = name;
 			return this;

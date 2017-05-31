@@ -193,7 +193,7 @@ public class FriendsControllerIT extends AbstractControllerIT {
                 .assertThat()
                 .statusCode(201)
                 // test assertions
-                //.body("pk", notNullValue())
+                //.body("id", notNullValue())
                 // get model
                 .extract().as(UserInvitationResultsDTO.class);
 

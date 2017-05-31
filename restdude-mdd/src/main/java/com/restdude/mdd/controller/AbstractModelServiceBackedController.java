@@ -76,14 +76,14 @@ import java.util.Set;
  * <p>You should extend this class when you want to use a 3 layers pattern : Repository, Service and Controller
  * If you don't have a real service (also called business layer), consider using RepositoryBasedRestController</p>
  * <p/>
- * <p>Default implementation uses "pk" field (usually a Long) in order to identify resources in web request.
+ * <p>Default implementation uses "id" field (usually a Long) in order to identify resources in web request.
  * If your want to identity resources by a slug (human readable identifier), your should override plainJsonGetById() method with for example :
  * <p/>
  * <pre>
  * <code>
  * {@literal @}Override
- * public Sample plainJsonGetById({@literal @}PathVariable String pk) {
- * Sample sample = this.service.findByName(pk);
+ * public Sample plainJsonGetById({@literal @}PathVariable String id) {
+ * Sample sample = this.service.findByName(id);
  * if (sample == null) {
  * throw new NotFoundException();
  * }
@@ -93,7 +93,7 @@ import java.util.Set;
  * </pre>
  *
  * @param <T>  Your resource class to manage, maybe an entity or DTO class
- * @param <PK> Resource pk type, usually Long or String
+ * @param <PK> Resource id type, usually Long or String
  * @param <S>  The service class
  */
 public class AbstractModelServiceBackedController<T extends PersistableModel<PK>, PK extends Serializable, S extends ModelService<T, PK>> implements InitializingBean {
@@ -105,7 +105,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
     protected static final String PARAM_JSONAPI_PAGE_NUMBER = "page[number]";
     protected static final String PARAM_JSONAPI_PAGE_SIZE = "page[size]";
     protected static final String PARAM_SORT = "sort";
-    protected static final String PARAM_PK = "pk";
+    protected static final String PARAM_PK = "id";
     protected static final String PARAM_PAGE_NUMBER = "_pn";
     protected static final String PARAM_PAGE_SIZE = "_ps";
     protected static final String[] PARAMS_IGNORE_FOR_CRITERIA = {PARAM_RELATION_NAME, PARAM_FILTER, PARAM_JSONAPI_PAGE_NUMBER, PARAM_JSONAPI_PAGE_SIZE, PARAM_SORT, PARAM_PK, PARAM_PAGE_NUMBER, PARAM_PAGE_SIZE};
@@ -277,7 +277,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         JsonApiModelResource<T, PK> resource = document.getData();
         if(resource != null ){
             entity = resource.getAttributes();
-            entity.setPk(resource.getIdentifier());
+            entity.setId(resource.getIdentifier());
         }
         return entity;
     }
@@ -291,18 +291,18 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
 
 
     
-    protected T update(PK pk, T resource) {
-        Assert.notNull(pk, "pk cannot be null");
-        resource.setPk(pk);
+    protected T update(PK id, T resource) {
+        Assert.notNull(id, "id cannot be null");
+        resource.setId(id);
         applyCurrentPrincipal(resource);
         resource = this.service.update(resource);
         return resource;
     }
 
     
-    protected T patch(PK pk, T resource) {
+    protected T patch(PK id, T resource) {
         applyCurrentPrincipal(resource);
-        resource.setPk(pk);
+        resource.setId(id);
         resource = this.service.patch(resource);
         return resource;
     }
@@ -312,21 +312,21 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         return service.findAll();
     }
 
-    protected T findById(PK pk) {
-        LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
-        T resource = this.service.findById(pk);
+    protected T findById(PK id) {
+        LOGGER.debug("plainJsonGetById, id: {}, model type: {}", id, this.service.getDomainClass());
+        T resource = this.service.findById(id);
         return resource;
     }
 
     
-    protected Iterable<T> findByIds(@NonNull Set<PK> pks) {
-        Assert.notNull(pks, "pks list cannot be null");
-        return this.service.findByIds(pks);
+    protected Iterable<T> findByIds(@NonNull Set<PK> ids) {
+        Assert.notNull(ids, "ids list cannot be null");
+        return this.service.findByIds(ids);
     }
 
     
-    protected void delete(@NonNull PK pk) {
-        T resource = this.findById(pk);
+    protected void delete(@NonNull PK id) {
+        T resource = this.findById(id);
         this.service.delete(resource);
     }
 
@@ -385,9 +385,9 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
                 String[] excludeRoles = predicate.ignoreforRoles();
                 boolean skipPredicate = this.hasAnyRole(predicate.ignoreforRoles());
                 if (!skipPredicate) {
-                    String pk = principal != null ? principal.getPk() : "ANONYMOUS";
-                    String[] val = {pk};
-                    LOGGER.debug("Adding implicit predicate, name: {}, pathFragment: {}", predicate.value(), pk);
+                    String id = principal != null ? principal.getId() : "ANONYMOUS";
+                    String[] val = {id};
+                    LOGGER.debug("Adding implicit predicate, name: {}, pathFragment: {}", predicate.value(), id);
                     parameters.put(predicate.value(), val);
                 }
 
@@ -431,11 +431,11 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
                         boolean skipApply = this.hasAnyRole(applyRule.ignoreforRoles());
                         // if role is not ignored
                         if (!skipApply) {
-                            String pk = principal != null ? principal.getPk() : null;
-                            if (pk != null) {
+                            String id = principal != null ? principal.getId() : null;
+                            if (id != null) {
                                 User user = new User();
-                                user.setPk(pk);
-                                LOGGER.debug("Applying principal to field: {}, pathFragment: {}", pk, field.getName());
+                                user.setId(id);
+                                LOGGER.debug("Applying principal to field: {}, pathFragment: {}", id, field.getName());
                                 PropertyUtils.setProperty(resource, field.getName(), user);
                             }
                         }

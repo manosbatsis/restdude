@@ -93,15 +93,15 @@ public class EntityUtil {
 
 
 	public static Set<String> findEntityPackageNames(String... basePackages) {
-		Set<String> pkgs = new HashSet<String>();
+		Set<String> ids = new HashSet<String>();
 		for (String basePackage : basePackages) {
 			Set<BeanDefinition> entityBeanDefs = EntityUtil.findEntities(basePackage);
 			for (BeanDefinition beanDef : entityBeanDefs) {
 				Class<?> entity = ClassUtils.getClass(beanDef.getBeanClassName());
-				pkgs.add(entity.getPackage().getName());
+				ids.add(entity.getPackage().getName());
 			}
 		}
-		return pkgs;
+		return ids;
 	}
 
 	public static ClassPathScanningCandidateComponentProvider createComponentScanner(Class... annotations) {
@@ -159,10 +159,10 @@ public class EntityUtil {
     }
 
     public static <PK extends Serializable> PK idOrNull(PersistableModel<PK> user) {
-        return user != null ? user.getPk() : null;
+        return user != null ? user.getId() : null;
     }
 
     public static String idOrNEmpty(PersistableModel entity) {
-        return entity != null ? entity.getPk().toString() : StringUtils.EMPTY;
+        return entity != null ? entity.getId().toString() : StringUtils.EMPTY;
     }
 }

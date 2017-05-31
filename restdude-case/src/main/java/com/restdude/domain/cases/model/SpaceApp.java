@@ -84,8 +84,14 @@ public class SpaceApp extends BaseContext {
 		private String avatarUrl = Constants.DEFAULT_AVATAR_URL;
 		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
 		private User owner;
+		private Space space;
 		private ContextVisibilityType visibility;
 		private Set<Membership> memberships;
+
+		public Builder space(Space space) {
+			this.space = space;
+			return this;
+		}
 
 		public Builder name(String name) {
 			this.name = name;
@@ -128,6 +134,7 @@ public class SpaceApp extends BaseContext {
 	}
 
 	private SpaceApp(Builder builder) {
+		this.setSpace(builder.space);
 		this.setName(builder.name);
 		this.setTitle(builder.title);
 		this.setDescription(builder.description);

@@ -77,7 +77,7 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
 
     @ApiModelProperty(value = "Current case status", allowableValues = "OPEM, CLOSED, [CUSTOM_VALUE]")
     @ManyToOne
-    @JoinColumn(referencedColumnName = "pk", nullable = false, updatable = false)
+    @JoinColumn(referencedColumnName = "id", nullable = false, updatable = false)
     private CaseStatus status;
 
     @ApiModelProperty(value = "The application this case belongs to")
@@ -148,7 +148,7 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("pk", this.getPk())
+                .append("id", this.getId())
                 .append("name", this.getName())
                 .append("caseIndex", this.getCaseIndex())
                 .append("title", this.getTitle())
@@ -161,7 +161,7 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
 
         log.debug("preSave, before: {}", this);
         super.preSave();
-        if (this.getCreatedBy() != null && this.getCreatedBy().getPk() == null) {
+        if (this.getCreatedBy() != null && this.getId() == null) {
             this.setCreatedBy(null);
         }
         if (StringUtils.isNotEmpty(this.getTitle()) && this.getTitle().length() > MAX_TITLE_LENGTH) {

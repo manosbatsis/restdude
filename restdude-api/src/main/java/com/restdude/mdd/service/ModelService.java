@@ -35,7 +35,7 @@ import java.util.Set;
  * @param <T>
  *            Your resource POJO to manage, maybe an entity or DTO class
  * @param <PK>
- *            Resource pk type, usually Long or String
+ *            Resource id type, usually Long or String
  */
 public interface ModelService<T extends Model<PK>, PK extends Serializable> extends BaseService {
 
@@ -90,14 +90,14 @@ public interface ModelService<T extends Model<PK>, PK extends Serializable> exte
     /**
      * Delete an existing resource.
      *
-     * @param id Resource pk
+     * @param id Resource id
      */
     void delete(PK id);
 
     /**
-     * Find resource by pk.
+     * Find resource by id.
      *
-     * @param id Resource pk
+     * @param id Resource id
      * @return resource
      */
     T findById(PK id);

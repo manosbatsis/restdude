@@ -56,7 +56,7 @@ public class SimpleModelResourceIdentifier<T extends Model<PK>, PK extends Seria
     }
 
     public SimpleModelResourceIdentifier(@NonNull T attributesModel, @NonNull String type){
-        this.identifier = attributesModel.getPk();
+        this.identifier = attributesModel.getId();
         this.type = type;
     }
 

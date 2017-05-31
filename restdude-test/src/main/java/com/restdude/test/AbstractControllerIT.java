@@ -205,7 +205,7 @@ public class AbstractControllerIT {
 
         JsonNode credentialsNode = given().spec(adminLoginContext.requestSpec)
                 .log().all()
-                .param("user", user.getPk())
+                .param("user", user.getId())
                 .get(WEBCONTEXT_PATH + "/api/rest/userCredentials")
                 .then()
                 .log().all()
@@ -243,9 +243,9 @@ public class AbstractControllerIT {
 
         String accessJwt = rs.getCookie("access_token");
 
-        // Get result cookie and user pk
+        // Get result cookie and user id
         lctx.jwtAccessToken = rs.getCookie(Constants.JWT_AUTHENTICATION_TOKEN_COOKIE_NAME);
-        lctx.userId = rs.jsonPath().getString("pk");
+        lctx.userId = rs.jsonPath().getString("id");
 
         RequestSpecification requestSpec = getJwtRequestSpec(assertFailed ? null : lctx.jwtAccessToken);
         lctx.requestSpec = requestSpec;
@@ -312,11 +312,11 @@ public class AbstractControllerIT {
                 .cookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, assertFailed
                         ? anyOf(equalTo("invalid"), nullValue())
                         : allOf(not("invalid"), notNullValue()))
-                .content("pk", assertFailed ? nullValue() : notNullValue());
+                .content("id", assertFailed ? nullValue() : notNullValue());
 
-        // Get result cookie and user pk
+        // Get result cookie and user id
         lctx.ssoToken = rs.getCookie(Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME);
-        lctx.userId = rs.jsonPath().getString("pk");
+        lctx.userId = rs.jsonPath().getString("id");
 
         RequestSpecification requestSpec = getRequestSpec(assertFailed ? null : lctx.ssoToken);
         lctx.requestSpec = requestSpec;
@@ -348,13 +348,13 @@ public class AbstractControllerIT {
     }
 
     protected Host getRandomHost(RequestSpecification someRequestSpec) {
-        // obtain a random Host pk
+        // obtain a random Host id
         String id = given().spec(someRequestSpec)
                 .get(WEBCONTEXT_PATH + "/api/rest/hosts").then()
-                .assertThat().body("content[0].pk", notNullValue()).extract().path("content[0].pk");
+                .assertThat().body("content[0].id", notNullValue()).extract().path("content[0].id");
 
         Host host = new Host();
-        host.setPk(id);
+        host.setId(id);
         return host;
     }
 

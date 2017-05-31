@@ -48,7 +48,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "country")
 @AttributeOverrides({
-        @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
+        @AttributeOverride(name = "id", column = @Column(unique = true, nullable = false, length = 2)),
         @AttributeOverride(name = "name", column = @Column(unique = true, nullable = false, length = 50)),
 })
 @ModelResource(pathFragment = "countries", apiName = "Countries", apiDescription = "Operations about countries", controllerSuperClass = CountryController.class)
@@ -86,13 +86,13 @@ public class Country extends AbstractFormalRegionModel<Continent, String> {
 		super();
 	}
 
-	public Country(String pk) {
-		this.setPk(pk);
+	public Country(String id) {
+		this.setId(id);
 	}
 
-	public Country(String pk, String name, String nativeName, String callingCode, Continent continent, String capital,
+	public Country(String id, String name, String nativeName, String callingCode, Continent continent, String capital,
 				   String currency, String languages) {
-		super(pk, name, continent);
+		super(id, name, continent);
 		this.nativeName = nativeName;
 		this.callingCode = callingCode;
 		this.capital = capital;

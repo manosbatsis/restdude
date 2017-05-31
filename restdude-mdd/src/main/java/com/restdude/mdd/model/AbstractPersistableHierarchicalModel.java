@@ -58,12 +58,12 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 	@DiffIgnore
 	@JsonIgnore
 	@ManyToOne(/* cascade=CascadeType.ALL, */fetch = FetchType.EAGER)
-    @JoinColumn(name = "same_as", referencedColumnName = "pk", nullable = true)
+    @JoinColumn(name = "same_as", referencedColumnName = "id", nullable = true)
     private T sameAs;
 
 	@DiffIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent", referencedColumnName = "pk", nullable = true)
+    @JoinColumn(name = "parent", referencedColumnName = "id", nullable = true)
     private T parent;
 
 	@DiffIgnore

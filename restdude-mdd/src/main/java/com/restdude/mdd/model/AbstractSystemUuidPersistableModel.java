@@ -38,21 +38,21 @@ public abstract class AbstractSystemUuidPersistableModel extends AbstractPersist
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
-	private String pk;
+	private String id;
 
 	/**
      * {@inheritDoc}
      */
 	@Override
-	public String getPk() {
-		return pk;
+	public String getId() {
+		return id;
 	}
 
 	/**
      * {@inheritDoc}
      */
-	public void setPk(String id) {
-		this.pk = id;
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public abstract class AbstractSystemUuidPersistableModel extends AbstractPersist
 	@Override
     @JsonIgnore
     public boolean isNew() {
-		return null == getPk();
+		return null == this.getId();
 	}
 
     /**

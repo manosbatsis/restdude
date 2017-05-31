@@ -78,7 +78,7 @@ public class RoleServiceImpl extends AbstractPersistableModelServiceImpl<Role, S
 	@Transactional(readOnly = false)
 	public void saveMember(String roleId, User user) {
 		Role role = this.repository.findByIdOrName(roleId);
-        User member = userRepository.findOne(user.getPk());
+        User member = userRepository.findOne(user.getId());
         member.addRole(role);
         userRepository.save(member);
     }

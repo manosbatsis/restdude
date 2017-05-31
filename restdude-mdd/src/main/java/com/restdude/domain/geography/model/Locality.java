@@ -72,6 +72,6 @@ public class Locality extends AbstractFormalRegionModel<Country, String> {
      */
     @Override
     public boolean isNew() {
-        return null == getPk();
+        return null == this.getId();
     }
 }

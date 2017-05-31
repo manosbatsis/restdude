@@ -105,12 +105,12 @@ public class MembershipRequestServiceImpl
 		Space businessContext = this.spaceContextRepository.getOne(resource.getSpaceId());
 
 		// verify principal is the context owner
-		if (!businessContext.getOwner().getPk().equals(userDetails.getPk())) {
+		if (!businessContext.getOwner().getId().equals(userDetails.getId())) {
 			throw new IllegalArgumentException("User not authorized to send invitations");
 		}
 
 		// init report
-		SpaceInvitationsResult.Builder results = new SpaceInvitationsResult.Builder().businessContextId(businessContext.getPk());
+		SpaceInvitationsResult.Builder results = new SpaceInvitationsResult.Builder().businessContextId(businessContext.getId());
 
 		// process recipients
 		for(String userHandle : resource.getCc()){
@@ -210,7 +210,7 @@ public class MembershipRequestServiceImpl
 	private MembershipRequest create(MembershipRequest resource, boolean skipValidation) {
 		// get current principal and target BusinessContext
 		UserDetails userDetails = this.getPrincipal();
-		resource.setContext(this.spaceContextRepository.getOne(resource.getContext().getPk()));
+		resource.setContext(this.spaceContextRepository.getOne(resource.getContext().getId()));
 		log.debug("create, userDetails: {}, ", userDetails);
 		log.debug("create, resource context owner: {}", resource.getContext().getOwner());
 		log.debug("create, resource context: {}}", resource.getContext());
@@ -218,19 +218,19 @@ public class MembershipRequestServiceImpl
 
 
 		// set current user as target if none was given
-		if(resource.getUser() == null || resource.getUser().getPk() == null){
-			resource.setUser(new User(userDetails.getPk()));
+		if(resource.getUser() == null){
+			resource.setUser(new User(userDetails.getId()));
 		}
 
-		log.debug("create, userDetails: {}, isOwner: {}", userDetails, this.spaceContextRepository.isOwner(resource.getContext(), new User(userDetails.getPk())));
+		log.debug("create, userDetails: {}, isOwner: {}", userDetails, this.spaceContextRepository.isOwner(resource.getContext(), new User(userDetails.getId())));
 		log.debug("create, resource context owner: {}", resource.getContext().getOwner());
 		log.debug("create, resource context: {}}", resource.getContext());
 		log.debug("create, resource user: {}, ", resource.getUser());
 
 		FriendshipIdentifier id = new FriendshipIdentifier();
-		id.init(userDetails.getPk(), resource.getUser().getPk());
+		id.init(userDetails.getId(), resource.getUser().getId());
 		FriendshipIdentifier idInv = new FriendshipIdentifier();
-		idInv.init(resource.getUser().getPk(), userDetails.getPk());
+		idInv.init(resource.getUser().getId(), userDetails.getId());
 		boolean friends = this.friendshipRepository.exists(id);
 		boolean friendsInv = this.friendshipRepository.exists(idInv);
 
@@ -250,9 +250,9 @@ public class MembershipRequestServiceImpl
 		}
 		if (!skipValidation) {
 			// request mode
-			if (userDetails.getPk().equals(resource.getUser().getPk())) {
+			if (userDetails.getId().equals(resource.getUser().getId())) {
 				// make sure context is visible if user is requesting to join
-				if(!this.spaceContextRepository.isVisible(resource.getContext().getPk())) {
+				if(!this.spaceContextRepository.isVisible(resource.getContext().getId())) {
 					throw new UnauthorizedException("Cannot complete request to join, BusinessContext does not exist or is not visible");
 				}
 			}
@@ -304,7 +304,7 @@ public class MembershipRequestServiceImpl
 		UserDetails userDetails = this.getPrincipal();
 		
 		// load the persisted record
-		MembershipRequest businessContextMembershipRequest = this.repository.findOne(resource.getPk());
+		MembershipRequest businessContextMembershipRequest = this.repository.findOne(resource.getId());
 		resource.setContext(businessContextMembershipRequest.getContext());
 
 		// validate request
@@ -340,10 +340,10 @@ public class MembershipRequestServiceImpl
 		log.debug("validateRequest, userDetails: {}, requestResource: {}", userDetails, requestResource);
 		// check if principal is join handler or target
 		MembershipRequest reference = persisted != null ? persisted : requestResource;
-		boolean isRequestUser = userDetails.getPk().equals(reference.getUser().getPk());
+		boolean isRequestUser = userDetails.getId().equals(reference.getUser().getId());
 		log.debug("validateRequest, isRequestUser: {}, reference: {}", isRequestUser, reference);
 		boolean isJoinRequestHandler = this.spaceContextRepository.canInviteUserToSpace(reference.getContext());
-		boolean isBusinessContextOwner = userDetails.getPk().equals(requestResource.getContext().getOwner().getPk());
+		boolean isBusinessContextOwner = userDetails.getId().equals(requestResource.getContext().getOwner().getId());
 		log.debug("validateRequest, isJoinRequestHandler: {}, isBusinessContextOwner: {}", isJoinRequestHandler, isBusinessContextOwner);
 
 		// ensure principal is either join handler or target user but not both
@@ -397,7 +397,7 @@ public class MembershipRequestServiceImpl
     @Transactional(readOnly = false)
     public void delete(String id) {
         MembershipRequest resource = new MembershipRequest();
-        resource.setPk(id);
+        resource.setId(id);
         this.delete(resource);
     }
 
@@ -438,7 +438,7 @@ public class MembershipRequestServiceImpl
 				this.sendStompActivityMessage(msg, this.businessContextMembershipService.findOnlineMemberUsernames(businessContextMembershipRequest.getContext()));
 			}
 			else{
-				this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getContext().getOwner().getPk()));
+				this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getContext().getOwner().getId()));
 			}
 		}
 
@@ -449,7 +449,7 @@ public class MembershipRequestServiceImpl
 					new ActivityNotificationMessage<>(
 							UserDTO.fromUser(businessContextMembershipRequest.getContext().getOwner()), MembershipRequestStatus.SENT_INVITE,
 							MembershipRequestInfo.from(businessContextMembershipRequest));
-			this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getUser().getPk()));
+			this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getUser().getId()));
 		}
 
 	}

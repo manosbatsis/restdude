@@ -55,7 +55,7 @@ public class File extends AbstractSystemUuidPersistableModel {
 			return false;
 		}
 		File that = (File) obj;
-        return null == this.getPk() ? false : this.getPk().equals(that.getPk());
+        return null == this.getId() ? false : this.getId().equals(this.getId());
     }
 
 

@@ -70,8 +70,8 @@ public abstract class AbstractBasicAuditedModel extends AbstractSystemUuidPersis
     @DiffIgnore
     @JsonIgnore
     @ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "created_by", referencedColumnName = "pk", updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER  )
+    @JoinColumn(name = "created_by", referencedColumnName = "id", updatable = false)
     @Getter @Setter
     private User createdBy;
 
@@ -80,7 +80,7 @@ public abstract class AbstractBasicAuditedModel extends AbstractSystemUuidPersis
     @JsonIgnore
     @ApiModelProperty(value = "udated by", readOnly = true, hidden = true)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "updated_by", referencedColumnName = "pk", updatable = false)
+    @JoinColumn(name = "updated_by", referencedColumnName = "id", updatable = false)
     @Getter @Setter
     private User lastModifiedBy;
 

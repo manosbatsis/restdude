@@ -37,7 +37,7 @@ import java.util.List;
 @Entity
 @Table(name = "continent")
 @AttributeOverrides({
-        @AttributeOverride(name = "pk", column = @Column(unique = true, nullable = false, length = 2)),
+        @AttributeOverride(name = "id", column = @Column(unique = true, nullable = false, length = 2)),
 })
 @ModelResource(pathFragment = "continents", apiName = "Continents", apiDescription = "Operations about continent")
 public class Continent extends AbstractFormalRegionModel<Continent, String> {
@@ -52,8 +52,8 @@ public class Continent extends AbstractFormalRegionModel<Continent, String> {
 		super();
 	}
 
-    public Continent(String pk, String name) {
-        super(pk, name, null);
+    public Continent(String id, String name) {
+        super(id, name, null);
     }
 
 	@Override

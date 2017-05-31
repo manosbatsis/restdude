@@ -70,14 +70,14 @@ import java.util.Set;
  * <p>You should extend this class when you want to use a 3 layers pattern : Repository, Service and Controller
  * If you don't have a real service (also called business layer), consider using RepositoryBasedRestController</p>
  * <p/>
- * <p>Default implementation uses "pk" field (usually a Long) in order to identify resources in web request.
+ * <p>Default implementation uses "id" field (usually a Long) in order to identify resources in web request.
  * If your want to identity resources by a slug (human readable identifier), your should override plainJsonGetById() method with for example :
  * <p/>
  * <pre>
  * <code>
  * {@literal @}Override
- * public Sample plainJsonGetById({@literal @}PathVariable String pk) {
- * Sample sample = this.service.findByName(pk);
+ * public Sample plainJsonGetById({@literal @}PathVariable String id) {
+ * Sample sample = this.service.findByName(id);
  * if (sample == null) {
  * throw new NotFoundException();
  * }
@@ -87,7 +87,7 @@ import java.util.Set;
  * </pre>
  *
  * @param <T>  Your resource class to manage, maybe an entity or DTO class
- * @param <PK> Resource pk type, usually Long or String
+ * @param <PK> Resource id type, usually Long or String
  * @param <S>  The service class
  */
 public class AbstractPersistableModelController<T extends PersistableModel<PK>, PK extends Serializable, S extends PersistableModelService<T, PK>>
@@ -121,33 +121,33 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return this.toDocument(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a resource")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
-    public Resource<T> plainJsonPut(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T model) {
-        model = super.update(pk, model);
+    public Resource<T> plainJsonPut(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id, @RequestBody T model) {
+        model = super.update(id, model);
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "{id}", method = RequestMethod.PATCH)
     @ApiOperation(value = "Patch (partially update) a resource"/*, notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity."*/)
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
-    public Resource<T> plainJsonPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody T model) {
-        model = super.patch(pk, model);
+    public Resource<T> plainJsonPatch(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id, @RequestBody T model) {
+        model = super.patch(id, model);
         return toHateoasResource(model);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.PATCH, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @RequestMapping(value = "{id}", method = RequestMethod.PATCH, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Patch (partially plainJsonPut) a resource given as a JSON API Document", notes = "Partial updates will apply all given properties (ignoring null values) to the persisted entity.")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
-    public JsonApiModelResourceDocument<T, PK> jsonApiPatch(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk, @RequestBody JsonApiModelResourceDocument<T, PK> document) {
+    public JsonApiModelResourceDocument<T, PK> jsonApiPatch(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id, @RequestBody JsonApiModelResourceDocument<T, PK> document) {
 
         // unwrap the submitted model and save changes
         T model = toModel(document);
-        model = super.patch(pk, model);
+        model = super.patch(id, model);
 
         // repackage and return as a JSON API Document
         return this.toDocument(model);
@@ -183,9 +183,9 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_PAGE_NUMBER, value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = PARAM_PAGE_NUMBER, required = false, defaultValue = "0") Integer page,
             @ApiParam(name = PARAM_PAGE_SIZE, value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
-            @RequestParam(value = PARAM_PAGE_SIZE, required = false, defaultValue = "30") Integer size,
+            @RequestParam(value = PARAM_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
-            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "id") String sort) {
         LOGGER.debug("plainJsonGetPage");
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
         return this.toHateoasPagedResources(super.<T>findPaginated(pageable, null), "_pn");
@@ -200,22 +200,22 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_JSONAPI_PAGE_NUMBER, value = "The page number", allowableValues = "range[0, infinity]", defaultValue = "0")
             @RequestParam(value = PARAM_JSONAPI_PAGE_NUMBER, required = false, defaultValue = "0") Integer page,
             @ApiParam(name = PARAM_JSONAPI_PAGE_SIZE, value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
-            @RequestParam(value = PARAM_JSONAPI_PAGE_SIZE, required = false, defaultValue = "30") Integer size,
+            @RequestParam(value = PARAM_JSONAPI_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
-            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "id") String sort) {
 
         LOGGER.debug("jsonApiGetPage");
         Pageable pageable = PageableUtil.buildPageable(page, size, sort);
         return toPageDocument(super.<T>findPaginated(pageable, null));
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.GET)
-    @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @ApiOperation(value = "Find by id", notes = "Find a resource by it's identifier")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
-    public ModelResource<T> plainJsonGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
-        LOGGER.debug("plainJsonGetById, pk: {}, model type: {}", pk, this.service.getDomainClass());
-        T model = super.findById(pk);
+    public ModelResource<T> plainJsonGetById(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id) {
+        LOGGER.debug("plainJsonGetById, id: {}, model type: {}", id, this.service.getDomainClass());
+        T model = super.findById(id);
         if (model == null) {
             throw new NotFoundException();
         }
@@ -225,11 +225,11 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     /**
      * GET has the same effect to both member and relationship endpoints
      */
-    @RequestMapping(value = {"{pk}/{relationName}", "{pk}/relationships/{relationName}"}, method = RequestMethod.GET)
-    @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
+    @RequestMapping(value = {"{id}/{relationName}", "{id}/relationships/{relationName}"}, method = RequestMethod.GET)
+    @ApiOperation(value = "Find related by root id", notes = "Find the related resource for the given relation name and identifier")
     @JsonView(Model.ItemView.class)
     public ResponseEntity plainJsonGetRelated(
-            @ApiParam(name = PARAM_PK, required = true, value = "string") @PathVariable PK pk,
+            @ApiParam(name = PARAM_PK, required = true, value = "string") @PathVariable PK id,
             @ApiParam(name = PARAM_RELATION_NAME, required = true, value = "string") @PathVariable String relationName,
             @ApiParam(name = PARAM_FILTER, value = "The RSQL/FIQL query to use. Simply URL param based search will be used if missing.")
             @RequestParam(value = PARAM_FILTER, required = false) String filter,
@@ -238,7 +238,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_PAGE_SIZE, value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
             @RequestParam(value = PARAM_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
-            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "id") String sort) {
 
         // get the field info for the relation, if any
         FieldInfo fieldInfo = this.getModelInfo().getField(relationName);
@@ -253,14 +253,14 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
         // if ToOne
         if(fieldInfo.isToOne()){
-            PersistableModel related = this.findRelatedSingle(pk, fieldInfo);
+            PersistableModel related = this.findRelatedSingle(id, fieldInfo);
             // if found
             Resource res = HypermediaUtils.toHateoasResource(related, fieldInfo.getRelatedModelInfo());
             responseEntity = new ResponseEntity(res, HttpStatus.OK);
         }
         else if(fieldInfo.isOneToMany()){
             Pageable pageable = PageableUtil.buildPageable(page, size, sort);
-            ParamsAwarePageImpl resultsPage = this.findRelatedPaginated(pk, pageable, fieldInfo);
+            ParamsAwarePageImpl resultsPage = this.findRelatedPaginated(id, pageable, fieldInfo);
             PagedResources resources = this.toHateoasPagedResources(resultsPage, "_pn");
             responseEntity = new ResponseEntity(resources, HttpStatus.OK);
 
@@ -273,11 +273,11 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     /**
      * GET has the same effect to both member and relationship endpoints
      */
-    @RequestMapping(value = {"{pk}/{relationName}", "{pk}/relationships/{relationName}"}, method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
-    @ApiOperation(value = "Find related by root pk", notes = "Find the related resource for the given relation name and identifier")
+    @RequestMapping(value = {"{id}/{relationName}", "{id}/relationships/{relationName}"}, method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @ApiOperation(value = "Find related by root id", notes = "Find the related resource for the given relation name and identifier")
     @JsonView(Model.ItemView.class)
     public JsonApiDocument jsonApiGetRelated(
-            @ApiParam(name = PARAM_PK, required = true, value = "string") @PathVariable PK pk,
+            @ApiParam(name = PARAM_PK, required = true, value = "string") @PathVariable PK id,
             @ApiParam(name = PARAM_RELATION_NAME, required = true, value = "string") @PathVariable String relationName,
             @ApiParam(name = PARAM_FILTER, value = "The RSQL/FIQL query to use. Simply URL param based search will be used if missing.")
             @RequestParam(value = PARAM_FILTER, required = false) String filter,
@@ -286,7 +286,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
             @ApiParam(name = PARAM_JSONAPI_PAGE_SIZE, value = "The page size", allowableValues = "range[1, infinity]", defaultValue = "10")
             @RequestParam(value = PARAM_JSONAPI_PAGE_SIZE, required = false, defaultValue = "10") Integer size,
             @ApiParam(name = PARAM_SORT, value = "Comma separated list of attribute names, descending for each one prefixed with a dash, ascending otherwise")
-            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "pk") String sort) {
+            @RequestParam(value = PARAM_SORT, required = false, defaultValue = "id") String sort) {
 
         // get the field info for the relation, if any
         FieldInfo fieldInfo = this.getModelInfo().getField(relationName);
@@ -301,7 +301,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
         // if ToOne
         if(fieldInfo.isToOne()){
-            PersistableModel related = this.findRelatedSingle(pk, fieldInfo);
+            PersistableModel related = this.findRelatedSingle(id, fieldInfo);
             // if found
             if(related != null) {
                 document = HypermediaUtils.toDocument(related, fieldInfo.getRelatedModelInfo());
@@ -309,7 +309,7 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         }
         else if(fieldInfo.isOneToMany()){
             Pageable pageable = PageableUtil.buildPageable(page, size, sort);
-            ParamsAwarePageImpl resultsPage = this.findRelatedPaginated(pk, pageable, fieldInfo);
+            ParamsAwarePageImpl resultsPage = this.findRelatedPaginated(id, pageable, fieldInfo);
             document = this.toPageDocument(resultsPage, fieldInfo.getRelatedModelInfo(), "page[number]");
 
         }
@@ -319,43 +319,43 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
     }
 
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
-    @ApiOperation(value = "Find by pk", notes = "Find a resource by it's identifier")
+    @RequestMapping(value = "{id}", method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @ApiOperation(value = "Find by id", notes = "Find a resource by it's identifier")
     @JsonView(Model.ItemView.class)
     @ModelDrivenPreAuth
-    public JsonApiModelResourceDocument<T, PK> jsonApiGetById(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
+    public JsonApiModelResourceDocument<T, PK> jsonApiGetById(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id) {
 
-        return toDocument(super.findById(pk));
+        return toDocument(super.findById(id));
     }
 
     @RequestMapping(params = "pks", method = RequestMethod.GET)
-    @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
+    @ApiOperation(value = "Search by ids", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public ModelResources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
-        return this.toHateoasResources(super.findByIds(pks));
+    public ModelResources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> ids) {
+        return this.toHateoasResources(super.findByIds(ids));
     }
 
     @RequestMapping(params = "pks", method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
-    @ApiOperation(value = "Search by pks", notes = "Find the set of resources matching the given identifiers.")
+    @ApiOperation(value = "Search by ids", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public JsonApiModelResourceCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "pks[]") Set<PK> pks) {
-        return toDocument(super.findByIds(pks));
+    public JsonApiModelResourceCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "pks[]") Set<PK> ids) {
+        return toDocument(super.findByIds(ids));
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
-    public void plainJsonDelete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
-        super.delete(pk);
+    public void plainJsonDelete(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id) {
+        super.delete(id);
     }
 
-    @RequestMapping(value = "{pk}", method = RequestMethod.DELETE, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a resource", notes = "Delete a resource by its identifier. ", httpMethod = "DELETE")
     @ModelDrivenPreAuth
-    public void jsonApiDelete(@ApiParam(name = "pk", required = true, value = "string") @PathVariable PK pk) {
-        super.delete(pk);
+    public void jsonApiDelete(@ApiParam(name = "id", required = true, value = "string") @PathVariable PK id) {
+        super.delete(id);
     }
 
     @RequestMapping(value = "jsonschema", method = RequestMethod.GET, consumes = MimeTypeUtils.APPLICATION_JSON_VALUE, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
@@ -385,32 +385,32 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
 
     /**
      * Find the other end of a ToOne relationship
-     * @param pk the root entity ID
+     * @param id the root entity ID
      * @param fieldInfo the member/relation name
      * @return the single related entity, if any
      * @see PersistableModelService#findRelatedSingle(java.io.Serializable, com.restdude.mdd.registry.FieldInfo)
      */
-    protected PersistableModel findRelatedSingle(PK pk, FieldInfo fieldInfo) {
-        PersistableModel resource = this.service.findRelatedSingle(pk, fieldInfo);
+    protected PersistableModel findRelatedSingle(PK id, FieldInfo fieldInfo) {
+        PersistableModel resource = this.service.findRelatedSingle(id, fieldInfo);
         return resource;
     }
 
 
     /**
      * Find a page of results matching the other end of a ToMany relationship
-     * @param pk the root entity ID
+     * @param id the root entity ID
      * @param pageable the page config
      * @param fieldInfo the member/relation name
      * @return the page of results, may be <code>null</code>
      * @see PersistableModelService#findRelatedPaginated(java.lang.Class, org.springframework.data.jpa.domain.Specification, org.springframework.data.domain.Pageable)
      */
-    protected <M extends PersistableModel> ParamsAwarePageImpl<M> findRelatedPaginated(PK pk, Pageable pageable, FieldInfo fieldInfo) {
+    protected <M extends PersistableModel> ParamsAwarePageImpl<M> findRelatedPaginated(PK id, Pageable pageable, FieldInfo fieldInfo) {
         ParamsAwarePageImpl<M> page = null;
         Optional<String> reverseFieldName = fieldInfo.getReverseFieldName();
         if(reverseFieldName.isPresent()) {
             Map<String, String[]> params = request.getParameterMap();
             Map<String, String[]> implicitCriteria = new HashMap<>();
-            implicitCriteria.put(reverseFieldName.get(), new String[]{pk.toString()});
+            implicitCriteria.put(reverseFieldName.get(), new String[]{id.toString()});
 
             ModelInfo relatedModelInfo = fieldInfo.getRelatedModelInfo();
             // optionally create a query specification

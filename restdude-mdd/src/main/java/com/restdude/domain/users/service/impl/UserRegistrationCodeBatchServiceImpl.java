@@ -80,7 +80,7 @@ public class UserRegistrationCodeBatchServiceImpl extends AbstractPersistableMod
     @Override
     public List<UserRegistrationCodeInfo> findBatchCodes(String batchId) {
 
-        LOGGER.info("findBatchCodes, pk: {}", batchId);
+        LOGGER.info("findBatchCodes, id: {}", batchId);
         List<UserRegistrationCodeInfo> rows = this.repository.findBatchCodes(batchId);
         LOGGER.info("findBatchCodes, rows: {}", rows);
 

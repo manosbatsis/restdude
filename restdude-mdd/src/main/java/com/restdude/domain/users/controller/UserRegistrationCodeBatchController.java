@@ -51,7 +51,7 @@ public class UserRegistrationCodeBatchController extends AbstractNoDeletePersist
 
 	@RequestMapping(value = "{id}/csv", method = RequestMethod.GET, produces = "text/csv")
 	@ApiOperation(value = "Export batch to a spreadsheet (CSV) report", notes = "The filename will be [batch name]_[date: yyyyMMddHHmmss].csv")
-    public List<UserRegistrationCodeInfo> exportToCsv(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, HttpServletResponse response) {
+    public List<UserRegistrationCodeInfo> exportToCsv(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, HttpServletResponse response) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         // get batch source ot source file
         String csvFileName = new StringBuffer(this.service.findBatchName(id))

@@ -33,23 +33,19 @@ public interface Model<PK extends Serializable> extends Serializable {
     /**
      * The primary key, field name.
      */
-    String PK_FIELD_NAME = "pk";
+    String PK_FIELD_NAME = "id";
 
     /**
-     * Get the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#getPk()}
-     * only without conflict with {@link ResourceSupport#getId()}
+     * Get the entity's primary key.
      */
-    //@JsonGetter("id")
-    PK getPk();
+    PK getId();
 
     /**
-     * Set the entity's primary key. Functionally equivalent to {@linke org.springframework.data.domain.Persistable#setPk()}
-     * only without conflict with the getter {@link ResourceSupport#getId()}
+     * Set the entity's primary key
      *
-     * @param pk the pk to set
+     * @param id the id to set
      */
-    //@JsonSetter("id")
-    void setPk(PK pk);
+    void setId(PK id);
 
     interface ItemView {
     }

@@ -43,7 +43,7 @@ public class UserDTO implements IMessageResource<String> {
         UserDTO dto = null;
         if (user != null) {
             log.debug("fromUser: {}", user);
-            return new UserDTO(user.getPk(),
+            return new UserDTO(user.getId(),
                     user.getFirstName(),
                     user.getLastName(),
                     user.getUsername(),
@@ -57,7 +57,7 @@ public class UserDTO implements IMessageResource<String> {
         return dto;
     }
 
-    private String pk;
+    private String id;
     private String name;
     private String firstName;
     private String lastName;
@@ -72,16 +72,16 @@ public class UserDTO implements IMessageResource<String> {
     public UserDTO() {
     }
 
-    public UserDTO(String pk, String firstName, String lastName, String username, String email, String emailHash, String avatarUrl, String bannerUrl, Integer stompSessionCount) {
-        this(pk, firstName, lastName, username, emailHash, avatarUrl);;
+    public UserDTO(String id, String firstName, String lastName, String username, String email, String emailHash, String avatarUrl, String bannerUrl, Integer stompSessionCount) {
+        this(id, firstName, lastName, username, emailHash, avatarUrl);;
         this.email = StringUtils.lowerCase(email);
         this.bannerUrl = bannerUrl;
         this.stompSessionCount = stompSessionCount;
     }
 
-    public UserDTO(String pk, String firstName, String lastName, String username, String emailHash, String avatarUrl){
+    public UserDTO(String id, String firstName, String lastName, String username, String emailHash, String avatarUrl){
         super();
-        this.pk = pk;
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = StringUtils.lowerCase(username);
@@ -92,7 +92,7 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     public UserDTO(User user) {
-        this(user.getPk(),
+        this(user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getContactDetails() != null && user.getContactDetails().getPrimaryEmail() != null ? user.getContactDetails().getPrimaryEmail().getValue() : null,
@@ -104,7 +104,7 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     private UserDTO(Builder builder) {
-        this.pk = builder.pk;
+        this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.username = StringUtils.lowerCase(builder.username);
@@ -116,7 +116,7 @@ public class UserDTO implements IMessageResource<String> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).appendSuper(super.toString()).append("pk", this.getUsername())
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("id", this.getUsername())
                 .append("firstName", this.getUsername())
                 .append("lastName", this.getUsername())
                 .append("username", this.getUsername())
@@ -128,7 +128,7 @@ public class UserDTO implements IMessageResource<String> {
 
     public User toUser() {
         return new User.Builder()
-                .id(this.pk)
+                .id(this.id)
                 .firstName(this.firstName)
                 .lastName(this.lastName)
                 .credentials(new UserCredentials())
@@ -146,15 +146,15 @@ public class UserDTO implements IMessageResource<String> {
      */
     @Override
     public String getId() {
-        return pk;
+        return id;
     }
 
     /**
      * @see com.restdude.websocket.message.IMessageResource#setId(java.io.Serializable)
      */
     @Override
-    public void setId(String pk) {
-        this.pk = pk;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -241,7 +241,7 @@ public class UserDTO implements IMessageResource<String> {
     }
 
     public static class Builder {
-        private String pk;
+        private String id;
         private String firstName;
         private String lastName;
         private String username;
@@ -250,8 +250,8 @@ public class UserDTO implements IMessageResource<String> {
         private String avatarUrl;
         private Integer stompSessionCount;
 
-        public Builder pk(String pk) {
-            this.pk = pk;
+        public Builder id(String id) {
+            this.id = id;
             return this;
         }
 

@@ -52,7 +52,7 @@ public class PredicateFactorySpecification<T extends Model> implements Specifica
         this.conversionService = conversionService;
         this.modelInfo = modelInfo;
         // remove unnecessary identifier suffix if any
-        if (propertyPath.endsWith(".pk")) {
+        if (propertyPath.endsWith(".id")) {
             propertyPath = propertyPath.substring(0, propertyPath.length() - 3);
         }
         this.propertyPath = propertyPath;

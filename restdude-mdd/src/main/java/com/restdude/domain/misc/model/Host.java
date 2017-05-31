@@ -50,7 +50,7 @@ public class Host extends AbstractSystemUuidPersistableModel {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "country_id", referencedColumnName = "pk")
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
@@ -86,7 +86,7 @@ public class Host extends AbstractSystemUuidPersistableModel {
             return false;
         }
         Host that = (Host) obj;
-        return null == this.getPk() ? false : this.getPk().equals(that.getPk());
+        return null == this.getId() ? false : this.getId().equals(this.getId());
     }
 
     public String getName() {

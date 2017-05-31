@@ -67,7 +67,7 @@ public class UserController extends AbstractNoDeletePersistableModelController<U
      * Disallow complete PUT as clients keep updating properties to null etc.
      */
     @Override
-    public User update(@ApiParam(name = "pk", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
+    public User update(@ApiParam(name = "id", required = true, value = "string") @PathVariable String id, @RequestBody User resource) {
         throw new NotImplementedException("PUT is not supported; use PATCH");
     }
 

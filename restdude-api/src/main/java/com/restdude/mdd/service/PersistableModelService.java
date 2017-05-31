@@ -93,11 +93,11 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
 
     /**
      * Find the other end of a ToOne relationship
-     * @param pk the root entity ID
+     * @param id the root entity ID
      * @param fieldInfo the member/relation name
      * @return the single related entity, if any
      */
-    PersistableModel findRelatedSingle(PK pk, FieldInfo fieldInfo);
+    PersistableModel findRelatedSingle(PK id, FieldInfo fieldInfo);
 
     /**
      * @see ModelRepository#validateConstraints(PersistableModel)
@@ -107,7 +107,7 @@ public interface PersistableModelService<T extends PersistableModel<PK>, PK exte
     /**
      * Get the entity's file uploads for this property
      *
-     * @param subjectId    the entity pk
+     * @param subjectId    the entity id
      * @param propertyName the property holding the upload(s)
      * @return the uploads
      */

@@ -31,9 +31,9 @@ import java.util.Optional;
 
 public interface MembershipRequestRepository extends ModelRepository<MembershipRequest,String> {
 
-    @Query("select req from MembershipRequest req where req.context.pk = :#{#context.pk} AND req.user.pk = :#{#user.pk}")
+    @Query("select req from MembershipRequest req where req.context.id = :#{#context.id} AND req.user.id = :#{#user.id}")
     Optional<MembershipRequest> findOneByContextAndUser(@Param("context")BaseContext context, @Param("user") User user);
 
-    @Query("select case when (count(req) > 0)  then true else false end from MembershipRequest req where req.context.pk = :#{#context.pk} AND req.user.pk = :#{#user.pk}")
+    @Query("select case when (count(req) > 0)  then true else false end from MembershipRequest req where req.context.id = :#{#context.id} AND req.user.id = :#{#user.id}")
     Boolean exists(@Param("context") BaseContext context, @Param("user") User user);
 }

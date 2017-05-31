@@ -53,7 +53,7 @@ public class PostalAddressDetail extends AbstractContactDetailModel {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "posralcode", referencedColumnName = "pk", nullable = false)
+    @JoinColumn(name = "posralcode", referencedColumnName = "id", nullable = false)
     private PostalCode postCode;
 
 

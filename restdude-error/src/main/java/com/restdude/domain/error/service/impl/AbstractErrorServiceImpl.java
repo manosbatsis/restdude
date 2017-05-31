@@ -171,7 +171,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
         if(resource.getStatus() == null){
             resource.setStatus(this.getStatusForNew(resource));
         }
-        // merge the UserAgent based on it's hash/pk
+        // merge the UserAgent based on it's hash/id
         if (resource.getUserAgent() != null) {
             resource.setUserAgent(this.userAgentService.findOrCreate(resource.getUserAgent()));
         }

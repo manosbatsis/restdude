@@ -81,7 +81,7 @@ public class MembershipServiceImpl
 	 */
 	@Override
 	public Membership getMembership(Space businessContext){
-		User user = new User(this.getPrincipal().getPk());
+		User user = new User(this.getPrincipal().getId());
 		return getMembership(businessContext, user);
 	}
 
@@ -133,7 +133,7 @@ public class MembershipServiceImpl
 		Set<String> recepients = this.repository.findOnlineMemberUsernames(resource.getContext());
 		// if BusinessContext is public send a notification to user's friends about the activity
 		if(ContextVisibilityType.PUBLIC.equals(resource.getContext().getVisibility())){
-			recepients.addAll(this.friendshipRepository.findAllStompOnlineFriendUsernames(resource.getUser().getPk()));
+			recepients.addAll(this.friendshipRepository.findAllStompOnlineFriendUsernames(resource.getUser().getId()));
 		}
 
 		// send the message
@@ -165,7 +165,7 @@ public class MembershipServiceImpl
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		Membership m = new Membership();
-		m.setPk(id);
+		m.setId(id);
 		this.delete(this.repository.getOne(id));
 	}
 
@@ -180,8 +180,8 @@ public class MembershipServiceImpl
 		UserDetails userDetails = this.getPrincipal();
 
 		// ensure principal is either BusinessContext owner or target user but not both
-		boolean isRequestUser = userDetails.getPk().equals(resource.getUser().getPk());
-		boolean isBusinessContextOwner = userDetails.getPk().equals(resource.getContext().getOwner().getPk());
+		boolean isRequestUser = userDetails.getId().equals(resource.getUser().getId());
+		boolean isBusinessContextOwner = userDetails.getId().equals(resource.getContext().getOwner().getId());
 
 		// ensure principal is either BusinessContext owner or target user but not both
 		if( (!isRequestUser && !isBusinessContextOwner) || (isRequestUser && isBusinessContextOwner)){

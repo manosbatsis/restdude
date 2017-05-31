@@ -76,7 +76,7 @@ public class JwtIT extends AbstractControllerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(201)
-                .body("pk", notNullValue())
+                .body("id", notNullValue())
                 .body("name", equalTo("ROLE_TEST_JWT"))
                 // get model
                 .extract().as(Role.class);

@@ -129,10 +129,10 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     @Column(name = "locale", nullable = false)
     private String locale = "en";
 
-    @Formula(" (select uc.active from user_credentials as uc where uc.user_id = pk) ")
+    @Formula(" (select uc.active from user_credentials as uc where uc.user_id = id) ")
     private Boolean active = false;
 
-    @Formula(" (select count(*) from stomp_session as stmpSess where stmpSess.user_id = pk) ")
+    @Formula(" (select count(*) from stomp_session as stmpSess where stmpSess.user_id = id) ")
     private Integer stompSessionCount;
 
     @JsonIgnore
@@ -150,7 +150,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     private List<Role> roles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pk.left")
+    @OneToMany(mappedBy = "id.left")
     private List<Friendship> friendships;
 
 
@@ -163,7 +163,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     }
 
     public User(UserDTO dto) {
-        this.setPk(dto.getId());
+        this.setId(dto.getId());
         this.setFirstName(dto.getFirstName());
         this.setLastName(dto.getLastName());
         this.username = dto.getUsername();
@@ -171,7 +171,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     }
 
     public User(String id) {
-        this.setPk(id);
+        this.setId(id);
     }
 
 
@@ -566,7 +566,7 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     }
 
     private User(Builder builder) {
-        this.setPk(builder.id);
+        this.setId(builder.id);
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.username = builder.username;

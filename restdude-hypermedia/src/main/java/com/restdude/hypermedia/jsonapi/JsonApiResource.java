@@ -37,7 +37,7 @@ import java.io.Serializable;
 public interface JsonApiResource<A extends Serializable, ID extends Serializable> extends JsonApiLinksContainer {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(value = { "pk", "links" })
+    @JsonIgnoreProperties(value = { "id", "links" })
     A getAttributes();
 
     @JsonProperty

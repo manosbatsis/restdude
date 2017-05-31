@@ -62,7 +62,7 @@ public class Resource extends AbstractSystemUuidPersistableModel {
 	 * The HTTP domain of the resource. 
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "host", referencedColumnName = "pk", nullable = true)
+    @JoinColumn(name = "host", referencedColumnName = "id", nullable = true)
     private Host host;
 
 	/**
@@ -101,7 +101,7 @@ public class Resource extends AbstractSystemUuidPersistableModel {
 			return false;
 		}
 		Resource that = (Resource) obj;
-        return null == this.getPk() ? false : this.getPk().equals(that.getPk());
+        return null == this.getId() ? false : this.getId().equals(this.getId());
     }
 
 	public String getName() {

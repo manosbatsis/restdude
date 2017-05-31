@@ -41,10 +41,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Generic repository that provides SCRUD and utility methods based on domain and pk type variables.
+ * Generic repository that provides SCRUD and utility methods based on domain and id type variables.
  *
  * @param <T> the domain type the repository manages
- * @param <PK> the type of the pk of the entity the repository manages
+ * @param <PK> the type of the id of the entity the repository manages
  *
  * @see org.springframework.data.domain.Sort
  * @see Pageable
@@ -62,10 +62,10 @@ public interface ModelRepository<T extends PersistableModel<PK>, PK extends Seri
 	Class<T> getDomainClass();
 
 	/**
-	 * Retrieves a container holding the entity in case of an pk match or nothing (i.e. null) otherwise.
+	 * Retrieves a container holding the entity in case of an id match or nothing (i.e. null) otherwise.
 	 * @param id must not be {@literal null}.
 	 * @return the container
-	 * @throws IllegalArgumentException if {@code pk} is {@literal null}
+	 * @throws IllegalArgumentException if {@code id} is {@literal null}
 	 */
 	Optional<T> findOptional(PK id);
 
@@ -136,7 +136,7 @@ public interface ModelRepository<T extends PersistableModel<PK>, PK extends Seri
 
 	/**
 	 * Get the entity's file uploads for this property
-	 * @param subjectId the entity pk
+	 * @param subjectId the entity id
 	 * @param propertyName the property holding the upload(s)
 	 * @return the uploads
 	 */
@@ -169,11 +169,11 @@ public interface ModelRepository<T extends PersistableModel<PK>, PK extends Seri
 
 	/**
 	 * Get the other end of a ToOne relationship
-	 * @param pk the id of the root model
+	 * @param id the id of the root model
 	 * @param fieldInfo the attribute name of the relationship
 	 * @return the single entity in the other side of the relation if any, null otherwise
 	 */
-	<RT extends PersistableModel> RT findRelatedEntityByOwnId(PK pk, FieldInfo fieldInfo);
+	<RT extends PersistableModel> RT findRelatedEntityByOwnId(PK id, FieldInfo fieldInfo);
 
 	enum EntityGraphType {
 

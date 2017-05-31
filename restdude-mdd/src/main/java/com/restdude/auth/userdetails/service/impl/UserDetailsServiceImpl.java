@@ -131,7 +131,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 // ask for the corresponding persisted user
                 User user = this.userService
                         .findActiveByCredentials(usernameOrEmail, password, metadata);
-                if (user != null && user.getPk() != null) {
+                if (user != null && user.getId() != null) {
 
                     LOGGER.info("#create, user: {}", user);
                     // convert to UserDetails if not null
@@ -206,7 +206,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private boolean isAnonymous(UserDetails userDetails) {
-        return userDetails == null || userDetails.getPk() == null;
+        return userDetails == null || userDetails.getId() == null;
     }
 
     @Override
@@ -259,7 +259,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         if (user == null) {
-            throw new UsernameNotFoundException("Could not match user pk: " + userId);
+            throw new UsernameNotFoundException("Could not match user id: " + userId);
         }
         return userDetails;
     }
@@ -313,7 +313,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
         //userService.createAccount(account);
-        String result = user != null && user.getPk() != null ? user.getPk().toString() : null;
+        String result = user != null && user.getId() != null ? user.getId().toString() : null;
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("ConnectionSignUp#execute, returning result: {}", result);
         }

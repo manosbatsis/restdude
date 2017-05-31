@@ -42,12 +42,12 @@ public abstract class AbstractReadOnlyPersistableModelController<T extends Persi
     }
 
 	@Override
-    public T update(PK pk, T resource) {
+    public T update(PK id, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 
 	@Override
-    public T patch(PK pk, T resource) {
+    public T patch(PK id, T resource) {
         throw new NotImplementedException("Method is unsupported.");
     }
 

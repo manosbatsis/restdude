@@ -36,7 +36,7 @@ public class UserSocialConnection implements PersistableModel<UserSocialConnecti
 	@NotNull
 	@ApiModelProperty(required = true)
 	@EmbeddedId
-	private UserSocialConnectionId pk;
+	private UserSocialConnectionId id;
 
 	private Integer rank;
 
@@ -62,7 +62,7 @@ public class UserSocialConnection implements PersistableModel<UserSocialConnecti
 			String providerUserId, int rank, String displayName,
 			String profileUrl, String imageUrl, String accessToken,
 			String secret, String refreshToken, Long expireTime) {
-		this.setPk(new UserSocialConnectionId(userId, providerId, providerUserId));
+		this.setId(new UserSocialConnectionId(userId, providerId, providerUserId));
 		this.setRank(rank);
 		this.setDisplayName(displayName);
 		this.setProfileUrl(profileUrl);
@@ -74,12 +74,12 @@ public class UserSocialConnection implements PersistableModel<UserSocialConnecti
 
 	}
 
-	public UserSocialConnectionId getPk() {
-		return pk;
+	public UserSocialConnectionId getId() {
+		return id;
 	}
 
-	public void setPk(UserSocialConnectionId pk) {
-		this.pk = pk;
+	public void setId(UserSocialConnectionId id) {
+		this.id = id;
 	}
 
 	@Override
