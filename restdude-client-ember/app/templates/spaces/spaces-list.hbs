@@ -1,0 +1,68 @@
+
+<div class="layout-fill layout-row layout-align-center-start ">
+
+{{#paper-card as |card|}}
+  {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+    {{#toolbar.tools class="layout-row"}}
+      <span class="flex"></span>
+      <h2 class="">My Spaces</h2>
+      <span class="flex"></span>
+    {{/toolbar.tools}}
+  {{/paper-toolbar}}
+
+    {{#if model.length}}
+      {{#paper-list}}
+        {{#each model as |item|}}
+          {{#paper-item class="md-3-line md-long-text" borderBottom=true onClick=(action (transition-to "spaces.space" item)) as |controls| }}
+
+            {{#if item.avatarUrl}}
+              <img src={{item.avatarUrl}} alt={{item.name}} class="md-avatar">
+            {{else}}
+
+             {{ember-initials class="md-avatar"
+                 size=50
+                 name=item.title
+                 seedText=item.title
+                 defaultName='?'
+                 textColor="white"
+                 fontSize=55
+                 fontWeight=100
+                 fontFamily="Helvetica Neue Light, Arial, sans-serif"
+             }}
+            {{/if}}
+            <div class="md-list-item-text">
+             <h3>{{item.title}} <span class="username">({{item.name}})</span></h3>
+             <p>Created {{moment-to-now item.createdDate}} </p>
+             <p>{{item.description}} </p>
+            </div>
+           <div class="flex">
+            &nbsp;
+           </div>
+            {{paper-icon "keyboard-arrow-right"}}
+          {{/paper-item}}
+        {{/each}}
+      {{/paper-list}}
+
+      {{#if model.meta.documentLinks}}
+        {{#card.actions class="layout-row"}}
+          {{#each-in model.meta.documentLinks as |key value|}}
+            {{#paper-button href=value.href}}{{key}}{{/paper-button}}
+          {{/each-in}}
+        {{/card.actions}}
+      {{/if}}
+
+    {{else}}
+
+      {{#card.content}}
+        <p>
+         This space has no members.
+        </p>
+      {{/card.content}}
+
+    {{/if}}
+
+{{/paper-card}}
+
+
+
+</div>

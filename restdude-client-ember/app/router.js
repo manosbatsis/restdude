@@ -54,7 +54,7 @@ Router.map(function() {
 
   this.route('spaces', function() {
     this.route('new');
-
+    this.route('spaces-list');
     this.route('space', {path: ':space_id'}, function() {
       this.route('settings');
       this.route('members');
@@ -62,6 +62,9 @@ Router.map(function() {
       this.route('membership-requests');
       this.route('apps');
       this.route('websites');
+      this.route('owned');
+      this.route('joined');
+
     });
   });
   this.route('context-membership');
