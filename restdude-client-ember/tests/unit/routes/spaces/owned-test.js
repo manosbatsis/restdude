@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('route:joined', 'Unit | Route | joined', {
+moduleFor('route:spaces/owned', 'Unit | Route | spaces/owned', {
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
 });

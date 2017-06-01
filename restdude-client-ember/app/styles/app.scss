@@ -51,8 +51,12 @@ h1, h2, h3, h4, h5, h6, header {
 .site-sidenav > md-sidenav {
   border-right: 1px solid rgb(232, 232, 232);
 }
-.md-menu-toolbar{
+.md-menu-toolbar, .md-menu-toolbar-top{
   border-bottom: 1px solid rgb(232, 232, 232);
+}
+.md-menu-toolbar-top > .md-toolbar-tools,
+.md-menu-toolbar-user > .md-toolbar-tools {
+  padding-left: 0;
 }
 
 md-sidenav > md-card {

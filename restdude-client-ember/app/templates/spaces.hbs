@@ -1,0 +1,9 @@
+{{#paper-tabs class='md-no-tab-content' centerTabs=true borderBottom=true as |tabs|}}
+   {{tabs.tab label="Joined" onSelect=(action (transition-to "spaces.joined" ))}}
+   {{tabs.tab label="Owned" onSelect=(action (transition-to "spaces.owned" ))}}
+ {{/paper-tabs}}
+ <md-tabs-content-wrapper style="display:none"/>
+
+<div class="layout-fill layout-row layout-align-center-start ">
+  {{outlet}}
+</div>

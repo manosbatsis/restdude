@@ -83,7 +83,7 @@ public class BaseContext extends AbstractPersistableNamedModel implements IBaseC
 	@Column(name = "banner_url")
 	@Getter @Setter
 	@ApiModelProperty(value = "The banner URL")
-	private String bannerUrl = Constants.DEFAULT_BANNER_URL;
+	private String bannerUrl;
 
 	@NotNull
 	@Column(name = "visibility", nullable = false)

@@ -30,8 +30,6 @@ public class Constants {
 
 	public static final String GRAVATAR_BASE_IMG_URL = "https://www.gravatar.com/avatar/";
 
-	public static final String DEFAULT_AVATAR_URL = ConfigurationFactory.getConfiguration().getString(ConfigurationFactory.BASE_URL) + "/img/avatars/default.jpg";
-	public static final String DEFAULT_BANNER_URL = ConfigurationFactory.getConfiguration().getString(ConfigurationFactory.BASE_URL) + "/img/banners/default.png";
 	public static final String HEADER_AUTHORIZATION =  "Authorization";
 
 }

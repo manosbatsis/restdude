@@ -44,7 +44,7 @@ import java.util.Set;
 		apiName = "ApplicationContext",
 		apiDescription = "Space applications")
 @ApiModel(description = SpaceApp.API_MODEL_DESCRIPTION)
-public class SpaceApp extends BaseContext {
+public class 	SpaceApp extends BaseContext {
 
 
 	public static final String API_PATH_FRAGMENT = "spaceApps";
@@ -81,8 +81,6 @@ public class SpaceApp extends BaseContext {
 		private String name;
 		private String title;
 		private String description;
-		private String avatarUrl = Constants.DEFAULT_AVATAR_URL;
-		private String bannerUrl = Constants.DEFAULT_BANNER_URL;
 		private User owner;
 		private Space space;
 		private ContextVisibilityType visibility;
@@ -108,16 +106,6 @@ public class SpaceApp extends BaseContext {
 			return this;
 		}
 
-		public Builder avatarUrl(String avatarUrl) {
-			this.avatarUrl = avatarUrl;
-			return this;
-		}
-
-		public Builder bannerUrl(String bannerUrl) {
-			this.bannerUrl = bannerUrl;
-			return this;
-		}
-
 		public Builder owner(User owner) {
 			this.owner = owner;
 			return this;
@@ -138,8 +126,6 @@ public class SpaceApp extends BaseContext {
 		this.setName(builder.name);
 		this.setTitle(builder.title);
 		this.setDescription(builder.description);
-		this.setAvatarUrl(builder.avatarUrl);
-		this.setBannerUrl(builder.bannerUrl);
 		this.setOwner(builder.owner);
 		this.setVisibility(builder.visibility);
 	}

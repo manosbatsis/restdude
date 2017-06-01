@@ -783,7 +783,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             system.setUsername("system");
             system.setFirstName("System");
             system.setLastName("User");
-            system.setAvatarUrl(this.baseurl + "/img/avatars/default.jpg");
             system.setCredentials(new UserCredentials.Builder().password("system").build());
             system.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("system@" + domain)).build());
             system.setLastVisit(now);
@@ -795,7 +794,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             adminUser.setLastName("User");
             adminUser.setLastVisit(now);
             adminUser.addRole(adminRole);
-            adminUser.setAvatarUrl(this.baseurl + "/img/avatars/default.jpg");
             adminUser.setCredentials(new UserCredentials.Builder().password("admin").build());
             adminUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("admin@" + domain)).build());
 //			adminUser.setCreatedBy(system);
@@ -811,7 +809,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             adminFriend.setFirstName("Admins");
             adminFriend.setLastName("Friend");
             adminFriend.setLastVisit(now);
-            adminFriend.setAvatarUrl(this.baseurl + "/img/avatars/default.jpg");
             adminFriend.setCredentials(new UserCredentials.Builder().password("adminFriend").build());
             adminFriend.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("adminFriend@" + domain)).build());
 //			adminUser.setCreatedBy(system);
@@ -822,7 +819,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             opUser.setUsername("operator");
             opUser.setFirstName("Operator");
             opUser.setLastName("User");
-            opUser.setAvatarUrl(this.baseurl + "/img/avatars/default.jpg");
             opUser.setCredentials(new UserCredentials.Builder().password("operator").build());
             opUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("operator@" + domain)).build());
             opUser.setLastVisit(now);
@@ -834,7 +830,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             simpleUser.setUsername("simple");
             simpleUser.setFirstName("Simple");
             simpleUser.setLastName("User");
-            simpleUser.setAvatarUrl(this.baseurl + "/img/avatars/default.jpg");
             simpleUser.setCredentials(new UserCredentials.Builder().password("simple").build());
             simpleUser.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("simple@" + domain)).build());
             simpleUser.setLastVisit(now);
@@ -845,7 +840,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
             userControllerIt.setUsername("usercontrollerit");
             userControllerIt.setFirstName("Usercontrollerit");
             userControllerIt.setLastName("User");
-            userControllerIt.setAvatarUrl(this.baseurl + "/img/avatars/default.jpg");
             userControllerIt.setCredentials(new UserCredentials.Builder().password("usercontrollerit").build());
             userControllerIt.setContactDetails(new ContactDetails.Builder().primaryEmail(new EmailDetail("usercontrollerit@" + domain)).build());
             userControllerIt.setLastVisit(now);

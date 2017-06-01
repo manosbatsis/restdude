@@ -1,20 +1,25 @@
 {{#if session.isAuthenticated}}
-{{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
-   {{#toolbar.tools}}
-   {{#paper-sidenav-toggle name="left" as |toggleAction|}}
-     {{#paper-button  classNames="hide-gt-sm" onClick=(action toggleAction)}}
-      {{paper-icon "menu"}}
-     {{/paper-button}}
-   {{/paper-sidenav-toggle}}
-   <h3 class="logo">noteblox</h3>
+  {{#paper-toolbar class="md-menu-toolbar md-menu-toolbar-top" as |toolbar|}}
 
-   {{/toolbar.tools}}
+    {{#toolbar.tools }}
+      {{#paper-list}}
+        {{#paper-item  onClick=(action (transition-to "/"))}}
+          {{paper-icon "home"}}
+          <h3 class="logo">noteblox</h3>
+        {{/paper-item}}
+      {{/paper-list}}
+      {{#paper-sidenav-toggle name="left" as |toggleAction|}}
+        {{#paper-button  classNames="hide-gt-sm" onClick=(action toggleAction)}}
+         {{paper-icon "menu"}}
+        {{/paper-button}}
+      {{/paper-sidenav-toggle}}
+    {{/toolbar.tools}}
  {{/paper-toolbar}}
 
  {{#paper-sidenav-container  class="site-sidenav"}}
 
    {{#paper-sidenav class="md-sidenav-left " name="left" open=leftSideBarOpen onToggle=(action (mut leftSideBarOpen)) }}
-    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+    {{#paper-toolbar class="md-menu-toolbar md-menu-toolbar-user" as |toolbar|}}
       {{#toolbar.tools}}
         {{#paper-list}}
           {{#paper-item class="md-2-line" as |controls| }}

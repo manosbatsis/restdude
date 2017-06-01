@@ -264,16 +264,6 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
         if (!StringUtils.isNotBlank(this.getUsername())) {
             this.setUsername(this.getUsername().toLowerCase());
         }
-        // fallback to gravatar
-        if (StringUtils.isBlank(this.getAvatarUrl())) {
-            LOGGER.debug("#preSave, avatar URL: ", this.getAvatarUrl());
-            //initDefaultAvatarUrl();
-        }
-        // default banner
-        if (StringUtils.isBlank(this.getBannerUrl())) {
-            this.setBannerUrl(Constants.DEFAULT_BANNER_URL);
-        }
-
     }
 
     // serialize user name to response
@@ -468,20 +458,6 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
 
     public void setStrings(List<String> stompSessions) {
         this.stompSessions = stompSessions;
-    }
-
-    /**
-     * Use Gravatar only if application is running on port 80.
-     * See also Gravatar <a href="http://en.gravatar.com/site/implement/images/#default-image">default image</a>
-     */
-    protected void initDefaultAvatarUrl() {
-        try {
-            this.setAvatarUrl(new StringBuffer(Constants.GRAVATAR_BASE_IMG_URL).append(this.getEmailHash())
-                    .append("?d=").append(URLEncoder.encode(Constants.DEFAULT_AVATAR_URL, CharEncoding.UTF_8))
-                    .toString());
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.error("Failed encoding avatar url");
-        }
     }
 
     public ContactDetails getContactDetails() {
