@@ -1,17 +1,18 @@
-<form {{action "save" on="submit"}}>
-  <div>
+{{#paper-form onSubmit=(route-action "save" ) as |form|}}
+   <div class="layout-md-row">
     <label>
-      Name
-      {{input type="text" value=model.name}}
+      {{form.input flex-md=40 id="name" label="Name" type="text" value=model.name onChange=(action (mut model.name)) required=true}}
     </label>
   </div>
-  <div>
+  <div class="layout-row">
     <label>
-      Description
-      {{input type="text" value=model.description}}
+    {{paper-input block=true textarea=true id="description" label="Description" type="text" value=model.description onChange=(action (mut model.description)) required=true}}
     </label>
   </div>
-  <div>
-    <input type="submit" value="Save">
+  <div class="layout-row">
+     {{#form.submit-button type="submit" raised=true id='save-btn' value="Save" primary=true}}Save{{/form.submit-button}}
   </div>
-</form>
+{{/paper-form}}
+
+
+
