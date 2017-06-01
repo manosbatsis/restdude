@@ -43,7 +43,7 @@
     <!--         <level pathFragment="debug" /> -->
 
     <logger name="com.restdude.test">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 
     <logger name="com.restdude.domain.error">

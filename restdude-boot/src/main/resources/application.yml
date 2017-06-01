@@ -72,7 +72,7 @@ logging:
     com.yahoo.elide.core: WARN
     org.springframework: WARN
     springfox.documentation.schema.property.CachingModelPropertiesProvider: ERROR
-    com.restdude: debug
+    com.restdude: WARN
 #      test: debug
 #      mdd: WARN
 #      jsonapi: WARN

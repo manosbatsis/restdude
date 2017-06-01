@@ -76,6 +76,11 @@ module.exports = function (environment) {
     ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
+
+  else if (environment === 'production') {
+    ENV.baseURL = '/project-name';
+    ENV.locationType = 'hash';
+  }
   else if (environment === 'test') {
     // Testem prefers this...
     ENV.locationType = 'none';
