@@ -46,6 +46,7 @@
     "ember-moment": "7.3.1",
     "ember-page-title": "3.1.6",
     "ember-paper": "1.0.0-alpha.19",
+    "ember-paper-expansion-panel": "0.0.1",
     "ember-paper-tabs": "0.0.1",
     "ember-reactive-helpers": "0.5.0",
     "ember-resolver": "^2.0.3",
