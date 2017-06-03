@@ -328,17 +328,17 @@ public class AbstractPersistableModelController<T extends PersistableModel<PK>, 
         return toDocument(super.findById(id));
     }
 
-    @RequestMapping(params = "pks", method = RequestMethod.GET)
+    @RequestMapping(params = "ids", method = RequestMethod.GET)
     @ApiOperation(value = "Search by ids", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public ModelResources<T> plainJsonGetByIds(@RequestParam(value = "pks[]") Set<PK> ids) {
+    public ModelResources<T> plainJsonGetByIds(@RequestParam(value = "ids[]") Set<PK> ids) {
         return this.toHateoasResources(super.findByIds(ids));
     }
 
-    @RequestMapping(params = "pks", method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
+    @RequestMapping(params = "ids", method = RequestMethod.GET, consumes = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON, produces = HypermediaUtils.MIME_APPLICATION_VND_PLUS_JSON)
     @ApiOperation(value = "Search by ids", notes = "Find the set of resources matching the given identifiers.")
     @ModelDrivenPreAuth
-    public JsonApiModelResourceCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "pks[]") Set<PK> ids) {
+    public JsonApiModelResourceCollectionDocument<T, PK> jsonApiGetByIds(@RequestParam(value = "ids[]") Set<PK> ids) {
         return toDocument(super.findByIds(ids));
     }
 

@@ -67,13 +67,13 @@ public abstract class AbstractEmbeddableManyToManyIdentifier<L extends Persistab
 
 
     @NotNull
-    @ApiModelProperty(required = true, example = "{id: '[pk]'}")
+    @ApiModelProperty(required = true, example = "{id: '[id]'}")
     @JoinColumn(name = "owner_id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private L left;
 
     @NotNull
-    @ApiModelProperty(required = true, example = "{id: '[pk]'}")
+    @ApiModelProperty(required = true, example = "{id: '[id]'}")
     @JoinColumn(name = "friend_id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private R right;

@@ -61,7 +61,7 @@ public class StompSession extends AbstractAssignedIdPersistableModel<String> {
 
     @Override
     public String toString() {
-        return "StompSession [pk=" + this.getId() + ", user=" + user + "]";
+        return "StompSession [id=" + this.getId() + ", user=" + user + "]";
     }
 
     public User getUser() {
