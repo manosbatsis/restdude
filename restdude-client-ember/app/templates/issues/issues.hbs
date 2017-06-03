@@ -1,0 +1,10 @@
+{{#paper-tabs class='md-no-tab-content' centerTabs=true borderBottom=true as |tabs|}}
+   {{tabs.tab label="Created" onSelect=(action (transition-to "issues.created" model))}}
+   {{tabs.tab label="Assigned" onSelect=(action (transition-to "issues.assigned" model))}}
+   {{tabs.tab label="Mentioned" onSelect=(action (transition-to "issues.mentioned" model))}}
+ {{/paper-tabs}}
+ <md-tabs-content-wrapper style="display:none"/>
+
+<div class="layout-fill layout-row layout-align-center-start ">
+  {{outlet}}
+</div>

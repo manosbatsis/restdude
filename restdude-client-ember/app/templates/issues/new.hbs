@@ -1,6 +1,22 @@
 <p>
   {{link-to "Issue list" "issues.index" }}
 </p>
+<div class="layout-fill layout-row layout-align-center-start ">
+  {{#paper-card as |card|}}
+    {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+    {{#toolbar.tools class="layout-row"}}
+      <span class="flex"></span>
+      <h2 class="">New Issue</h2>
+      <span class="flex"></span>
+      {{#paper-button onClick=(action (transition-to "issues.index")) aria-label="Back to Issues"}}
+       {{paper-icon "navigate-before"}} Back
+      {{/paper-button}}
+    {{/toolbar.tools}}
+  {{/paper-toolbar}}
 
-<h1>New Issue</h1>
-{{partial "issues/form"}}
+    {{#card.content class="layout-row layout-align-space-between"}}
+      {{partial "issues/form"}}
+    {{/card.content}}
+
+  {{/paper-card}}
+</div>

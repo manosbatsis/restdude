@@ -101,9 +101,12 @@ Router.map(function() {
       path: ':website_id'
     });
   });
-  this.route('issue');
+  this.route('issues');
   this.route('issues', function() {
     this.route('new');
+    this.route('created');
+    this.route('mentioned');
+    this.route('assigned');
 
     this.route('edit', {
       path: ':issue_id/edit'
