@@ -101,6 +101,30 @@ Router.map(function() {
       path: ':website_id'
     });
   });
+  this.route('issue');
+  this.route('issues', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':issue_id/edit'
+    });
+
+    this.route('show', {
+      path: ':issue_id'
+    });
+  });
+  this.route('issue-comment');
+  this.route('issue-comments', function() {
+    this.route('new');
+
+    this.route('edit', {
+      path: ':issue-comment_id/edit'
+    });
+
+    this.route('show', {
+      path: ':issue-comment_id'
+    });
+  });
 });
 
 export default Router;

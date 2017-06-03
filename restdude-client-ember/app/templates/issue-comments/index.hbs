@@ -1,0 +1,60 @@
+<h1>Issue-comments list</h1>
+
+<p>
+  {{link-to "New Issue-comment" "issue-comments.new" }}
+</p>
+
+{{#if model.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Title
+        </th>
+        <th>
+          Description
+        </th>
+        <th>
+          Visibility
+        </th>
+        <th colspan="3">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |issue-comment|}}
+        <tr>
+          <td>
+            {{issue-comment.name}}
+          </td>
+          <td>
+            {{issue-comment.title}}
+          </td>
+          <td>
+            {{issue-comment.description}}
+          </td>
+          <td>
+            {{issue-comment.visibility}}
+          </td>
+          <td>
+            {{link-to "Edit" "issue-comments.edit" issue-comment}}
+          </td>
+          <td>
+            {{link-to "Show" "issue-comments.show" issue-comment}}
+          </td>
+          <td>
+            <a href="#" {{action "remove" issue-comment}}>Remove</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p id="blankslate">
+    No Issue-comments found
+  </p>
+{{/if}}

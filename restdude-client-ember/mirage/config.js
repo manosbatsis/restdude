@@ -1,4 +1,14 @@
 export default function() {
+this.get('/issue-comments');
+this.get('/issue-comments/:id');
+this.post('/issue-comments');
+this.del('/issue-comments/:id');
+this.patch('/issue-comments/:id');
+this.get('/issues');
+this.get('/issues/:id');
+this.post('/issues');
+this.del('/issues/:id');
+this.patch('/issues/:id');
 this.get('/websites');
 this.get('/websites/:id');
 this.post('/websites');

@@ -1,0 +1,60 @@
+<h1>Issues list</h1>
+
+<p>
+  {{link-to "New Issue" "issues.new" }}
+</p>
+
+{{#if model.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Title
+        </th>
+        <th>
+          Description
+        </th>
+        <th>
+          Visibility
+        </th>
+        <th colspan="3">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |issue|}}
+        <tr>
+          <td>
+            {{issue.name}}
+          </td>
+          <td>
+            {{issue.title}}
+          </td>
+          <td>
+            {{issue.description}}
+          </td>
+          <td>
+            {{issue.visibility}}
+          </td>
+          <td>
+            {{link-to "Edit" "issues.edit" issue}}
+          </td>
+          <td>
+            {{link-to "Show" "issues.show" issue}}
+          </td>
+          <td>
+            <a href="#" {{action "remove" issue}}>Remove</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p id="blankslate">
+    No Issues found
+  </p>
+{{/if}}
