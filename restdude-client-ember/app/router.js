@@ -107,6 +107,9 @@ Router.map(function() {
     this.route('created');
     this.route('mentioned');
     this.route('assigned');
+      this.route('issue', function(){
+        this.route('comments')
+      });
 
     this.route('edit', {
       path: ':issue_id/edit'

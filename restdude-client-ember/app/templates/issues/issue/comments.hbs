@@ -1,0 +1,89 @@
+{{#paper-card as |card|}}
+  {{#paper-toolbar class="md-menu-toolbar" as |toolbar|}}
+    {{#toolbar.tools class="layout-row"}}
+      <span class="flex"></span>
+      <h2>Current Issues</h2>
+      <span class="flex"></span>
+    {{/toolbar.tools}}
+  {{/paper-toolbar}}
+
+  <h1>Issue</h1>
+
+
+{{#each model as |co|}}
+
+    <h3>{{co.title}}</h3>
+
+
+    {{#if model.length}}
+      {{#paper-list}}
+
+         {{#paper-item class="md-2-line" as |controls| }}
+           {{#if co.avatarUrl}}
+             <img src={{co.createdBy.avatarUrl}} alt={{co.createdBy.username}} class="md-avatar">
+           {{else}}
+             {{ember-initials class="md-avatar"
+                 size=50
+                 name=co.createdBy.username
+                 seedText=co.createdBy.username
+                 defaultName='?'
+                 textColor="white"
+                 fontSize=55
+                 fontWeight=100
+                 fontFamily="Helvetica Neue Light, Arial, sans-serif"
+             }}
+           {{/if}}
+           <div class="md-list-item-text">
+             {{#paper-expansion-panel as |panel|}}
+                {{#panel.collapsed}}
+                  <div class="md-panel-title">{{co.createdBy.username}}</div>
+                  {{paper-icon "keyboard_arrow_down"}}
+                {{/panel.collapsed}}
+
+                {{#panel.expanded as |expanded|}}
+                  {{#expanded.header}}
+                    <div class="md-panel-title">{{co.createdBy.username}}</div>
+                    {{paper-icon "keyboard_arrow_up"}}
+                  {{/expanded.header}}
+
+                  {{#expanded.content}}
+                   <p>{{co.createdDate}}</p>
+                    <p>Comment {{co.content}} </p>
+                  {{/expanded.content}}
+
+                  {{#expanded.footer}}
+                    <span class="flex"></span>
+                    {{#paper-button onClick=(action panel.collapse)}}
+                      Cancel
+                    {{/paper-button}}
+                    {{#paper-button primary=true onClick=(action panel.collapse)}}
+                      Save
+                    {{/paper-button}}
+                  {{/expanded.footer}}
+
+                {{/panel.expanded}}
+              {{/paper-expansion-panel}}
+
+           </div>
+         {{/paper-item}}
+
+      {{/paper-list}}
+      {{#if model.meta.documentLinks}}
+        {{#card.actions class="layout-row"}}
+          {{#each-in model.meta.documentLinks as |key value|}}
+            {{#paper-button href=value.href}}{{key}}{{/paper-button}}
+          {{/each-in}}
+        {{/card.actions}}
+      {{/if}}
+
+    {{else}}
+
+
+      {{#card.content}}
+        <p>
+         This space has no members.
+        </p>
+      {{/card.content}}
+    {{/if}}
+{{/each}}
+  {{/paper-card}}
