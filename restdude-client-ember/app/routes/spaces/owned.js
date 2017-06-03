@@ -1,3 +1,4 @@
+import Ember  from 'ember';
 import BaseSearch  from './base-search';
 
 export default BaseSearch.extend( {

@@ -54,6 +54,14 @@
 
      {{#paper-list}}
 
+       {{#paper-item  onClick=(action (transition-to "issues"))}}
+        {{paper-icon "folder"}}
+        <p>issues</p>
+       {{/paper-item}}
+       {{#paper-item  onClick=(action (transition-to "issues.assigned"))}}
+        {{paper-icon "folder"}}
+        <p>assigned</p>
+       {{/paper-item}}
        {{#paper-item  onClick=(action (transition-to "home"))}}
         {{paper-icon "home"}}
         <p>Home</p>
