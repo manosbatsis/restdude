@@ -96,6 +96,7 @@ public abstract class AbstractCaseServiceImpl<T extends AbstractCaseModel<?, ?, 
     @Override
     @Transactional(readOnly = false)
     public T create(T resource) {
+        log.debug("create, resource: {}", resource);
 
         // save case
         resource = super.create(resource);

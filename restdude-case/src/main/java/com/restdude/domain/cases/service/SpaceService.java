@@ -29,4 +29,11 @@ public interface SpaceService extends ContextService<Space> {
      * @return
      */
     Space getSystemContext();
+
+    /**
+     * Get the space matching the given name
+     * @param name
+     * @return
+     */
+    Space findByName(String name);
 }

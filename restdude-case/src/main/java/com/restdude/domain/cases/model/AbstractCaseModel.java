@@ -28,9 +28,11 @@ import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import com.restdude.domain.cases.ICaseModel;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.dto.CaseStatustInfo;
+import com.restdude.domain.users.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -43,6 +45,7 @@ import java.util.List;
 /**
  * Base topic impl
  */
+
 @Slf4j
 @MappedSuperclass
 public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCaseModel<A, C, CC>, CC extends AbstractCaseCommentModel>
@@ -90,12 +93,12 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
     @Getter @Setter
     private List<CC> comments;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = {@JoinColumn(name = "member_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "case_id")})
+    @ApiModelProperty(value = "Assigned to", readOnly = true, hidden = true)
+    @ManyToOne(fetch = FetchType.EAGER  )
+    @JoinColumn(name = "assigned_to", referencedColumnName = "id", updatable = false)
     @Getter @Setter
-    private List<Membership> assignedTo;
+    private User assignee;
+
 
 
 

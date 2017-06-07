@@ -208,16 +208,24 @@ public class SpaceServiceImpl
 					.firstName(username.substring(0, 3)).lastName(username.substring(3)).build();
 			testUsers.put(username, userService.createAsConfirmed(u));
 		}
-
-
 		return testUsers;
 	}
+
+
 	@Override
 	public Space getSystemContext(){
 		if(this.syetemSpace == null){
 			this.syetemSpace = this.repository.getSystemContext();
 		}
 		return this.syetemSpace;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Space findByName(String name) {
+		return this.repository.findByName(name);
 	}
 
 }
