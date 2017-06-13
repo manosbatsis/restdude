@@ -38,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Named;
 import java.util.*;
@@ -48,6 +49,8 @@ public class SpaceServiceImpl
 		extends AbstractContextServiceImpl<Space, SpaceRepository>
 		implements SpaceService {
 
+	@Value("${restdude.testEmailDomain:restdude.com}")
+	private String testEmailDomain;
 	private Space syetemSpace;
 	private UserService userService;
 	private FriendshipService friendshipService;
@@ -204,7 +207,7 @@ public class SpaceServiceImpl
 			User u = new User.Builder().username(username)
 					.credentials(new UserCredentials.Builder().active(true).password(username).build())
 					.contactDetails(new ContactDetails.Builder()
-							.primaryEmail(new EmailDetail(username + "@evasyst.com")).build())
+							.primaryEmail(new EmailDetail(username + "@" + testEmailDomain)).build())
 					.firstName(username.substring(0, 3)).lastName(username.substring(3)).build();
 			testUsers.put(username, userService.createAsConfirmed(u));
 		}

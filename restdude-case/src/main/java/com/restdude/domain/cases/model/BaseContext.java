@@ -26,6 +26,7 @@ import com.restdude.domain.cases.IBaseContext;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
+import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.ModelResource;
@@ -91,6 +92,7 @@ public class BaseContext extends AbstractPersistableNamedModel implements IBaseC
 	@ApiModelProperty(value = "Visibility settings", allowableValues = "SECRET, CLOSED, OPEN, PUBLIC", required = true)
 	ContextVisibilityType visibility = ContextVisibilityType.CLOSED;
 
+	@CurrentPrincipal
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "owner", nullable = false)

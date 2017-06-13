@@ -56,6 +56,7 @@ public class CookieUtil {
 		String server = (String) request.getAttribute(Constants.DOMAIN_KEY);
 		LOGGER.debug("addCookie, cookie name: {}, value: {}, domain: {}, secure: {}, http-only: {}", cookieName, cookieValue, server, userDetailsConfig.isCookiesSecure(), userDetailsConfig.isCookiesHttpOnly());
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setMaxAge(-1);
 		cookie.setPath("/");
 		// set the cookie domain
 		if (StringUtils.isNotBlank(server)) {

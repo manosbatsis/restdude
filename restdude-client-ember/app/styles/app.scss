@@ -69,6 +69,10 @@ md-sidenav > md-card {
 md-card {
   box-shadow: none;
 }
+md-content.main-content  {
+  background-color: transparent;
+}
+
 
 .username {
   font-variant: small-caps;
