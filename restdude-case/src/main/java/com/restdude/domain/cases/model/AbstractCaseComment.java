@@ -21,46 +21,72 @@
 package com.restdude.domain.cases.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
+import com.restdude.domain.PersistableModel;
 import com.restdude.domain.cases.ICaseCommentModel;
+import com.restdude.mdd.model.AbstractPersistableNamedModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Base case comment implementation
- */
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "case_comment_base")
+@Inheritance(strategy = InheritanceType.JOINED)
+*/
+@Slf4j
+@Data
 @MappedSuperclass
-public abstract class AbstractCaseCommentModel<T extends AbstractCaseModel, C extends AbstractCaseCommentModel>
-        extends AbstractBasicAuditedModel implements ICaseCommentModel<T, C> {
+public abstract class AbstractCaseComment<T extends AbstractCase, C extends AbstractCaseComment>
+        extends AbstractPersistableNamedModel implements ICaseCommentModel<T, C> {
 
 
     @NotNull
     @ApiModelProperty(value = "The comment text", required = true, notes = "Max byte length: " + MAX_DETAIL_LENGTH)
     @Column(name = "text_content", nullable = false, updatable = false, length = MAX_DETAIL_LENGTH)
-    @Getter
-    @Setter
     private String content;
 
     @ApiModelProperty(value = "The case this comment is attached to")
     @ManyToOne
     @JoinColumn(name = "topic_case", updatable = false, nullable = false)
-    @Getter @Setter
     private T subject;
 
     @ApiModelProperty(value = "The comment replied to")
     @ManyToOne
     @JoinColumn(name = "parent_comment", updatable = false, nullable = true)
-    @Getter @Setter
     private T parent;
+
+    @Column(name = "entry_index")
+    @Getter
+    @Setter
+    private Integer entryIndex;
 
     @JsonIgnore
     @OneToMany(mappedBy="parent", fetch= FetchType.LAZY)
-    @Getter @Setter
     private List<C> comments;
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void preSave() {
+        super.preSave();
+        if(StringUtils.isBlank(this.getName())){
+            this.setName(UUID.randomUUID().toString());
+            log.debug("preSave, tmp name: {}", this.getName());
+        }
+    }
 }

@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.cases.service;
 
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.users.model.User;
@@ -30,7 +31,7 @@ import java.util.Set;
 public interface MembershipService extends PersistableModelService<Membership, String> {
 
 
-	Set<String> findOnlineMemberUsernames(Space context);
+	Set<String> findOnlineMemberUsernames(BaseContext context);
 
 	/**
 	 * Get the membership of the current user for the given BusinessContext if any exists, 

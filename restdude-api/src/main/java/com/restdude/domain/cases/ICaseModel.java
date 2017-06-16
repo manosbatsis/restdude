@@ -30,8 +30,8 @@ public interface ICaseModel<A extends IBaseContext, C extends ICaseCommentModel>
 
     public String getName();
     public void setName(String name);
-    public Integer getCaseIndex();
-    public void setCaseIndex(Integer name);
+    public Integer getEntryIndex();
+    public void setEntryIndex(Integer name);
     public A getApplication();
     public void setApplication(A app);
 }

@@ -41,7 +41,8 @@ import com.restdude.domain.users.model.UserDTO;
 import com.restdude.domain.users.repository.UserRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.exception.http.UnauthorizedException;
-import com.restdude.websocket.message.ActivityNotificationMessage;
+import com.restdude.websocket.message.StompActivityNotificationMessage;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class MembershipRequestServiceImpl
 	
 	protected FriendshipRepository friendshipRepository;
 	
-	protected MembershipService businessContextMembershipService;
+	protected MembershipService membershipService;
 
 	protected SpaceRepository spaceContextRepository;
 
@@ -75,8 +76,8 @@ public class MembershipRequestServiceImpl
 	}
 
 	@Autowired
-	public void setBusinessContextMembershipService(MembershipService businessContextMembershipService) {
-		this.businessContextMembershipService = businessContextMembershipService;
+	public void setMembershipService(MembershipService membershipService) {
+		this.membershipService = membershipService;
 	}
 
 	@Autowired
@@ -120,7 +121,7 @@ public class MembershipRequestServiceImpl
 				User user = this.userRepository.findActiveByIdOrUsernameOrEmail(userHandle);
 				if(user != null){
 					// make sure a membership for this user does not already exist
-					if(this.businessContextMembershipService.getMembership(businessContext, user) == null){
+					if(this.membershipService.getMembership(businessContext, user) == null){
 
 						// check for existing request
 						MembershipRequest existingRequest = this.repository.findOneByContextAndUser(businessContext, user).orElse(null);
@@ -181,9 +182,8 @@ public class MembershipRequestServiceImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Boolean exists(BaseContext context, User user) {
+	public Boolean exists(@NonNull Space context, @NonNull User user) {
 		Boolean exists = this.repository.exists(context, user);
-		log.debug("exists: {}, context: {}, user: {}", exists, context, user);
 		return exists;
 	}
 
@@ -410,7 +410,7 @@ public class MembershipRequestServiceImpl
 
         // create the membership if approved
         if(MembershipRequestStatus.CONFIRMED.equals(businessContextMembershipRequest.getStatus())){
-            this.businessContextMembershipService.create(new Membership.Builder()
+            this.membershipService.create(new Membership.Builder()
                     .context(businessContextMembershipRequest.getContext())
                     .user(businessContextMembershipRequest.getUser())
                     .build());
@@ -421,7 +421,7 @@ public class MembershipRequestServiceImpl
 				|| MembershipRequestStatus.BLOCK_INVITE.equals(businessContextMembershipRequest.getStatus())
 				|| MembershipRequestStatus.BLOCK_REQUEST.equals(businessContextMembershipRequest.getStatus())){
 			// delete any membership matching the BusinessContext and user
-			this.businessContextMembershipService.delete(
+			this.membershipService.delete(
 					businessContextMembershipRequest.getContext(), businessContextMembershipRequest.getUser()
 			);
 		}
@@ -429,13 +429,13 @@ public class MembershipRequestServiceImpl
 		// send notifications for new requests to owner
 		else if(MembershipRequestStatus.SENT_REQUEST.equals(businessContextMembershipRequest.getStatus())){
 			// create and send message to context owner
-			ActivityNotificationMessage<UserDTO, MembershipRequestStatus, MembershipRequestInfo> msg =
-					new ActivityNotificationMessage<>(
-							UserDTO.fromUser(businessContextMembershipRequest.getUser()), MembershipRequestStatus.SENT_REQUEST,
+			StompActivityNotificationMessage<UserDTO, MembershipRequestInfo> msg =
+					new StompActivityNotificationMessage<>(
+							UserDTO.fromUser(businessContextMembershipRequest.getUser()), MembershipRequestStatus.SENT_REQUEST.name(),
 							MembershipRequestInfo.from(businessContextMembershipRequest));
 			// notify according to BusinessContext type
 			if(ContextVisibilityType.OPEN.equals(businessContextMembershipRequest.getContext().getVisibility())){
-				this.sendStompActivityMessage(msg, this.businessContextMembershipService.findOnlineMemberUsernames(businessContextMembershipRequest.getContext()));
+				this.sendStompActivityMessage(msg, this.membershipService.findOnlineMemberUsernames(businessContextMembershipRequest.getContext()));
 			}
 			else{
 				this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getContext().getOwner().getId()));
@@ -445,9 +445,9 @@ public class MembershipRequestServiceImpl
 		// send notifications for new invitations to recipient user
 		else if(MembershipRequestStatus.SENT_INVITE.equals(businessContextMembershipRequest.getStatus())){
 			// create and send message to context owner
-			ActivityNotificationMessage<UserDTO, MembershipRequestStatus, MembershipRequestInfo> msg =
-					new ActivityNotificationMessage<>(
-							UserDTO.fromUser(businessContextMembershipRequest.getContext().getOwner()), MembershipRequestStatus.SENT_INVITE,
+			StompActivityNotificationMessage<UserDTO, MembershipRequestInfo> msg =
+					new StompActivityNotificationMessage<>(
+							UserDTO.fromUser(businessContextMembershipRequest.getContext().getOwner()), MembershipRequestStatus.SENT_INVITE.name(),
 							MembershipRequestInfo.from(businessContextMembershipRequest));
 			this.sendStompActivityMessage(msg, this.userRepository.findUsernameById(businessContextMembershipRequest.getUser().getId()));
 		}

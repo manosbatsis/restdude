@@ -54,10 +54,6 @@ public class Space extends BaseContext {
 	public static final String API_PATH_FRAGMENT = "spaces";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a space context, such as an organization or team";
 
-	@ManyToOne
-	private Space parent;
-
-
 	@OneToMany(mappedBy = "space", orphanRemoval = true)
 	@JsonIgnore
 	@Getter
@@ -65,25 +61,10 @@ public class Space extends BaseContext {
 	@ApiModelProperty(value = "The apps owned by this space")
 	private List<SpaceApp> applications;
 
-	@OneToMany(mappedBy = "parent")
-	@JsonIgnore
-	@Getter
-	@Setter
-	@ApiModelProperty(value = "The sub-spaces owned by this space")
-	private List<Space> children;
-
-	@JsonIgnore
-	public Space getParent() {
-		return parent;
-	}
 
 	@JsonGetter("parent")
 	public BaseContextInfo getParentDTO() {
-		return BaseContextInfo.from(this.parent);
-	}
-
-	public void setParent(Space parent) {
-		this.parent = parent;
+		return BaseContextInfo.from(this.getParent());
 	}
 
 	public Space() {
@@ -98,6 +79,7 @@ public class Space extends BaseContext {
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
 				.append("name", this.getName())
+				.append("title", this.getTitle())
 				.append("visibility", this.getVisibility())
 				.append("owner", this.getOwner())
 				.toString();

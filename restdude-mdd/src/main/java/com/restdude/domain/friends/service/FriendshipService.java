@@ -20,21 +20,25 @@
  */
 package com.restdude.domain.friends.service;
 
+import java.util.List;
+
 import com.restdude.domain.friends.model.FriendshipIdentifier;
 import com.restdude.mdd.service.PersistableModelService;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.users.model.UserDTO;
-import com.restdude.websocket.message.ActivityNotificationMessage;
+import com.restdude.websocket.message.StompActivityNotificationMessage;
 
 public interface FriendshipService extends PersistableModelService<Friendship, FriendshipIdentifier> {
 
 	public static final String BEAN_ID = "friendshipService";
 
+	List<String> findAllStompOnlineFriendUsernames(String userId);
+
 	public Iterable<UserDTO> findAllMyFriends();
 
 //	public Page<UserDTO> findAllMyFriendsPaginated(Pageable pageRequest);
 
-	public void sendStompActivityMessageToOnlineFriends(ActivityNotificationMessage msg);
+	public void sendStompActivityMessageToOnlineFriends(StompActivityNotificationMessage msg);
 
     Friendship createTest(Friendship resource);
 

@@ -34,6 +34,21 @@
         <level value="error"/>
     </logger>
 
+    <logger name="com.restdude.domain.cases.listener">
+        <level value="debug"/>
+    </logger>
+    <logger name="org.springframework.context.event">
+        <level value="debug"/>
+    </logger>
+
+    <logger name="com.restdude.domain.cases.service.impl.SpaceServiceImpl">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.restdude.domain.error.service.impl.SystemErrorServiceImpl">
+        <level value="debug"/>
+    </logger>
+
+
     <!--
 
 

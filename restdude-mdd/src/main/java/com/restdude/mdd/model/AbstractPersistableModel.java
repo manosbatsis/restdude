@@ -35,6 +35,8 @@ import javax.persistence.MappedSuperclass;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
+import org.springframework.data.domain.AbstractAggregateRoot;
+
 /**
  * Abstract entity class with basic auditing, unique constraints validation and authorization settings.
  * @param <PK> The id Serializable

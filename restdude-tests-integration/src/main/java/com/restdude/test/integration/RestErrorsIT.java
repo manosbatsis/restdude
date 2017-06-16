@@ -22,9 +22,12 @@ package com.restdude.test.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.restdude.auth.userAccount.model.UserAccountRegistration;
+import com.restdude.domain.cases.model.SpaceApp;
 import com.restdude.domain.error.model.ClientError;
 import com.restdude.domain.error.model.ErrorLog;
+import com.restdude.domain.error.model.ErrorsApplication;
 import com.restdude.domain.error.model.SystemError;
+import com.restdude.domain.error.repository.ClientErrorRepository;
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.users.model.User;
 import com.restdude.test.AbstractControllerIT;
@@ -194,7 +197,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                 .then().log().all().assertThat()
                 // test assertions
                 .statusCode(200)
-                .body("content[0].caseIndex", notNullValue())
+                .body("content[0].entryIndex", notNullValue())
                 .body("content[1].title", notNullValue())
                 .extract().as(JsonNode.class);
         String errorId = errorsPage.get("content").get(0).get("id").asText();
@@ -221,11 +224,27 @@ public class RestErrorsIT extends AbstractControllerIT {
     public void testClientErrorSubmission() throws Exception {
 
         Loggedincontext adminLoginContext = this.getLoggedinContext("admin", "admin");
+
         RequestSpecification adminRequestSpec = adminLoginContext.requestSpec;
+        // get Web UI client errors app
+        JsonNode clientApps = given().spec(adminRequestSpec)
+                .param("name", ClientErrorRepository.ERRORS_WORKFLOW_NAME)
+                .log().all()
+                .get(WEBCONTEXT_PATH + "/api/rest/" + SpaceApp.API_PATH_FRAGMENT)
+                .then().log().all().assertThat()
+                // test assertions
+                .statusCode(200)
+                .body("content[0].id", notNullValue())
+                .extract().as(JsonNode.class);
+
+        String appId = clientApps.get("content").get(0).get("id").asText();
+        ErrorsApplication clientErrorsApp = new ErrorsApplication();
+        clientErrorsApp.setId(appId);
 
         for (int i = 0; i < 1; i++) {
             String description = "ClientError #" + i + " created by " + this.getClass().getName();
             ClientError error = new ClientError();
+            error.setApplication(clientErrorsApp);
             ErrorLog log = new ErrorLog();
             log.setRootCauseMessage("Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC");
             log.setStacktrace("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur");

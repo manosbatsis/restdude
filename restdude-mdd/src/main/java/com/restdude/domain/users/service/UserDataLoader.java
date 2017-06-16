@@ -38,7 +38,6 @@ public class UserDataLoader {
 
     private RoleDataLoader roleDataLoader;
     private RoleService roleService;
-    private UserService userService;
 
 
     @Autowired
@@ -51,16 +50,10 @@ public class UserDataLoader {
         this.roleService = roleService;
     }
 
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
     
     @PostConstruct
     @Transactional(readOnly = false)
-    public void run() {
-        this.userService.initData();
+    public void run(){
     }
 
 }

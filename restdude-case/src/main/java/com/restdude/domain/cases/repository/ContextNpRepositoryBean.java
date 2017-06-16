@@ -20,6 +20,7 @@
  */
 package com.restdude.domain.cases.repository;
 
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.users.model.User;
@@ -31,18 +32,18 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
 @NoRepositoryBean
-public interface ContextRepository<T extends Space> extends ModelRepository<T,String> {
+public interface ContextNpRepositoryBean<T extends BaseContext> extends ModelRepository<T,String> {
 
     String SYSTEM_CONTEXT_NAME = "SYS_CTX";
-    String SYSTEM_CONTEXT_TITLE = "System context";
+    String SYSTEM_CONTEXT_TITLE = "Global System Context";
 
     String BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS = " context.id, context.name, context.title, context.description, context.avatarUrl, context.bannerUrl,  " +
             "  context.owner.id, context.owner.firstName, context.owner.lastName, context.owner.username, context.owner.contactDetails.primaryEmail.email, " +
             "context.owner.emailHash, context.owner.avatarUrl, context.owner.bannerUrl, " +
             "context.visibility ";
     String SELECT_BUSINESS_CONTEXT_INFO =
-            "select new com.restdude.domain.cases.model.dto.BaseContextInfo(" + BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS + ") from Space context ";
-    String SELECT_COUNT_BUSINESS_CONTEXT_IDS = "select count(context.id) from Space context ";
+            "select new com.restdude.domain.cases.model.dto.BaseContextInfo(" + BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS + ") from BaseContext context ";
+    String SELECT_COUNT_BUSINESS_CONTEXT_IDS = "select count(context.id) from BaseContext context ";
     String VISIBLE = "  left join context.memberships as membership "
             + "where context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.PUBLIC "
             + " or context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.OPEN "
@@ -68,7 +69,7 @@ public interface ContextRepository<T extends Space> extends ModelRepository<T,St
     Page<BaseContextInfo> findVisibleMembershipSpaces(User u, Pageable pageable);
 
     @Query(value = "select CASE WHEN COUNT(context) > 0 THEN true ELSE false END  "
-            + "from Space context "
+            + "from BaseContext context "
             + "  left join context.memberships as membership "
             + "where context.id = ?1 "
             + "		and (context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.PUBLIC "
@@ -78,8 +79,8 @@ public interface ContextRepository<T extends Space> extends ModelRepository<T,St
     boolean isVisible(String id);
 
 
-    @Query("select (persisted.owner.id = :#{#user.id}) from Space persisted where persisted.id = :#{#context.id} ")
-    boolean isOwner(@Param("context") Space context, @Param("user") User user);
+    @Query("select (persisted.owner.id = :#{#user.id}) from BaseContext persisted where persisted.id = :#{#context.id} ")
+    boolean isOwner(@Param("context") BaseContext context, @Param("user") User user);
 
     @Query(value = "select CASE WHEN COUNT(membership) > 0 THEN true ELSE false END  "
             + "from Membership membership "
@@ -88,14 +89,14 @@ public interface ContextRepository<T extends Space> extends ModelRepository<T,St
             + "		and (membership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.PUBLIC "
             + "         or membership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.OPEN "
             + "         or membership.context.owner.id = ?#{principal.id} ) ")
-    boolean canInviteUserToSpace(@Param("context") Space context);
+    boolean canInviteUserToSpace(@Param("context") BaseContext context);
 
     @Query(value = "select CASE WHEN COUNT(membership) > 0 THEN true ELSE false END  "
             + "from Membership membership "
             + "where membership.user.id = ?#{principal.id} and membership.context.id = :#{#context.id} "
             + "		and (membership.context.visibility = com.restdude.domain.cases.model.enums.ContextVisibilityType.OPEN "
             + "         or membership.context.owner.id = ?#{principal.id} ) ")
-    boolean canApproveRequestToJoinSpace(@Param("context") Space context);
+    boolean canApproveRequestToJoinSpace(@Param("context") BaseContext context);
 
     @Query(value = SELECT_BUSINESS_CONTEXT_INFO + " where context.owner.id = ?#{principal.id} ")
     Page<BaseContextInfo> findMy(Pageable pageable);

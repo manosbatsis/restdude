@@ -41,7 +41,7 @@ public interface ClientErrorRepository extends AbstractCaseModelRepository<Clien
     CaseWorkflow getWorkflow();
 
     @Query(value = "select count(c)+1 from  BaseError c where c.application = :#{#unIndexed.application}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
-    Integer getCaseIndex( @Param("unIndexed") BaseError unIndexed);
+    Integer getEntryIndex( @Param("unIndexed") BaseError unIndexed);
 
 
     String SELECT_NEW_ERROR_COMMENT_INFOS = "select new com.restdude.domain.cases.model.dto.CaseCommenttInfo";

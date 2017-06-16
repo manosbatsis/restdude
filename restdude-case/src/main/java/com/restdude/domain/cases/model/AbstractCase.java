@@ -29,10 +29,10 @@ import com.restdude.domain.cases.ICaseModel;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.dto.CaseStatustInfo;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.model.AbstractPersistableNamedModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -40,25 +40,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
  * Base topic impl
- */
+ *
+
+@Slf4j
+@Entity
+@Table(name = "case_base")
+@Inheritance(strategy = InheritanceType.JOINED)
+*/
 
 @Slf4j
 @MappedSuperclass
-public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCaseModel<A, C, CC>, CC extends AbstractCaseCommentModel>
-        extends AbstractBasicAuditedModel
+public  class AbstractCase<A extends SpaceCasesApp<C>, C extends AbstractCase<A, C, CC>, CC extends AbstractCaseComment>
+        extends AbstractPersistableNamedModel
         implements ICaseModel<A, CC> {
 
-
-    @JsonProperty( access = JsonProperty.Access.READ_ONLY)
-    @ApiModelProperty(value = "Short descriptive title", readOnly = true)
-    @Column(name = "name", nullable = true, updatable = true, length = CommentableModel.MAX_TITLE_LENGTH)
-    @Getter
-    @Setter
-    private String name;
 
     @NotNull
     @ApiModelProperty(value = "Short descriptive title")
@@ -73,10 +73,10 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
     @Setter
     private String detail;
 
-    @Column(name = "case_index")
+    @Column(name = "entry_index")
     @Getter
     @Setter
-    private Integer caseIndex;
+    private Integer entryIndex;
 
     @ApiModelProperty(value = "Current case status", allowableValues = "OPEM, CLOSED, [CUSTOM_VALUE]")
     @ManyToOne
@@ -136,14 +136,14 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
 
 
 
-    public AbstractCaseModel() {
+    public AbstractCase() {
     }
 
-    public AbstractCaseModel(String title) {
+    public AbstractCase(String title) {
         this.title = title;
     }
 
-    public AbstractCaseModel(String title, String detail) {
+    public AbstractCase(String title, String detail) {
         this.title = title;
         this.detail = detail;
     }
@@ -153,7 +153,7 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
         return new ToStringBuilder(this)
                 .append("id", this.getId())
                 .append("name", this.getName())
-                .append("caseIndex", this.getCaseIndex())
+                .append("entryIndex", this.getEntryIndex())
                 .append("title", this.getTitle())
                 .append("status", this.getStatus())
                 .toString();
@@ -174,6 +174,10 @@ public  class AbstractCaseModel<A extends SpaceCasesApp<C>, C extends AbstractCa
             this.setDetail(StringUtils.abbreviate(this.getDetail(), CommentableModel.MAX_DETAIL_LENGTH));
         }
 
+        if(StringUtils.isBlank(this.getName())){
+            this.setName(UUID.randomUUID().toString());
+            log.debug("preSave, tmp name: {}", this.getName());
+        }
         log.debug("preSave, after: {}", this);
     }
 

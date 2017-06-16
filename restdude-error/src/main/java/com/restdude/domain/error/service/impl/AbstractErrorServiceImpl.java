@@ -33,6 +33,7 @@ import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.ErrorsApplication;
 import com.restdude.domain.error.repository.ErrorCommentRepository;
+import com.restdude.domain.error.service.ErrorCommentService;
 import com.restdude.domain.error.service.ErrorLogService;
 import com.restdude.domain.error.service.UserAgentService;
 import com.restdude.domain.users.model.User;
@@ -55,26 +56,27 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
 
 
     protected  CaseWorkflow workflow;
-    private ErrorsApplication errorApplication;
+    protected ErrorsApplication errorApplication;
 
-    private UserAgentService userAgentService;
-    private ErrorLogService errorLogService;
+    protected UserAgentService userAgentService;
+    protected ErrorLogService errorLogService;
 
-    private UserService userService;
-    private CaseStatusService caseStatusService;
-    private SpaceService spaceContextService;
-    private PersistableModelService<ErrorsApplication, String> errorsApplicationService;
-    protected ErrorCommentRepository errorCommentRepository;
-    private CaseWorkflowService caseWorkflowService;
+    protected UserService userService;
+    protected CaseStatusService caseStatusService;
+    protected SpaceService spaceContextService;
+    protected PersistableModelService<ErrorsApplication, String> errorsApplicationService;
+    protected ErrorCommentService errorCommentService;
+    protected CaseWorkflowService caseWorkflowService;
 
-    @Autowired
-    public void setErrorCommentRepository(ErrorCommentRepository errorCommentRepository) {
-        this.errorCommentRepository = errorCommentRepository;
-    }
 
     @Autowired
     public void setCaseWorkflowService(CaseWorkflowService caseWorkflowService) {
         this.caseWorkflowService = caseWorkflowService;
+    }
+
+    @Autowired
+    public void setErrorCommentService(ErrorCommentService errorCommentService) {
+        this.errorCommentService = errorCommentService;
     }
 
     @Autowired

@@ -23,6 +23,8 @@ package com.restdude.domain.cases.init;
 import com.restdude.domain.cases.service.SpaceService;
 import com.restdude.domain.users.service.UserDataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,7 @@ import javax.inject.Named;
  */
 @Component
 @Named("spaceDataLoader")
-public class SpaceDataLoader {
+public class SpaceDataLoader implements ApplicationListener<ApplicationReadyEvent> {
 
     private UserDataLoader userDataLoader;
     private SpaceService spaceContextService;
@@ -49,9 +51,14 @@ public class SpaceDataLoader {
         this.spaceContextService = spaceContextService;
     }
 
-    @PostConstruct
+
+    /**
+     * Handle an application event.
+
+     * @param event the event to respond to
+     */
     @Transactional(readOnly = false)
-    public void run()  {
-        spaceContextService.initData();
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
     }
 }

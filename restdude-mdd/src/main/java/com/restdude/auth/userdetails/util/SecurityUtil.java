@@ -113,11 +113,11 @@ public class SecurityUtil {
 
 		if (principal != null) {
 			if(String.class.isAssignableFrom(principal.getClass())){
-				LOGGER.warn("getPrincipal1, principal is {}, forcing anonymous: ",  principal.toString());
+				LOGGER.warn("getPrincipal1, principal is a String {}, forcing null",  principal.toString());
                 principal = null;
 			}
 			else if (User.class.isAssignableFrom(principal.getClass())) {
-				LOGGER.warn("getPrincipal1, principal: {} ",  principal.toString());
+				LOGGER.warn("getPrincipal1, principal is a User: {} ",  principal.toString());
 				principal = UserDetailsImpl.fromUser((User) principal);
 			}
 		}

@@ -79,8 +79,6 @@ public class UniqueValidator implements ConstraintValidator<Unique, PersistableM
                 // get records matching the unique field values
                 List<PersistableModel> resultSet = getViolatingRecords(value, domainClass, uniqueFieldNames);
 
-                LOGGER.debug("isValid, resultSet size: {}", resultSet.size());
-
                 // process violating records
                 if (!resultSet.isEmpty()) {
 
@@ -101,11 +99,11 @@ public class UniqueValidator implements ConstraintValidator<Unique, PersistableM
                                     }
                                     // match?
                                     if (newValue.equals(existingValue)) {
-                                        LOGGER.debug("isValid, adding violation for property name: {}, pathFragment: {}", propertyName, newValue);
+                                        LOGGER.debug("isValid, adding violation for property name: {}, value: {}", propertyName, newValue);
                                         valid = false;
                                         // report violation
                                         constraintValidatorContext
-                                                .buildConstraintViolationWithTemplate("Unique pathFragment not available")
+                                                .buildConstraintViolationWithTemplate("Unique value not available for property: " + propertyName )
                                                 .addPropertyNode(propertyName).addConstraintViolation();
                                     }
                                 }

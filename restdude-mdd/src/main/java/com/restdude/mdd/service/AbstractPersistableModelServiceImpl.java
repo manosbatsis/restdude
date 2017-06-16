@@ -26,6 +26,9 @@ import com.restdude.domain.MetadatumModel;
 import com.restdude.domain.PersistableModel;
 import com.restdude.domain.Roles;
 import com.restdude.domain.UploadedFileModel;
+import com.restdude.domain.UserDetails;
+import com.restdude.domain.event.EntityCreatedEvent;
+import com.restdude.domain.event.EntityUpdatedEvent;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
@@ -35,7 +38,10 @@ import com.restdude.specification.SpecificationUtils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -66,12 +72,13 @@ import java.util.*;
  * @param <R>  The repository class to automatically inject
  */
 @Slf4j
-public abstract class AbstractPersistableModelServiceImpl<T extends PersistableModel<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
+public class AbstractPersistableModelServiceImpl<T extends PersistableModel<PK>, PK extends Serializable, R extends ModelRepository<T, PK>>
         extends AbstractBaseServiceImpl
         implements PersistableModelService<T, PK>{
 
     protected R repository;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setRepository(R repository) {
         this.repository = repository;
@@ -104,33 +111,40 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @Transactional(readOnly = false)
     public final void initData() {
 
-        // load system user if it exists
-        User systemUser = this.userRepository.findByUsername("admin");
-        log.debug("initData, available users: {}, systemUser: {}", this.userRepository.count(), systemUser);
-        List<User> users = this.userRepository.findAll();
-        for(User u : users){
-            log.debug("initData, available user: {}", u);
-        }
+        User systemUser = (User) this.getPrincipalLocalUser();
+        boolean wasAnonymous = Objects.isNull(systemUser) || StringUtils.isBlank(systemUser.getId());
 
-        Authentication auth = null;
 
-        // init auth with system user or emulate
-        if(systemUser != null){
-            auth = new UserDetailsAuthenticationToken(UserDetailsImpl.fromUser(systemUser));
-        }
-        else{
-            auth = new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
-                            Arrays.asList(new SimpleGrantedAuthority[]{new SimpleGrantedAuthority(Roles.ROLE_USER), new SimpleGrantedAuthority(Roles.ROLE_ADMIN)}));
-        }
+        //? login?
+        if(wasAnonymous){
 
-        // login
-        SecurityContextHolder.getContext().setAuthentication(auth);
+            // load system user if it exists
+            systemUser = this.userRepository.findByUsername("admin");
+
+            Authentication auth = null;
+
+            // init auth with system user or emulate
+            if(systemUser != null){
+                auth = new UserDetailsAuthenticationToken(UserDetailsImpl.fromUser(systemUser));
+            }
+            else{
+                auth = new AnonymousAuthenticationToken(this.getClass().getName(), this.getClass().getName(),
+                        Arrays.asList(new SimpleGrantedAuthority[]{new SimpleGrantedAuthority(Roles.ROLE_USER), new SimpleGrantedAuthority(Roles.ROLE_ADMIN)}));
+            }
+
+            // login
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
 
         // init data
+        log.debug("initData, was anonymous: {}, service domain type: {}", wasAnonymous, this.getDomainClass());
+        log.debug("initData > initDataOverride with user: {}", systemUser);
         this.initDataOverride(systemUser);
 
-        // logout
-        SecurityContextHolder.clearContext();
+        // logout?
+        if(wasAnonymous) {
+            SecurityContextHolder.clearContext();
+        }
     }
 
     /**
@@ -145,12 +159,17 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
      */
     @Override
     @Transactional(readOnly = false)
-    @ModelDrivenPreAuth
+    //@ModelDrivenPreAuth
     public T create(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
+        log.debug("create, principal: {}", this.getPrincipal());
         log.debug("create resource: {}", resource);
         resource = repository.persist(resource);
         this.postCreate(resource);
+
+        EntityCreatedEvent<T> event = new EntityCreatedEvent<T>(resource);
+        this.applicationEventPublisher.publishEvent(event);
+
         return resource;
     }
 
@@ -169,7 +188,9 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     public T update(@P("resource") T resource) {
         Assert.notNull(resource, "Resource can't be null");
         log.debug("update resource: {}", resource);
-        return repository.save(resource);
+        resource = repository.save(resource);
+        applicationEventPublisher.publishEvent(new EntityUpdatedEvent<T>(resource));
+        return resource;
     }
 
     /**
@@ -180,7 +201,9 @@ public abstract class AbstractPersistableModelServiceImpl<T extends PersistableM
     @ModelDrivenPreAuth
     public T patch(@P("resource") T resource) {
         log.debug("patch resource: {}", resource);
-        return repository.patch(resource);
+        resource = repository.patch(resource);
+        applicationEventPublisher.publishEvent(new EntityUpdatedEvent<T>(resource));
+        return resource;
     }
 
     /**

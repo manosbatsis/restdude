@@ -21,10 +21,10 @@
 package com.restdude.domain.cases.service.impl;
 
 import com.restdude.domain.UserDetails;
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
-import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.model.enums.SpaceActivity;
 import com.restdude.domain.cases.repository.MembershipRepository;
 import com.restdude.domain.cases.service.BusinessContextMembersActivityMessanger;
@@ -35,7 +35,8 @@ import com.restdude.domain.users.model.UserDTO;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.util.exception.http.UnauthorizedException;
-import com.restdude.websocket.message.ActivityNotificationMessage;
+import com.restdude.websocket.message.IActivityNotificationMessage;
+import com.restdude.websocket.message.StompActivityNotificationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,16 @@ import org.springframework.security.access.method.P;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Named("membershipService")
 public class MembershipServiceImpl
 		extends AbstractPersistableModelServiceImpl<Membership, String, MembershipRepository>
-		implements MembershipService, BusinessContextMembersActivityMessanger {
+		implements MembershipService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MembershipServiceImpl.class);
 
@@ -61,18 +66,10 @@ public class MembershipServiceImpl
 
 
 	/**
-	 * @see BusinessContextMembersActivityMessanger#getBusinessContextMembershipRepository()
-	 */
-	@Override
-	public MembershipRepository getBusinessContextMembershipRepository() {
-		return this.repository;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> findOnlineMemberUsernames(Space businessContext){
+	public Set<String> findOnlineMemberUsernames(BaseContext businessContext){
 		return this.repository.findOnlineMemberUsernames(businessContext);
 	}
 
@@ -117,27 +114,15 @@ public class MembershipServiceImpl
 	}
 
 	private Membership create(Membership resource, boolean skipAuthorizationCheck){
+		if(Objects.isNull(resource.getContext())){
+			throw new IllegalArgumentException("Given membership cannot have empty context");
+		}
 		if(this.repository.exists(resource.getContext(), resource.getUser())){
 			throw new BadRequestException("Resource already exists: " + resource);
 		}
 
 		resource = super.create(resource);
 
-
-		// create and send message to context members
-		ActivityNotificationMessage<UserDTO, SpaceActivity, BaseContextInfo> msg =
-				new ActivityNotificationMessage<UserDTO, SpaceActivity, BaseContextInfo>(
-						UserDTO.fromUser(resource.getUser()), SpaceActivity.BECAME_MEMBER_OF, BaseContextInfo.from(resource.getContext()));
-
-		// send notification to BusinessContext members
-		Set<String> recepients = this.repository.findOnlineMemberUsernames(resource.getContext());
-		// if BusinessContext is public send a notification to user's friends about the activity
-		if(ContextVisibilityType.PUBLIC.equals(resource.getContext().getVisibility())){
-			recepients.addAll(this.friendshipRepository.findAllStompOnlineFriendUsernames(resource.getUser().getId()));
-		}
-
-		// send the message
-		this.sendStompActivityMessage(msg, recepients);
 
 		return resource;
 	}
@@ -195,11 +180,11 @@ public class MembershipServiceImpl
 		notifyDeletion(resource.getContext(), resource.getUser());
 	}
 
-	private void notifyDeletion(Space businessContext, User user) {
+	private void notifyDeletion(BaseContext businessContext, User user) {
 		// create and send message to context members
-		ActivityNotificationMessage<UserDTO, SpaceActivity, BaseContextInfo> msg =
-				new ActivityNotificationMessage<UserDTO, SpaceActivity, BaseContextInfo>(
-						UserDTO.fromUser(user), SpaceActivity.STOPPED_BEING_MEMBER_OF, BaseContextInfo.from(businessContext));
+		StompActivityNotificationMessage<UserDTO, BaseContextInfo> msg =
+				new StompActivityNotificationMessage<>(
+						UserDTO.fromUser(user), SpaceActivity.STOPPED_BEING_MEMBER_OF.name(), BaseContextInfo.from(businessContext));
 
 		// send the message
 		this.sendStompActivityMessageToMembers(msg, businessContext);
@@ -207,5 +192,35 @@ public class MembershipServiceImpl
 
 
 
+
+	/**
+	 * Sent the given activity message to online members of the given BusinessContext
+	 * @param msg the message to send
+	 * @param businessContext the BusinessContext whose online members should receive the message
+	 */
+	protected void sendStompActivityMessageToMembers(IActivityNotificationMessage msg, BaseContext businessContext) {
+		this.sendStompActivityMessageToMembers(msg, businessContext, null);
+	}
+
+	/**
+	 * Sent the given activity message to online members of the given BusinessContext and optionally, to additional recipients
+	 * @param msg the message to send
+	 * @param businessContext the BusinessContext whose online members should receive the message
+	 * @param cc any additional recipients user names to be treated as recipients
+	 */
+	protected void sendStompActivityMessageToMembers(IActivityNotificationMessage msg, BaseContext businessContext, List<String> cc) {
+		// build recipients collection
+		Set<String> usernames = new HashSet<String>();
+
+		// add any additional usernames given
+		if(cc != null){
+			usernames.addAll(cc);
+		}
+
+		// add online BusinessContext members
+		usernames.addAll(this.repository.findOnlineMemberUsernames(businessContext));
+
+		this.sendStompActivityMessage(msg, usernames);
+	}
 
 }

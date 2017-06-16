@@ -79,6 +79,7 @@ public class SpaceServiceImpl
 	 */
 	@Override
 	protected void initDataOverride(User systemUser){
+		log.debug("initDataOverride, systemUser: {}", systemUser);
 
 		// initialize globals?
 		this.syetemSpace = this.repository.getSystemContext();
@@ -134,6 +135,7 @@ public class SpaceServiceImpl
 			}
 
 		}
+
 	}
 
 	protected void createTestFriendships(Map<String, User> testUsers) {

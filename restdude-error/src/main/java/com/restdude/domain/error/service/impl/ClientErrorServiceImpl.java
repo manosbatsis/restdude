@@ -67,8 +67,8 @@ public class ClientErrorServiceImpl extends AbstractErrorServiceImpl<ClientError
     /**
      * {@inheritDoc}
      */
-    public Integer getCaseIndex(ClientError persisted){
-        return this.repository.getCaseIndex(persisted);
+    public Integer getEntryIndex(ClientError persisted){
+        return this.repository.getEntryIndex(persisted);
     }
 
 }

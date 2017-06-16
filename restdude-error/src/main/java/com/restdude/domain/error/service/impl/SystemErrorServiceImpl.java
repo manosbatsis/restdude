@@ -20,7 +20,9 @@
  */
 package com.restdude.domain.error.service.impl;
 
+import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
+import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.model.ErrorLog;
@@ -29,10 +31,12 @@ import com.restdude.domain.error.model.SystemError;
 import com.restdude.domain.error.repository.SystemErrorRepository;
 import com.restdude.domain.error.service.SystemErrorService;
 import com.restdude.domain.users.model.User;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Named;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -60,21 +64,13 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
         return SystemErrorRepository.ERRORS_WORKFLOW_DESCRIPTION;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initDataOverride(User systemUser){
-        super.initDataOverride(systemUser);
-        this.initSystemErrors(systemUser);
-    }
 
 
     /**
      * {@inheritDoc}
      */
-    public Integer getCaseIndex(SystemError persisted){
-        return this.repository.getCaseIndex(persisted);
+    public Integer getEntryIndex(SystemError persisted){
+        return this.repository.getEntryIndex(persisted);
     }
 
     /**
@@ -82,6 +78,14 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
      */
     public List<CaseCommenttInfo> getCompactCommentsBySubject(SystemError subject){
         return this.repository.getCompactCommentsBySubject(subject);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void initDataOverride(@NonNull() User systemUser){
+        super.initDataOverride(systemUser);
+        this.initSystemErrors(systemUser);
     }
 
     protected void initSystemErrors(User systemUser) {
@@ -114,7 +118,7 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
                 error.setErrorLog(st);
                 error = this.create(error);
                 for(int j = 0; j < lorem.length; j++){
-                    this.errorCommentRepository.persist(new ErrorComment(error, lorem[j]));
+                    this.errorCommentService.create(new ErrorComment(error, lorem[j]));
                 }
             }
 

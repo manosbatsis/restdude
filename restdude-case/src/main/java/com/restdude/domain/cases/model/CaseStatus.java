@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 import static com.restdude.domain.CommentableModel.MAX_DETAIL_LENGTH;
 
 /**
- * Case status option
+ * AbstractCase status option
  */
 @Entity
 @Table(name = "case_status")

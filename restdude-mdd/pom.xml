@@ -53,6 +53,11 @@
         </dependency>
         <dependency>
             <groupId>com.restdude</groupId>
+            <artifactId>restdude-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.restdude</groupId>
             <artifactId>restdude-rsql</artifactId>
             <version>${project.version}</version>
         </dependency>

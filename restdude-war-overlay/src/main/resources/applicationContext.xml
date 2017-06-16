@@ -77,14 +77,13 @@
     <!--  By defining this object as a Bean, Spring Security is exposed as SpEL expressions for creating Sp	ring Data queries.  -->
     <bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
 
-
     <!-- auth config -->
     <bean id="userDetailsConfig"
           class="com.restdude.auth.userdetails.util.SimpleUserDetailsConfig">
         <constructor-arg value="restdude-sso"/>
     </bean>
 
-    <context:component-scan base-package="**.restdude, **.restdude">
+    <context:component-scan base-package="**.restdude">
     </context:component-scan>
 
     <!-- THYMELEAF: Template Resolver for email templates -->

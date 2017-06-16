@@ -21,6 +21,7 @@
 package com.restdude.domain.cases.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.restdude.domain.cases.model.AbstractCaseComment;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.websocket.message.MessageResource;
 import io.swagger.annotations.ApiModel;
@@ -44,6 +45,12 @@ public class CaseCommenttInfo extends MessageResource<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CaseCommenttInfo.class);
 
+
+
+	public static CaseCommenttInfo from(AbstractCaseComment resource) {
+		return resource != null ? new CaseCommenttInfo(resource) : null;
+	}
+
 	@Getter @Setter
 	private String content;
 	@Getter @Setter
@@ -56,6 +63,9 @@ public class CaseCommenttInfo extends MessageResource<String> {
 		super();
 	}
 
+	public CaseCommenttInfo(AbstractCaseComment resource) {
+		this(resource.getId(), resource.getContent(), resource.getCreatedDate(), UserDTO.fromUser(resource.getCreatedBy()));
+	}
 
 	public CaseCommenttInfo(
 			String id, String content, LocalDateTime createdDate,
@@ -63,7 +73,17 @@ public class CaseCommenttInfo extends MessageResource<String> {
 		super(id, null);
 		this.setContent(content);
 		this.setCreatedDate(createdDate);
-		this.setAuthor(new UserDTO(authorAvatarUrl, authorFirstName, authorLastName, authorUsername, authorEmailHash, authorAvatarUrl));
+		this.setAuthor(new UserDTO(authorId, authorFirstName, authorLastName, authorUsername, authorEmailHash, authorAvatarUrl));
+
+	}
+
+	public CaseCommenttInfo(
+			String id, String content, LocalDateTime createdDate,
+			UserDTO author) {
+		super(id, null);
+		this.setContent(content);
+		this.setCreatedDate(createdDate);
+		this.setAuthor(author);
 
 	}
 	

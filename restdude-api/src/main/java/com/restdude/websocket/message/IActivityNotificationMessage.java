@@ -20,6 +20,8 @@
  */
 package com.restdude.websocket.message;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
@@ -34,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         use = JsonTypeInfo.Id.MINIMAL_CLASS,
         include = JsonTypeInfo.As.PROPERTY,
         property = "@class")
-public interface IActivityNotificationMessage<S extends IMessageResource<?>, P extends Enum<P>, O extends IMessageResource<?>> {
+public interface IActivityNotificationMessage<S extends IMessageResource<?>, P extends Serializable, O extends IMessageResource<?>> {
 
     S getSubject();
 

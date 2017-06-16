@@ -20,9 +20,18 @@
  */
 package com.restdude.domain.error.repository;
 
-import com.restdude.domain.cases.repository.CaseCommentNoBeanRepository;
+import com.restdude.domain.error.model.BaseError;
 import com.restdude.domain.error.model.ErrorComment;
 
-public interface ErrorCommentRepository extends CaseCommentNoBeanRepository<ErrorComment> {
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.method.P;
+
+public interface ErrorCommentRepository extends com.restdude.mdd.repository.ModelRepository<ErrorComment,String> {
+
+
+	@Query(value = "select count(c)+1 from  ErrorComment c where c.subject = :#{#unIndexed.subject}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
+	Integer getEntryIndex(@P("unIndexed") @Param("unIndexed") ErrorComment unIndexed);
 
 }
+

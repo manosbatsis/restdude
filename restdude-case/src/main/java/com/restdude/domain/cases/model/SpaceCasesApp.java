@@ -23,7 +23,6 @@ package com.restdude.domain.cases.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
-import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +34,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "context_cases_app")
-public class SpaceCasesApp<C extends AbstractCaseModel> extends SpaceApp {
+public class SpaceCasesApp<C extends AbstractCase> extends SpaceApp {
 
 	public static final String API_PATH_FRAGMENT = "caseApplications";
 	public static final String API_MODEL_DESCRIPTION = "A model representing an case management application of a some context";
@@ -51,7 +50,7 @@ public class SpaceCasesApp<C extends AbstractCaseModel> extends SpaceApp {
 	@Getter @Setter
 	@ApiModelProperty(value = "The cases owned by this business application")
 	@OneToMany(mappedBy="application")
-	@OrderBy("caseIndex ASC")
+	@OrderBy("entryIndex ASC")
 	private List<C> cases;
 
 	public List<C> getCases() {

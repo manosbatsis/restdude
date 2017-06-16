@@ -60,9 +60,9 @@ public class Membership extends AbstractBasicAuditedModel implements IMembership
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(name = "context", nullable = false, updatable = false)
 	@Getter @Setter
-	private Space context;
+	private BaseContext context;
 
 	@NotNull
 	@ManyToOne

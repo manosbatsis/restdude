@@ -69,8 +69,8 @@ public class BaseErrorServiceImpl extends AbstractErrorServiceImpl<BaseError, Ba
     /**
      * {@inheritDoc}
      */
-    public Integer getCaseIndex(BaseError persisted){
-        return this.repository.getCaseIndex(persisted);
+    public Integer getEntryIndex(BaseError persisted){
+        return this.repository.getEntryIndex(persisted);
     }
 
 

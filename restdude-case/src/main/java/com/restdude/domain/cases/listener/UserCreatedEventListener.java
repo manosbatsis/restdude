@@ -23,47 +23,57 @@ package com.restdude.domain.cases.listener;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.service.SpaceService;
-import com.restdude.domain.users.event.UserCreatedEvent;
+import com.restdude.domain.event.EntityCreatedEvent;
 import com.restdude.domain.users.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Creates a "personal" {@link Space} for a newly persisted {@link User}
  */
 @Slf4j
-@Component
-public class UserCreatedEventListener  implements ApplicationListener<UserCreatedEvent> {
+//@Component
+public class UserCreatedEventListener extends AbstractEventListener<User> implements ApplicationListener<EntityCreatedEvent<User>> {
 
-    @Autowired
-    SpaceService spaceService;
+	@Autowired
+	SpaceService spaceService;
 
-    @Override
-    public void onApplicationEvent(UserCreatedEvent event) {
+	/**
+	 * Handle an application event.
 
-        User user = event.getModel();
-        String name = user.getUsername();
+	 * @param event the event to respond to
+	 */
+	@Override
+	public void onApplicationEvent(EntityCreatedEvent<User> event) {
 
-        String title = user.getName();
-        if(StringUtils.isBlank(title)){
-            title = name;
-        }
+		User user = event.getModel();
+		log.debug("onApplicationEvent user: {}", user.getUsername());
+//		log.debug("onApplicationEvent event: {}", event.getSource());
+		String name = user.getUsername();
 
-        String description = user.getDescription();
-        if(StringUtils.isBlank(description)){
-            description = "Space for " + name;
-        }
+		String title = user.getName();
+		if (StringUtils.isBlank(title)) {
+			title = name;
+		}
 
-        Space space = this.spaceService.create(new Space.Builder()
-                .owner(user)
-                .name(name)
-                .title(title)
-                .description(description)
-                .visibility(ContextVisibilityType.CLOSED)
-                .build());
-        log.debug("Created user space: ", space);
-    }
+		String description = user.getDescription();
+		if (StringUtils.isBlank(description)) {
+			description = "Space for " + name;
+		}
+		Space space = new Space.Builder()
+				.owner(user)
+				.name(name)
+				.title(title)
+				.description(description)
+				.visibility(ContextVisibilityType.CLOSED)
+				.build();
+		log.debug("onApplicationEvent creating user space: {}", space);
+		space = this.spaceService.create(space);
+	}
+
 }

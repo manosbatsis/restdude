@@ -22,6 +22,7 @@ package com.restdude.domain.cases.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.cases.IBaseContext;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
@@ -30,13 +31,17 @@ import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.ModelResource;
+import com.restdude.mdd.model.AbstractPersistableHierarchicalModel;
 import com.restdude.mdd.model.AbstractPersistableNamedModel;
 import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -53,7 +58,7 @@ import java.util.Set;
 		apiName = "AbstractContext",
 		apiDescription = "Contexts management")
 @ApiModel(description = BaseContext.API_MODEL_DESCRIPTION)
-public class BaseContext extends AbstractPersistableNamedModel implements IBaseContext<User, Membership, MembershipRequest> {
+public class 	BaseContext extends AbstractPersistableHierarchicalModel<BaseContext> implements IBaseContext<User, Membership, MembershipRequest> {
 
 	public static final String API_PATH_FRAGMENT = "contexts";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a context, such as an organization, team, or process type.";
@@ -115,6 +120,12 @@ public class BaseContext extends AbstractPersistableNamedModel implements IBaseC
 	}
 
 
+	@Formula(" (select count(*) from context_membership where context_membership.context = id) ")
+	@ApiModelProperty(value = "The number of user members")
+	@Getter @Setter
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Integer membershipsCount = 0;
+
 	@OneToMany(mappedBy = "context", orphanRemoval = true)
     @JsonIgnore
 	@Getter @Setter
@@ -127,7 +138,11 @@ public class BaseContext extends AbstractPersistableNamedModel implements IBaseC
 	@ApiModelProperty(value = "The membership requests/invites")
     private List<MembershipRequest> membershipRequests;
 
-
+	@Formula(" (select count(*) from membership_request cmr where cmr.context = id and cmr.status = 'SENT_REQUEST') ")
+	@ApiModelProperty(value = "The number of membership requests pending approval")
+	@Getter @Setter
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Integer pendingMembershipRequestsCount = 0;
 
 	public BaseContext() {
 		super();

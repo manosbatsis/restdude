@@ -56,7 +56,6 @@
         <module>restdude-framework</module>
         <module>restdude-test</module>
         <module>restdude-tests-integration</module>
-        <module>restdude-war-overlay</module>
         <module>restdude-boot</module>
     </modules>
 
@@ -158,6 +157,7 @@
             <id>libs</id>
             <modules>
                 <module>restdude-api</module>
+                <module>restdude-model</module>
                 <module>restdude-hypermedia</module>
                 <module>restdude-resources</module>
                 <module>restdude-util</module>

@@ -20,21 +20,26 @@
  */
 package com.restdude.domain.cases.service.impl;
 
-import com.restdude.domain.cases.model.AbstractCaseCommentModel;
-import com.restdude.domain.cases.model.AbstractCaseModel;
+import com.restdude.domain.cases.model.AbstractCase;
+import com.restdude.domain.cases.model.AbstractCaseComment;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
+import com.restdude.domain.event.EntityCreatedEvent;
+import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+
+import org.springframework.security.access.method.P;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractCaseServiceImpl<T extends AbstractCaseModel<?, ?, ?>, CC extends AbstractCaseCommentModel, R extends AbstractCaseModelRepository<T>>
+public abstract class AbstractCaseServiceImpl<T extends AbstractCase<?, ?, ?>, CC extends AbstractCaseComment, R extends AbstractCaseModelRepository<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R>        {
 
 
@@ -79,7 +84,7 @@ public abstract class AbstractCaseServiceImpl<T extends AbstractCaseModel<?, ?, 
     /**
      * {@inheritDoc}
      */
-    public abstract Integer getCaseIndex(T persisted);
+    public abstract Integer getEntryIndex(T persisted);
 
 
     /**
@@ -95,20 +100,26 @@ public abstract class AbstractCaseServiceImpl<T extends AbstractCaseModel<?, ?, 
      */
     @Override
     @Transactional(readOnly = false)
-    public T create(T resource) {
-        log.debug("create, resource: {}", resource);
+    @ModelDrivenPreAuth
+    public T create(@P("resource") T resource) {
+        Assert.notNull(resource, "Resource can't be null");
+        log.debug("create, principal: {}", this.getPrincipal());
+        log.debug("create resource: {}", resource);
+        resource = this.repository.persist(resource);
 
-        // save case
-        resource = super.create(resource);
-
-        log.debug("create, calling getCaseIndex with: {}", resource);
+        log.debug("create, calling getEntryIndex with: {}", resource);
         log.debug("create, this.repository: {}", this.repository);
-        // TODO: tmp hack, needs to be refactored to some transaction synchronization handler in @PostPersit or whatever
-        Integer caseIndex = this.getCaseIndex(resource);
-        resource.setCaseIndex(caseIndex);
+        // TODO: tmp hack, needs to be refactored to some custom sequence or adapter
+        Integer caseIndex = this.getEntryIndex(resource);
+        resource.setEntryIndex(caseIndex);
         resource.setName(new StringBuffer(resource.getApplicationDTO().getName()).append(INDEX_CHAR).append(caseIndex).toString());
-        resource = this.repository.save(resource);
-        log.debug("create, returning error:: {}", resource);
+        //resource = this.repository.save(resource);
+        log.debug("create, returning: {}", resource);
+
+        log.debug("create applicationEventPublisher: {}", this.applicationEventPublisher);
+        EntityCreatedEvent<T> event = new EntityCreatedEvent<T>(resource);
+        log.debug("create event: {}", event);
+        this.applicationEventPublisher.publishEvent(event);
 
         return resource;
     }

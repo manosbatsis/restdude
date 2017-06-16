@@ -20,6 +20,8 @@
  */
 package com.restdude.domain.friends.service.impl;
 
+import java.util.List;
+
 import com.restdude.domain.friends.model.Friendship;
 import com.restdude.domain.friends.model.FriendshipDTO;
 import com.restdude.domain.friends.model.FriendshipIdentifier;
@@ -31,7 +33,7 @@ import com.restdude.domain.users.model.UserDTO;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.exception.http.BadRequestException;
 import com.restdude.websocket.Destinations;
-import com.restdude.websocket.message.ActivityNotificationMessage;
+import com.restdude.websocket.message.StompActivityNotificationMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +122,10 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
         this.saveRelationship(resource);
     }
 
+    @Override
+    public List<String> findAllStompOnlineFriendUsernames(String userId){
+        return this.repository.findAllStompOnlineFriendUsernames(userId);
+    }
 
     protected void validateSender(Friendship resource) {
 
@@ -210,7 +216,7 @@ public class FriendshipServiceImpl extends AbstractPersistableModelServiceImpl<F
     }
 
     @Override
-    public void sendStompActivityMessageToOnlineFriends(ActivityNotificationMessage msg) {
+    public void sendStompActivityMessageToOnlineFriends(StompActivityNotificationMessage msg) {
 
         // get online friends
         Iterable<String> useernames = this.repository.findAllStompOnlineFriendUsernames(this.getPrincipal().getId());

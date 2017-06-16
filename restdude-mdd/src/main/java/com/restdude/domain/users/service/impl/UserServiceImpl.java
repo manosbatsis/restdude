@@ -34,7 +34,7 @@ import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.details.contact.service.ContactDetailsService;
 import com.restdude.domain.details.contact.service.EmailDetailService;
-import com.restdude.domain.users.event.UserCreatedEvent;
+import com.restdude.domain.event.EntityCreatedEvent;
 import com.restdude.domain.users.model.*;
 import com.restdude.domain.users.repository.RoleRepository;
 import com.restdude.domain.users.repository.UserRegistrationCodeRepository;
@@ -107,12 +107,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
     private PasswordEncoder passwordEncoder;
     private Validator validator;
 
-    private ApplicationEventPublisher applicationEventPublisher;
-
-    @Autowired
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
 
     @Autowired
     public void setValidator(Validator validator) {
@@ -308,8 +302,6 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         this.repository.flush();
 
         resource = initRoles(resource);
-
-        applicationEventPublisher.publishEvent(new UserCreatedEvent(resource));
 
         return resource;
     }

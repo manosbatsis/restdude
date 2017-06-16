@@ -20,12 +20,12 @@
  */
 package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.AbstractCaseModel;
+import com.restdude.domain.cases.model.AbstractCase;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface AbstractCaseModelRepository<T extends AbstractCaseModel<?,?,?>> extends ModelRepository<T, String> {
+public interface AbstractCaseModelRepository<T extends AbstractCase<?,?,?>> extends ModelRepository<T, String> {
 
 
 

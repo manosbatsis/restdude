@@ -21,11 +21,16 @@
 package com.restdude.domain.error.init;
 
 import com.restdude.domain.cases.init.SpaceDataLoader;
+import com.restdude.domain.cases.service.SpaceService;
 import com.restdude.domain.error.service.BaseErrorService;
 import com.restdude.domain.error.service.ClientErrorService;
 import com.restdude.domain.error.service.SystemErrorService;
+import com.restdude.domain.users.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,19 +45,19 @@ import javax.inject.Named;
 @Named("errorDataLoader")
 public class ErrorDataLoader {
 
-    private SpaceDataLoader spaceDataLoader;
-    private BaseErrorService baseErrorService;
+    private UserService userService;
+    private SpaceService spaceContextService;
     private SystemErrorService systemErrorService;
     private ClientErrorService clientErrorService;
 
     @Autowired
-    public void setSpaceDataLoader(SpaceDataLoader spaceDataLoader) {
-        this.spaceDataLoader = spaceDataLoader;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Autowired
-    public void setBaseErrorService(BaseErrorService baseErrorService) {
-        this.baseErrorService = baseErrorService;
+    public void setSpaceContextService(SpaceService spaceContextService) {
+        this.spaceContextService = spaceContextService;
     }
 
     @Autowired
@@ -65,11 +70,19 @@ public class ErrorDataLoader {
         this.clientErrorService = clientErrorService;
     }
 
-    @PostConstruct
+    /**
+     * Handle an application event.
+
+     * @param event the event to respond to
+     */
     @Transactional(readOnly = false)
-    public void run() {
-        log.debug("run");
-        baseErrorService.initData();
+    @EventListener
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        log.warn("onApplicationEvent, event: {}", event);
+
+        userService.initData();
+        spaceContextService.initData();
+
         systemErrorService.initData();
         clientErrorService.initData();
     }

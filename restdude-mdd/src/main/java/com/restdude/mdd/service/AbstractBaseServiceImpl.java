@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,6 +54,12 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
     protected RepositoryRegistryService repositoryRegistryService;
     protected FilePersistenceService filePersistenceService;
     protected SimpMessageSendingOperations messagingTemplate;
+    protected ApplicationEventPublisher applicationEventPublisher;
+
+    @Autowired
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     @Autowired
     public void setConversionService(ConversionService conversionService) {
@@ -64,6 +71,7 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
         return this.conversionService;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     @Qualifier(FilePersistenceService.BEAN_ID)
     public void setFilePersistenceService(FilePersistenceService filePersistenceService) {
@@ -124,7 +132,6 @@ public abstract class AbstractBaseServiceImpl implements BaseService{
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_USER')")
     public void sendStompActivityMessage(IActivityNotificationMessage msg, Iterable<String> useernames) {
         LOGGER.debug("sendStompActivityMessage, useernames: {}", useernames);
         for(String useername : useernames){

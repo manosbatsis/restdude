@@ -18,15 +18,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+package com.restdude.domain.cases.service;
 
-import com.restdude.domain.cases.model.AbstractCaseCommentModel;
-import com.restdude.mdd.repository.ModelRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import java.util.Set;
 
-@NoRepositoryBean
-public interface CaseCommentNoBeanRepository<T extends AbstractCaseCommentModel<?, ?>> extends ModelRepository<T, String> {
+import com.restdude.domain.cases.model.ActivityLog;
+import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.users.model.User;
+import com.restdude.mdd.service.PersistableModelService;
 
 
+public interface ActivityLogService extends PersistableModelService<ActivityLog, String> {
 
+	String BEAN_NAME = "activityLogService";
+	
 }

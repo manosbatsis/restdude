@@ -22,6 +22,7 @@ package com.restdude.domain.cases.repository;
 
 import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.MembershipRequest;
+import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.ModelRepository;
 import org.springframework.data.jpa.repository.Query;

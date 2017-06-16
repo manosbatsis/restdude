@@ -40,7 +40,7 @@ public interface SystemErrorRepository extends AbstractCaseModelRepository<Syste
     CaseWorkflow getWorkflow();
 
     @Query(value = "select count(c)+1 from  BaseError c where c.application = :#{#unIndexed.application}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
-    Integer getCaseIndex( @P("unIndexed")  @Param("unIndexed") SystemError unIndexed);
+    Integer getEntryIndex( @P("unIndexed")  @Param("unIndexed") SystemError unIndexed);
 
 
     String SELECT_NEW_ERROR_COMMENT_INFOS = "select new com.restdude.domain.cases.model.dto.CaseCommenttInfo";

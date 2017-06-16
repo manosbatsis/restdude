@@ -18,22 +18,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.users.event;
+package com.restdude.domain.cases.model.enums;
 
-import com.restdude.domain.users.model.User;
-import lombok.Getter;
-import org.springframework.context.ApplicationEvent;
+import io.swagger.annotations.ApiModel;
 
-/**
- * Fired when a new {@link User} instance has been persisted
- */
-public class UserCreatedEvent extends ApplicationEvent {
+@ApiModel
+public enum ActivityLogObjectType {
 
-    @Getter
-    private User model;
+	SPACE(1), APP(2), CASE(3), CASE_COMMENT(4), MEMBERSHIP(5), MEMBERSHIP_REQUEST(6);
+	private final int value;
 
-    public UserCreatedEvent(User source) {
-        super(source);
-        this.model = source;
-    }
+	private ActivityLogObjectType(int value) {
+		this.value = value;
+	}
+
+	public int getValue() {
+		return value;
+	}
 }

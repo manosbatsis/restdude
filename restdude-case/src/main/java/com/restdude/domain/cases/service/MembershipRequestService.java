@@ -22,6 +22,7 @@ package com.restdude.domain.cases.service;
 
 import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.MembershipRequest;
+import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.SpaceInvitations;
 import com.restdude.domain.cases.model.dto.SpaceInvitationsResult;
 import com.restdude.domain.users.model.User;
@@ -48,6 +49,6 @@ public interface MembershipRequestService extends PersistableModelService<Member
 	/**
 	 * Check if an entry already exists for the given BusinessContext and User
 	 */
-	public Boolean exists(BaseContext context, User user);
+	public Boolean exists(Space context, User user);
 
 }

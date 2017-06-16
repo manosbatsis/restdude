@@ -26,7 +26,7 @@ import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
-import com.restdude.domain.cases.repository.ContextRepository;
+import com.restdude.domain.cases.repository.ContextNpRepositoryBean;
 import com.restdude.domain.cases.service.ContextService;
 import com.restdude.domain.cases.service.MembershipService;
 import com.restdude.domain.friends.repository.FriendshipRepository;
@@ -36,6 +36,8 @@ import com.restdude.util.exception.http.ForbiddenException;
 import com.restdude.util.exception.http.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +50,7 @@ import java.util.Set;
 
 
 @Slf4j
-public abstract class AbstractContextServiceImpl<T extends Space, R extends ContextRepository<T>>
+public abstract class AbstractContextServiceImpl<T extends Space, R extends ContextNpRepositoryBean<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R> implements ContextService<T> {
 
     protected MembershipService membershipService;
@@ -75,6 +77,8 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
                 resource.setOwner(new User(ud.getId()));
             }
         }
+
+        log.debug("create resource: {}", resource);
         // create the context
         resource = super.create(resource);
 
