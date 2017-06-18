@@ -137,7 +137,7 @@ public class AbstractPersistableModelServiceImpl<T extends PersistableModel<PK>,
         }
 
         // init data
-        log.debug("initData, was anonymous: {}, service domain type: {}", wasAnonymous, this.getDomainClass());
+        log.debug("initData, was anonymous: {}, service domain type: {}", wasAnonymous, this.getDomainClass().getSimpleName());
         log.debug("initData > initDataOverride with user: {}", systemUser);
         this.initDataOverride(systemUser);
 

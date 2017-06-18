@@ -23,11 +23,13 @@ package com.restdude.domain.cases.listener;
 import java.util.Set;
 
 import com.restdude.domain.cases.model.AbstractCase;
+import com.restdude.domain.cases.model.AbstractCaseComment;
 import com.restdude.domain.cases.model.ActivityLog;
 import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
+import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.cases.model.dto.CaseInfo;
 import com.restdude.domain.cases.model.enums.CasesActivity;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
@@ -55,8 +57,7 @@ import org.springframework.stereotype.Component;
  * Created by manos on 16/6/2017.
  */
 @Slf4j
-@Component
-public class EventsHandler {
+public class AbstractEntityEventsHandler {
 
 
 	protected SpaceService spaceService;
@@ -89,6 +90,9 @@ public class EventsHandler {
 	public void setSpaceService(SpaceService spaceService) {
 		this.spaceService = spaceService;
 	}
+
+
+
 
 	@EventListener
 	public void onUserCreated(EntityCreatedEvent<User> event) {
@@ -140,10 +144,35 @@ public class EventsHandler {
 		AbstractCase model = event.getModel();
 		User user = model.getCreatedBy();
 		BaseContext context = model.getApplication();
+		Enum predicate = CasesActivity.CREATED;
+		MessageResource objectMessageResource = CaseInfo.from(model);
+
+		createLog(model, user, context, predicate, objectMessageResource);
+
+	}
+
+	@EventListener
+	public void onCaseUpdated(EntityCreatedEvent<AbstractCase> event) {
+
+		AbstractCase model = event.getModel();
+		User user = model.getCreatedBy();
+		BaseContext context = model.getApplication();
 		Enum predicate = CasesActivity.UPDATED;
 		MessageResource objectMessageResource = CaseInfo.from(model);
 
 		createLog(model, user, context, predicate, objectMessageResource);
+
+	}
+
+	@EventListener
+	public void onCaseCommentCreated(EntityCreatedEvent<AbstractCaseComment> event) {
+
+		AbstractCaseComment model = event.getModel();
+		User user = model.getCreatedBy();
+		BaseContext context = model.getSubject().getApplication();
+		Enum predicate = CasesActivity.COMMENTED;
+		MessageResource objectMessageResource = CaseCommenttInfo.from(model);
+
 
 	}
 

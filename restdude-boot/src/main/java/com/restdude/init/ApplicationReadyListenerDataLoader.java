@@ -18,32 +18,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.error.init;
+package com.restdude.init;
 
-import com.restdude.domain.cases.init.SpaceDataLoader;
+import javax.inject.Named;
+
 import com.restdude.domain.cases.service.SpaceService;
-import com.restdude.domain.error.service.BaseErrorService;
 import com.restdude.domain.error.service.ClientErrorService;
 import com.restdude.domain.error.service.SystemErrorService;
 import com.restdude.domain.users.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
 
 /**
  * Initial data
  */
 @Slf4j
 @Component
-@Named("errorDataLoader")
-public class ErrorDataLoader {
+public class ApplicationReadyListenerDataLoader {
 
     private UserService userService;
     private SpaceService spaceContextService;
@@ -77,6 +74,7 @@ public class ErrorDataLoader {
      */
     @Transactional(readOnly = false)
     @EventListener
+    @Order(10)
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.warn("onApplicationEvent, event: {}", event);
 

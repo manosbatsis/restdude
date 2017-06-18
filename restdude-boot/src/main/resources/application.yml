@@ -70,9 +70,11 @@ logging:
   level:
     root: WARN
     com.yahoo.elide.core: WARN
-    org.springframework.security: debug
+    org.springframework.security: WARN
     springfox.documentation.schema.property.CachingModelPropertiesProvider: ERROR
-    com.restdude.domain.cases: debug
+    com.restdude:
+      init: debug
+      mdd.service.AbstractPersistableModelServiceImpl:  debug
 
 #      test: debug
 #      mdd: WARN
