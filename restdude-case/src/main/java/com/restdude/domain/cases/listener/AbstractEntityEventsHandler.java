@@ -200,10 +200,6 @@ public class AbstractEntityEventsHandler {
 				.subject(user)
 				.predicate(predicate.name())
 				.object(model).build());
-		// handle base case subclasses
-		if(Objects.nonNull(model) && BaseCase.class.isAssignableFrom(model.getClass())){
-			activityLog.setDiscriminator("3");
-		}
 
 		log.debug("createLog: {}", activityLog);
 		activityLog = this.activityLogService.create(activityLog);
