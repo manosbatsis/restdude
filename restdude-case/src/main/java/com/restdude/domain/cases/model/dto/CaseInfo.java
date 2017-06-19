@@ -23,7 +23,7 @@ package com.restdude.domain.cases.model.dto;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.domain.cases.model.AbstractCase;
+import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.websocket.message.MessageResource;
 import io.swagger.annotations.ApiModel;
@@ -46,7 +46,7 @@ public class CaseInfo extends MessageResource<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CaseInfo.class);
 
 
-	public static CaseInfo from(AbstractCase resource) {
+	public static CaseInfo from(BaseCase resource) {
 		return resource != null ? new CaseInfo(resource) : null;
 	}
 
@@ -66,7 +66,7 @@ public class CaseInfo extends MessageResource<String> {
 	}
 
 
-	public CaseInfo(AbstractCase resource) {
+	public CaseInfo(BaseCase resource) {
 		this(resource.getId(), resource.getName(), resource.getTitle(), resource.getDetail(), resource.getCreatedDate(), UserDTO.fromUser(resource.getCreatedBy()));
 	}
 

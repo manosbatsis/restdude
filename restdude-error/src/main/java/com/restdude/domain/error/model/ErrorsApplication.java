@@ -42,7 +42,7 @@ import javax.persistence.Table;
 @ModelResource(pathFragment = ErrorsApplication.API_PATH_FRAGMENT,
 		apiName = "ErrorsApplication",
 		apiDescription = "ErrorsApplication management")
-public class ErrorsApplication extends SpaceCasesApp<BaseError> {
+public class ErrorsApplication extends SpaceCasesApp {
 
 	public static final String API_PATH_FRAGMENT = "errorApplications";
 	public static final String API_MODEL_DESCRIPTION = "A model representing an Errors Management process";

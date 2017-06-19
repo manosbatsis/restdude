@@ -27,6 +27,7 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 //#import org.javers.spring.data.JaversSpringDataAuditable;
@@ -85,6 +86,6 @@ public interface UserRepository extends ModelRepository<User, String> {
 
 	@Query("UPDATE User AS u SET u.credentials.resetPasswordTokenCreated = NULL, u.credentials.resetPasswordToken = NULL "
 			+ "WHERE u.credentials.resetPasswordTokenCreated IS NOT NULL and u.credentials.resetPasswordTokenCreated  < ?1")
-	public void expireResetPasswordTokens(Date yesterday);
+	public void expireResetPasswordTokens(LocalDateTime yesterday);
 	
 }

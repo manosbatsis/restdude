@@ -21,7 +21,6 @@
 package com.restdude.domain.cases.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.PersistableModel;
 import com.restdude.domain.cases.ICaseCommentModel;
 import com.restdude.mdd.model.AbstractPersistableNamedModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,7 +49,7 @@ import java.util.UUID;
 @Slf4j
 @Data
 @MappedSuperclass
-public abstract class AbstractCaseComment<T extends AbstractCase, C extends AbstractCaseComment>
+public abstract class AbstractCaseComment<T extends BaseCase, C extends AbstractCaseComment>
         extends AbstractPersistableNamedModel implements ICaseCommentModel<T, C> {
 
 

@@ -388,7 +388,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
     public void expireConfirmationOrPasswordResetTokens() {
         // get a hibernate session suitable for read-only access to large datasets
         StatelessSession session = ((Session) this.repository.getEntityManager().getDelegate()).getSessionFactory().openStatelessSession();
-        Date yesterday = DateUtils.addDays(new Date(), -1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 
         // send email notifications for account confirmation tokens that expired
         org.hibernate.Query query = session.createQuery(UserRepository.SELECT_USERDTO + " FROM User u "

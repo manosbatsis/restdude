@@ -55,7 +55,6 @@ import java.util.Set;
 @Table(name = "context_base")
 @Inheritance(strategy = InheritanceType.JOINED)
 @ModelResource(pathFragment = BaseContext.API_PATH_FRAGMENT,
-		apiName = "AbstractContext",
 		apiDescription = "Contexts management")
 @ApiModel(description = BaseContext.API_MODEL_DESCRIPTION)
 public class 	BaseContext extends AbstractPersistableHierarchicalModel<BaseContext> implements IBaseContext<User, Membership, MembershipRequest> {

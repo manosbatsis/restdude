@@ -20,9 +20,10 @@
  */
 package com.restdude.domain.cases.listener;
 
+import java.util.Objects;
 import java.util.Set;
 
-import com.restdude.domain.cases.model.AbstractCase;
+import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.cases.model.AbstractCaseComment;
 import com.restdude.domain.cases.model.ActivityLog;
 import com.restdude.domain.cases.model.BaseContext;
@@ -51,7 +52,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by manos on 16/6/2017.
@@ -95,7 +95,11 @@ public class AbstractEntityEventsHandler {
 
 
 	@EventListener
-	public void onUserCreated(EntityCreatedEvent<User> event) {
+	public final void onUserCreatedListener(EntityCreatedEvent<User> event) {
+		this.onUserCreated(event);
+	}
+
+	protected void onUserCreated(EntityCreatedEvent<User> event) {
 
 		User user = event.getModel();
 		log.debug("onUserCreated user: {}", user.getUsername());
@@ -124,6 +128,10 @@ public class AbstractEntityEventsHandler {
 
 
 	@EventListener
+	public final void onMembershipCreatedListener(EntityCreatedEvent<Membership> event) {
+		this.onMembershipCreated(event);
+	}
+
 	public void onMembershipCreated(EntityCreatedEvent<Membership> event) {
 
 		Membership model = event.getModel();
@@ -138,10 +146,15 @@ public class AbstractEntityEventsHandler {
 	}
 
 
-	@EventListener
-	public void onCaseCreated(EntityUpdatedEvent<AbstractCase> event) {
 
-		AbstractCase model = event.getModel();
+	@EventListener
+	public final void onCaseCreatedListener(EntityCreatedEvent<BaseCase> event) {
+		this.onCaseCreated(event);
+	}
+
+	public void onCaseCreated(EntityCreatedEvent<BaseCase> event) {
+
+		BaseCase model = event.getModel();
 		User user = model.getCreatedBy();
 		BaseContext context = model.getApplication();
 		Enum predicate = CasesActivity.CREATED;
@@ -152,9 +165,13 @@ public class AbstractEntityEventsHandler {
 	}
 
 	@EventListener
-	public void onCaseUpdated(EntityCreatedEvent<AbstractCase> event) {
+	public final void onCaseUpdatedListener(EntityUpdatedEvent<BaseCase> event) {
+		this.onCaseUpdated(event);
+	}
 
-		AbstractCase model = event.getModel();
+	public void onCaseUpdated(EntityUpdatedEvent<BaseCase> event) {
+
+		BaseCase model = event.getModel();
 		User user = model.getCreatedBy();
 		BaseContext context = model.getApplication();
 		Enum predicate = CasesActivity.UPDATED;
@@ -165,14 +182,13 @@ public class AbstractEntityEventsHandler {
 	}
 
 	@EventListener
-	public void onCaseCommentCreated(EntityCreatedEvent<AbstractCaseComment> event) {
+	public <C extends AbstractCaseComment> void onCaseCommentCreated(EntityCreatedEvent<C> event) {
 
 		AbstractCaseComment model = event.getModel();
 		User user = model.getCreatedBy();
 		BaseContext context = model.getSubject().getApplication();
 		Enum predicate = CasesActivity.COMMENTED;
 		MessageResource objectMessageResource = CaseCommenttInfo.from(model);
-
 
 	}
 
@@ -184,6 +200,11 @@ public class AbstractEntityEventsHandler {
 				.subject(user)
 				.predicate(predicate.name())
 				.object(model).build());
+		// handle base case subclasses
+		if(Objects.nonNull(model) && BaseCase.class.isAssignableFrom(model.getClass())){
+			activityLog.setDiscriminator("3");
+		}
+
 		log.debug("createLog: {}", activityLog);
 		activityLog = this.activityLogService.create(activityLog);
 

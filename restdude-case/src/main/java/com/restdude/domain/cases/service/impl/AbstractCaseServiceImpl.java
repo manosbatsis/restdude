@@ -20,7 +20,7 @@
  */
 package com.restdude.domain.cases.service.impl;
 
-import com.restdude.domain.cases.model.AbstractCase;
+import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.cases.model.AbstractCaseComment;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
@@ -39,8 +39,8 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractCaseServiceImpl<T extends AbstractCase<?, ?, ?>, CC extends AbstractCaseComment, R extends AbstractCaseModelRepository<T>>
-        extends AbstractPersistableModelServiceImpl<T, String, R>        {
+public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC extends AbstractCaseComment, R extends AbstractCaseModelRepository<T>>
+        extends AbstractPersistableModelServiceImpl<T, String, R> {
 
 
     public abstract CaseWorkflow getWorkflow();

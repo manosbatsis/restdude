@@ -20,12 +20,12 @@
  */
 package com.restdude.domain.error.service;
 
-import com.restdude.domain.cases.service.CaseService;
+import com.restdude.domain.cases.service.AbstractCaseService;
 import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.model.SystemError;
 
 
-public interface SystemErrorService extends CaseService<SystemError, ErrorComment> {
+public interface SystemErrorService extends AbstractCaseService<SystemError, ErrorComment> {
 
     String BEAN_ID = "systemErrorService";
 

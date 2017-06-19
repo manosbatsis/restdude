@@ -18,15 +18,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+@AnyMetaDef(name = "SpaceUserActivityObjectMetaDef", metaType = "string", idType = "string",
+		metaValues = {
+				@MetaValue(value = "1", targetEntity = Space.class),
+				@MetaValue(value = "2", targetEntity = SpaceApp.class),
+				@MetaValue(value = "3", targetEntity = BaseCase.class),
+				@MetaValue(value = "4", targetEntity = AbstractCaseComment.class),
+				@MetaValue(value = "5", targetEntity = Membership.class),
+				@MetaValue(value = "6", targetEntity = MembershipRequest.class)
+		}
+)
+package com.restdude.domain.cases.model;
 
-import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.mdd.repository.ModelRepository;
-import org.springframework.data.repository.NoRepositoryBean;
-
-@NoRepositoryBean
-public interface AbstractCaseModelRepository<T extends BaseCase<?,?>> extends ModelRepository<T, String> {
-
-
-
-}
+import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.annotations.MetaValue;

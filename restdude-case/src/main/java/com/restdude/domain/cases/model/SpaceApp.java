@@ -44,7 +44,7 @@ import java.util.Set;
 		apiName = "ApplicationContext",
 		apiDescription = "Space applications")
 @ApiModel(description = SpaceApp.API_MODEL_DESCRIPTION)
-public class 	SpaceApp extends BaseContext {
+public class SpaceApp extends BaseContext {
 
 
 	public static final String API_PATH_FRAGMENT = "spaceApps";

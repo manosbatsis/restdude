@@ -34,10 +34,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.PersistableModel;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.CurrentPrincipal;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.model.AbstractPersistableModel;
 import com.restdude.mdd.model.AbstractPersistableNamedModel;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.websocket.message.IActivityNotificationMessage;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,7 +67,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "space_user_activity")
 @EntityListeners(AuditingEntityListener.class)
+@ModelResource(
+		pathFragment = ActivityLog.API_PATH_FRAGMENT,
+		apiName = "Activity Logs",
+		apiDescription = ActivityLog.API_MODEL_DESCRIPTION)
+
+@ApiModel(description = ActivityLog.API_MODEL_DESCRIPTION)
 public class ActivityLog extends AbstractSystemUuidPersistableModel {
+
+	public static final String API_PATH_FRAGMENT = "activityLogs";
+	public static final String API_MODEL_DESCRIPTION = "User space activity feeds";
 
 	@CreatedDate
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -79,6 +90,12 @@ public class ActivityLog extends AbstractSystemUuidPersistableModel {
 	@ApiModelProperty(readOnly = true)
 	@Column(nullable = false, updatable = false)
 	private String predicate;
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@ApiModelProperty(readOnly = true)
+	@Column(insertable = false, updatable = false)
+	@Getter @Setter
+	private String discriminator;
 
 	@CurrentPrincipal
 	@NotNull

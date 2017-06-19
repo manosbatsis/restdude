@@ -34,7 +34,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "context_cases_app")
-public class SpaceCasesApp<C extends AbstractCase> extends SpaceApp {
+public class SpaceCasesApp extends SpaceApp {
 
 	public static final String API_PATH_FRAGMENT = "caseApplications";
 	public static final String API_MODEL_DESCRIPTION = "A model representing an case management application of a some context";
@@ -51,21 +51,13 @@ public class SpaceCasesApp<C extends AbstractCase> extends SpaceApp {
 	@ApiModelProperty(value = "The cases owned by this business application")
 	@OneToMany(mappedBy="application")
 	@OrderBy("entryIndex ASC")
-	private List<C> cases;
-
-	public List<C> getCases() {
-		return cases;
-	}
-
-	public void setCases(List<C> cases) {
-		this.cases = cases;
-	}
+	private List<BaseCase> cases;
 
 	public SpaceCasesApp(){
 	}
 
 	public SpaceCasesApp(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner,
-						 Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow, List<C> cases) {
+						 Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow, List<BaseCase> cases) {
 		super(name, title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests);
 		this.workflow = workflow;
 		this.cases = cases;

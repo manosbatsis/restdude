@@ -20,20 +20,12 @@
  */
 package com.restdude.domain.cases.service.impl;
 
-import java.util.List;
-
 import com.restdude.domain.PersistableModel;
-import com.restdude.domain.cases.model.AbstractCase;
 import com.restdude.domain.cases.model.AbstractCaseComment;
-import com.restdude.domain.cases.model.CaseStatus;
-import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
-import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
 import com.restdude.domain.event.EntityCreatedEvent;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;

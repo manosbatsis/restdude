@@ -22,14 +22,14 @@ package com.restdude.domain.cases.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.CommentableModel;
-import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import com.restdude.domain.cases.ICaseModel;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.dto.CaseStatustInfo;
 import com.restdude.domain.users.model.User;
+import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.model.AbstractPersistableNamedModel;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,21 +43,19 @@ import java.util.List;
 import java.util.UUID;
 
 
-/**
- * Base topic impl
- *
-
 @Slf4j
 @Entity
 @Table(name = "case_base")
 @Inheritance(strategy = InheritanceType.JOINED)
-*/
-
-@Slf4j
-@MappedSuperclass
-public  class AbstractCase<A extends SpaceCasesApp<C>, C extends AbstractCase<A, C, CC>, CC extends AbstractCaseComment>
+@ModelResource(pathFragment = BaseCase.API_PATH_FRAGMENT,
+        apiDescription = "Cases management")
+@ApiModel(description = BaseCase.API_MODEL_DESCRIPTION)
+public  class BaseCase<C extends BaseCase<C, CC>, CC extends AbstractCaseComment>
         extends AbstractPersistableNamedModel
-        implements ICaseModel<A, CC> {
+        implements ICaseModel<SpaceCasesApp, CC> {
+
+    public static final String API_PATH_FRAGMENT = "cases";
+    public static final String API_MODEL_DESCRIPTION = "A model representing a case, such as an issue, ticket, note etc.";
 
 
     @NotNull
@@ -86,7 +84,7 @@ public  class AbstractCase<A extends SpaceCasesApp<C>, C extends AbstractCase<A,
     @ApiModelProperty(value = "The application this case belongs to")
     @ManyToOne(optional = false)
     @JoinColumn(name = "application", nullable=false)
-    private A application;
+    private SpaceCasesApp application;
 
     @JsonIgnore
     @OneToMany(mappedBy="subject", fetch= FetchType.LAZY)
@@ -124,26 +122,26 @@ public  class AbstractCase<A extends SpaceCasesApp<C>, C extends AbstractCase<A,
 
     @JsonIgnore
     @Override
-    public A getApplication() {
+    public SpaceCasesApp getApplication() {
         return application;
     }
 
     @Override
-    public void setApplication(A application) {
+    public void setApplication(SpaceCasesApp application) {
         this.application = application;
     }
 
 
 
 
-    public AbstractCase() {
+    public BaseCase() {
     }
 
-    public AbstractCase(String title) {
+    public BaseCase(String title) {
         this.title = title;
     }
 
-    public AbstractCase(String title, String detail) {
+    public BaseCase(String title, String detail) {
         this.title = title;
         this.detail = detail;
     }

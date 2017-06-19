@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
-import com.restdude.domain.cases.model.AbstractCase;
+import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.error.ErrorUtil;
 import com.restdude.mdd.annotation.model.CurrentPrincipalField;
 import com.restdude.mdd.annotation.model.ModelResource;
@@ -56,7 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 @PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 
 @Slf4j
-public class BaseError extends AbstractCase<ErrorsApplication, BaseError, ErrorComment> implements  PersistableError {
+public class BaseError extends BaseCase<BaseError, ErrorComment> implements  PersistableError {
     public static final String API_PATH = "allErrors";
 
 

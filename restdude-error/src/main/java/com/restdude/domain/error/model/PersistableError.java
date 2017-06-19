@@ -23,9 +23,10 @@ package com.restdude.domain.error.model;
 import com.restdude.domain.ErrorModel;
 import com.restdude.domain.cases.ICaseModel;
 import com.restdude.domain.cases.model.CaseStatus;
+import com.restdude.domain.cases.model.SpaceCasesApp;
 import com.restdude.domain.users.model.User;
 
-public interface PersistableError extends ErrorModel<String>, ICaseModel<ErrorsApplication, ErrorComment> {
+public interface PersistableError extends ErrorModel<String>, ICaseModel<SpaceCasesApp, ErrorComment> {
 
 
     CaseStatus getStatus();
