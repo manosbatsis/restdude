@@ -57,22 +57,12 @@ import java.util.Set;
 @ModelResource(pathFragment = BaseContext.API_PATH_FRAGMENT,
 		apiDescription = "Contexts management")
 @ApiModel(description = BaseContext.API_MODEL_DESCRIPTION)
-public class 	BaseContext extends AbstractPersistableHierarchicalModel<BaseContext> implements IBaseContext<User, Membership, MembershipRequest> {
+public class BaseContext extends AbstractPersistableResourceModel implements IBaseContext<User, Membership, MembershipRequest> {
 
 	public static final String API_PATH_FRAGMENT = "contexts";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a context, such as an organization, team, or process type.";
 
-	@NotNull
-	@Column(name = "title", nullable = false, unique = true)
-	@Getter @Setter
-	@ApiModelProperty(value = "Short description, up to a handful of words", required = true)
-	private String title;
 
-	@NotNull
-	@Column(name = "description", length = 500, nullable = false)
-	@Getter @Setter
-	@ApiModelProperty(value = "Regular Description text, i.e. a paragraph", required = true)
-	private String description;
 
 	@FilePersistence(maxWidth = 130, maxHeight = 130)
 	@FilePersistencePreview(maxWidth = 100, maxHeight = 100)
@@ -149,8 +139,8 @@ public class 	BaseContext extends AbstractPersistableHierarchicalModel<BaseConte
 
 	public BaseContext(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
 		super(name);
-		this.title = title;
-		this.description = description;
+		this.setTitle(title);
+		this.setDescription(description);
 		this.avatarUrl = avatarUrl;
 		this.bannerUrl = bannerUrl;
 		this.visibility = visibility;

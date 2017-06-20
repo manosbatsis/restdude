@@ -47,6 +47,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>net._01001111</groupId>
+            <artifactId>jlorem</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.restdude</groupId>
             <artifactId>restdude-api</artifactId>
             <version>${project.version}</version>

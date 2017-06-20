@@ -99,6 +99,10 @@ public class AbstractEntityEventsHandler {
 		this.onUserCreated(event);
 	}
 
+	/**
+	 * Creates a space for the new user
+	 * @param event
+	 */
 	protected void onUserCreated(EntityCreatedEvent<User> event) {
 
 		User user = event.getModel();
@@ -115,6 +119,7 @@ public class AbstractEntityEventsHandler {
 		if (StringUtils.isBlank(description)) {
 			description = "Space for " + name;
 		}
+
 		Space space = new Space.Builder()
 				.owner(user)
 				.name(name)
@@ -141,7 +146,7 @@ public class AbstractEntityEventsHandler {
 		Enum predicate = SpaceActivity.BECAME_MEMBER_OF;
 		MessageResource objectMessageResource = BaseContextInfo.from(context);
 
-		createLog(context, user, context, predicate, objectMessageResource);
+		createLog(model	, user, context, predicate, objectMessageResource);
 
 	}
 
