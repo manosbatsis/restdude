@@ -37,12 +37,6 @@ public class ErrorComment extends BaseCaseComment<BaseError, ErrorComment> {
         super();
     }
 
-    public ErrorComment(BaseError parent, String content) {
-        super();
-        this.setParent(parent);
-        this.setDetail(content);
-    }
-
     public ErrorComment(String content, BaseError parent) {
         super(content, parent);
     }

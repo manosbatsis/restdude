@@ -20,9 +20,12 @@
  */
 package com.restdude.domain.error.service.impl;
 
-import com.restdude.domain.cases.model.CaseStatus;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.inject.Named;
+
 import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.model.ErrorLog;
@@ -34,11 +37,6 @@ import com.restdude.domain.users.model.User;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net._01001111.text.LoremIpsum;
-
-import javax.inject.Named;
-import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
 
 @Slf4j
 @Named(SystemErrorService.BEAN_ID)
@@ -105,7 +103,7 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
                 error.setErrorLog(st);
                 error = this.create(error);
                 for(int j = 0; j < 4; j++){
-                    this.errorCommentService.create(new ErrorComment(error, jlorem.paragraphs(2)));
+                    this.errorCommentService.create(new ErrorComment(jlorem.paragraphs(2), error));
                 }
             }
 
