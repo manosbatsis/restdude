@@ -22,9 +22,9 @@ package com.restdude.domain.cases.listener;
 
 import java.util.Set;
 
+import com.restdude.domain.cases.model.ActivityLog;
 import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.cases.model.BaseCaseComment;
-import com.restdude.domain.cases.model.ActivityLog;
 import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
@@ -187,6 +187,9 @@ public class AbstractEntityEventsHandler {
 	}
 
 	@EventListener
+	public void onCaseCommentCreatedListener(EntityCreatedEvent<BaseCaseComment> event) {
+		this.onCaseCommentCreated(event);
+	}
 	public void onCaseCommentCreated(EntityCreatedEvent<BaseCaseComment> event) {
 
 		BaseCaseComment model = event.getModel();
