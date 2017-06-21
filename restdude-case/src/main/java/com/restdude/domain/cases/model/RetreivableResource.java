@@ -25,14 +25,11 @@ import static com.restdude.domain.CommentableModel.MAX_TITLE_LENGTH;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.model.AbstractPersistableHierarchicalModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -81,11 +78,11 @@ public class RetreivableResource<P extends RetreivableResource, T extends Retrei
 		}
 	}
 
-	public T getParentCasted(){
-		return (T) this.getParent();
+	public P getParentCasted(){
+		return (P) this.getParent();
 	}
 
-	public P getSameAsCasted(){
-		return (P) this.getSameAs();
+	public T getSameAsCasted(){
+		return (T) this.getSameAs();
 	}
 }
