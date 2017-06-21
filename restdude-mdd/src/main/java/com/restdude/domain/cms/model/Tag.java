@@ -31,7 +31,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "content_tag")
-public class Tag extends AbstractPersistableCategoryModel<Tag> {
+public class Tag extends AbstractPersistableCategoryModel<Tag, Tag> {
 
 	public Tag(String name) {
 		super(name);

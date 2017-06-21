@@ -21,7 +21,7 @@
 package com.restdude.domain.cases.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.restdude.domain.cases.model.AbstractCaseComment;
+import com.restdude.domain.cases.model.BaseCaseComment;
 import com.restdude.domain.users.model.UserDTO;
 import com.restdude.websocket.message.MessageResource;
 import io.swagger.annotations.ApiModel;
@@ -47,12 +47,14 @@ public class CaseCommenttInfo extends MessageResource<String> {
 
 
 
-	public static CaseCommenttInfo from(AbstractCaseComment resource) {
+	public static CaseCommenttInfo from(BaseCaseComment resource) {
 		return resource != null ? new CaseCommenttInfo(resource) : null;
 	}
 
 	@Getter @Setter
-	private String content;
+	private String title;
+	@Getter @Setter
+	private String detail;
 	@Getter @Setter
 	private LocalDateTime createdDate;
 	@Getter @Setter
@@ -63,25 +65,25 @@ public class CaseCommenttInfo extends MessageResource<String> {
 		super();
 	}
 
-	public CaseCommenttInfo(AbstractCaseComment resource) {
-		this(resource.getId(), resource.getContent(), resource.getCreatedDate(), UserDTO.fromUser(resource.getCreatedBy()));
+	public CaseCommenttInfo(BaseCaseComment resource) {
+		this(resource.getId(), resource.getDetail(), resource.getCreatedDate(), UserDTO.fromUser(resource.getCreatedBy()));
 	}
 
 	public CaseCommenttInfo(
-			String id, String content, LocalDateTime createdDate,
+			String id, String detail, LocalDateTime createdDate,
 			String authorId, String authorFirstName, String authorLastName, String authorUsername, String authorEmailHash, String authorAvatarUrl) {
 		super(id, null);
-		this.setContent(content);
+		this.setDetail(detail);
 		this.setCreatedDate(createdDate);
 		this.setAuthor(new UserDTO(authorId, authorFirstName, authorLastName, authorUsername, authorEmailHash, authorAvatarUrl));
 
 	}
 
 	public CaseCommenttInfo(
-			String id, String content, LocalDateTime createdDate,
+			String id, String detail, LocalDateTime createdDate,
 			UserDTO author) {
 		super(id, null);
-		this.setContent(content);
+		this.setDetail(detail);
 		this.setCreatedDate(createdDate);
 		this.setAuthor(author);
 

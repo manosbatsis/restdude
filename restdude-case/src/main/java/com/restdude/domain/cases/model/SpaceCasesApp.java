@@ -46,21 +46,14 @@ public class SpaceCasesApp extends SpaceApp {
 	@ApiModelProperty(value = "The workflow for this business context")
 	private CaseWorkflow workflow;
 
-	@JsonIgnore
-	@Getter @Setter
-	@ApiModelProperty(value = "The cases owned by this business application")
-	@OneToMany(mappedBy="application")
-	@OrderBy("entryIndex ASC")
-	private List<BaseCase> cases;
-
 	public SpaceCasesApp(){
+		super();
 	}
 
 	public SpaceCasesApp(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner,
-						 Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow, List<BaseCase> cases) {
+						 Set<Membership> memberships, List<MembershipRequest> membershipRequests, CaseWorkflow workflow) {
 		super(name, title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests);
 		this.workflow = workflow;
-		this.cases = cases;
 	}
 
 
@@ -116,7 +109,7 @@ public class SpaceCasesApp extends SpaceApp {
 	private SpaceCasesApp(Builder builder) {
 		this.setName(builder.name);
 		this.setTitle(builder.title);
-		this.setDescription(builder.description);
+		this.setDetail(builder.description);
 		this.setOwner(builder.owner);
 		this.setVisibility(builder.visibility);
 

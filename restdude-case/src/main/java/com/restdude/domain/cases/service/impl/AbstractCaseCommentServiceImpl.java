@@ -21,7 +21,8 @@
 package com.restdude.domain.cases.service.impl;
 
 import com.restdude.domain.PersistableModel;
-import com.restdude.domain.cases.model.AbstractCaseComment;
+import com.restdude.domain.cases.model.BaseCaseComment;
+import com.restdude.domain.cases.repository.CaseCommentNoRepositoryBean;
 import com.restdude.domain.event.EntityCreatedEvent;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
@@ -31,15 +32,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 @Slf4j
-public abstract class AbstractCaseCommentServiceImpl<T extends PersistableModel<String>, R extends ModelRepository<T, String>>
+public abstract class AbstractCaseCommentServiceImpl<T extends BaseCaseComment<?,?>, R extends CaseCommentNoRepositoryBean<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R>        {
 
     public static final char INDEX_CHAR = '-';
 
+
     /**
      * {@inheritDoc}
      */
-    public abstract Integer getEntryIndex(T persisted);
+    public Integer getEntryIndex(T persisted){
+        return this.repository.getEntryIndex(persisted);
+    }
+
+
 
     /**
      * {@inheritDoc}
@@ -51,14 +57,14 @@ public abstract class AbstractCaseCommentServiceImpl<T extends PersistableModel<
         Assert.notNull(resource, "Resource can't be null");
         log.debug("create resource: {}", resource);
         resource = this.repository.persist(resource);
-        AbstractCaseComment persisted = (AbstractCaseComment) resource;
+        BaseCaseComment persisted = (BaseCaseComment) resource;
 
         log.debug("create, calling getEntryIndex with: {}", resource);
         log.debug("create, this.repository: {}", this.repository);
         // TODO: tmp hack, needs to be refactored to some custom sequence or adapter
         Integer caseIndex = this.getEntryIndex(resource);
         persisted.setEntryIndex(caseIndex);
-        persisted.setName(new StringBuffer(persisted.getSubject().getName()).append(INDEX_CHAR).append(caseIndex).toString());
+        persisted.setName(new StringBuffer(persisted.getParent().getName()).append(INDEX_CHAR).append(caseIndex).toString());
         //resource = this.repository.save(resource);
         log.debug("create, returning: {}", resource);
 

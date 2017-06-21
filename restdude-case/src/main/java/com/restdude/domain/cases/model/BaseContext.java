@@ -31,14 +31,9 @@ import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.mdd.model.AbstractPersistableHierarchicalModel;
-import com.restdude.mdd.model.AbstractPersistableNamedModel;
-import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Formula;
@@ -53,11 +48,10 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "context_base")
-@Inheritance(strategy = InheritanceType.JOINED)
 @ModelResource(pathFragment = BaseContext.API_PATH_FRAGMENT,
 		apiDescription = "Contexts management")
 @ApiModel(description = BaseContext.API_MODEL_DESCRIPTION)
-public class BaseContext extends AbstractPersistableResourceModel implements IBaseContext<User, Membership, MembershipRequest> {
+public class BaseContext extends RetreivableResource<BaseContext, BaseContext> implements IBaseContext<User, Membership, MembershipRequest> {
 
 	public static final String API_PATH_FRAGMENT = "contexts";
 	public static final String API_MODEL_DESCRIPTION = "A model representing a context, such as an organization, team, or process type.";
@@ -140,7 +134,7 @@ public class BaseContext extends AbstractPersistableResourceModel implements IBa
 	public BaseContext(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
 		super(name);
 		this.setTitle(title);
-		this.setDescription(description);
+		this.setDetail(description);
 		this.avatarUrl = avatarUrl;
 		this.bannerUrl = bannerUrl;
 		this.visibility = visibility;
@@ -212,7 +206,7 @@ public class BaseContext extends AbstractPersistableResourceModel implements IBa
 	private BaseContext(Builder builder) {
 		this.setName(builder.name);
 		this.setTitle(builder.title);
-		this.setDescription(builder.description);
+		this.setDetail(builder.description);
 		this.setAvatarUrl(builder.avatarUrl);
 		this.setBannerUrl(builder.bannerUrl);
 		this.setOwner(builder.owner);

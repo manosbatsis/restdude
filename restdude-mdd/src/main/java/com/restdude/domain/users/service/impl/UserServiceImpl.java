@@ -72,6 +72,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.persistence.TemporalType;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -393,7 +394,7 @@ public class UserServiceImpl extends AbstractPersistableModelServiceImpl<User, S
         // send email notifications for account confirmation tokens that expired
         org.hibernate.Query query = session.createQuery(UserRepository.SELECT_USERDTO + " FROM User u "
                 + "WHERE u.credentials.resetPasswordTokenCreated IS NOT NULL and u.credentials.resetPasswordTokenCreated  < :yesterday");
-        query.setParameter("yesterday", yesterday);
+        query.setParameter("yesterday", yesterday, TemporalType.TIMESTAMP);
         query.setFetchSize(Integer.valueOf(1000));
         query.setReadOnly(true);
         query.setLockMode("a", LockMode.NONE);

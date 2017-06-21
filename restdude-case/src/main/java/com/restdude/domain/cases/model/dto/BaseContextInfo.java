@@ -54,7 +54,7 @@ public class BaseContextInfo extends MessageResource<String> {
 	@Getter @Setter
 	private String title;
 	@Getter @Setter
-	private String description;
+	private String detail;
 	@Getter @Setter
 	private String avatarUrl;
 	@Getter @Setter
@@ -72,10 +72,10 @@ public class BaseContextInfo extends MessageResource<String> {
 	}
 
 
-	public BaseContextInfo(String id, String name, String title, String description, String avatarUrl, String bannerUrl, UserDTO owner,
+	public BaseContextInfo(String id, String name, String title, String detail, String avatarUrl, String bannerUrl, UserDTO owner,
 						   ContextVisibilityType visibility, LocalDateTime lastModifiedDate) {
 		super(id, name);
-		this.description = description;
+		this.detail = detail;
 		this.title = title;
 		this.avatarUrl = avatarUrl;
 		this.bannerUrl = bannerUrl;
@@ -84,24 +84,24 @@ public class BaseContextInfo extends MessageResource<String> {
 		this.visibility = visibility;
 	}
 
-	public BaseContextInfo(String id, String name, String title, String description, String avatarUrl, String bannerUrl,
+	public BaseContextInfo(String id, String name, String title, String detail, String avatarUrl, String bannerUrl,
 						   String ownerId, String ownerFirstName, String ownerLastName, String ownerUsername, String ownerEmail, String ownerEmailHash, String ownerAvatarUrl,
 						   String ownerBannerUrl, ContextVisibilityType visibility) {
-		this(id, name, title, description, avatarUrl, bannerUrl,
+		this(id, name, title, detail, avatarUrl, bannerUrl,
 				ownerId, ownerFirstName, ownerLastName, ownerUsername, ownerEmail, ownerEmailHash, ownerAvatarUrl,
 				ownerBannerUrl, visibility, null);
 	}
 
-	public BaseContextInfo(String id, String name, String title, String description, String avatarUrl, String bannerUrl,
+	public BaseContextInfo(String id, String name, String title, String detail, String avatarUrl, String bannerUrl,
 						   String ownerId, String ownerFirstName, String ownerLastName, String ownerUsername, String ownerEmail, String ownerEmailHash, String ownerAvatarUrl,
 						   String ownerBannerUrl, ContextVisibilityType visibility, LocalDateTime lastModifiedDate) {
-		this(id, name, title, description, avatarUrl, bannerUrl,
+		this(id, name, title, detail, avatarUrl, bannerUrl,
 				new UserDTO(ownerId, ownerFirstName, ownerLastName, ownerUsername, ownerEmail, ownerEmailHash, ownerAvatarUrl, ownerBannerUrl, null),
 				visibility, lastModifiedDate);
 	}
 
 	private BaseContextInfo(BaseContext resource) {
-		this(resource.getId(), resource.getName(), resource.getTitle(), resource.getDescription(), resource.getAvatarUrl(), resource.getBannerUrl(), UserDTO.fromUser(resource.getOwner()),
+		this(resource.getId(), resource.getName(), resource.getTitle(), resource.getDetail(), resource.getAvatarUrl(), resource.getBannerUrl(), UserDTO.fromUser(resource.getOwner()),
 				resource.getVisibility(), null);
 	}
 	
@@ -112,7 +112,7 @@ public class BaseContextInfo extends MessageResource<String> {
 				.append("id", this.id)
 				.append("name", this.name)
 				.append("title", this.title)
-				.append("description", this.description)
+				.append("description", this.detail)
 				.append("avatarUrl", this.avatarUrl)
 				.append("bannerUrl", this.bannerUrl)
 				.append("owner", this.owner)
@@ -124,7 +124,7 @@ public class BaseContextInfo extends MessageResource<String> {
 		return new HashCodeBuilder()
 				.append(id)
 				.append(name)
-				.append(description)
+				.append(detail)
 				.toHashCode();
 	}
 
@@ -135,7 +135,7 @@ public class BaseContextInfo extends MessageResource<String> {
 			return new EqualsBuilder()
 					.append(id, other.id)
 					.append(name, other.name)
-					.append(description, other.description)
+					.append(detail, other.detail)
 					.isEquals();
 		} else{
 			return false;

@@ -23,7 +23,7 @@ package com.restdude.domain.error.service.impl;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.Space;
-import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
+import com.restdude.domain.cases.repository.CaseNoRepositoryBean;
 import com.restdude.domain.cases.service.CaseStatusService;
 import com.restdude.domain.cases.service.CaseWorkflowService;
 import com.restdude.domain.cases.service.SpaceService;
@@ -32,7 +32,6 @@ import com.restdude.domain.error.model.BaseError;
 import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.model.ErrorLog;
 import com.restdude.domain.error.model.ErrorsApplication;
-import com.restdude.domain.error.repository.ErrorCommentRepository;
 import com.restdude.domain.error.service.ErrorCommentService;
 import com.restdude.domain.error.service.ErrorLogService;
 import com.restdude.domain.error.service.UserAgentService;
@@ -48,7 +47,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends AbstractCaseModelRepository<T>>
+
+import static com.restdude.domain.CommentableModel.*;
+
+public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends CaseNoRepositoryBean<T>>
         extends AbstractCaseServiceImpl<T, ErrorComment,  R>  {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractErrorServiceImpl.class);
@@ -166,8 +168,8 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
         LOGGER.debug("create PersistableError: {}, userDetails: {}", resource, this.getPrincipal());
 
         // set app if missing
-        if(resource.getApplication() == null){
-            resource.setApplication(this.errorApplication);
+        if(resource.getParent() == null){
+            resource.setParent(this.errorApplication);
         }
         // set status if missing
         if(resource.getStatus() == null){
@@ -196,15 +198,15 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends A
     }
 
     protected void setDetailFromLogIfMissing(T resource) {
-        // if the description detail is empty, use the error log instead
+        // if the description description is empty, use the error log instead
         ErrorLog errorLog = resource.getErrorLog();
         if(StringUtils.isBlank(resource.getDetail())
                 && errorLog != null
                 && StringUtils.isNotBlank(errorLog.getRootCauseMessage())){
             String detail = new StringBuffer().append("Error logged automatically, root case: \"`").append(errorLog.getRootCauseMessage())
-                    .append("`... \", trace: \n```\n").append(org.apache.commons.lang3.StringUtils.abbreviate(errorLog.getStacktrace(), BaseError.MAX_DETAIL_LENGTH-250))
+                    .append("`... \", trace: \n```\n").append(org.apache.commons.lang3.StringUtils.abbreviate(errorLog.getStacktrace(), MAX_DETAIL_LENGTH-250))
                     .append("\n```\n see attached error log for more information").toString();
-            LOGGER.debug("create, detail: {}", detail);
+            LOGGER.debug("create, description: {}", detail);
             resource.setDetail(detail);
         }
     }

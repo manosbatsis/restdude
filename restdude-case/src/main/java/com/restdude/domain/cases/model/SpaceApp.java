@@ -26,7 +26,6 @@ import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 
 import javax.persistence.Entity;
@@ -125,7 +124,7 @@ public class SpaceApp extends BaseContext {
 		this.setSpace(builder.space);
 		this.setName(builder.name);
 		this.setTitle(builder.title);
-		this.setDescription(builder.description);
+		this.setDetail(builder.description);
 		this.setOwner(builder.owner);
 		this.setVisibility(builder.visibility);
 	}

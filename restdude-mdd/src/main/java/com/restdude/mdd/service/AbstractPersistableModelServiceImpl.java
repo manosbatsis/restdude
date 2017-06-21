@@ -339,7 +339,7 @@ public class AbstractPersistableModelServiceImpl<T extends PersistableModel<PK>,
      */
     @Override
     public Set<ConstraintViolation<T>> validateConstraints(T resource) {
-        return this.repository.validateConstraints(resource);
+        return  this.repository.validateConstraints(resource);
     }
 
     /**

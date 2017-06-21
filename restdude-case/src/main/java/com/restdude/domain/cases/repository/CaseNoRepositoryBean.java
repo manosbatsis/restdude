@@ -22,11 +22,17 @@ package com.restdude.domain.cases.repository;
 
 import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.mdd.repository.ModelRepository;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.method.P;
 
 @NoRepositoryBean
-public interface AbstractCaseModelRepository<T extends BaseCase<?,?>> extends ModelRepository<T, String> {
+public interface CaseNoRepositoryBean<T extends BaseCase<?,?>> extends ModelRepository<T, String> {
 
 
+	@Query(value = "select count(c)+1 from  BaseCase c where c.parent.id = :#{#unIndexed.parent.id}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
+	Integer getEntryIndex( @P("unIndexed")  @Param("unIndexed") BaseCase unIndexed);
 
 }

@@ -21,11 +21,11 @@
 package com.restdude.domain.cases.service.impl;
 
 import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.domain.cases.model.AbstractCaseComment;
+import com.restdude.domain.cases.model.BaseCaseComment;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
-import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
+import com.restdude.domain.cases.repository.CaseNoRepositoryBean;
 import com.restdude.domain.event.EntityCreatedEvent;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC extends AbstractCaseComment, R extends AbstractCaseModelRepository<T>>
+public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC extends BaseCaseComment, R extends CaseNoRepositoryBean<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R> {
 
 
@@ -74,18 +74,18 @@ public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC exten
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Integer getEntryIndex(T persisted){
+        return this.repository.getEntryIndex(persisted);
+    }
 
 
     /**
      * {@inheritDoc}
      */
     public abstract List<CaseCommenttInfo> getCompactCommentsBySubject(T subject);
-
-    /**
-     * {@inheritDoc}
-     */
-    public abstract Integer getEntryIndex(T persisted);
-
 
     /**
      * {@inheritDoc}
@@ -112,7 +112,7 @@ public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC exten
         // TODO: tmp hack, needs to be refactored to some custom sequence or adapter
         Integer caseIndex = this.getEntryIndex(resource);
         resource.setEntryIndex(caseIndex);
-        resource.setName(new StringBuffer(resource.getApplicationDTO().getName()).append(INDEX_CHAR).append(caseIndex).toString());
+        resource.setName(new StringBuffer(resource.getParent().getName()).append(INDEX_CHAR).append(caseIndex).toString());
         //resource = this.repository.save(resource);
         log.debug("create, returning: {}", resource);
 

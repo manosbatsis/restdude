@@ -20,11 +20,9 @@
  */
 package com.restdude.domain.cases.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.cases.ICaseCommentModel;
-import com.restdude.mdd.model.AbstractPersistableNamedModel;
+import com.restdude.mdd.annotation.model.ModelResource;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -32,60 +30,63 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import java.util.Objects;
 import java.util.UUID;
+
+
+import static com.restdude.domain.CommentableModel.*;
 
 /**
  * Base case comment implementation
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Entity
-@Table(name = "case_comment_base")
-@Inheritance(strategy = InheritanceType.JOINED)
 */
 @Slf4j
-@Data
-@MappedSuperclass
-public abstract class AbstractCaseComment<T extends BaseCase, C extends AbstractCaseComment>
-        extends AbstractPersistableNamedModel implements ICaseCommentModel<T, C> {
+@Entity
+@Table(name = "case_comment_base")
+@ModelResource(pathFragment = BaseCaseComment.API_PATH_FRAGMENT,
+        apiDescription = "Case comments management")
+@ApiModel(description = BaseCaseComment.API_MODEL_DESCRIPTION)
+public class BaseCaseComment<T extends BaseCase<T, C>, C extends BaseCaseComment<T, C>>
+        extends RetreivableResource<BaseCase, BaseCaseComment> /*implements ICaseCommentModel<T, C>*/ {
 
-
-    @NotNull
-    @ApiModelProperty(value = "The comment text", required = true, notes = "Max byte length: " + MAX_DETAIL_LENGTH)
-    @Column(name = "text_content", nullable = false, updatable = false, length = MAX_DETAIL_LENGTH)
-    private String content;
-
-    @ApiModelProperty(value = "The case this comment is attached to")
-    @ManyToOne
-    @JoinColumn(name = "topic_case", updatable = false, nullable = false)
-    private T subject;
-
-    @ApiModelProperty(value = "The comment replied to")
-    @ManyToOne
-    @JoinColumn(name = "parent_comment", updatable = false, nullable = true)
-    private T parent;
+    public static final String API_PATH_FRAGMENT = "caseComments";
+    public static final String API_MODEL_DESCRIPTION = "A model representing a case comment.";
 
     @Column(name = "entry_index")
-    @Getter
-    @Setter
+    @Getter @Setter
     private Integer entryIndex;
 
-    @JsonIgnore
-    @OneToMany(mappedBy="parent", fetch= FetchType.LAZY)
-    private List<C> comments;
+    public BaseCaseComment() {
+        super();
+    }
+
+    public BaseCaseComment(String detail, BaseCase parent, Integer entryIndex) {
+        super();
+        this.setDetail(detail);
+        this.setParent(parent);
+        this.entryIndex = entryIndex;
+    }
+
+    public BaseCaseComment(String name, String detail, BaseCase parent, Integer entryIndex) {
+        super(name);
+        this.setDetail(detail);
+        this.setParent(parent);
+        this.entryIndex = entryIndex;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void preSave() {
-        super.preSave();
         if(StringUtils.isBlank(this.getName())){
             this.setName(UUID.randomUUID().toString());
             log.debug("preSave, tmp name: {}", this.getName());
+        }
+        super.preSave();
+        // add empty title if needed
+        if(Objects.isNull(this.getTitle())){
+            this.setTitle(StringUtils.EMPTY);
         }
     }
 }

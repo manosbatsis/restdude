@@ -20,15 +20,15 @@
  */
 package com.restdude.domain.cases.listener;
 
-import java.util.Objects;
 import java.util.Set;
 
 import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.domain.cases.model.AbstractCaseComment;
+import com.restdude.domain.cases.model.BaseCaseComment;
 import com.restdude.domain.cases.model.ActivityLog;
 import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
+import com.restdude.domain.cases.model.SpaceCasesApp;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
 import com.restdude.domain.cases.model.dto.CaseInfo;
@@ -161,7 +161,7 @@ public class AbstractEntityEventsHandler {
 
 		BaseCase model = event.getModel();
 		User user = model.getCreatedBy();
-		BaseContext context = model.getApplication();
+		BaseContext context = (BaseContext) model.getParent();
 		Enum predicate = CasesActivity.CREATED;
 		MessageResource objectMessageResource = CaseInfo.from(model);
 
@@ -178,7 +178,7 @@ public class AbstractEntityEventsHandler {
 
 		BaseCase model = event.getModel();
 		User user = model.getCreatedBy();
-		BaseContext context = model.getApplication();
+		SpaceCasesApp context = (SpaceCasesApp) model.getParent();
 		Enum predicate = CasesActivity.UPDATED;
 		MessageResource objectMessageResource = CaseInfo.from(model);
 
@@ -187,13 +187,15 @@ public class AbstractEntityEventsHandler {
 	}
 
 	@EventListener
-	public <C extends AbstractCaseComment> void onCaseCommentCreated(EntityCreatedEvent<C> event) {
+	public void onCaseCommentCreated(EntityCreatedEvent<BaseCaseComment> event) {
 
-		AbstractCaseComment model = event.getModel();
+		BaseCaseComment model = event.getModel();
+		BaseContext context = (BaseContext) model.getParent().getParent();
 		User user = model.getCreatedBy();
-		BaseContext context = model.getSubject().getApplication();
 		Enum predicate = CasesActivity.COMMENTED;
 		MessageResource objectMessageResource = CaseCommenttInfo.from(model);
+
+		createLog(model, user, context, predicate, objectMessageResource);
 
 	}
 

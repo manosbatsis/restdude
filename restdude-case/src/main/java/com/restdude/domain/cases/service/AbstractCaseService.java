@@ -21,7 +21,7 @@
 package com.restdude.domain.cases.service;
 
 import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.domain.cases.model.AbstractCaseComment;
+import com.restdude.domain.cases.model.BaseCaseComment;
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
@@ -30,7 +30,7 @@ import com.restdude.mdd.service.PersistableModelService;
 import java.util.List;
 
 
-public interface AbstractCaseService< T extends BaseCase<?, ?>, CC extends AbstractCaseComment> extends PersistableModelService<T, String> {
+public interface AbstractCaseService< T extends BaseCase<?, ?>, CC extends BaseCaseComment> extends PersistableModelService<T, String> {
 
 
     CaseWorkflow getWorkflow();

@@ -37,7 +37,7 @@ public interface ContextNpRepositoryBean<T extends BaseContext> extends ModelRep
     String SYSTEM_CONTEXT_NAME = "SYS_CTX";
     String SYSTEM_CONTEXT_TITLE = "Global System Context";
 
-    String BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS = " context.id, context.name, context.title, context.description, context.avatarUrl, context.bannerUrl,  " +
+    String BUSINESSCONTEXTINFO_CONSTRUCTOR_PARAMS = " context.id, context.name, context.title, context.detail, context.avatarUrl, context.bannerUrl,  " +
             "  context.owner.id, context.owner.firstName, context.owner.lastName, context.owner.username, context.owner.contactDetails.primaryEmail.email, " +
             "context.owner.emailHash, context.owner.avatarUrl, context.owner.bannerUrl, " +
             "context.visibility ";

@@ -27,7 +27,7 @@ import javax.persistence.MappedSuperclass;
  * Resource categories are hierarchical, have aliases and can be used as tags
  */
 @MappedSuperclass
-public abstract class AbstractPersistableCategoryModel<T extends AbstractPersistableCategoryModel<T>> extends AbstractPersistableHierarchicalModel<T> {
+public abstract class AbstractPersistableCategoryModel<P extends AbstractPersistableCategoryModel, T extends AbstractPersistableCategoryModel> extends AbstractPersistableHierarchicalModel<P, T> {
 
     private static final long serialVersionUID = -1329254539598110186L;
 
@@ -39,7 +39,7 @@ public abstract class AbstractPersistableCategoryModel<T extends AbstractPersist
         super(name);
     }
 
-    public AbstractPersistableCategoryModel(String name, T parent) {
+    public AbstractPersistableCategoryModel(String name, P parent) {
         super(name, parent);
     }
 

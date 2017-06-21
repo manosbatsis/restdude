@@ -33,6 +33,7 @@ import com.restdude.domain.error.service.SystemErrorService;
 import com.restdude.domain.users.model.User;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net._01001111.text.LoremIpsum;
 
 import javax.inject.Named;
 import java.time.LocalDateTime;
@@ -64,15 +65,6 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
         return SystemErrorRepository.ERRORS_WORKFLOW_DESCRIPTION;
     }
 
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public Integer getEntryIndex(SystemError persisted){
-        return this.repository.getEntryIndex(persisted);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -89,13 +81,8 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
     }
 
     protected void initSystemErrors(User systemUser) {
-        String[] lorem = {"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque imperdiet maximus enim, suscipit porta est sodales nec. Ut fermentum et dolor vitae elementum. Nulla facilisi. Aenean rutrum non nunc ac sollicitudin. Fusce scelerisque turpis ac metus pellentesque vulputate. Vivamus velit orci, egestas eu lacus iaculis, egestas bibendum dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget mi vehicula, porta nisl non, facilisis eros. Pellentesque eget finibus mauris. Donec et consequat ligula, eu luctus dolor. Sed interdum, velit non semper fringilla, velit erat molestie velit, sit amet condimentum sem lectus ut tortor. Aenean id arcu a massa sodales fermentum quis vulputate nunc. Quisque sodales id orci vitae porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu nulla a mauris convallis elementum.",
-                "Vivamus non ante ante. Sed non viverra est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus facilisis nunc lectus, vel posuere erat viverra eget. Quisque mauris neque, condimentum nec bibendum ut, tempor nec lectus. Vestibulum eget tempor enim, sed finibus nisl. Integer eu nulla arcu.",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris eu nulla a augue fermentum commodo. Nullam sollicitudin nisl ac consectetur varius. Donec lectus lectus, bibendum quis arcu a, bibendum aliquam neque. Donec ante massa, facilisis eu ex vitae, facilisis egestas augue. Donec porta justo quis facilisis porttitor. Donec ante tortor, consequat eu rhoncus nec, ultrices vitae risus. Curabitur ex elit, tempus a metus pharetra, tincidunt scelerisque metus.",
-                "Praesent consequat nisl quis arcu vehicula pharetra. In consequat dolor sit amet tellus eleifend pharetra. Pellentesque nisi erat, vulputate et ornare eu, efficitur at lorem. In sed ligula eget ex consectetur auctor. Praesent molestie fermentum augue, posuere cursus tortor accumsan eget. Etiam elementum, ante vitae blandit porta, ipsum purus luctus diam, in pretium urna arcu sed orci. Pellentesque aliquam nibh maximus felis euismod molestie. Sed et consequat diam. Mauris urna elit, lacinia a nisl at, viverra lobortis massa. Donec sem magna, fringilla nec bibendum ut, fermentum in ipsum. Aliquam consequat id tellus iaculis mollis.",
-                "Sed metus mauris, tempus ut sodales nec, tempor ac nisi. Cras sed dui ac diam blandit interdum eget in quam. Proin lectus magna, vehicula vel augue sit amet, commodo bibendum urna. Aliquam diam massa, semper quis elementum non, congue a justo. In nec sodales ante. Nullam venenatis odio ut leo iaculis ornare. Nulla suscipit felis nunc. Phasellus fermentum, neque nec luctus laoreet, sapien purus ultrices arcu, ut sollicitudin libero erat eu neque. Phasellus hendrerit massa sit amet luctus scelerisque. Morbi erat nunc, viverra vel hendrerit id, fringilla eu est. Mauris leo ex, elementum nec convallis a, feugiat sit amet mauris. Vivamus hendrerit libero id hendrerit elementum.",
-                "Aenean a leo sed tortor elementum lacinia. Fusce libero nunc, efficitur id sem vitae, elementum rutrum velit. Donec imperdiet accumsan massa, eget facilisis tellus volutpat vitae. Nulla at diam sit amet est pulvinar vulputate. Integer eu semper arcu. Mauris tincidunt fermentum nibh vel dapibus. Cras lectus velit, suscipit sed risus sit amet, scelerisque tempus massa.",
-                "Vestibulum pretium tempor placerat. In eu nulla pharetra, varius tortor non, ullamcorper nulla. Praesent non leo non velit fermentum egestas. Mauris lacus sapien, cursus sit amet sagittis vel, fringilla eget orci. Aliquam condimentum volutpat lobortis. Mauris hendrerit non ligula vel viverra. Donec malesuada arcu augue, ac vulputate mauris eleifend quis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;"};
+
+        LoremIpsum jlorem = new LoremIpsum();
         if(this.count() == 0){
             // create errors
             Object[][] stackTraces = {
@@ -117,8 +104,8 @@ public class SystemErrorServiceImpl extends AbstractErrorServiceImpl<SystemError
                 SystemError error = (SystemError) stackTrace[4];
                 error.setErrorLog(st);
                 error = this.create(error);
-                for(int j = 0; j < lorem.length; j++){
-                    this.errorCommentService.create(new ErrorComment(error, lorem[j]));
+                for(int j = 0; j < 4; j++){
+                    this.errorCommentService.create(new ErrorComment(error, jlorem.paragraphs(2)));
                 }
             }
 

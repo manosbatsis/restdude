@@ -214,7 +214,7 @@ public class RestErrorsIT extends AbstractControllerIT {
         Assert.assertTrue(comments.isArray());
         if(comments.size() > 0){
 
-            Assert.assertNotNull(comments.get(0).get("content").asText());
+            Assert.assertNotNull(comments.get(0).get("detail").asText());
             Assert.assertNotNull(comments.get(0).get("createdDate").asText());
             Assert.assertNotNull(comments.get(0).get("author").get("username").asText());
         }
@@ -242,15 +242,15 @@ public class RestErrorsIT extends AbstractControllerIT {
         clientErrorsApp.setId(appId);
 
         for (int i = 0; i < 1; i++) {
-            String description = "ClientError #" + i + " created by " + this.getClass().getName();
+            String detail = "ClientError #" + i + " created by " + this.getClass().getName();
             ClientError error = new ClientError();
-            error.setApplication(clientErrorsApp);
+            error.setParent(clientErrorsApp);
             ErrorLog log = new ErrorLog();
             log.setRootCauseMessage("Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC");
             log.setStacktrace("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur");
 
             error.setTitle("Client Error #" + i + "!");
-            error.setDetail(description);
+            error.setDetail(detail);
             error.setErrorLog(log);
 
             error = given().spec(adminRequestSpec)
@@ -261,7 +261,7 @@ public class RestErrorsIT extends AbstractControllerIT {
                     // test assertions
                     .statusCode(201)
                     .body("title", notNullValue())
-                    .body("detail", equalTo(description))
+                    .body("detail", equalTo(detail))
                     .body("createdBy.id", equalTo(adminLoginContext.userId))
                     .extract().as(ClientError.class);
 

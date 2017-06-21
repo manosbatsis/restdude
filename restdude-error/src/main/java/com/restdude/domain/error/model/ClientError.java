@@ -40,6 +40,9 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 
+
+import static com.restdude.domain.CommentableModel.*;
+
 @Entity
 @Table(name = "error_client")
 @ModelResource(pathFragment = ClientError.API_PATH,
@@ -71,6 +74,7 @@ public class ClientError extends BaseError implements PersistableError {
     private String viewUrl;
 
     public ClientError() {
+        super();
     }
 
     public ClientError(HttpServletRequest request, String title, String screenshotUrl, String detail) {

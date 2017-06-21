@@ -24,27 +24,18 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import com.restdude.domain.cases.model.AbstractCaseComment;
+import com.restdude.domain.cases.model.BaseCaseComment;
 import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.dto.CaseCommenttInfo;
-import com.restdude.domain.cases.repository.AbstractCaseModelRepository;
 import com.restdude.domain.cases.repository.BaseCaseModelRepository;
 import com.restdude.domain.cases.service.BaseCaseService;
-import com.restdude.domain.event.EntityCreatedEvent;
-import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
-import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-
-import org.springframework.security.access.method.P;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 @Slf4j
 @Named("baseCaseService")
-public class BaseCaseServiceImpl<CC extends AbstractCaseComment>
+public class BaseCaseServiceImpl<CC extends BaseCaseComment>
         extends  AbstractCaseServiceImpl<BaseCase<?, ?>, CC, BaseCaseModelRepository>
 		implements BaseCaseService{
 
@@ -84,8 +75,7 @@ public class BaseCaseServiceImpl<CC extends AbstractCaseComment>
 
 	 * @param persisted
 	 */
-	@Override
-	public Integer getEntryIndex(BaseCase<?, ?> persisted) {
-		return null;
+	public Integer getEntryIndex(@NonNull BaseCase persisted){
+		return  this.repository.getEntryIndex(persisted);
 	}
 }

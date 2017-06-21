@@ -21,6 +21,9 @@
 package com.restdude.mdd.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restdude.mdd.validation.Unique;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -29,13 +32,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
  * A base class for pathFragment-like resource entities: files, folders, categories etc.
  */
 @MappedSuperclass
-public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPersistableHierarchicalModel<T>> extends AbstractPersistableNamedModel {
+public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPersistableHierarchicalModel, T extends AbstractPersistableHierarchicalModel> extends AbstractPersistableNamedModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +49,8 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 	 * The HTTP URL of the resource, excluding the protocol, domain and port. Starts with a slash. 
 	 */
     @NotNull
-    @Column(name = "resource_path", length = 1500, nullable = false)
+    @Column(name = "resource_path", length = 1500, nullable = false, unique = true)
+	@Getter @Setter
 	private String path;
 	
 	/**
@@ -53,23 +58,22 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 	 */
     @NotNull
     @Column(name = "path_level", nullable = false)
+	@Getter @Setter
 	private Short pathLevel;
 
 	@DiffIgnore
 	@JsonIgnore
-	@ManyToOne(/* cascade=CascadeType.ALL, */fetch = FetchType.EAGER)
+	@ManyToOne(/* cascade=CascadeType.ALL, */fetch = FetchType.LAZY)
     @JoinColumn(name = "same_as", referencedColumnName = "id", nullable = true)
+	@Getter @Setter
     private T sameAs;
 
 	@DiffIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent", referencedColumnName = "id", nullable = true)
-    private T parent;
-
-	@DiffIgnore
 	@JsonIgnore
-	@OneToMany(mappedBy = "parent", /* cascade=CascadeType.ALL, */ fetch=FetchType.LAZY)
-	private List<T> children = new ArrayList<T>(0);
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent", referencedColumnName = "id", nullable = true)
+    private P parent;
+
 
 	public AbstractPersistableHierarchicalModel() {
 		super();
@@ -77,7 +81,7 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 	public AbstractPersistableHierarchicalModel(String name) {
 		this.setName(name);
 	}
-	public AbstractPersistableHierarchicalModel(String name, T parent) {
+	public AbstractPersistableHierarchicalModel(String name, P parent) {
 		this(name);
 		this.setParent(parent);
 	}
@@ -88,13 +92,23 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 		return PATH_SEPARATOR;
 	}
 
+	public P getParent() {
+		return parent;
+	}
+
+	public void setParent(P parent) {
+		this.parent = parent;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void preSave() {
-		// set pathFragment
-		if(this.getPath() == null){
+		super.preSave();
+		// update path if needed
+		if(this.getPath() == null
+				|| (Objects.nonNull(this.getPath()) && Objects.nonNull(this.getName()) && !this.getPath().endsWith(this.getName()))){
 			StringBuffer path = new StringBuffer();
 			if(this.getParent() != null){
 				path.append(this.getParent().getPath());
@@ -102,10 +116,11 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 			path.append(getPathSeparator());
 			path.append(this.getName());
 			this.setPath(path.toString());
+
+			// set pathFragment level
+			Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
+			this.setPathLevel(pathLevel.shortValue());;
 		}
-		// set pathFragment level
-		Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
-		this.setPathLevel(pathLevel.shortValue());;
 	}
 
 	
@@ -130,36 +145,6 @@ public abstract class AbstractPersistableHierarchicalModel<T extends AbstractPer
 		return builder.isEquals();
 	}
 	
-	
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
-	public Short getPathLevel() {
-		return pathLevel;
-	}
-	public void setPathLevel(Short pathLevel) {
-		this.pathLevel = pathLevel;
-	}
-	public T getSameAs() {
-		return sameAs;
-	}
-	public void setSameAs(T sameAs) {
-		this.sameAs = sameAs;
-	}
-	public T getParent() {
-		return parent;
-	}
-	public void setParent(T parent) {
-		this.parent = parent;
-	}
-	public List<T> getChildren() {
-		return children;
-	}
-	public void setChildren(List<T> children) {
-		this.children = children;
-	}
+
 
 }

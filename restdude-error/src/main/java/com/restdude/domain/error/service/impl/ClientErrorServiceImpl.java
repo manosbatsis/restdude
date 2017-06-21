@@ -63,12 +63,4 @@ public class ClientErrorServiceImpl extends AbstractErrorServiceImpl<ClientError
         return this.repository.getCompactCommentsBySubject(subject);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public Integer getEntryIndex(ClientError persisted){
-        return this.repository.getEntryIndex(persisted);
-    }
-
 }

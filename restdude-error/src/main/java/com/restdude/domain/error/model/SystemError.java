@@ -54,7 +54,6 @@ import java.util.Set;
         + "System validationErrors have a many-to-one relationship with ErrorLog records, as those are shared based on their hash to save space. ")
 @JsonPropertyOrder({"title", "createdDate", "httpStatusCode", "requestMethod", "requestUrl",
         "validationErrors", "user"})
-
 public class SystemError extends BaseError {
 
     public static final String API_PATH = "systemErrors";
@@ -149,6 +148,13 @@ public class SystemError extends BaseError {
         return this.getErrorLog() != null ? this.getId() : null;
     }
 
+    @Override
+    public void preSave() {
+        super.preSave();
+        if(StringUtils.isBlank(this.getDetail())){
+            this.setDetail("");
+        }
+    }
 
     public String getRequestMethod() {
         return requestMethod;
@@ -202,7 +208,7 @@ public class SystemError extends BaseError {
     public static class Builder {
 
         private String title;
-        private String detail;
+        private String description;
         private User user;
 
         private String requestMethod;
@@ -219,8 +225,8 @@ public class SystemError extends BaseError {
             return this;
         }
 
-        public Builder detail(String detail) {
-            this.detail = detail;
+        public Builder description(String detail) {
+            this.description = detail;
             return this;
         }
 
@@ -271,7 +277,7 @@ public class SystemError extends BaseError {
     private SystemError(Builder builder) {
 
         this.setTitle(builder.title);
-        this.setDetail(builder.detail);
+        this.setDetail(builder.description);
         this.setCreatedBy(builder.user);
 
         this.requestMethod = builder.requestMethod;

@@ -43,8 +43,10 @@ spring:
 #    type: com.zaxxer.hikari.HikariDataSource
   jpa:
     generate-ddl: true
+    database-platform: ${buildfilters.hibernate.dialect}
     properties:
       javax.persistence.validation.mode: none
+      hibernate.temp.use_jdbc_metadata_defaults: false
 #     open-in-view: false
 #    show-sql: true
 #    database: H2
@@ -73,8 +75,10 @@ logging:
     org.springframework.security: WARN
     springfox.documentation.schema.property.CachingModelPropertiesProvider: ERROR
     com.restdude:
-      init: debug
-      mdd.service.AbstractPersistableModelServiceImpl:  debug
+      init: WARN
+      mdd.service.AbstractPersistableModelServiceImpl:  WARN
+      mdd.repository:  WARN
+      domain.error: WARN
 
 #      test: debug
 #      mdd: WARN

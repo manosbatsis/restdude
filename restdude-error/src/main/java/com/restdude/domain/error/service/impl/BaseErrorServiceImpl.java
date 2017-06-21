@@ -66,12 +66,4 @@ public class BaseErrorServiceImpl extends AbstractErrorServiceImpl<BaseError, Ba
         return this.repository.getCompactCommentsBySubject(subject);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Integer getEntryIndex(BaseError persisted){
-        return this.repository.getEntryIndex(persisted);
-    }
-
-
 }

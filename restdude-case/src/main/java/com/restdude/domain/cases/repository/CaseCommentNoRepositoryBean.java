@@ -18,31 +18,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.error.model;
+package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.ErrorModel;
-import com.restdude.domain.cases.ICaseModel;
-import com.restdude.domain.cases.model.CaseStatus;
-import com.restdude.domain.cases.model.SpaceCasesApp;
-import com.restdude.domain.users.model.User;
+import com.restdude.domain.cases.model.BaseCaseComment;
+import com.restdude.mdd.repository.ModelRepository;
 
-public interface PersistableError extends ErrorModel<String>/*, ICaseModel<SpaceCasesApp, ErrorComment>*/ {
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.method.P;
 
-
-    CaseStatus getStatus();
-    void setStatus(CaseStatus status);
-
-    User getCreatedBy();
-
-    void setCreatedBy(User user);
+@NoRepositoryBean
+public interface CaseCommentNoRepositoryBean<T extends BaseCaseComment<?,?>> extends ModelRepository<T, String> {
 
 
-    UserAgent getUserAgent();
-
-    void setUserAgent(UserAgent userAgent);
-
-    ErrorLog getErrorLog();
-
-    void setErrorLog(ErrorLog errorLog);
+	@Query(value = "select count(c)+1 from  BaseCaseComment c where c.parent.id = :#{#unIndexed.parent.id}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
+	Integer getEntryIndex(@P("unIndexed") @Param("unIndexed") BaseCaseComment unIndexed);
 
 }

@@ -26,7 +26,6 @@ import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -34,7 +33,6 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
@@ -64,7 +62,7 @@ public class Space extends BaseContext {
 
 	@JsonGetter("parent")
 	public BaseContextInfo getParentDTO() {
-		return BaseContextInfo.from(this.getParent());
+		return BaseContextInfo.from(this.getParentCasted());
 	}
 
 	public Space() {
@@ -138,7 +136,7 @@ public class Space extends BaseContext {
 	private Space(Builder builder) {
 		this.setName(builder.name);
 		this.setTitle(builder.title);
-		this.setDescription(builder.description);
+		this.setDetail(builder.description);
 		this.setAvatarUrl(builder.avatarUrl);
 		this.setBannerUrl(builder.bannerUrl);
 		this.setOwner(builder.owner);

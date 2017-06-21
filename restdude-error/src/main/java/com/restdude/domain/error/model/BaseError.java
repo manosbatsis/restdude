@@ -21,6 +21,7 @@
 package com.restdude.domain.error.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.auth.spel.annotations.*;
 import com.restdude.auth.spel.binding.SpelUtil;
@@ -41,9 +42,13 @@ import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 
 
+import static com.restdude.domain.CommentableModel.*;
+
+
+import static com.restdude.domain.CommentableModel.*;
+
 @Entity
 @Table(name = "error_base")
-@Inheritance(strategy = InheritanceType.JOINED)
 @ModelResource(pathFragment = BaseError.API_PATH, controllerSuperClass = AbstractReadOnlyPersistableModelController.class,
         apiName = "Errors", apiDescription = "Generic error information (readonly)")
 @ApiModel(value = "BaseError", description = "Generic error superclass")
@@ -54,8 +59,8 @@ import javax.servlet.http.HttpServletRequest;
 @PreAuthorizePatch(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeFindById(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
 @PreAuthorizeUpdate(controller = SpelUtil.HAS_ROLE_ADMIN_OR_OPERATOR, service = SpelUtil.PERMIT_ALL)
-
 @Slf4j
+@JsonIgnoreProperties("description")
 public class BaseError extends BaseCase<BaseError, ErrorComment> implements  PersistableError {
     public static final String API_PATH = "allErrors";
 
@@ -76,11 +81,12 @@ public class BaseError extends BaseCase<BaseError, ErrorComment> implements  Per
     private ErrorLog errorLog;
 
     public BaseError() {
-
+        super();
     }
 
     protected BaseError(HttpServletRequest request, String title) {
-        super(title);
+        this();
+        this.setTitle(title);
         // note reguest details
         this.addRequestInfo(request);
     }
@@ -118,7 +124,6 @@ public class BaseError extends BaseCase<BaseError, ErrorComment> implements  Per
             this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, MAX_DETAIL_LENGTH);
         }
     }
-
 
     @JsonIgnore
     @Override

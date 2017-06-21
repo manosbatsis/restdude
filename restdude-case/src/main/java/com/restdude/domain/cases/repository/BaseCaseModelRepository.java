@@ -21,11 +21,8 @@
 package com.restdude.domain.cases.repository;
 
 import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.mdd.repository.ModelRepository;
 
-import org.springframework.data.repository.NoRepositoryBean;
-
-public interface BaseCaseModelRepository extends AbstractCaseModelRepository<BaseCase<?,?>> {
+public interface BaseCaseModelRepository extends CaseNoRepositoryBean<BaseCase<?,?>> {
 
 
 

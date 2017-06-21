@@ -38,7 +38,7 @@ public interface IBaseContext<O extends UserModel, M extends IMembership, MR ext
 
     String getName();
 
-    String getDescription();
+    String getDetail();
 
     String getAvatarUrl();
 
@@ -54,7 +54,7 @@ public interface IBaseContext<O extends UserModel, M extends IMembership, MR ext
 
     void setTitle(String title);
 
-    void setDescription(String description);
+    void setDetail(String detail);
 
     void setAvatarUrl(String avatarUrl);
 
