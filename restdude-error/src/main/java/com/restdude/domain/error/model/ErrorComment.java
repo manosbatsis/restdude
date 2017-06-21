@@ -20,10 +20,10 @@
  */
 package com.restdude.domain.error.model;
 
-import com.restdude.domain.cases.model.BaseCaseComment;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import com.restdude.domain.cases.model.BaseCaseComment;
 
 /**
  * Comments for discussing errors
@@ -43,11 +43,11 @@ public class ErrorComment extends BaseCaseComment<BaseError, ErrorComment> {
         this.setDetail(content);
     }
 
-    public ErrorComment(String content, BaseError parent, Integer entryIndex) {
-        super(content, parent, entryIndex);
+    public ErrorComment(String content, BaseError parent) {
+        super(content, parent);
     }
 
-    public ErrorComment(String name, String content, BaseError parent, Integer entryIndex) {
-        super(name, content, parent, entryIndex);
+    public ErrorComment(String name, String content, BaseError parent) {
+        super(name, content, parent);
     }
 }

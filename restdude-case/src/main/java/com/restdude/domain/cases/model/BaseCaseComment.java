@@ -20,22 +20,19 @@
  */
 package com.restdude.domain.cases.model;
 
+import java.util.Objects;
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import java.util.Objects;
-import java.util.UUID;
-
-
-import static com.restdude.domain.CommentableModel.*;
 
 /**
  * Base case comment implementation
@@ -60,18 +57,16 @@ public class BaseCaseComment<T extends BaseCase<T, C>, C extends BaseCaseComment
         super();
     }
 
-    public BaseCaseComment(String detail, BaseCase parent, Integer entryIndex) {
+    public BaseCaseComment(String detail, BaseCase parent) {
         super();
         this.setDetail(detail);
         this.setParent(parent);
-        this.entryIndex = entryIndex;
     }
 
-    public BaseCaseComment(String name, String detail, BaseCase parent, Integer entryIndex) {
+    public BaseCaseComment(String name, String detail, BaseCase parent) {
         super(name);
         this.setDetail(detail);
         this.setParent(parent);
-        this.entryIndex = entryIndex;
     }
 
     /**
