@@ -32,7 +32,7 @@ import org.springframework.security.access.method.P;
 public interface CaseCommentNoRepositoryBean<T extends BaseCaseComment<?,?>> extends ModelRepository<T, String> {
 
 
-	@Query(value = "select count(c)+1 from  BaseCaseComment c where c.parent.id = :#{#unIndexed.parent.id}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
+	@Query(value = "select count(c)+1 from  BaseCaseComment c where c.parentCase.id = :#{#unIndexed.parentCase.id}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
 	Integer getEntryIndex(@P("unIndexed") @Param("unIndexed") BaseCaseComment unIndexed);
 
 }

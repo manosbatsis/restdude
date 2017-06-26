@@ -166,7 +166,6 @@ public class AbstractEntityEventsHandler {
 		MessageResource objectMessageResource = CaseInfo.from(model);
 
 		createLog(model, user, context, predicate, objectMessageResource);
-
 	}
 
 	@EventListener

@@ -20,12 +20,22 @@
  */
 package com.restdude.mdd.registry;
 
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import com.restdude.domain.Model;
 import com.restdude.mdd.util.EntityUtil;
 import com.restdude.util.ClassUtils;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -36,10 +46,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.*;
-
 /**
  * Provides metadata for all Model types and generates missing model-based components
  *  i.e. <code>Repository</code>, <code>Service</code> and
@@ -48,9 +54,9 @@ import java.util.*;
  * @see ModelBasedComponentGenerator
  */
 @Component
-public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, ApplicationContextAware {
+public class ModelInfoRegistryImpl implements BeanDefinitionRegistryPostProcessor, ApplicationContextAware, ModelInfoRegistry {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModelInfoRegistry.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModelInfoRegistryImpl.class);
 
     public static final String[] BASEPACKAGES_DEFAULT = {"**.calipso", "**.restdude"};
     public static final String BEAN_NAME = "modelInfoRegistry";
@@ -79,17 +85,20 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
         applicationContext = appContext;
     }
 
+    @Override
     public ModelInfo getEntryFor(Class<?> modelClass){
         Assert.notNull(modelClass, "Cannot get entry for null modelClass");
         return this.modelEntries.get(modelClass);
     }
 
+    @Override
     public List<ModelInfo> getEntries(){
         ArrayList<ModelInfo> entries = new ArrayList<>(this.modelEntries.size());
         entries.addAll(this.modelEntries.values());
         return entries;
     }
 
+    @Override
     public List<Class> getTypes(){
         ArrayList<Class> entries = new ArrayList<>(this.modelEntries.size());
         entries.addAll(this.modelEntries.keySet());
@@ -223,6 +232,7 @@ public class ModelInfoRegistry implements BeanDefinitionRegistryPostProcessor, A
 
     }
 
+    @Override
     public Class<?> getHandlerModelType(@NonNull Class<?> handlerType) {
         /*
         if(String.class.isAssignableFrom(handler.getClass())){

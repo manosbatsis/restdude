@@ -20,20 +20,15 @@
  */
 package com.restdude.hypermedia.hateoas;
 
+import java.util.Collection;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.restdude.domain.Model;
-import com.restdude.hypermedia.util.HypermediaUtils;
-import com.restdude.util.ParamsAwarePage;
 import lombok.Getter;
-import lombok.NonNull;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by manos on 21/2/2017.
@@ -41,23 +36,8 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PagedModelResources<M extends Model> extends PagedResources<ModelResource<M>> {
 
-    public static <M extends Model> PagedModelResources<M> create(@NonNull ParamsAwarePage<M> page, @NonNull HttpServletRequest request, @NonNull String pageNumberParamName){
-
-        PagedResources.PageMetadata paginationInfo = new PagedResources.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
-        List<Link> links = HypermediaUtils.buileHateoasLinks(page, request, pageNumberParamName);
-
-        ArrayList<ModelResource<M>> wrapped = new ArrayList<>();
-        for(M model : page.getContent()){
-            wrapped.add(new ModelResource<M>(model));
-        }
-
-        return new PagedModelResources(wrapped, paginationInfo, page.getParameters(), links);
-
-
-    }
 
     @Getter private Map<String, String[]> urlParameters;
-
     private PagedModelResources() {
     }
 
@@ -82,7 +62,7 @@ public class PagedModelResources<M extends Model> extends PagedResources<ModelRe
      * @param urlParameters the original URL parameters used to construct the page
      * @param links
      */
-    protected PagedModelResources(Collection<ModelResource<M>> content, PageMetadata paginationMetadata, Map<String, String[]> urlParameters, Iterable<Link> links) {
+    public PagedModelResources(Collection<ModelResource<M>> content, PageMetadata paginationMetadata, Map<String, String[]> urlParameters, Iterable<Link> links) {
         super(content, paginationMetadata, links);
         this.urlParameters = urlParameters;
     }

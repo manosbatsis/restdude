@@ -20,10 +20,25 @@
  */
 package com.restdude.domain.cases.model;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.domain.cases.model.dto.BaseContextInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.cases.model.dto.CaseStatustInfo;
+import com.restdude.domain.cms.model.Tag;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
@@ -33,10 +48,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import javax.persistence.*;
-
-import java.util.UUID;
+import org.hibernate.annotations.Formula;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 
 @Slf4j
 @Entity
@@ -51,11 +64,28 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
     public static final String API_PATH_FRAGMENT = "cases";
     public static final String API_MODEL_DESCRIPTION = "A model representing a case, such as an issue, ticket, note etc.";
 
+    @Formula(" (select count(*) from case_comment_base where case_comment_base.parent_case = id ) ")
+    @ApiModelProperty(value = "The number of open cases")
+    @Getter @Setter
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer commentsCount = 0;
+
+    @ApiModelProperty(value = "The case priority")
+    @Getter @Setter
+    private String priority = "Normal";
+
 
     @Column(name = "entry_index")
-    @Getter
-    @Setter
+    @Getter @Setter
     private Integer entryIndex;
+
+
+    @ApiModelProperty(value = "List of tags")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "issue_tags", joinColumns = {@JoinColumn(name = "tag")}, inverseJoinColumns = {
+            @JoinColumn(name = "issue")})
+    @Getter @Setter
+    private List<Tag> tags;
 
     @ApiModelProperty(value = "Current case status", allowableValues = "OPEM, CLOSED, [CUSTOM_VALUE]")
     @ManyToOne
@@ -67,6 +97,19 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
     @JoinColumn(name = "assigned_to", referencedColumnName = "id", updatable = false)
     @Getter @Setter
     private User assignee;
+
+    @DiffIgnore
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_app", referencedColumnName = "id", nullable = false)
+    @Getter @Setter
+    private SpaceCasesApp parentApplication;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "parentCase", orphanRemoval = true)
+    @ApiModelProperty(value = "The case comments")
+    @Getter @Setter
+    private List<BaseCaseComment> comments;
 
     @JsonIgnore
     public CaseStatus getStatus() {
@@ -107,6 +150,13 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
     @Override
     public void preSave() {
 
+        // TODO: tmp parent pointer to app, should point to comment
+        if(Objects.isNull(this.getParent())){
+            this.setParent(this.getParentApplication());
+        }
+        else if(Objects.isNull(this.getParentApplication())){
+            this.setParentApplication((SpaceCasesApp) this.getParent());
+        }
         if(StringUtils.isBlank(this.getName())){
             this.setName(UUID.randomUUID().toString());
             log.debug("preSave, tmp name: {}", this.getName());

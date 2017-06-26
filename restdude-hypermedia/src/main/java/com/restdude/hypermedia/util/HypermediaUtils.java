@@ -20,27 +20,33 @@
  */
 package com.restdude.hypermedia.util;
 
-import com.restdude.domain.Model;
-import com.restdude.hypermedia.hateoas.ModelResource;
-import com.restdude.hypermedia.hateoas.ModelResources;
-import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
-import com.restdude.mdd.registry.FieldInfo;
-import com.restdude.mdd.registry.ModelInfo;
-import com.restdude.util.ParamsAwarePage;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.mvc.BasicLinkBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.restdude.domain.Model;
+import com.restdude.hypermedia.hateoas.ModelResource;
+import com.restdude.hypermedia.hateoas.ModelResources;
+import com.restdude.hypermedia.hateoas.PagedModelResources;
+import com.restdude.hypermedia.jsonapi.JsonApiModelResourceDocument;
+import com.restdude.mdd.registry.FieldInfo;
+import com.restdude.mdd.registry.ModelInfo;
+import com.restdude.mdd.registry.ModelInfoRegistry;
+import com.restdude.util.ParamsAwarePage;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.mvc.BasicLinkBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Provides utilities for working with JSON API
@@ -116,7 +122,7 @@ public class HypermediaUtils {
 
     public static <RT extends Model<RID>, RID extends Serializable> ModelResource<RT> toHateoasResource(RT model, ModelInfo<RT, RID> modelInfo) {
         Class<RT> modelType = (modelInfo != null) ? modelInfo.getModelType() : (Class<RT>) model.getClass();
-        ModelResource<RT> resource = new ModelResource<>(model);
+        ModelResource<RT> resource = new ModelResource<>(modelInfo.getUriComponent(), model);
         List<Link> links = HypermediaUtils.buileHateoasLinks(model, modelInfo);
         log.debug("toHateoasResource, model: {}, modelType: {}, modelInfo: {}", model, modelType, modelInfo);
         if(CollectionUtils.isNotEmpty(links)) {
@@ -130,10 +136,12 @@ public class HypermediaUtils {
      *
      * @param models
      */
-    public static <RT extends Model> ModelResources<RT> toHateoasResources(@NonNull Iterable<RT> models, Class<RT> modelType) {
+    public static <RT extends Model> ModelResources<RT> toHateoasResources(@NonNull Iterable<RT> models, Class<RT> modelType, ModelInfoRegistry modelInfoRegistry) {
         LinkedList<ModelResource<RT>> wrapped = new LinkedList<>();
+        ModelInfo modelInfo;
         for(RT model : models){
-            wrapped.add(new ModelResource<RT>(model));
+            modelInfo = modelInfoRegistry.getEntryFor(modelType);
+            wrapped.add(new ModelResource<RT>(modelInfo.getUriComponent(), model));
         }
         ModelResources<RT> resources = new ModelResources<>(wrapped);
         return resources;
@@ -155,5 +163,22 @@ public class HypermediaUtils {
             }
         }
         return doc;
+    }
+
+    public static <M extends Model> PagedModelResources<M> toHateoasPagedResources(@NonNull ParamsAwarePage<M> page, @NonNull HttpServletRequest request, @NonNull String pageNumberParamName, ModelInfoRegistry modelInfoRegistry){
+
+        PagedResources.PageMetadata paginationInfo = new PagedResources.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
+        List<Link> links = HypermediaUtils.buileHateoasLinks(page, request, pageNumberParamName);
+
+        ArrayList<ModelResource<M>> wrapped = new ArrayList<>();
+        ModelInfo modelInfo;
+        for(M model : page.getContent()){
+            modelInfo = modelInfoRegistry.getEntryFor(model.getClass());
+            wrapped.add(new ModelResource<M>(modelInfo.getUriComponent(), model));
+        }
+
+        return new PagedModelResources(wrapped, paginationInfo, page.getParameters(), links);
+
+
     }
 }

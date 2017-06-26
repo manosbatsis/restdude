@@ -30,6 +30,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.mdd.model.AbstractPersistableHierarchicalModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -78,10 +79,12 @@ public class RetreivableResource<P extends RetreivableResource, T extends Retrei
 		}
 	}
 
+	@JsonIgnore
 	public P getParentCasted(){
 		return (P) this.getParent();
 	}
 
+	@JsonIgnore
 	public T getSameAsCasted(){
 		return (T) this.getSameAs();
 	}

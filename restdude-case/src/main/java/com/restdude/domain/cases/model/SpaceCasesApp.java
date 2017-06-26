@@ -20,17 +20,24 @@
  */
 package com.restdude.domain.cases.model;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Set;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "context_cases_app")
@@ -39,12 +46,26 @@ public class SpaceCasesApp extends SpaceApp {
 	public static final String API_PATH_FRAGMENT = "caseApplications";
 	public static final String API_MODEL_DESCRIPTION = "A model representing an case management application of a some context";
 
+
+	@Formula(" (select count(*) from case_base where case_base.parent_app = id ) ")
+	@ApiModelProperty(value = "The number of open cases")
+	@Getter @Setter
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Integer openCasesCount = 0;
+
 	@NotNull
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id", nullable = false, updatable = false)
 	@Getter @Setter
 	@ApiModelProperty(value = "The workflow for this business context")
 	private CaseWorkflow workflow;
+
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "parentApplication", orphanRemoval = true)
+	@ApiModelProperty(value = "The case entries for this app")
+	@Getter @Setter
+	private List<BaseCase> cases;
 
 	public SpaceCasesApp(){
 		super();

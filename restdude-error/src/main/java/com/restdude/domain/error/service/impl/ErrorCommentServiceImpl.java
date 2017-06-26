@@ -23,6 +23,7 @@ package com.restdude.domain.error.service.impl;
 import javax.inject.Named;
 
 import com.restdude.domain.cases.service.impl.AbstractCaseCommentServiceImpl;
+import com.restdude.domain.error.model.BaseError;
 import com.restdude.domain.error.model.ErrorComment;
 import com.restdude.domain.error.repository.ErrorCommentRepository;
 import com.restdude.domain.error.service.ErrorCommentService;
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Named(ErrorCommentService.BEAN_ID)
-public class ErrorCommentServiceImpl extends AbstractCaseCommentServiceImpl<ErrorComment, ErrorCommentRepository>
+public class ErrorCommentServiceImpl extends AbstractCaseCommentServiceImpl<ErrorComment, BaseError, ErrorCommentRepository>
         implements ErrorCommentService {
 
     /**

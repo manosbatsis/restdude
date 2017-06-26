@@ -20,6 +20,8 @@
  */
 package com.restdude.domain.cases.service.impl;
 
+import java.util.List;
+
 import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.cases.model.BaseCaseComment;
 import com.restdude.domain.cases.model.CaseStatus;
@@ -29,14 +31,12 @@ import com.restdude.domain.cases.repository.CaseNoRepositoryBean;
 import com.restdude.domain.event.EntityCreatedEvent;
 import com.restdude.mdd.annotation.model.ModelDrivenPreAuth;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
 import org.springframework.security.access.method.P;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-
-import java.util.List;
 
 @Slf4j
 public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC extends BaseCaseComment, R extends CaseNoRepositoryBean<T>>
@@ -101,10 +101,7 @@ public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC exten
     @Override
     @Transactional(readOnly = false)
     @ModelDrivenPreAuth
-    public T create(@P("resource") T resource) {
-        Assert.notNull(resource, "Resource can't be null");
-        log.debug("create, principal: {}", this.getPrincipal());
-        log.debug("create resource: {}", resource);
+    public T create(@NonNull @P("resource") T resource) {
         resource = this.repository.persist(resource);
 
         log.debug("create, calling getEntryIndex with: {}", resource);
@@ -116,9 +113,7 @@ public abstract class AbstractCaseServiceImpl<T extends BaseCase<?, ?>, CC exten
         //resource = this.repository.save(resource);
         log.debug("create, returning: {}", resource);
 
-        log.debug("create applicationEventPublisher: {}", this.applicationEventPublisher);
         EntityCreatedEvent<T> event = new EntityCreatedEvent<T>(resource);
-        log.debug("create event: {}", event);
         this.applicationEventPublisher.publishEvent(event);
 
         return resource;

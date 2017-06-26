@@ -18,21 +18,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+package com.restdude.mdd.registry;
 
-import com.restdude.domain.cases.model.BaseCase;
-import com.restdude.mdd.repository.ModelRepository;
+import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.access.method.P;
+import lombok.NonNull;
 
-@NoRepositoryBean
-public interface CaseNoRepositoryBean<T extends BaseCase<?,?>> extends ModelRepository<T, String> {
+ /**
+ * Provides metadata for all Model types and generates missing model-based components
+ *  i.e. <code>Repository</code>, <code>Service</code> and
+ * <code>Controller</code> mdd
+ *
+ */
+public interface ModelInfoRegistry {
+	ModelInfo getEntryFor(Class<?> modelClass);
 
+	List<ModelInfo> getEntries();
 
-	@Query(value = "select count(c)+1 from  BaseCase c where c.parentApplication.id = :#{#unIndexed.parentApplication.id}  and c.createdDate  <  :#{#unIndexed.createdDate} ")
-	Integer getEntryIndex( @P("unIndexed")  @Param("unIndexed") BaseCase unIndexed);
+	List<Class> getTypes();
 
+	Class<?> getHandlerModelType(@NonNull Class<?> handlerType);
 }

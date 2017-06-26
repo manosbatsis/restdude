@@ -21,7 +21,12 @@
 package com.restdude.hypermedia.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restdude.domain.Model;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 
@@ -32,16 +37,24 @@ import org.springframework.hateoas.Resource;
 public class ModelResource<T extends Model> extends Resource<T>{
 
     /**
+     * Equivalent to JSON API document type
+     */
+    @JsonProperty("@type")
+    @Getter @Setter
+    String type;
+
+    /**
      * {@inheritDoc}
      */
-    public ModelResource(T content, Link... links) {
+    public ModelResource(@NonNull String type, @NonNull T content, Link... links) {
         super(content, links);
+        this.type = type;
     }
 
     /**
      * {@inheritDoc}
      */
-    public ModelResource(T content, Iterable<Link> links) {
+    public ModelResource(@NonNull String type, @NonNull T content, Iterable<Link> links) {
         super(content, links);
     }
 

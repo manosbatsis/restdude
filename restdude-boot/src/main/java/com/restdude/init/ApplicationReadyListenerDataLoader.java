@@ -20,8 +20,6 @@
  */
 package com.restdude.init;
 
-import javax.inject.Named;
-
 import com.restdude.domain.cases.service.SpaceService;
 import com.restdude.domain.error.service.ClientErrorService;
 import com.restdude.domain.error.service.SystemErrorService;
@@ -76,7 +74,7 @@ public class ApplicationReadyListenerDataLoader {
     @EventListener
     @Order(10)
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        log.warn("onApplicationEvent, event: {}", event);
+        log.debug("onApplicationEvent, event: {}", event);
 
         userService.initData();
         spaceContextService.initData();

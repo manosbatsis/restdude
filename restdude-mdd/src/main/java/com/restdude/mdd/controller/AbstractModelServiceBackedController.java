@@ -20,6 +20,16 @@
  */
 package com.restdude.mdd.controller;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,23 +61,19 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.Resources;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -173,7 +179,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      */
     protected ModelResources<T> toHateoasResources(@NonNull Iterable<T> models) {
         Class<T> modelType = this.modelType;
-        return HypermediaUtils.toHateoasResources(models, modelType);
+        return HypermediaUtils.toHateoasResources(models, modelType, this.mmdelInfoRegistry);
     }
 
     /**
@@ -195,7 +201,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
         ModelInfo rootModelInfo = this.mmdelInfoRegistry.getEntryFor(modelType);
 
         // long size, long number, long totalElements, long totalPages
-        PagedModelResources<RT> pagedResources = PagedModelResources.create(page, request, pageNumberParamName);
+        PagedModelResources<RT> pagedResources = HypermediaUtils.toHateoasPagedResources(page, request, pageNumberParamName, this.mmdelInfoRegistry);
 
 
         return pagedResources;
