@@ -168,7 +168,7 @@ public class AbstractModelServiceBackedController<T extends PersistableModel<PK>
      * @param model
      */
     protected ModelResource<T> toHateoasResource(@NonNull T model) {
-        return HypermediaUtils.toHateoasResource(model, this.getModelInfo());
+        return HypermediaUtils.toHateoasResource(model, this.mmdelInfoRegistry.getEntryFor(model.getClass()));
     }
 
 
