@@ -81,7 +81,6 @@ public class BaseCaseComment<T extends BaseCase<T, C>, C extends BaseCaseComment
     private Integer entryIndex;
 
     @DiffIgnore
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_case", referencedColumnName = "id", nullable = false)
     @Getter @Setter
