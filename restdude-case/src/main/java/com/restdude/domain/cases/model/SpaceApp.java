@@ -20,6 +20,14 @@
  */
 package com.restdude.domain.cases.model;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
@@ -27,12 +35,7 @@ import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
-
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import java.util.List;
-import java.util.Set;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * {@value #API_MODEL_DESCRIPTION}
@@ -50,14 +53,17 @@ public class SpaceApp extends BaseContext {
 	public static final String API_MODEL_DESCRIPTION = "A model representing an application context, such as case management or other process type.";
 
 
+	@ApiModelProperty(hidden = true)
 	@ManyToOne
 	private Space space;
 
+	@ApiModelProperty(hidden = true)
 	@JsonIgnore
 	public Space getSpace() {
 		return space;
 	}
 
+	@ApiModelProperty(hidden = true)
 	@JsonGetter("space")
 	public BaseContextInfo getSpaceDTO() {
 		return BaseContextInfo.from(this.space);
@@ -74,6 +80,20 @@ public class SpaceApp extends BaseContext {
 
 	public SpaceApp(String name, String title, String description, String avatarUrl, String bannerUrl, ContextVisibilityType visibility, User owner, Set<Membership> memberships, List<MembershipRequest> membershipRequests) {
 		super(name, title, description, avatarUrl, bannerUrl, visibility, owner, memberships, membershipRequests);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void preSave() {
+		if(Objects.isNull(this.getSpace())){
+			this.setSpace((Space) this.getParent());
+		}
+		if(Objects.isNull(this.getParent())){
+			this.setParent(this.getSpace());
+		}
+		super.preSave();
 	}
 
 	public static class Builder {
@@ -121,7 +141,7 @@ public class SpaceApp extends BaseContext {
 	}
 
 	private SpaceApp(Builder builder) {
-		this.setSpace(builder.space);
+		this.setParent(builder.space);
 		this.setName(builder.name);
 		this.setTitle(builder.title);
 		this.setDetail(builder.description);

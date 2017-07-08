@@ -25,20 +25,18 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.domain.PersistableModel;
 import com.restdude.domain.users.model.User;
-import com.restdude.mdd.annotation.model.CurrentPrincipal;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.model.AbstractPersistableModel;
-import com.restdude.mdd.model.AbstractPersistableNamedModel;
 import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
-import com.restdude.websocket.message.IActivityNotificationMessage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -48,10 +46,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
-import org.hibernate.annotations.MetaValue;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -86,6 +83,15 @@ public class ActivityLog extends AbstractSystemUuidPersistableModel {
 	@Getter @Setter
 	private LocalDateTime createdDate;
 
+	@CreatedBy
+	@DiffIgnore
+	@JsonIgnore
+	@ApiModelProperty(value = "Created by", readOnly = true, hidden = true)
+	@ManyToOne(fetch = FetchType.EAGER  )
+	@JoinColumn(name = "created_by", referencedColumnName = "id", updatable = false)
+	@Getter @Setter
+	private User createdBy;
+
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@ApiModelProperty(readOnly = true)
 	@Column(nullable = false, updatable = false)
@@ -97,7 +103,7 @@ public class ActivityLog extends AbstractSystemUuidPersistableModel {
 	@Getter @Setter
 	private String discriminator;
 
-	@CurrentPrincipal
+	//@CurrentPrincipal
 	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)

@@ -25,5 +25,5 @@ import io.swagger.annotations.ApiModel;
 @ApiModel
 public enum CasesActivity {
 
-	CREATED, UPDATED, COMMENTED;
+	CASE_CREATED, CASE_UPDATED, CASE_COMMENTED;
 }

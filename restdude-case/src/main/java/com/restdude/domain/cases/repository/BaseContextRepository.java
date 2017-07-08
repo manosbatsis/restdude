@@ -35,6 +35,5 @@ public interface BaseContextRepository extends ContextNpRepositoryBean<BaseConte
     @Query(value = "select context from BaseContext context  where context.owner = :#{#user}  and context.name = :#{#user.username} ")
     BaseContext getUserBaseContext(@Param("user") User user);
 
-    BaseContext findByName(String name);
 
 }

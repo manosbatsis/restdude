@@ -20,26 +20,39 @@
  */
 package com.restdude.domain.cases.model;
 
+import static com.restdude.domain.CommentableModel.MAX_DETAIL_LENGTH;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
+import com.restdude.mdd.annotation.model.ModelResource;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import static com.restdude.domain.CommentableModel.MAX_DETAIL_LENGTH;
 
 /**
  * BaseCase status option
  */
 @Entity
 @Table(name = "case_status")
+@ModelResource(pathFragment = CaseStatus.API_PATH_FRAGMENT,
+        apiDescription = "Cases workflow management")
+@ApiModel(description = CaseStatus.API_MODEL_DESCRIPTION)
 public class CaseStatus extends AbstractBasicAuditedModel {
+
+    public static final String API_PATH_FRAGMENT = "caseStatuses";
+    public static final String API_MODEL_DESCRIPTION = "A model representing a status option of a case workflow.";
 
     public static final String UNASSIGNED = "Unassigned";
     public static final String OPEN = "Open";
     public static final String CLOSED = "Closed";
+    public static final String ARCHIVED = "Archived";
 
     @NotNull
     @ApiModelProperty(value = "Short description, i.e. one or two words")

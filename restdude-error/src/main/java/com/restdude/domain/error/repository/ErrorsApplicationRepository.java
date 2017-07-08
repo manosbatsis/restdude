@@ -18,18 +18,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
-
-import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.mdd.repository.ModelRepository;
-
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-public interface CaseWorkflowRepository extends ModelRepository<CaseWorkflow, String> {
+package com.restdude.domain.error.repository;
 
 
-	@Query(value = "select scp.workflow from SpaceCasesApp scp  where scp.id = :#{#applicationId} ")
-	CaseWorkflow findByApplicationId(@Param("applicationId") String applicationId);
+import com.restdude.domain.cases.repository.ContextNpRepositoryBean;
+import com.restdude.domain.error.model.ErrorsApplication;
+
+/**
+ * Calipso JPA repository for the ErrorsApplication entity.
+ * {@inheritDoc}
+ */
+public interface ErrorsApplicationRepository extends ContextNpRepositoryBean<ErrorsApplication> {
+
 
 }

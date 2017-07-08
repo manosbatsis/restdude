@@ -18,18 +18,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+package com.restdude.domain.cases.model.enums;
 
-import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.mdd.repository.ModelRepository;
+import io.swagger.annotations.ApiModel;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+@ApiModel
+public enum CaseStatus {
 
-public interface CaseWorkflowRepository extends ModelRepository<CaseWorkflow, String> {
-
-
-	@Query(value = "select scp.workflow from SpaceCasesApp scp  where scp.id = :#{#applicationId} ")
-	CaseWorkflow findByApplicationId(@Param("applicationId") String applicationId);
-
+	OPEN, CLOSED, ARCHIVED;
 }

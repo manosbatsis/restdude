@@ -25,6 +25,7 @@ import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.repository.ModelRepository;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -103,4 +104,7 @@ public interface ContextNpRepositoryBean<T extends BaseContext> extends ModelRep
 
     @Query(value = "select context from Space context  where context.owner.username = 'system' and context.name = '" + SYSTEM_CONTEXT_NAME + "' ")
     Space getSystemContext();
+
+
+    T findByName(String name);
 }

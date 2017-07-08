@@ -20,20 +20,35 @@
  */
 package com.restdude.domain.cases.service;
 
+import java.util.Set;
+
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.service.PersistableModelService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Set;
+public interface ContextService<T extends BaseContext> extends PersistableModelService<T, String> {
 
-public interface ContextService<T extends Space> extends PersistableModelService<T, String> {
+    /**
+     * Get the system business context
+     * @return
+     */
+    Space getSystemContext();
 
     Page<BaseContextInfo> findVisible(Pageable pageable);
 
     Page<BaseContextInfo> findMy(Pageable pageable);
 
     Set<String> getActivityNotificationRecepients(User activityUser, T resource);
+
+    /**
+     * Get the space matching the given name
+     * @param name
+     * @return
+     */
+    T findByName(String name);
 }

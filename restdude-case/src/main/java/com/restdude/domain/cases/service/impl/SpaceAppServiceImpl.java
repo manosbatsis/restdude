@@ -18,18 +18,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+package com.restdude.domain.cases.service.impl;
 
-import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.mdd.repository.ModelRepository;
+import javax.inject.Named;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import com.restdude.domain.cases.model.SpaceApp;
+import com.restdude.domain.cases.repository.SpaceAppRepository;
+import com.restdude.domain.cases.service.SpaceAppService;
+import lombok.extern.slf4j.Slf4j;
 
-public interface CaseWorkflowRepository extends ModelRepository<CaseWorkflow, String> {
+@Slf4j
+@Named("spaceAppService")
+public class SpaceAppServiceImpl
+		extends AbstractContextServiceImpl<SpaceApp, SpaceAppRepository>
+		implements SpaceAppService {
 
-
-	@Query(value = "select scp.workflow from SpaceCasesApp scp  where scp.id = :#{#applicationId} ")
-	CaseWorkflow findByApplicationId(@Param("applicationId") String applicationId);
 
 }

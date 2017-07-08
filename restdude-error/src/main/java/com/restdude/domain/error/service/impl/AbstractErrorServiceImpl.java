@@ -20,6 +20,11 @@
  */
 package com.restdude.domain.error.service.impl;
 
+import static com.restdude.domain.CommentableModel.MAX_DETAIL_LENGTH;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.Space;
@@ -41,14 +46,9 @@ import com.restdude.mdd.service.PersistableModelService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.LinkedList;
-import java.util.List;
-
-
-import static com.restdude.domain.CommentableModel.*;
 
 public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends CaseNoRepositoryBean<T>>
         extends AbstractCaseServiceImpl<T, ErrorComment,  R>  {
@@ -144,6 +144,7 @@ public abstract class AbstractErrorServiceImpl<T extends BaseError,  R extends C
             errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.UNASSIGNED, "Status for cases that have not yet been assigned", this.workflow)));
             errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.OPEN, "Status for pending cases", this.workflow)));
             errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.CLOSED, "Status for closed cases", this.workflow)));
+            errorsWorkflowStatuses.add(caseStatusService.create(new CaseStatus(CaseStatus.ARCHIVED, "Status for archived cases", this.workflow)));
             this.workflow.setStatuses(errorsWorkflowStatuses);
 
             this.errorApplication = this.errorsApplicationService.create(

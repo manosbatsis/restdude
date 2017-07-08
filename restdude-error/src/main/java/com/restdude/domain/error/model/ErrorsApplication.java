@@ -20,6 +20,9 @@
  */
 package com.restdude.domain.error.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import com.restdude.domain.cases.model.CaseWorkflow;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.SpaceCasesApp;
@@ -27,9 +30,6 @@ import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
 import io.swagger.annotations.ApiModel;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * {@value #API_MODEL_DESCRIPTION}
@@ -107,7 +107,7 @@ public class ErrorsApplication extends SpaceCasesApp {
 		this.setTitle(builder.title);
 		this.setDetail(builder.description);
 		this.setOwner(builder.owner);
-		this.setSpace(builder.space);
+		this.setParent(builder.space);
 		this.setVisibility(builder.visibility);
 		this.setWorkflow(builder.workflow);
 

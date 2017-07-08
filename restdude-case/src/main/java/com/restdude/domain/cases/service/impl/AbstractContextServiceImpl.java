@@ -20,23 +20,30 @@
  */
 package com.restdude.domain.cases.service.impl;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.UserDetails;
+import com.restdude.domain.cases.model.BaseContext;
 import com.restdude.domain.cases.model.Membership;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.dto.BaseContextInfo;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.repository.ContextNpRepositoryBean;
 import com.restdude.domain.cases.service.ContextService;
+import com.restdude.domain.cases.service.MembershipRequestService;
 import com.restdude.domain.cases.service.MembershipService;
 import com.restdude.domain.friends.repository.FriendshipRepository;
+import com.restdude.domain.friends.service.FriendshipService;
 import com.restdude.domain.users.model.User;
+import com.restdude.domain.users.service.UserService;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import com.restdude.util.exception.http.ForbiddenException;
 import com.restdude.util.exception.http.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ObjectUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,17 +52,41 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 
 @Slf4j
-public abstract class AbstractContextServiceImpl<T extends Space, R extends ContextNpRepositoryBean<T>>
+public abstract class AbstractContextServiceImpl<T extends BaseContext, R extends ContextNpRepositoryBean<T>>
         extends AbstractPersistableModelServiceImpl<T, String, R> implements ContextService<T> {
 
     protected MembershipService membershipService;
     protected FriendshipRepository friendshipRepository;
 
+    protected UserService userService;
+    protected FriendshipService friendshipService;
+    protected MembershipRequestService membershipRequestService;
+
+    protected Space syetemSpace;
+
+    @Override
+    public Space getSystemContext(){
+        if(this.syetemSpace == null){
+            this.syetemSpace = this.repository.getSystemContext();
+        }
+        return this.syetemSpace;
+    }
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setFriendshipService(FriendshipService friendshipService) {
+        this.friendshipService = friendshipService;
+    }
+
+    @Autowired
+    public void setMembershipRequestService(MembershipRequestService membershipRequestService) {
+        this.membershipRequestService = membershipRequestService;
+    }
     @Autowired
     public void setMembershipService(MembershipService membershipService) {
         this.membershipService = membershipService;
@@ -64,6 +95,14 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
     @Autowired
     public void setFriendshipRepository(FriendshipRepository friendshipRepository) {
         this.friendshipRepository = friendshipRepository;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T findByName(String name) {
+        return this.repository.findByName(name);
     }
 
     /**
@@ -77,7 +116,9 @@ public abstract class AbstractContextServiceImpl<T extends Space, R extends Cont
                 resource.setOwner(new User(ud.getId()));
             }
         }
-
+        if(Objects.nonNull(resource.getParent())){
+            resource.setParent(this.repository.findOne(resource.getParent().getId()));
+        }
         log.debug("create resource: {}", resource);
         // create the context
         resource = super.create(resource);

@@ -21,15 +21,16 @@
 package com.restdude.domain.cases.service.impl;
 
 
+import javax.inject.Named;
+
 import com.restdude.domain.cases.model.CaseStatus;
 import com.restdude.domain.cases.service.CaseStatusService;
 import com.restdude.mdd.repository.ModelRepository;
 import com.restdude.mdd.service.AbstractPersistableModelServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
+@Named("caseStatusService")
 public class CaseStatusServiceImpl extends AbstractPersistableModelServiceImpl<CaseStatus, String, ModelRepository<CaseStatus, String>>
         implements CaseStatusService {
 

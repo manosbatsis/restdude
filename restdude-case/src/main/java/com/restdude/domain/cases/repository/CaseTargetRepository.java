@@ -20,16 +20,18 @@
  */
 package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.CaseWorkflow;
+
+import java.util.Optional;
+
+import com.restdude.domain.cases.model.BaseContext;
+import com.restdude.domain.cases.model.CaseTarget;
 import com.restdude.mdd.repository.ModelRepository;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-public interface CaseWorkflowRepository extends ModelRepository<CaseWorkflow, String> {
+public interface CaseTargetRepository extends ModelRepository<CaseTarget, String> {
 
 
-	@Query(value = "select scp.workflow from SpaceCasesApp scp  where scp.id = :#{#applicationId} ")
-	CaseWorkflow findByApplicationId(@Param("applicationId") String applicationId);
-
+	@Query("select n from CaseTarget n where n.path = ?1 and n.host.name =?2 and n.context = ?3")
+	Optional<CaseTarget> find(String path, String domain, BaseContext spaceBlock);
 }

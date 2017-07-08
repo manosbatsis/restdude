@@ -20,22 +20,36 @@
  */
 package com.restdude.domain.cases.model;
 
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
+import com.restdude.mdd.annotation.model.ModelResource;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Workflow metadata.
  */
 @Entity
-@Table
+@Table(name = "case_workflow")
+@ModelResource(pathFragment = CaseWorkflow.API_PATH_FRAGMENT,
+        apiDescription = "Cases workflow management")
+@ApiModel(description = CaseWorkflow.API_MODEL_DESCRIPTION)
 public class CaseWorkflow extends AbstractBasicAuditedModel {
+
+    public static final String API_PATH_FRAGMENT = "workflows";
+    public static final String API_MODEL_DESCRIPTION = "A model representing a cases application workflow.";
 
     @NotNull
     @Column(nullable = false)
@@ -45,7 +59,7 @@ public class CaseWorkflow extends AbstractBasicAuditedModel {
     @NotNull
     @Column(nullable = false, length = 500)
     @Getter @Setter
-    private String description;
+    private String detail;
 
     @NotNull
     @ManyToOne
@@ -64,14 +78,14 @@ public class CaseWorkflow extends AbstractBasicAuditedModel {
 
     }
 
-    public CaseWorkflow(String name, String description, Space maintainerContext) {
+    public CaseWorkflow(String name, String detail, Space maintainerContext) {
         this.name = name;
-        this.description = description;
+        this.detail = detail;
         this.maintainerContext = maintainerContext;
     }
 
-    public CaseWorkflow(String name, String description, Space businessContext, List<CaseStatus> statuses) {
-        this(name, description, businessContext);
+    public CaseWorkflow(String name, String detail, Space businessContext, List<CaseStatus> statuses) {
+        this(name, detail, businessContext);
         this.statuses = statuses;
     }
 }

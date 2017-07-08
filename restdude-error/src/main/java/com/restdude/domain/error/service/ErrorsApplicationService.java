@@ -18,18 +18,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.cases.repository;
+package com.restdude.domain.error.service;
 
-import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.domain.cases.service.ContextService;
+import com.restdude.domain.error.model.ErrorsApplication;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-public interface CaseWorkflowRepository extends ModelRepository<CaseWorkflow, String> {
-
-
-	@Query(value = "select scp.workflow from SpaceCasesApp scp  where scp.id = :#{#applicationId} ")
-	CaseWorkflow findByApplicationId(@Param("applicationId") String applicationId);
+public interface ErrorsApplicationService extends ContextService<ErrorsApplication> {
 
 }

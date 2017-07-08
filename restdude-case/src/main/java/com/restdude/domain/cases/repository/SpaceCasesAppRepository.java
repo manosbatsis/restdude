@@ -20,16 +20,14 @@
  */
 package com.restdude.domain.cases.repository;
 
-import com.restdude.domain.cases.model.CaseWorkflow;
-import com.restdude.mdd.repository.ModelRepository;
+import com.restdude.domain.cases.model.SpaceCasesApp;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+/**
+ * Calipso JPA repository for the SpaceCasesApp entity.
+ * {@inheritDoc}
+ */
+public interface SpaceCasesAppRepository extends ContextNpRepositoryBean<SpaceCasesApp> {
 
-public interface CaseWorkflowRepository extends ModelRepository<CaseWorkflow, String> {
 
-
-	@Query(value = "select scp.workflow from SpaceCasesApp scp  where scp.id = :#{#applicationId} ")
-	CaseWorkflow findByApplicationId(@Param("applicationId") String applicationId);
 
 }

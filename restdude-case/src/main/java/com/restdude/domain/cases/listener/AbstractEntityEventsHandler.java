@@ -162,7 +162,7 @@ public class AbstractEntityEventsHandler {
 		BaseCase model = event.getModel();
 		User user = model.getCreatedBy();
 		BaseContext context = (BaseContext) model.getParent();
-		Enum predicate = CasesActivity.CREATED;
+		Enum predicate = CasesActivity.CASE_CREATED;
 		MessageResource objectMessageResource = CaseInfo.from(model);
 
 		createLog(model, user, context, predicate, objectMessageResource);
@@ -178,7 +178,7 @@ public class AbstractEntityEventsHandler {
 		BaseCase model = event.getModel();
 		User user = model.getCreatedBy();
 		SpaceCasesApp context = (SpaceCasesApp) model.getParent();
-		Enum predicate = CasesActivity.UPDATED;
+		Enum predicate = CasesActivity.CASE_UPDATED;
 		MessageResource objectMessageResource = CaseInfo.from(model);
 
 		createLog(model, user, context, predicate, objectMessageResource);
@@ -194,7 +194,7 @@ public class AbstractEntityEventsHandler {
 		BaseCaseComment model = event.getModel();
 		BaseContext context = (BaseContext) model.getParent().getParent();
 		User user = model.getCreatedBy();
-		Enum predicate = CasesActivity.COMMENTED;
+		Enum predicate = CasesActivity.CASE_COMMENTED;
 		MessageResource objectMessageResource = CaseCommenttInfo.from(model);
 
 		createLog(model, user, context, predicate, objectMessageResource);

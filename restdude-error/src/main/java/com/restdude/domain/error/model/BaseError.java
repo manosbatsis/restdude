@@ -20,10 +20,20 @@
  */
 package com.restdude.domain.error.model;
 
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.servlet.http.HttpServletRequest;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.auth.spel.annotations.*;
+import com.restdude.auth.spel.annotations.PreAuthorizeCreate;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindById;
+import com.restdude.auth.spel.annotations.PreAuthorizeFindByIds;
+import com.restdude.auth.spel.annotations.PreAuthorizePatch;
+import com.restdude.auth.spel.annotations.PreAuthorizeUpdate;
 import com.restdude.auth.spel.binding.SpelUtil;
 import com.restdude.domain.cases.model.BaseCase;
 import com.restdude.domain.error.ErrorUtil;
@@ -35,17 +45,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import javax.persistence.*;
-import javax.servlet.http.HttpServletRequest;
-
-
-import static com.restdude.domain.CommentableModel.*;
-
-
-import static com.restdude.domain.CommentableModel.*;
 
 @Entity
 @Table(name = "error_base")
@@ -63,12 +63,6 @@ import static com.restdude.domain.CommentableModel.*;
 @JsonIgnoreProperties("description")
 public class BaseError extends BaseCase<BaseError, ErrorComment> implements  PersistableError {
     public static final String API_PATH = "allErrors";
-
-
-    @ApiModelProperty(value = "The address the request originated from", readOnly = true)
-    @Column(name = "remote_address", updatable = false, length = MAX_DETAIL_LENGTH)
-    @Getter @Setter
-    private String remoteAddress;
 
     @ApiModelProperty(value = "The UA string if provided with a request")
     @ManyToOne
@@ -98,12 +92,9 @@ public class BaseError extends BaseCase<BaseError, ErrorComment> implements  Per
     }
 
     public void addRequestInfo(HttpServletRequest request) {
+        super.addRequestInfo(request);
         // get request info
         if (request != null) {
-
-            if (this.remoteAddress == null) {
-                this.remoteAddress = ErrorUtil.getRemoteAddress(request);
-            }
             if (this.userAgent == null) {
                 this.userAgent = ErrorUtil.getUserAgent(request);
             }
@@ -115,14 +106,6 @@ public class BaseError extends BaseCase<BaseError, ErrorComment> implements  Per
         return new ToStringBuilder(this).appendSuper(super.toString())
                 .append("remoteAddress", this.getRemoteAddress())
                 .toString();
-    }
-
-    @Override
-    public void preSave() {
-        super.preSave();
-        if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > MAX_DETAIL_LENGTH) {
-            this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, MAX_DETAIL_LENGTH);
-        }
     }
 
     @JsonIgnore

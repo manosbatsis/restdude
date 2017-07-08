@@ -20,12 +20,18 @@
  */
 package com.restdude.domain.cases.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import com.restdude.domain.audit.model.AbstractBasicAuditedModel;
 import com.restdude.domain.cases.IMembership;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
-import com.restdude.mdd.model.AbstractSystemUuidPersistableModel;
 import com.restdude.mdd.util.EntityUtil;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -33,9 +39,6 @@ import lombok.Setter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * {@value #API_MODEL_DESCRIPTION}
@@ -118,10 +121,10 @@ public class Membership extends AbstractBasicAuditedModel implements IMembership
 	}
 
 	public static class Builder {
-		private Space context1;
+		private BaseContext context1;
 		private User user;
 
-		public Builder context(Space context1) {
+		public Builder context(BaseContext context1) {
 			this.context1 = context1;
 			return this;
 		}

@@ -20,6 +20,8 @@
  */
 package com.restdude.domain.cases.model;
 
+import static com.restdude.domain.CommentableModel.MAX_DETAIL_LENGTH;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,11 +35,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletRequest;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.restdude.domain.cases.model.dto.CaseStatustInfo;
+import com.restdude.domain.cases.CaseUtil;
 import com.restdude.domain.cms.model.Tag;
 import com.restdude.domain.users.model.User;
 import com.restdude.mdd.annotation.model.ModelResource;
@@ -63,6 +65,11 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
 
     public static final String API_PATH_FRAGMENT = "cases";
     public static final String API_MODEL_DESCRIPTION = "A model representing a case, such as an issue, ticket, note etc.";
+
+    @ApiModelProperty(value = "The address the request originated from", readOnly = true)
+    @Column(name = "remote_address", updatable = false, length = MAX_DETAIL_LENGTH)
+    @Getter @Setter
+    private String remoteAddress;
 
     @Formula(" (select count(*) from case_comment_base where case_comment_base.parent_case = id ) ")
     @ApiModelProperty(value = "The number of open cases")
@@ -90,6 +97,7 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
     @ApiModelProperty(value = "Current case status", allowableValues = "OPEM, CLOSED, [CUSTOM_VALUE]")
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", nullable = false, updatable = false)
+    @Getter @Setter
     private CaseStatus status;
 
     @ApiModelProperty(value = "Assigned to", readOnly = true, hidden = true)
@@ -99,18 +107,24 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
     private User assignee;
 
     @DiffIgnore
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_app", referencedColumnName = "id", nullable = false)
     @Getter @Setter
     private SpaceCasesApp parentApplication;
 
     @JsonIgnore
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "target", nullable = true)
+    @ApiModelProperty(value = "The target resource for this case", required = false)
+    @Getter @Setter
+    private CaseTarget target;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "parentCase", orphanRemoval = true)
     @ApiModelProperty(value = "The case comments")
     @Getter @Setter
     private List<BaseCaseComment> comments;
-
+/*
     @JsonIgnore
     public CaseStatus getStatus() {
         return status;
@@ -124,7 +138,7 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
     public void setStatus(CaseStatus status) {
         this.status = status;
     }
-
+*/
     public BaseCase() {
         super();
     }
@@ -136,6 +150,17 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
         this.setDetail(detail);
     }
 
+    //TODO: move this to a spring adapter or something
+    public void addRequestInfo(HttpServletRequest request) {
+        // get request info
+        if (request != null) {
+
+            if (this.remoteAddress == null) {
+                this.remoteAddress = CaseUtil.getRemoteAddress(request);
+            }
+        }
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -144,11 +169,17 @@ public  class BaseCase<C extends BaseCase<C, CC>, CC extends BaseCaseComment<C, 
                 .append("entryIndex", this.getEntryIndex())
                 .append("title", this.getTitle())
                 .append("status", this.getStatus())
+                .append("parentApplication", this.getParentApplication())
+
                 .toString();
     }
 
     @Override
     public void preSave() {
+
+        if (StringUtils.isNotEmpty(this.remoteAddress) && this.remoteAddress.length() > MAX_DETAIL_LENGTH) {
+            this.remoteAddress = StringUtils.abbreviate(this.remoteAddress, MAX_DETAIL_LENGTH);
+        }
 
         // TODO: tmp parent pointer to app, should point to comment
         if(Objects.isNull(this.getParent())){

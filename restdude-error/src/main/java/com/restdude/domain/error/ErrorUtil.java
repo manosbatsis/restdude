@@ -20,13 +20,13 @@
  */
 package com.restdude.domain.error;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.restdude.domain.error.model.UserAgent;
 import com.restdude.util.HashUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 public class ErrorUtil {
@@ -42,14 +42,6 @@ public class ErrorUtil {
             ua = new UserAgent(HashUtils.buildHash(value), value);
         }
         return ua;
-    }
-
-    public static String getRemoteAddress(HttpServletRequest request) {
-        String addresss = request.getHeader("X-FORWARDED-FOR");
-        if (addresss == null) {
-            addresss = request.getRemoteAddr();
-        }
-        return addresss;
     }
 
 }

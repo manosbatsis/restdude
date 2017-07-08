@@ -20,24 +20,31 @@
  */
 package com.restdude.mdd.model;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restdude.mdd.validation.Unique;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.javers.core.metamodel.annotation.DiffIgnore;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 
 /**
  * A base class for pathFragment-like resource entities: files, folders, categories etc.
  */
+@Slf4j
 @MappedSuperclass
 public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPersistableHierarchicalModel, T extends AbstractPersistableHierarchicalModel> extends AbstractPersistableNamedModel {
 
@@ -49,6 +56,7 @@ public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPer
 	 * The HTTP URL of the resource, excluding the protocol, domain and port. Starts with a slash. 
 	 */
     @NotNull
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "resource_path", length = 1500, nullable = false, unique = true)
 	@Getter @Setter
 	private String path;
@@ -57,21 +65,25 @@ public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPer
 	 * The number of URL segments in the resource path
 	 */
     @NotNull
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "path_level", nullable = false)
 	@Getter @Setter
 	private Short pathLevel;
 
 	@DiffIgnore
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ApiModelProperty(hidden = true)
 	@ManyToOne(/* cascade=CascadeType.ALL, */fetch = FetchType.LAZY)
     @JoinColumn(name = "same_as", referencedColumnName = "id", nullable = true)
 	@Getter @Setter
     private T sameAs;
 
 	@DiffIgnore
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ApiModelProperty(hidden = true)
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent", referencedColumnName = "id", nullable = true)
+	@Getter @Setter
     private P parent;
 
 
@@ -92,13 +104,6 @@ public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPer
 		return PATH_SEPARATOR;
 	}
 
-	public P getParent() {
-		return parent;
-	}
-
-	public void setParent(P parent) {
-		this.parent = parent;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -107,10 +112,13 @@ public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPer
 	public void preSave() {
 		super.preSave();
 		// update path if needed
-		if(this.getPath() == null
+		log.debug("preSave, name: {}, path: {}", this.getName(), this.getPath());
+		// if new or name does not match path
+		if(Objects.isNull(this.getPath())
 				|| (Objects.nonNull(this.getPath()) && Objects.nonNull(this.getName()) && !this.getPath().endsWith(this.getName()))){
+
 			StringBuffer path = new StringBuffer();
-			if(this.getParent() != null){
+			if(Objects.nonNull(this.getParent())){
 				path.append(this.getParent().getPath());
 			}
 			path.append(getPathSeparator());
@@ -119,7 +127,9 @@ public abstract class AbstractPersistableHierarchicalModel<P extends AbstractPer
 
 			// set pathFragment level
 			Integer pathLevel = StringUtils.countMatches(this.getPath(), getPathSeparator());
-			this.setPathLevel(pathLevel.shortValue());;
+			this.setPathLevel(pathLevel.shortValue());
+
+			log.debug("preSave, updated path for new name: {}, path: {}", this.getName(), this.getPath());
 		}
 	}
 

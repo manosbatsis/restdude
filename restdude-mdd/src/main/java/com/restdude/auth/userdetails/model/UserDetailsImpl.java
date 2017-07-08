@@ -20,6 +20,11 @@
  */
 package com.restdude.auth.userdetails.model;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.restdude.auth.model.BasicUserDetailsImpl;
 import com.restdude.auth.model.LoginRequest;
 import com.restdude.domain.UserDetails;
@@ -28,13 +33,10 @@ import com.restdude.domain.users.model.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 //@ApiModel
@@ -60,7 +62,7 @@ public class UserDetailsImpl extends BasicUserDetailsImpl {
 			details = new UserDetailsImpl();
 			BeanUtils.copyProperties(user, details);
 			if (user.getCredentials() != null) {
-				BeanUtils.copyProperties(user.getCredentials(), details, "id");
+				BeanUtils.copyProperties(user.getCredentials(), details);//, "id");
 			}
 
 			// init global roles

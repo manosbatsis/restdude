@@ -21,6 +21,25 @@
 package com.restdude.domain.users.model;
 
 
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,31 +56,21 @@ import com.restdude.domain.users.controller.UserController;
 import com.restdude.mdd.annotation.model.FilePersistence;
 import com.restdude.mdd.annotation.model.FilePersistencePreview;
 import com.restdude.mdd.annotation.model.ModelResource;
-import com.restdude.util.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Formula;
 import org.javers.core.metamodel.annotation.ShallowReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.hateoas.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 
 
 @ShallowReference
@@ -138,6 +147,10 @@ public class User extends AbstractMetadataSubjectModel<UserMetadatum> implements
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     UserCredentials credentials;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    UserTotalsCount counters;
 
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)

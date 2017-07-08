@@ -20,28 +20,30 @@
  */
 package com.restdude.domain.cases.service.impl;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Named;
+
 import com.restdude.domain.cases.model.MembershipRequest;
 import com.restdude.domain.cases.model.Space;
 import com.restdude.domain.cases.model.enums.ContextVisibilityType;
 import com.restdude.domain.cases.model.enums.MembershipRequestStatus;
 import com.restdude.domain.cases.repository.SpaceRepository;
-import com.restdude.domain.cases.service.MembershipRequestService;
 import com.restdude.domain.cases.service.SpaceService;
 import com.restdude.domain.details.contact.model.ContactDetails;
 import com.restdude.domain.details.contact.model.EmailDetail;
 import com.restdude.domain.friends.model.Friendship;
-import com.restdude.domain.friends.service.FriendshipService;
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserCredentials;
-import com.restdude.domain.users.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
-import javax.inject.Named;
-import java.util.*;
+import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 @Named("spaceService")
@@ -49,27 +51,9 @@ public class SpaceServiceImpl
 		extends AbstractContextServiceImpl<Space, SpaceRepository>
 		implements SpaceService {
 
+
 	@Value("${restdude.testEmailDomain:restdude.com}")
 	private String testEmailDomain;
-	private Space syetemSpace;
-	private UserService userService;
-	private FriendshipService friendshipService;
-	protected MembershipRequestService membershipRequestService;
-
-	@Autowired
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	@Autowired
-	public void setFriendshipService(FriendshipService friendshipService) {
-		this.friendshipService = friendshipService;
-	}
-
-	@Autowired
-	public void setMembershipRequestService(MembershipRequestService membershipRequestService) {
-		this.membershipRequestService = membershipRequestService;
-	}
 
 	public Space getUserSpace(User user){
 		return this.repository.getUserSpace(user);
@@ -225,12 +209,5 @@ public class SpaceServiceImpl
 		return this.syetemSpace;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Space findByName(String name) {
-		return this.repository.findByName(name);
-	}
 
 }

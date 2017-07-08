@@ -24,16 +24,4 @@ import com.restdude.domain.cases.model.Space;
 
 public interface SpaceService extends ContextService<Space> {
 
-    /**
-     * Get the system business context
-     * @return
-     */
-    Space getSystemContext();
-
-    /**
-     * Get the space matching the given name
-     * @param name
-     * @return
-     */
-    Space findByName(String name);
 }

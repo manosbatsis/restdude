@@ -18,7 +18,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.restdude.domain.error;
+package com.restdude.domain.cases;
+
+import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,5 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class CaseUtil {
 
 
+	public static String getRemoteAddress(HttpServletRequest request) {
+		String addresss = request.getHeader("X-FORWARDED-FOR");
+		if (addresss == null) {
+			addresss = request.getRemoteAddr();
+		}
+		return addresss;
+	}
 
 }
