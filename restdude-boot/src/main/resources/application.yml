@@ -70,11 +70,11 @@ spring:
     add-mappings: true
 logging:
   level:
-    root: debug
+    root: WARN
     com.yahoo.elide.core: WARN
-    org.springframework.security: debug
+    org.springframework.security: WARN
     springfox.documentation.schema.property.CachingModelPropertiesProvider: ERROR
-    com.restdude: debug
+    com.restdude: WARN
 
 
 server:
