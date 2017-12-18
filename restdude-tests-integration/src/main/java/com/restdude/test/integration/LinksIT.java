@@ -40,17 +40,12 @@ public class LinksIT extends AbstractControllerIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinksIT.class);
 
-    Loggedincontext adminLoginContext;
     RequestSpecification adminRequestSpec;
 
     @BeforeClass
     public void setup() {
         super.setup();
-        // parse JSON by default
-        // RestAssured.defaultParser = Parser.JSON;
-
-        this.adminLoginContext = this.getLoggedinContext("admin", "admin");
-        this.adminRequestSpec = adminLoginContext.requestSpec;
+        this.adminRequestSpec = this.getAdminContext().requestSpec;
     }
 
     @Test(description = "Test ToOne", priority = 10)
@@ -63,7 +58,7 @@ public class LinksIT extends AbstractControllerIT {
 
 
         LOGGER.debug("testSimpleTypeProperty, JSON API");
-        eu = this.getCountryParent(getRequestSpec(adminLoginContext.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8));
+        eu = this.getCountryParent(getRequestSpec(this.getAdminContext().ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8));
 
         Assert.assertEquals(eu.get("data").get("id").asText(), "EU");
         Assert.assertEquals(eu.get("data").get("attributes").get("name").asText(), "Europe");
@@ -111,7 +106,7 @@ public class LinksIT extends AbstractControllerIT {
                 .body("content[0].name", equalTo("Greece"));
 
         LOGGER.debug("testRelatedPaging, JSON API");
-        RequestSpecification adminJsonApiRequestSpec = getRequestSpec(adminLoginContext.ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
+        RequestSpecification adminJsonApiRequestSpec = getRequestSpec(this.getAdminContext().ssoToken, Constants.BASIC_AUTHENTICATION_TOKEN_COOKIE_NAME, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8, AbstractControllerIT.MIME_APPLICATION_VND_API_JSON_UTF8);
         country = given().spec(adminJsonApiRequestSpec)
                 .log().all()
                 .get(WEBCONTEXT_PATH + "/api/rest/continents/EU")

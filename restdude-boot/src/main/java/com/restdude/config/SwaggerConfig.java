@@ -71,13 +71,11 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        org.apache.commons.configuration.Configuration config = ConfigurationFactory.getConfiguration();
-
 
         Contact contact = new Contact(contactName, contactUrl, contactEmail);
         return new ApiInfo(applicationName + " API Reference " + applicationVersion,
                 "Automatically-generated documentation based on [Swagger](http://swagger.io/) and created by [Springfox](http://springfox.github.io/springfox/).",
-                applicationVersion, "urn:tos", contact, licenseName,
+                applicationVersion, "urn:tos", contactName, licenseName,
                 licenseUrl);
     }
 }
