@@ -63,7 +63,7 @@ public class SpaceServiceImpl
 	 */
 	@Override
 	protected void initDataOverride(User systemUser){
-		log.debug("initDataOverride, systemUser: {}", systemUser);
+		log.debug("spaceService initDataOverride, systemUser: {}", systemUser);
 
 		// initialize globals?
 		this.syetemSpace = this.repository.getSystemContext();
@@ -78,14 +78,6 @@ public class SpaceServiceImpl
 							.description("The global system context")
 							.visibility(ContextVisibilityType.SECRET)
 							.build());
-
-			Space geekologue = this.create(new Space.Builder()
-					.owner(systemUser)
-					.name("GKLG")
-					.title("Geekologue, EOOD")
-					.description("Root business space for Geekologue, EOOD")
-					.visibility(ContextVisibilityType.CLOSED)
-					.build());
 		}
 
 		Map<String, User> testUsers = createTestSpaceUsers();

@@ -20,15 +20,15 @@
  */
 package com.restdude.domain.users.repository;
 
-import com.restdude.mdd.repository.ModelRepository;
+import java.time.LocalDateTime;
+
 import com.restdude.domain.users.model.User;
 import com.restdude.domain.users.model.UserDTO;
+import com.restdude.mdd.repository.ModelRepository;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 //#import org.javers.spring.data.JaversSpringDataAuditable;
 
@@ -83,9 +83,8 @@ public interface UserRepository extends ModelRepository<User, String> {
     public void updateLastLogin(String userId);
 
     @Modifying
-
-	@Query("UPDATE User AS u SET u.credentials.resetPasswordTokenCreated = NULL, u.credentials.resetPasswordToken = NULL "
-			+ "WHERE u.credentials.resetPasswordTokenCreated IS NOT NULL and u.credentials.resetPasswordTokenCreated  < ?1")
+	@Query("UPDATE UserCredentials credentials SET credentials.resetPasswordTokenCreated = NULL, credentials.resetPasswordToken = NULL "
+			+ "WHERE credentials.resetPasswordTokenCreated IS NOT NULL and credentials.resetPasswordTokenCreated  < ?1")
 	public void expireResetPasswordTokens(LocalDateTime yesterday);
 	
 }

@@ -20,12 +20,13 @@
  */
 package com.restdude.domain.geography.service;
 
+import java.util.Collection;
+
 import com.restdude.domain.geography.model.Country;
 import com.restdude.mdd.service.PersistableModelService;
 
-import java.util.Collection;
-
 public interface CountryService extends PersistableModelService<Country, String> {
-    public void create(Collection<Country> resources);
+    void create(Collection<Country> resources);
 
+	void initContinentsAndCountries();
 }

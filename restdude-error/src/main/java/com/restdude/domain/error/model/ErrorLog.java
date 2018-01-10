@@ -20,6 +20,14 @@
  */
 package com.restdude.domain.error.model;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import com.restdude.domain.CommentableModel;
 import com.restdude.mdd.annotation.model.ModelResource;
 import com.restdude.mdd.controller.AbstractReadOnlyPersistableModelController;
@@ -31,13 +39,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.annotations.Formula;
-import org.springframework.hateoas.core.Relation;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import org.springframework.hateoas.core.Relation;
 
 /**
  * {@value #CLASS_DESCRIPTION}
@@ -75,6 +78,7 @@ public class ErrorLog extends AbstractAssignedIdPersistableModel<String> {
     @ApiModelProperty(value = "The number of errors corresponding to this stacktrace.")
     private Integer errorCount = 0;
 
+    @Lob
     @NotNull
     @ApiModelProperty(value = "The actual stacktrace.", required = true)
     @Column(length = CommentableModel.MAX_STACKTRACE_LENGTH, nullable = false)

@@ -102,7 +102,7 @@ public interface ContextNpRepositoryBean<T extends BaseContext> extends ModelRep
     @Query(value = SELECT_BUSINESS_CONTEXT_INFO + " where context.owner.id = ?#{principal.id} ")
     Page<BaseContextInfo> findMy(Pageable pageable);
 
-    @Query(value = "select context from Space context  where context.owner.username = 'system' and context.name = '" + SYSTEM_CONTEXT_NAME + "' ")
+    @Query(value = "select context from Space context  where context.name = '" + SYSTEM_CONTEXT_NAME + "' ")
     Space getSystemContext();
 
 
